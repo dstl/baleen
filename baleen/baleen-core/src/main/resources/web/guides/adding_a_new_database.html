@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Baleen - Adding a new database</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-control="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand">Baleen</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../index.html">About</a></li>
+					<li><a href="/javadoc">JavaDoc</a></li>
+					<li><a href="/swagger">REST API</a></li>
+					<li class="active"><a href="index.html">Guides</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Adding a new database</h1>
+			<p>External databases are used extensively in Baleen; to load
+				documents from for processing (in collection readers), to load
+				processing information from (e.g. gazetteers in annotator) or to
+				save data to (in consumers). They can also be used for support
+				services such as logging, history and metrics. Deployers of Baleen
+				will typically want to use their preferred database.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p>Baleen has inbuilt with database support for Mongo,
+			Elasticsearch and an inmemory option (largely designed for
+			testing).</p>
+		<p>
+			Additional databases are implemented as BaleenResources. As a shared
+			resources they are available throughout a pipeline which offers
+			implementators options for connection pooling and resource management
+			to avoid overloading remote database servers. See <a
+				href="developing_sharedresources.html">Developing
+				SharedResources</a> for further information.
+		</p>
+		<p>A typical pattern for implementing a database as a
+			BaleenResource will be form a database connection in doInitialize()
+			and close that connection in doDestroy.</p>
+
+		<h3>Specific uses of database in Baleen</h3>
+		<p>We now consider how to implement resources in the different use
+			cases. In each case the database should be injected into the pipeline
+			as a BaleenResource.</p>
+		<p>In all cases thought should be given to storage and query
+			patterns, and appropriate indices created on the database to maintain
+			pipeline throughput.</p>
+		<p>Implementors should avoid hard coding any configuration into a
+			databases.</p>
+		<h4>Collection reader</h4>
+		<p>Extending BaleenCollectionReader, the database should be polled
+			in doHasNext. If new data exists to process, it should be stored in
+			the instance and the corresponding item marked as 'in processing' (or
+			even deleted) from the database. This supports clustering (multiple
+			version of Baleen polling the same database) to avoid two instance of
+			Baleen processing the same data item. This 'get and change' should be
+			performed within a single transaction (if transactions exist in the
+			database).</p>
+		<p>The retrieved item (that is temporarily stored in the instance)
+			should be processed and returned through doGetNext.</p>
+		<h4>Annotators</h4>
+		<p>Use of a database in an annotator will be very dependent on
+			that annotator. Thought should be given to whether to cache the
+			database's content in memory to avoid querying the database for each
+			document. If data is cached then it should be periodically refreshed
+			(or ideally refreshed on change).</p>
+		<h4>Consumers</h4>
+		<p>Consumers will write the results of the pipeline (a Uima JCas
+			object) into the database.</p>
+		<p>What they store and the format they store should match the
+			business requirements for onward processing of data.</p>
+		<p>Thought should be given to:</p>
+		<ul>
+			<li>Insert new or replace existing documents with the same
+				external id</li>
+			<li>Storage of history information</li>
+			<li>If the data should be verified/acknowledge on writer (called
+				the write concern / consistency) to maintain integrirty at the cost
+				of performance</li>
+			<li>Batching of data (for fast and high volume pipelines)</li>
+		</ul>
+		<h4>History</h4>
+		<p>History implementations should implement DocumentHistory and
+			BaleenHistory.</p>
+		<p>For a typical database AbstractBaleenHistory and
+			AbstractBaleenDocumentHistory provides a start point for
+			implementation, with AbstractCachingBaleenHistory offering the
+			desirable aspect of managing a local in-memory cache while a document
+			is being processed through the pipeline.</p>
+		<p>Where possible database changes should be saved live (that is
+			saved to the database as they happen). This will not only reduce the
+			amount of state in memory but also allow better diagnosis of errors.</p>
+		<p>Any functions which get items from the database (getHistory on
+			DocumentHistory) should be made performant and get a minimal data.</p>
+	</div>
+
+</body>
+
+
+</html>

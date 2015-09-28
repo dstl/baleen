@@ -1,0 +1,7 @@
+world,earth,planet
+
+london,londres
+madrid
+Paris
+ny, new york, big apple
+

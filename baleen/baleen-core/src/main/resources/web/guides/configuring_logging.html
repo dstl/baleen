@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Baleen - Configuring Logging</title>
+		
+		<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+		<style type="text/css">
+			body{
+				padding-top: 70px;
+				padding-bottom: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-control="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand">Baleen</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="../index.html">About</a></li>
+						<li><a href="/javadoc">JavaDoc</a></li>
+						<li><a href="/swagger">REST API</a></li>
+						<li class="active"><a href="index.html">Guides</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container">
+			<div class="jumbotron">
+				<h1>Configuring Logging</h1>
+				<p>This guide will walk you through configuring the logging of Baleen.</p>
+				<p>Logging is a key tool for diagnosing problems and fixing bugs. It also provides an audit trail (to a certain extent) of what Baleen has done.
+				Configuring it so that it provides relevant and useful information, is therefore an important task.</p>
+			</div>
+		</div>
+		
+		<div class="container">
+			<p>In this guide, we will be looking at the configuration options available for the logging framework in Baleen.</p>
+			
+			<h2>The Config File</h2>
+			<p>Logging for Baleen, and a number of other options, is configured in the Baleen configuration file. This is the file you pass to Baleen from the command line, for example:</p>
+			<pre>java -jar baleen-2.0.0.jar config.yaml</pre>
+			<p>In the above example, <em>config.yaml</em> is the name of the configuration file and this is the name we will refer to it by during this guide.
+			Calling it <em>config.yaml</em> isn't required though, and you can call it whatever you want so long as that's the file you pass to Baleen when you start it up.</p>
+			<p>The configuration file is a YAML file, and uses YAML markup to configure Baleen.
+			If you're not familiar with YAML markup, you should look at some online tutorials as we will not cover the syntax in this guide.</p>
+			
+			<h2>The Logging Section</h2>
+			<p>The configuration file is made up of a number of sections, and the logging section is indicated by the <code>logging</code> property.
+			We then define a list of loggers using the <code>loggers</code> property. For example, here's a simple <em>config.yaml</em> to log things to the console.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">config.yaml</div>
+				<div class="panel-body">
+<pre>
+logging:
+  loggers:
+   - name: console
+</pre>
+				</div>
+			</div>
+			
+			<p>The logger name is indicated with the <code>name</code> property, as shown above.
+			The name <em>console</em> is a special case to log to the standard console, if a different name is provided it will log to file (by default a file with the same name as the <em>name</em> value you provided).
+			Multiple loggers can be specified by adding further list items to the <code>loggers</code> key. If specifying a file name, the log file will be written to the current running directory.</p> 
+			
+			<h2>Further Configuration</h2>
+			<p>The <code>name</code> property isn't the only option you can specify, and there are a number of properties you can specify to control things such as
+			the file name, the maximum file size, the logging levels to log, the packages to log, and more.
+			These are all documented in the JavaDoc (see <a href="/javadoc/uk/gov/dstl/baleen/core/logging/BaleenLogging.html">BaleenLogging</a> to get started),
+			so rather than go through them in detail here we will just provide some common 'recipes' from which you can start configuring your logging to suit your needs.</p>
+			
+			<h3>Only logging warnings and errors</h3>
+			<div class="panel panel-default">
+				<div class="panel-heading">config.yaml</div>
+				<div class="panel-body">
+<pre>
+logging:
+  loggers:
+    - name: errors.log
+      minLevel: WARN
+</pre>
+				</div>
+			</div>
+			
+			<h3>Logging to multiple files</h3>
+			<div class="panel panel-default">
+				<div class="panel-heading">config.yaml</div>
+				<div class="panel-body">
+<pre>
+logging:
+  loggers:
+    - name: warnings.log
+      minLevel: WARN
+      maxLevel: WARN
+    - name: errors.log
+      minLevel: ERROR
+</pre>
+				</div>
+			</div>
+			
+			<h3>Excluding logging from certain packages</h3>
+			<div class="panel panel-default">
+				<div class="panel-heading">config.yaml</div>
+				<div class="panel-body">
+<pre>
+logging:
+  loggers:
+    - name: ignoreJetty
+      file: baleen.log
+      excludeLoggers:
+      - org.eclipse.jetty
+</pre>
+				</div>
+			</div>
+			
+			<h3>Limiting log size to 32MB</h3>
+			<div class="panel panel-default">
+				<div class="panel-heading">config.yaml</div>
+				<div class="panel-body">
+<pre>
+logging:
+  loggers:
+    - name: baleen.log
+      size: 32
+</pre>
+				</div>
+			</div>
+			
+			<h3>Keeping logs from the past week</h3>
+			<div class="panel panel-default">
+				<div class="panel-heading">config.yaml</div>
+				<div class="panel-body">
+<pre>
+logging:
+  loggers:
+    - name: baleen.log
+      daily: true
+      history: 7
+</pre>
+				</div>
+			</div>
+			
+		</div>
+	
+		<script src="../bootstrap/jquery-1.11.0.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

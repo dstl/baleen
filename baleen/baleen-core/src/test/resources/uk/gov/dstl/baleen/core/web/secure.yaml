@@ -1,0 +1,17 @@
+web:
+  auth:
+    type: basic
+    name: baleentest
+    users:
+    - username: guest
+      password: g
+    - username: stats
+      password: s
+      roles:
+      - metrics
+    - username: pipeline
+      password: p
+      roles:
+      - pipelines.list
+    
+    

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>Baleen Type System - Metadata</name>
+  <description>XML definition of the Baleen type system metadata.
+
+This XML file classified as UK OFFICIAL.</description>
+  <version>2.0</version>
+  <vendor>Dstl</vendor>
+  <imports>
+    <import name="types/base_type_system"/>
+  </imports>
+  <types>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.metadata.ProtectiveMarking</name>
+      <description>The protective marking of the text span defined by the begin and end properties.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.BaleenAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>classification</name>
+          <description>The security classification of this protective marking</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>caveats</name>
+          <description>An array of string values specifying handling caveats for this protective marking</description>
+          <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+          <multipleReferencesAllowed>true</multipleReferencesAllowed>
+        </featureDescription>
+        <featureDescription>
+          <name>releasability</name>
+          <description>Array of country designators to which this protective marking is releasable.</description>
+          <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+          <multipleReferencesAllowed>true</multipleReferencesAllowed>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.metadata.Metadata</name>
+      <description>Metadata associated with the document</description>
+      <supertypeName>uk.gov.dstl.baleen.types.BaleenAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>key</name>
+          <description>The key (name) for the metadata</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>value</name>
+          <description>The value of the metadata</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.metadata.PublishedId</name>
+      <description>The published ID of the document, e.g. the Document Reference</description>
+      <supertypeName>uk.gov.dstl.baleen.types.BaleenAnnotation</supertypeName>
+      <features>
+        <featureDescription>
+          <name>value</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>publishedIdType</name>
+          <description>The type of PublishedID that this particular annotation refers to</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    </types>
+</typeSystemDescription>

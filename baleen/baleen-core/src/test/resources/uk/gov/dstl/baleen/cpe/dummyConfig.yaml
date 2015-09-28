@@ -1,0 +1,17 @@
+example:
+  color: red
+  count: 7
+
+collectionreader: uk.gov.dstl.baleen.testing.DummyCollectionReader
+
+annotators:
+  - uk.gov.dstl.baleen.testing.DummyAnnotator1
+  - class: uk.gov.dstl.baleen.testing.DummyAnnotator1
+    example.color: green
+  - class: uk.gov.dstl.baleen.testing.DummyAnnotator1
+  - class: uk.gov.dstl.baleen.testing.DummyAnnotator2
+    example.count: 6
+    shape: square
+
+consumers:
+  - class: uk.gov.dstl.baleen.testing.DummyConsumer

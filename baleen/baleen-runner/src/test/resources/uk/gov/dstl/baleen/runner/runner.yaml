@@ -1,0 +1,8 @@
+pipelines:
+  - name: sample
+    file: src/test/resources/uk/gov/dstl/baleen/runner/sample_pipeline.yaml
+    
+logging:
+  loggers:
+    - name: console
+      minLevel: DEBUG

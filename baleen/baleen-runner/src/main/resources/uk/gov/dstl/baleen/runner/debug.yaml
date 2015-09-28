@@ -1,0 +1,5 @@
+logging:
+  recent: 10000
+  loggers:
+    - name: console
+      minLevel: DEBUG

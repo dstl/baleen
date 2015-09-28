@@ -1,0 +1,19 @@
+{
+	"apiVersion": "1",
+	"basePath": "/api/1",
+	"apis": [
+		{
+			"path":"/consumers",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"consumers",
+					"parameters":[],
+					"summary":"List consumers currently available to Baleen",
+					"notes":"Produces a YAML formatted list of all the consumers (classes extending BaleenConsumer) currently available on the class path. If using authentication, the user will need the 'consumers' role to access this resource.",
+					"produces":"text/x-yaml"
+				}
+			]
+		}
+	]
+}

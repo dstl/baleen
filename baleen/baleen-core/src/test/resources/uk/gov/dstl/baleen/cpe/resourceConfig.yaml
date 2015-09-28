@@ -1,0 +1,8 @@
+collectionreader:
+  class: uk.gov.dstl.baleen.testing.RandomStringCollectionReader
+
+annotators:
+  - class: uk.gov.dstl.baleen.testing.DummyResourceAnnotator
+
+consumers:
+  - class: uk.gov.dstl.baleen.testing.DummyConsumer

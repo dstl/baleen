@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>uk.gov.dstl.baleen</groupId>
+		<artifactId>baleen</artifactId>
+		<version>2.0.0</version>
+	</parent>
+	<packaging>jar</packaging>
+	<artifactId>baleen-core</artifactId>
+	<name>Baleen Core</name>
+	<description>Core and common functionality of Baleen</description>
+
+	<dependencies>
+		<!-- YAML -->
+		<dependency>
+			<groupId>org.yaml</groupId>
+			<artifactId>snakeyaml</artifactId>
+			<version>${snakeyaml.version}</version>
+		</dependency>
+
+		<!-- Jetty -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlet</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-servlets</artifactId>
+			<version>${jetty.version}</version>
+		</dependency>
+
+		<!-- Jackson -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+		<!-- Metrics -->
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-annotation</artifactId>
+			<version>${metrics.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-core</artifactId>
+			<version>${metrics.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-jetty9</artifactId>
+			<version>${metrics.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jetty-server</artifactId>
+					<groupId>org.eclipse.jetty</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-json</artifactId>
+			<version>${metrics.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-jvm</artifactId>
+			<version>${metrics.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-logback</artifactId>
+			<version>${metrics.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codahale.metrics</groupId>
+			<artifactId>metrics-servlet</artifactId>
+			<version>${metrics.version}</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.elasticsearch</groupId>
+		  <artifactId>metrics-elasticsearch-reporter</artifactId>
+		  <version>${metrics-elasticsearch.version}</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.googlecode.concurrent-trees</groupId>
+		  <artifactId>concurrent-trees</artifactId>
+		  <version>${concurrenttrees.version}</version>
+		</dependency>
+		<dependency>
+		  <groupId>org.reflections</groupId>
+		  <artifactId>reflections</artifactId>
+		  <version>${reflections.version}</version>
+		</dependency>
+
+		<!--  Required for integration tests only -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Baleen</title>
+		
+		<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css" />
+		<style type="text/css">
+			body{
+				padding-top: 70px;
+				padding-bottom: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-control="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand">Baleen</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li class="active"><a href="index.html">About</a></li>
+						<li><a href="/javadoc">JavaDoc</a></li>
+						<li><a href="/swagger">REST API</a></li>
+						<li><a href="/guides">Guides</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container">
+			<div class="jumbotron">
+				<h1>Baleen</h1>
+				<p>Baleen is a text processing engine for extracting metadata, entities and other information from unstructured and semi-structured text.
+				It is built on a number of open source technologies, as well as bespoke code, and is fully configurable to meet the needs of different customers.</p>
+			</div>
+		</div>
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<h2>Credits</h2>
+					<p>Baleen was developed at <a href="http://www.dstl.gov.uk">Dstl</a> (Defence Science and Technology Laboratory) as part of it's ongoing research programme in support of UK Defence.</p>
+				</div>
+				<div class="col-md-4">
+					<h2>Documentation</h2>
+					<p>The following documentation covers the usage and development of Baleen:</p>
+					<ul>
+						<li><a href="/javadoc">JavaDoc</a> - In-depth technical information on all aspects of Baleen, including configuration.</li>
+						<li><a href="/swagger">REST API Documentation</a> - Information on how to interact with the REST API.</li>
+					</ul>
+				</div>
+				<div class="col-md-4">
+					<h2>Licence</h2>
+					<p>Baleen is licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache Software License 2.0</a>.</p>
+					<p>For information on the licenses of Baleen's dependencies, please see the included third party licenses file.</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="container">
+			<h2>Quickstart</h2>
+			<p>This section provides a quick overview of Baleen and it's configuration options. For full documentation, see the <a href="/javadoc">JavaDoc</a>.</p>
+			
+			<h3>Running Baleen</h3>
+			<p>To start the Baleen server, run the following command from the home directory of Baleen:</p>
+			<pre>java -jar baleen-2.0.0.jar</pre>
+			<p>Note that the name of the JAR file may be different depending on the version of Baleen that you are running. This applies to all references of JAR files in this document.</p>
+			<p>In order to have access to the JavaDoc on your server, you must have <em>baleen-2.0.0-javadoc.jar</em> in the same directory as the Baleen JAR. If this file isn't present, JavaDoc will not be accessible.</p>
+			<p>Once running, you can access it at <a href="http://localhost:6413">http://localhost:6413</a>.</p>
+			
+			<h3>Configuring Baleen</h3>
+			<p>Baleen is configured via a YAML file, that is passed to the server on start up.
+			The YAML file can be called whatever you want, but in this document we will refer to it as <em>config.yaml</em>.
+			To pass the YAML file to Baleen, use the following command:</p>
+			<pre>java -jar baleen-2.0.0.jar config.yaml</pre>
+			<p>The configuration file contains a number of different sections that refer to different aspects of Baleen, such as the server configuration, default pipelines and logging.
+			These are described in the JavaDoc, and listed on the <a href="/javadoc/uk/gov/dstl/baleen/runner/Baleen.html">Baleen</a> page.
+			Sensible defaults are assumed where an explicit setting is not provided in the configuration.</p>
+			<p>An example configuration is provided below. Note that spaces should be used rather than tabs:</p>
+			<div class="panel panel-default">
+				<div class="panel-heading">config.yaml</div>
+				<div class="panel-body">
+<pre>
+logging:
+  loggers:
+    - name: console
+      minLevel: INFO
+      excludeLoggers:
+      - org.eclipse.jetty
+      - org.apache.pdfbox
+    - name: errors.log
+      minLevel: WARN
+
+pipelines:
+  - name: Test Pipeline
+    file: test_pipeline.yaml
+</pre>
+				</div>
+			</div>
+
+			<h3>Configuring Pipelines</h3>
+			<p>Pipelines are also configured via YAML files, which can be specified at start up in the <em>config.yaml</em> file (as above),
+			or loaded into Baleen via the Baleen REST API (see the <a href="/swagger">REST API documentation</a>).</p>
+			<p>Pipeline configuration files are split into sections describing each of the UIMA analysis engine types (e.g. collection readers, annotators and CAS consumers),
+			as well as a section for global variables.
+			The format is described in more detail in the JavaDoc, on the <a href="/javadoc/uk/gov/dstl/baleen/cpe/CpeBuilder.html">CpeBuilder</a> page, and an example is given below:</p>
+			<div class="panel panel-default">
+				<div class="panel-heading">test_pipeline.yaml</div>
+				<div class="panel-body">
+<pre>
+mongo:
+  host: example.com
+  db: baleen_example
+
+collectionreader:
+  class: FolderReader
+  folders:
+   - documents
+   - reports
+
+annotators:
+  - class: regex.Email
+  - class: regex.Mgrs
+  - class: gazetteer.Mongo
+    collection: people
+    type: Person
+
+consumers:
+  - class: Mongo
+    entities: output
+</pre>
+				</div>
+			</div>
+			<p>Pipelines that are specified in the <em>config.yaml</em> are automatically started when Baleen starts, but pipelines created through the REST API need to be explicitly started through the REST API.
+			Once running, a pipeline will continue to run until it is stopped by the user; it will continually poll the collection reader for new documents.
+			So once the above example pipeline is running, documents can be processed through it at any time by placing them in a folder being watched by the FolderReader.
+			
+			<h3>Next Steps</h3>
+			<p>You should now have a running instance of Baleen and with some basic configuration and an example pipeline.
+			You should read the <a href="/javadoc">JavaDoc</a> and have a look at the <a href="/swagger">REST API documentation</a> for more information on how to configure, use and develop Baleen.
+			There are also a number of more in depth <a href="/guides">Guides</a> available.</p>
+		</div>
+	
+		<script src="bootstrap/jquery-1.11.0.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

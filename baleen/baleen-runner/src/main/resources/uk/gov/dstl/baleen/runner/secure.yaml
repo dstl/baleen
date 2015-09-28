@@ -1,0 +1,34 @@
+web:
+  auth:
+    name: baleen
+    type: basic
+    users:
+    - username: guest
+      password: guest
+    - username: user
+      password: user
+      roles:
+      - pipelines.list
+      - pipelines.control
+      - metrics
+    - username: dev
+      password: dev
+      roles:
+      - pipelines.list
+      - pipelines.control
+      - pipelines.create
+      - pipelines.delete
+      - config.pipelines
+      - metrics
+      - logging     
+    - username: admin
+      password: admin
+      roles:
+      - pipelines.list
+      - pipelines.control
+      - pipelines.create
+      - pipelines.delete
+      - config.pipelines
+      - config.manager
+      - metrics
+      - logging 

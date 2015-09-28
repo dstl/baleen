@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Baleen - Developing Regex Annotators</title>
+		
+		<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+		<style type="text/css">
+			body{
+				padding-top: 70px;
+				padding-bottom: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-control="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand">Baleen</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="../index.html">About</a></li>
+						<li><a href="/javadoc">JavaDoc</a></li>
+						<li><a href="/swagger">REST API</a></li>
+						<li class="active"><a href="index.html">Guides</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container">
+			<div class="jumbotron">
+				<h1>Developing Regex Annotators</h1>
+				<p>This guide will walk you through the development of a regular expression, or regex, annotator in Baleen.</p>
+				<p>Annotators are the Baleen components that extract information and entities from content being passed through the pipeline.
+				Regular expressions are a way of expressing a pattern that might appear in text.
+				For example, we wouldn't be able to list every possible e-mail address but we are able to describe a pattern that would represent all e-mail addresses.</p>
+			</div>
+		</div>
+		
+		<div class="container">
+			<p>In this guide, we will be developing a regex annotator to annotate all <em>.com</em> e-mail addresses.
+			That is, any e-mail address that ends in .com will be annotated as a CommsIdentifier.</p>
+			
+			<h2>Creating the Class</h2>
+			<p>To start with, let's create a new Java class called <code>ComEmail</code> which extends <code>AbstractRegexAnnotator</code>.
+			The <code>AbstractRegexAnnotator</code> class provides most of the functionality for us, and we just need to provide a small amount of code to specify what the regular expression is,
+			and what we should do when we find one.</p>
+			<p>We will create it in the <code>uk.gov.dstl.baleen.annotators.guides</code> package to keep it separate from existing annotators.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">ComEmail.java</div>
+				<div class="panel-body">
+<pre>
+package uk.gov.dstl.baleen.annotators.regex;
+
+import java.util.regex.Matcher;
+
+import org.apache.uima.jcas.JCas;
+
+import uk.gov.dstl.baleen.annotators.regex.helpers.AbstractRegexAnnotator;
+import uk.gov.dstl.baleen.types.common.CommsIdentifier;
+
+public class ComEmail extends AbstractRegexAnnotator<CommsIdentifier> {
+
+	public ComEmail() {
+	
+	}
+	
+	@Override
+	protected CommsIdentifier create(JCas jCas, Matcher matcher) {
+		return null;
+	}
+
+}
+</pre>
+				</div>
+			</div>
+			<p>You will notice in the above code that we have had to tell <code>AbstractRegexAnnotator</code> what type of annotation we will be returning,
+			and we have also created a constructor function and overridden the <code>create(JCas, Matcher)</code> function.
+			It is this function that we will use to create our annotation and set any annotator specific properties.</p>
+			
+			<h2>The Constructor</h2>
+			<p>The constructor of <code>AbstractRegexAnnotator</code>, our super constructor, will do most of the hard work for us so we just need to pass it the correct things.
+			There are several constructors available on <code>AbstractRegexAnnotator</code>, but we will use the one that takes:</p>
+			<ul>
+				<li>The regular expression</li>
+				<li>A flag to indicate whether the regular expression is case sensitive</li>
+				<li>The confidence to assign to our regular expression</li>
+			</ul>
+			<div class="panel panel-default">
+				<div class="panel-heading">ComEmail.java: Constructor</div>
+				<div class="panel-body">
+<pre>
+private static final String COM_EMAIL_REGEX = "[A-Z0-9._%+-]+@([A-Z0-9.-]+\\.com)";
+
+public ComEmail() {
+	super(COM_EMAIL_REGEX, false, 1.0);
+}
+</pre>
+				</div>
+			</div>
+			
+			<h2>The create(JCas, Matcher) Function</h2>
+			<p><code>AbstractRegexAnnotator</code> requires us to override the <code>create(JCas, Matcher)</code> function in order to create the annotation.
+			This function should return an annotation of the correct type with any properties specific to that type (for example, identifier type in our case) set.
+			You do not need to set standard properties like the value and begin/end, as these will be set for you by the <code>AbstractRegexAnnotator</code>.
+			In fact, if you do try to set these they will be overwritten.</p>
+			<p>The Matcher object provided will contain a Matcher with pattern provided in the constructor and the match for the current entity.
+			This may be useful if you need to set annotation properties based on some logic involving the current match, but is not needed in this example so we will ignore it.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">ComEmail.java: create(JCas, Matcher) Function</div>
+				<div class="panel-body">
+<pre>
+@Override
+protected CommsIdentifier create(JCas jCas, Matcher matcher) {
+	CommsIdentifier ci = new CommsIdentifier(jCas);
+	ci.setIdentifierType("email");
+	return ci;
+}
+</pre>
+				</div>
+			</div>
+			
+			<h2>Conclusion</h2>
+			<p>And that's it! We now have a fully working annotator that will find e-mail addresses ending in <em>.com</em>.
+			Most of the hard work is done behind the scenes, and we just need to implement two simple functions to get our annotator up and running.</p>
+			<p>To really finish it off, we should provide documentation and unit tests - but that is left as an exercise for the reader!</p>  
+			
+			<h2>Including in Baleen</h2>
+			<p>Now you've built your annotator and want to include it in Baleen, all you need to do is ensure that your class is on the classpath,
+			and then in your pipeline configuration include your class in the pipeline ensuring that you specify the full package and classname.</p>
+			
+		</div>
+	
+		<script src="../bootstrap/jquery-1.11.0.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

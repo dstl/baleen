@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>Baleen Type System - Military</name>
+  <description>XML definition of the Baleen type system for defence domain.
+
+This XML file classified as UK OFFICIAL.</description>
+  <version>2.0</version>
+  <vendor>Dstl</vendor>
+  <imports>
+    <import name="types/base_type_system"/>
+    <import name="types/semantic_type_system"/>
+  </imports>
+  <types>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.military.MilitaryPlatform</name>
+      <description>A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>platformType</name>
+          <description>The platform type</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    </types>
+</typeSystemDescription>

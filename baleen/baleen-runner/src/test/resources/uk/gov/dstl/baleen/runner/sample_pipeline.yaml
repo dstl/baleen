@@ -1,0 +1,11 @@
+collectionreader:
+  class: FolderReader
+  folders:
+    - src/test/resources
+
+annotators:
+  - class: EmailRegex
+  - class: UrlRegex
+
+consumers:
+  - class: EntityCountConsumer

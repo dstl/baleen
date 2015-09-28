@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Baleen - Ordering of Annotators</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-control="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand">Baleen</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../index.html">About</a></li>
+					<li><a href="/javadoc">JavaDoc</a></li>
+					<li><a href="/swagger">REST API</a></li>
+					<li class="active"><a href="index.html">Guides</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Ordering of Annotators</h1>
+			<p>The Baleen REST API will provide you with a list of all available annotators, but it provides them in alphabetical order.
+			This isn't the best order to have them in however, and in some cases may even cause some annotators to fail.
+			Here we'll discuss working out the order they should be done in.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p>The majority of annotators can run anywhere in the pipeline without any issues - this includes the majority of Regular Expression (RegEx) annotators.
+		However, some annotators are dependent on the outputs of other annotators, and therefore must follow these annotators in the processing chain.
+		Below is some general guidance to help you decide on an appropriate order for your purposes.</p>
+		
+		<ul>
+			<li>The Language OpenNLP annotator (language.OpenNLP) should generally come first in the pipeline, as a number of other annotators are dependent on it.</li>
+			<li>Cleaners should generally come at the end of the pipeline, as there's no point cleaning up until we've done everything else!</li>
+			<li>In general, the more generic a cleaner or annotator, the later it should come in the pipeline so that specific cases have already been dealt with.
+			For example, cleaners.RemoveNestedEntities should come after cleaners.RemoveDateTimes and cleaners.RemoveLocations.</li>
+			<li>Grammatical annotators are usually best placed after most of the other annotators, as they often rely on existing annotations as well as the grammatical information.</li>
+			<li>Coreference cleaners are usually best placed after most of the other cleaners, so that they have the 'best' annotations to work with when trying to find coreferences.</li>
+		</ul>
+		
+		<p>The advice above is just general guidance, and there will be exceptions to most rules.
+		To properly 'optimise' your pipeline, you should read the Javadoc for the annotators you are using to understand how they work
+		and therefore the potential dependencies between annotators.</p>
+	</div>
+
+</body>
+
+
+</html>

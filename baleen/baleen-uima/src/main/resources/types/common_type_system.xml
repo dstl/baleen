@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>Baleen Type System - Common</name>
+  <description>XML definition of the Baleen type system common named entities.
+
+This XML file classified as UK OFFICIAL.</description>
+  <version>2.0</version>
+  <vendor>Dstl</vendor>
+  <imports>
+    <import name="types/base_type_system"/>
+  <import name="types/semantic_type_system"/>
+  </imports>
+  <types>
+      <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Frequency</name>
+      <description>A specific frequency value in the electro-magnetic spectrum (Hertz - Hz, MHz, GHz etc.).</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Vehicle</name>
+      <description>Specific vehicle or vessel</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>vehicleType</name>
+          <description>The type of vehicle</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>vehicleIdentifier</name>
+          <description>An identifying name or number for the vehicle</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Person</name>
+      <description>A Person named entitiy, as defined by an explict name reference within the source document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    <features>
+        <featureDescription>
+          <name>title</name>
+          <description>A person's title, for example Mr or President</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Organisation</name>
+      <description>An explicit refrence to a formal organisation, including governmental, political, religious, charitable, economic/financial, business or criminal bodies.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Url</name>
+      <description>A well-formed uniform resource location (URL) value</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Buzzword</name>
+      <description>User-defined key phrases or domain-specific terms, described by a type property.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>tags</name>
+          <description>A list of types that are associated with a given BuzzWord value.</description>
+          <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+          <multipleReferencesAllowed>true</multipleReferencesAllowed>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Money</name>
+      <description>Specific amount of some current mentioned within the document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>amount</name>
+          <description>Numeric value of amount of money mentioned in document.</description>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>currency</name>
+          <description>String value of the currency denomination the money amount is specified in.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Quantity</name>
+      <description>Type to annotate references to quantities within text</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>normalizedUnit</name>
+          <description>The unit of the normalized quantity</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>normalizedQuantity</name>
+          <description>The normalized quantity</description>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>unit</name>
+          <description>The unit of the raw quantity</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>quantity</name>
+          <description>The raw quantity</description>
+          <rangeTypeName>uima.cas.Double</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>quantityType</name>
+          <description>The type of quantity - e.g. distance, weight, volume, etc.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Nationality</name>
+      <description>Nationality denonym (e.g. French, British, Spanish)</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>countryCode</name>
+          <description>The country code associated with this nationality, e.g. FRA for French</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.CommsIdentifier</name>
+      <description>A communication identifier - including equipent, user, accounts or subscription.  Includes (but not limited to) the following types: emailAddress, IPv4, IPv6, MSISDN, IMEI, IMSI values.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>identifierType</name>
+          <description>A string description of the underlying type of comms identifier described by the annotation type.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.DocumentReference</name>
+      <description>A publication reference/serial/identifier within the source document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    </typeDescription>
+  </types>
+</typeSystemDescription>

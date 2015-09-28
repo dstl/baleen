@@ -1,0 +1,173 @@
+{
+	"apiVersion": "1",
+	"basePath": "/api/1/pipelines",
+	"apis": [
+		{
+			"path":"/",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"getPipeline",
+					"type":"Pipeline",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name of the pipeline to get details on. If no names are present then all pipelines are returned",
+							"dataType":"string",
+							"required":false,
+							"allowMultiple":true
+						}
+					
+					
+					],
+					"summary":"Get one, more or all pipelines by name",
+					"notes":"Get details on the pipelines within this Baleen instance. If using authentication, the user will need the 'pipelines.list' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"createPipeline",
+					"type":"Pipeline",
+					"parameters":[
+						{
+							"paramType":"form",
+							"name":"name",
+							"description":"The name of the pipeline to create. Note that pipelines must be uniquely named.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":false
+						},
+						{
+							"paramType":"form",
+							"name":"yaml",
+							"description":"The YAML configuration as a string which is the configuration for this.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":false
+						},
+						{
+							"paramType":"form",
+							"name":"start",
+							"description":"If true, the pipeline will be started when created. Otherwise (by default) the pipeline is created but not configured.",
+							"dataType":"boolean",
+							"required":false,
+							"allowMultiple":false
+						}
+					],
+					"summary":"Create a pipeline from YAML",
+					"notes":"Create a pipeline with a designated name and with a YAML configuration, and optionally start the pipeline immediately. If using authentication, the user will need the 'pipelines.create' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/",
+			"operations":[
+				{
+					"httpMethod":"DELETE",
+					"nickname":"deletePipeline",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name of the pipeline to delete.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					],
+					"summary":"Delete a pipeline by name",
+					"notes":"Stops and then deletes a pipeline (or pipelines) with the designated name(s). If using authentication, the user will need the 'pipelines.delete' role to access this resource."
+				}
+			]
+		},
+		{
+			"path":"/start",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"startPipeline",
+					"type":"Pipeline",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name(s) of the pipeline(s).",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					
+					
+					],
+					"summary":"Start one or more pipelines by name.",
+					"notes":"Signals a pipelines to start, and returns information on the pipeline. At time of return the pipeline may not yet be running (since it may need to be initialised). If using authentication, the user will need the 'pipelines.control' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/stop",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"stopPipeline",
+					"type":"Pipeline",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name(s) of the pipeline(s).",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					],
+					"summary":"Stop one or more pipelines by name.",
+					"notes":"Stop a pipeline. If using authentication, the user will need the 'pipelines.control' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/restart",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"restartPipeline",
+					"type":"Pipeline",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name(s) of the pipeline(s).",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					
+					
+					],
+					"summary":"Restart one or more pipelines by name, reloading the configuration from disk where applicatble",
+					"notes":"Signals a pipelines to stop, reload the configuration from disk (where applicable), and restart. If using authentication, the user will need the 'pipelines.control' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		}
+	],
+	"models": {
+		"Pipeline": {
+			"id":"Pipeline",
+			"properties": {
+				"name": { "type":"string", "description":"The name of the pipeline" },
+				"running": { "type":"string", "format":"boolean", "description":"Whether the pipeline is actually running (at time of return)" }
+			}
+		}
+	}
+}

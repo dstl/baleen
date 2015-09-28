@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Baleen - Using configuration</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-control="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand">Baleen</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../index.html">About</a></li>
+					<li><a href="/javadoc">JavaDoc</a></li>
+					<li><a href="/swagger">REST API</a></li>
+					<li class="active"><a href="index.html">Guides</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Using configuration</h1>
+			<p>Configuration allows users to tailor the functions of Baleen,
+				its pipelines and their elements to suit specific data and deployments.
+				This is enabled by flexibility in the implementation of annotations
+				and other elements and which reduces the number of highly specific
+				classes in Baleen.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p>Baleen has two main configuration files:</p>
+		<ul>
+			<li>A global configuration: Configures the Baleen instance
+				components (e.g. web server port address) and can be used to provide
+				defaults for pipelines shared resources. It also contains the lists
+				of pipelines to load and start when Baleen starts.</li>
+			<li>Per pipeline configuration: Configures a specific pipeline
+				and can be used to override global configuration (for that
+				pipeline).</li>
+		</ul>
+		<p>All configuration in Baleen is Yaml (Yet Another Markup
+			Language) which is human readable, concise and feature rich. A
+			negative aspect of Yaml is that it is whitespace sensitive: tabs
+			should not be used (though Baleen will attempt to recover if tabs are
+			included, with a warning displayed in the logs).</p>
+		<h3>Accessing configuration</h3>
+		<p>The manner in which configuration is accessed at runtime is
+			dependent on the element being configured.</p>
+		<p>
+			For global Baleen components configuration is provided through the
+			configure() function (on BaleenComponent) which offers a
+			YamlConfiguration object. See
+			<code>YamlConfiguration</code>
+			for more details of its use, but it offers helpers to access
+			configuration values with defaults types and other conveniences. Care
+			should be taken to provide sensible defaults if values are omitted.
+		</p>
+		<p>For Uima components (Consumer, CollectionReaders, Annotators,
+			SharedResource etc) configuration is through Uimafit configuration
+			parameter injection. This hides the configuration mechanism from
+			these elements.</p>
+		<p>The following is an example:</p>
+		<pre>
+/**
+ * The Mongo host to connect to
+ * 
+ * @baleen.config localhost
+ */
+public static final String PARAM_HOST = "mongo.host";
+@ConfigurationParameter(name = PARAM_HOST, defaultValue="localhost")
+private String mongoHost;
+
+/**
+ * The port to connect to Mongo on
+ * 
+ * @baleen.config 27017
+ */
+public static final String PARAM_PORT = "mongo.port";
+@ConfigurationParameter(name = PARAM_PORT, defaultValue="27017")
+private int mongoPort;
+</pre>
+		<p>With a corresponding configuration:</p>
+		<pre>
+mongo:
+	host: another.mongoserver.com
+	port: 27016		
+		</pre>
+		<p>There are couple of points to note from the above:</p>
+		<ul>
+			<li>This is the standard UimaFIT mechanism and users should
+				refer to that documentation for help.</li>
+			<li>The Yaml hierarchical object system is flattened into a path
+				structure for configuration.</li>
+			<li>A defaultValue should be given in the
+				ConfigurationParameter. A priniciple of Baleen development is that
+				without configuration Baleen (and its elements) should run in a
+				sensible fashion (ie with sensible defaults). This is either a
+				String or String[] (array) depending on the type of the data.</li>
+			<li>This approach provides 'type safe' (from the element's
+				perspective) configuration parameter. Most standard Java types are
+				supported (including non-primitives like lists and arrays)</li>
+			<li>Often though configuration are supplied and initialisaton will
+				be required to in order to use them. For example server will be
+				supplied as an IP to the database server, but initialisation will be
+				required to connect to that and produce a DB connection object. In
+				some cases data will need to be transformed from one type to another
+				(e.g. string to dateformat) due to deserialisation limitations.</li>
+			<li>Baleen has specific processing for javadocs in order to
+				create an automatic table for configuration parameters in the output
+				Javadocs. They must follow a specific structure (which aligns to the
+				structure required for Uimafit). Note that this necessitates the
+				creation of the constant PARAM_ string and the replication of the
+				default value. The line @baleen.javadoc should also be added to the
+				<strong>class's</strong> Javadoc.
+<pre>
+/**
+ * [description here]
+ * 
+ * @baleen.config [default value here]
+ */
+public static final String PARAM_NAME = "[path of the configuration]";
+@ConfigurationParameter(name = PARAM_NAME, defaultValue="[default value again]")
+private int mongoPort;	
+</pre>
+
+
+			</li>
+		</ul>
+
+	</div>
+
+
+</body>
+
+
+</html>

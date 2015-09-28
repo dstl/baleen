@@ -1,0 +1,31 @@
+metrics:
+  reporters:
+  - type: console
+    # Durations in ms (default is s)
+    durationUnit: milliseconds
+    # Durations in mins (default is s)
+    rateUnit: minutes
+    # Reports sent out each 120s (defaults to 60)
+    period: 1
+
+  - type: log
+    # The name of the logger (defaults to metrics:reporter)
+    logger: test_metrics
+    period: 1
+
+  - type: csv
+    # Directory to write csv files too (defaults to metrics)
+    # Ensure you have write permission to this directory.
+    directory: test_csvmetrics
+    period: 1
+
+  - type: elasticsearch
+    # The server to connect to (defaults to localhost)
+    server: localhost
+    # The name of the ES index to write to
+    index: test_metrics
+    # Bulk size for batching. Defaults to 2500
+    bulkSize: 1
+    # Timeout for connections in ms (defaults to 1000)
+    timeout: 10000
+    period: 1

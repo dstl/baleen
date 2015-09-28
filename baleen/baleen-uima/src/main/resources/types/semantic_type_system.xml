@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>Baleen Type System - Semantics</name>
+  <description>XML definition of the Baleen type system semantic annotations.
+
+This XML file classified as UK OFFICIAL.</description>
+  <version>2.0</version>
+  <vendor>Dstl</vendor>
+  <imports>
+    <import name="types/base_type_system"/>
+  </imports>
+  <types>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.semantic.Entity</name>
+      <description>Type to represent named entities - values that are assigned a semantic type.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>value</name>
+          <description>A value which reflects the name of the entity. May or may not differ from underlying span from the document.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>referent</name>
+          <description>Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text.</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.semantic.ReferenceTarget</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.semantic.Relation</name>
+      <description>Records a relationship between named entities, explicitly mentioned within the source document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>relationshipType</name>
+          <description>Denotes the semantic type of the relationship between entities. 
+
+Currently based on the ACE2002 top-level relationships: {"AT" , "NEAR" , "PART" , "ROLE" , "SOCIAL"}
+Additional relationship types that have been added: {"QUANTITY", "ALIAS"}</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>source</name>
+          <description>The source of the relationship (subject)</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.semantic.Entity</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>target</name>
+          <description>The target of the relationship (object)</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.semantic.Entity</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>value</name>
+          <description>The value of the relationship, typically the spanning text within the sentence</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>relationSubType</name>
+          <description>Used to record any sub-type information for the relation, for example the sub-relations defined within the ACE dataset.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.semantic.Temporal</name>
+      <description>General type to record temporal (time based) information mentioned within the document.  This is a general purpose type that is extended in "time" types.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.semantic.Location</name>
+      <description>A reference to a place, country, administrative region or geo-political entity within the source document. This is a general purpose type that is extended in "geo" types.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>geoJson</name>
+          <description>A strnig representation of geoJson format represention of geographic information associated with the location, including where possible coordinate(s).</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.semantic.Event</name>
+      <description>An temporal interaction of interest, covering political, organisational, miltiary, criminal or social interactions mentioned within the document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <features>
+        <featureDescription>
+          <name>description</name>
+          <description>A description of the event</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>location</name>
+          <description>The location of the event</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.semantic.Location</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>occurrence</name>
+          <description>The time-based information relating to the event.</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.semantic.Temporal</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.semantic.ReferenceTarget</name>
+      <description>A target type for the referent property, such that entities pointing to the same target are assumed to be coreferences. The target can therefore be thought of as a super-entity, though it has no properties or value of it's own. The span of this entity is taken to be the scope in which this reference target is valid.</description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+    </typeDescription>
+  </types>
+</typeSystemDescription>

@@ -1,0 +1,17 @@
+#Test pipeline where some annotators aren't valid
+
+collectionreader:
+  class: uk.gov.dstl.baleen.testing.DummyCollectionReader
+
+annotators:
+  - class: uk.gov.dstl.baleen.testing.DummyAnnotator1
+  - class: uk.gov.dstl.baleen.testing.MissingAnnotator
+  - class: AnotherMissingAnnotator
+  - name: Missing Class Parameter
+  - class: Class with a space
+  - class: uk.gov.dstl.baleen.testing.DummyAnnotator2
+
+
+consumers:
+  - class: uk.gov.dstl.baleen.testing.DummyConsumer
+  - class: uk.gov.dstl.baleen.testing.MissingConsumer

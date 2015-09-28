@@ -1,0 +1,5 @@
+metrics:
+  reporters:
+  - type: elasticsearch
+    server: tanguy.ptn.dstl.uk.vl:9200
+    index: dev_metrics

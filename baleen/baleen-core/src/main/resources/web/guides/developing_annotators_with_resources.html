@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Baleen - Developing Annotators with Resources</title>
+		
+		<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+		<style type="text/css">
+			body{
+				padding-top: 70px;
+				padding-bottom: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-control="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand">Baleen</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="../index.html">About</a></li>
+						<li><a href="/javadoc">JavaDoc</a></li>
+						<li><a href="/swagger">REST API</a></li>
+						<li class="active"><a href="index.html">Guides</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container">
+			<div class="jumbotron">
+				<h1>Developing Annotators with Resources</h1>
+				<p>This guide will walk you through the development of an annotator in Baleen using a shared resource.</p>
+				<p>Annotators are the Baleen components that extract information and entities from content being passed through the pipeline.
+				Shared resources are Baleen components that provide access to a resource, for example a file or a database,
+				in a manner such that multiple annotators can make use of it efficiently.
+				This avoids loading data into memory multiple times or setting up multiple connections to databases, for example.</p>
+			</div>
+		</div>
+		
+		<div class="container">
+			<p>In this guide, we will be developing a gazetteer annotator to annotate countries using the SharedCountryResource.
+			The SharedCountryResource provides access to a preloaded database of countries that includes GeoJSON, Demonyms, etc.</p>
+			
+			<h2>Creating the Class</h2>
+			<p>To start with, let's create a new Java class called <code>Country</code> which extends <code>AbstractRadixTreeGazetteerAnnotator</code>.
+			The <code>AbstractRadixTreeGazetteerAnnotator</code> class provides most of the functionality for us, and we just need to provide code to configure the gazetteer.</p>
+			<p>We will create it in the <code>uk.gov.dstl.baleen.annotators.guides</code> package to keep it separate from existing annotators.
+			The final annotator we have produced will be identical to the <code>Country</code> annotator in the <code>uk.gov.dstl.baleen.annotators.gazetteer</code> package.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">Country.java</div>
+				<div class="panel-body">
+<pre>
+package uk.gov.dstl.baleen.annotators.guides;
+
+import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractRadixTreeGazetteerAnnotator;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.resources.gazetteer.IGazetteer;
+
+public class Country extends AbstractRadixTreeGazetteerAnnotator {
+
+	public Country() {
+	}
+	
+	@Override
+	public IGazetteer configureGazetteer() throws BaleenException {
+		return null;
+	}
+}
+
+</pre>
+				</div>
+			</div>
+			
+			<h2>Adding the External Resource</h2>
+			<p>Baleen uses UimaFIT to handle resource injection, so we can add the resource by adding the following lines to the top of our class:</p>
+			<div class="panel panel-default">
+				<div class="panel-heading">Country.java</div>
+				<div class="panel-body">
+<pre>
+@ExternalResource(key = "country")
+private SharedCountryResource country;
+</pre>
+				</div>
+			</div>
+			<p>The key we give the class is used to identify a shared instance, so every time the same key is used the same instance of that class is provided.
+			That is, we are using the same instance of <code>SharedCountryResource</code> as every other class that accesses the resource with the key <em>country</em>.</p>
+			<p>The variable <var>country</var> now references the <code>SharedCountryResource</code>, and we could use it directly to access the resource if we wanted.
+			Fortunately though, a lot of the hard work is done for us by the <code>AbstractRadixTreeGazetteerAnnotator</code>.</p>
+			
+			<h2>Configuring the Gazetteer</h2>
+			<p>Configuring our gazetteer is straight forward, as there are helper functions to do most of the hard work.
+			All we need to do in this case is force the entity type to be Location
+			(usually <code>AbstractRadixTreeGazetteerAnnotator</code> allows the user to specify the type,
+			but in this case we always want extracted countries to be locations),
+			and then pass our SharedCountryResource to the gazetteer.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">Country.java</div>
+				<div class="panel-body">
+<pre>
+package uk.gov.dstl.baleen.annotators.guides;
+
+import org.apache.uima.UimaContext;
+import org.apache.uima.fit.descriptor.ExternalResource;
+import org.apache.uima.resource.ResourceInitializationException;
+
+import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractRadixTreeGazetteerAnnotator;
+import uk.gov.dstl.baleen.annotators.gazetteer.helpers.GazetteerUtils;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.resources.SharedCountryResource;
+import uk.gov.dstl.baleen.resources.gazetteer.CountryGazetteer;
+import uk.gov.dstl.baleen.resources.gazetteer.IGazetteer;
+
+public class Country extends AbstractRadixTreeGazetteerAnnotator {
+	@ExternalResource(key = "country")
+	private SharedCountryResource country;
+	
+	@Override
+	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+		type = "Location";
+		super.doInitialize(aContext);
+	}
+	
+	@Override
+	public IGazetteer configureGazetteer() throws BaleenException {
+		IGazetteer gaz = new CountryGazetteer();
+		gaz.init(country, GazetteerUtils.configureCountry(caseSensitive));
+		
+		return gaz;
+	}
+
+}
+</pre>
+				</div>
+			</div>
+			
+			<h2>Testing</h2>
+			<p>And that's it! We should now have a working gazetteer annotator that uses an external resource.
+			To check it's working, we can write and run Unit Tests to ensure the output is as expected.</p> 
+			<div class="panel panel-default">
+				<div class="panel-heading">CountryTest.java</div>
+				<div class="panel-body">
+<pre>
+package uk.gov.dstl.baleen.annotators.guides;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.analysis_engine.AnalysisEngineDescription;
+import org.apache.uima.fit.factory.AnalysisEngineFactory;
+import org.apache.uima.fit.factory.ExternalResourceFactory;
+import org.apache.uima.fit.util.JCasUtil;
+import org.apache.uima.resource.ExternalResourceDescription;
+import org.junit.Test;
+
+import uk.gov.dstl.baleen.annotators.gazetteer.Country;
+import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
+import uk.gov.dstl.baleen.resources.SharedCountryResource;
+import uk.gov.dstl.baleen.types.semantic.Location;
+
+public class CountryGazetteerTest extends AnnotatorTestBase{
+	@Test
+	public void test() throws Exception{
+		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription("country", SharedCountryResource.class);
+		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(Country.class, "country", erd);
+		
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
+		
+		jCas.setDocumentText("Last month, Peter visited the coast of Jamaica");
+		
+		ae.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, Location.class).size());
+		Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
+		assertEquals("Jamaica", l.getValue());
+		assertNotNull(l.getGeoJson());
+		
+		ae.destroy();
+	}
+}
+</pre>
+				</div>
+			</div>
+			
+			<h2>Including in Baleen</h2>
+			<p>Now you've built your annotator and want to include it in Baleen, all you need to do is ensure that your class is on the classpath,
+			and then in your pipeline configuration include your class in the pipeline ensuring that you specify the full package and classname.</p>
+			
+		</div>
+	
+		<script src="../bootstrap/jquery-1.11.0.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

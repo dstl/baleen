@@ -1,0 +1,343 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>uk.gov.dstl.baleen</groupId>
+	<artifactId>baleen</artifactId>
+	<version>2.0.0</version>
+	<packaging>pom</packaging>
+	<name>Baleen</name>
+	<description>Structured information from unstructured data</description>
+	<inceptionYear>2015</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Apache License 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>James Baker</name>
+		</developer>
+		<developer>
+			<name>Chris Flatley</name>
+		</developer>
+		<developer>
+			<name>Rich Brantingham</name>
+		</developer>
+		<developer>
+			<name>Alan Knox</name>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<java.version>1.8</java.version>
+		<baleen.version>2.0.0</baleen.version>
+
+		<uima.version>2.8.1</uima.version>
+		<uimafit.version>2.1.0</uimafit.version>
+
+		<junit.version>4.12</junit.version>
+		<mockito.version>1.10.19</mockito.version>
+		<logback.version>1.1.3</logback.version>
+		<slf4j.version>1.7.12</slf4j.version>
+		<guava.version>18.0</guava.version>
+
+		<snakeyaml.version>1.15</snakeyaml.version>
+		<jetty.version>9.3.2.v20150730</jetty.version>
+		<metrics.version>3.0.2</metrics.version>
+		<jackson.version>2.6.1</jackson.version>
+		<httpclient.version>4.5</httpclient.version>
+		<metrics-elasticsearch.version>2.0</metrics-elasticsearch.version>
+		<opencsv.version>2.4</opencsv.version>
+		<concurrenttrees.version>2.4.0</concurrenttrees.version>
+		<reflections.version>0.9.10</reflections.version>
+		
+		<!--  Required by non-core (annotators etc) -->
+		<mongodb.version>2.13.2</mongodb.version>
+		<opennlp.version>1.6.0</opennlp.version>
+		<commonslang3.version>3.4</commonslang3.version>
+		<jsonic.version>1.3.8</jsonic.version>
+		<languagedetector.version>0.5</languagedetector.version>
+		<tika.version>1.10</tika.version>
+		<elasticsearch.version>1.7.1</elasticsearch.version>
+		<jsoup.version>1.8.3</jsoup.version>
+		<postgres.version>9.3-1102-jdbc41</postgres.version>
+
+		<javassist.version>3.20.0-GA</javassist.version>
+
+		<!--  Testing -->
+		<fongo.version>1.6.3</fongo.version>
+	</properties>
+
+	<dependencies>
+		<!-- General utilities -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+
+		<!-- UIMA -->
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>uimafit-core</artifactId>
+			<version>${uimafit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.uima</groupId>
+			<artifactId>uimafit-cpe</artifactId>
+			<version>${uimafit.version}</version>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Part of the sonar-maven-plugin (also see below) -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>sonar-maven-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+
+			<!-- Javadocs plugin -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.1</version>
+				<configuration>
+					<additionalparam>-Xdoclint:none</additionalparam>
+					<taglets>
+						<taglet>
+							<tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>
+							<tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>
+							<tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>
+							<tagletArtifact>
+								<groupId>uk.gov.dstl.baleen</groupId>
+								<artifactId>baleen-javadoc</artifactId>
+								<version>${baleen.version}</version>
+							</tagletArtifact>
+						</taglet>
+					</taglets>
+				</configuration>
+			</plugin>
+			
+			<!-- Licenses -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.8</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+
+			<!-- Jacoco: Code coverage -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.4.201502262128</version>
+				<executions>
+				
+					<!-- 
+						Prepares the property pointing to the jacoco runtime agent which is passed as VM argument
+						 when the surefire plugin is executed 
+					 -->
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<argLine>${argLine}</argLine>
+				</configuration>
+			</plugin>
+							
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.jacoco</groupId>
+										<artifactId>
+											jacoco-maven-plugin
+										</artifactId>
+										<versionRange>
+											[0.7.2.201409121644,)
+										</versionRange>
+										<goals>
+											<goal>prepare-agent</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+
+			<!-- Javadoc: Create Javadocs -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<configuration>
+					<additionalparam>-Xdoclint:none</additionalparam>
+					<taglets>
+						<taglet>
+							<tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>
+							<tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>
+							<tagletArtifact>
+								<groupId>uk.gov.dstl.baleen</groupId>
+								<artifactId>baleen-javadoc</artifactId>
+								<version>${baleen.version}</version>
+							</tagletArtifact>
+						</taglet>
+					</taglets>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc</report>
+							<report>test-javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+
+			<!-- license-maven-plugin (see above): Licence reporting -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.8</version>
+			</plugin>
+
+			<!-- PMD (need jxr): Find bugs in code -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.3</version>
+				<configuration>
+					<linkXref>true</linkXref>
+					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+					<targetJdk>${java.version}</targetJdk>
+				</configuration>
+			</plugin>
+			
+			<!-- Changelog: Lists changes -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changelog-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+
+			<!-- Jdepends: Produce report on code complexity -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+				<version>2.0</version>
+			</plugin>
+
+			<!-- Findbugs: Find bugs in code -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>3.0.0</version>
+			</plugin>
+
+			<!-- Reporting: Generate site report -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.18.1</version>
+			</plugin>
+			
+		</plugins>
+	</reporting>
+
+	<modules>
+		<module>baleen-core</module>
+		<module>baleen-annotators</module>
+		<module>baleen-uima</module>
+		<module>baleen-resources</module>
+		<module>baleen-collectionreaders</module>
+		<module>baleen-consumers</module>
+		<module>baleen-runner</module>
+		<module>baleen-history</module>
+		<module>baleen-javadoc</module>
+	</modules>
+</project>

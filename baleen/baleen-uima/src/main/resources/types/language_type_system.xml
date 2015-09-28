@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>Baleen Type System - Language</name>
+  <description>XML definition of the Baleen type system language annotations.
+
+This XML file classified as UK OFFICIAL.</description>
+  <version>2.0</version>
+  <vendor>Dstl</vendor>
+  <imports>
+    <import name="types/base_type_system"/>
+  </imports>
+  <types>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.Sentence</name>
+      <description>Defines a sentence from the source document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.WordToken</name>
+      <description>The output from some text tokenization process.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>partOfSpeech</name>
+          <description>The part of speech (POS) tag. Usually a Penn Treebank tag.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>sentenceOrder</name>
+          <description>If not null, this should be the index position of the word token within parent sentence.</description>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>lemmas</name>
+          <description>A list of alternative lemmas for this word token.</description>
+          <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+          <elementType>uk.gov.dstl.baleen.types.language.WordLemma</elementType>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.PhraseChunk</name>
+      <description>Annotation to store the result of shallow parsing, which provide noun phrase and verb phrase constituents, rather than just WordTokens.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>chunkType</name>
+          <description>The Penn Treebank constituent annotation</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>constituentWords</name>
+          <description>Word tokens which comprose the constituent.</description>
+          <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+          <elementType>uk.gov.dstl.baleen.types.language.WordToken</elementType>
+          <multipleReferencesAllowed>true</multipleReferencesAllowed>
+        </featureDescription>
+        <featureDescription>
+          <name>headWord</name>
+          <description>The head word of the constituent phrase</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.language.WordToken</rangeTypeName>
+        </featureDescription>
+        </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.Paragraph</name>
+      <description>Defines a paragraph from the source document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.WordLemma</name>
+      <description>Specifies a lemma form for a word token</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>partOfSpeech</name>
+          <description>The part of speech (POS) tag for this lemma. Usually a Penn Treebank tag.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>lemmaForm</name>
+          <description>The normal form for this lemma.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.Section</name>
+      <description>An annotation that allows a document to be arbitrarily divided up into sections (articles, chapters, comments, ...).</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>label</name>
+          <description>A label that desribes what the section contains.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  </types>
+</typeSystemDescription>

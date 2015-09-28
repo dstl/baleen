@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Baleen - Developing SharedResources</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-control="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand">Baleen</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../index.html">About</a></li>
+					<li><a href="/javadoc">JavaDoc</a></li>
+					<li><a href="/swagger">REST API</a></li>
+					<li class="active"><a href="index.html">Guides</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Developing Shared resources</h1>
+			<p>SharedResources are instance which are accessible across a
+				pipeline. These can be used to implement shared state (such as with
+				history), sharing complex or memory intensive data structures (such
+				as gazetteers), or sharing access to remote resources.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p>Shared resources are simply a class derived from BaleenResource
+			(which in turn derived from Resource_ImplBase). At a basic level
+			implementors should subclass BaleenResource and then add the methods
+			required for that resource.</p>
+
+		<p>Resources will typically fall into two categories.</p>
+		<ol>
+			<li>Those which hold and manage an item such as a gazetteer or
+				database connection. In which case the SharedResource is likely to
+				have functions such as as get() and effectively acts as a 'pipeline
+				singleton'.</li>
+			<li>Those which offer common functionality, allowing plugin
+				implementation to be offered pipeline elements. Implementations are
+				likely to have more functional methods (categorise(document) or
+				translate(text)).).</li>
+		</ol>
+		<p>As each pipeline is single threaded and processes only a single
+			document, shared resources need not be thread safe. However
+			implementations may need to make requests of other services (eg
+			database or remote web services) which are synchronous / slow and
+			they may also cache data. This can lead to unintended side effects.</p>
+
+		<p>Through BaleenResource shared resources have very basic
+			lifecycle:</p>
+
+		<ul>
+			<li>doInitialize: call to create the resource and initialise it.</li>
+			<li>afterResourcesInitialized: called after all other resources
+				have been initialised.</li>
+			<li>doDestroy: called when the resource is no longer required to
+				clean up, free memory, etc.</li>
+		</ul>
+		<p>
+			The important point from the lifecycle is applicable to resources
+			which themselves depend on other resources (ie inject other shared
+			resources). An example is a gazetteer which depends on a shared
+			database resources to provide it's terms. When the gazetteer
+			doInitialise is called the database shared resource may not yet be
+			initialised and may not be injected as a Uimafit dependency (that is
+			<code>@ExternalResource private Database sharedDb;</code>
+			will be null).
+		</p>
+		<p>Behind the scenes, Uimafit will first doInitialize all
+			resources then inject resources into one another (and annotators
+			etc). If your initialisation requires access to other resources you
+			should perform that initialisation in afterResourcesInitialized (and
+			not doInitialise).</p>
+		<h2>Using shared resources</h2>
+		<p>
+			Use of shared resources is given in <a
+				href="developing_annotators_with_resources.html">Developing
+				annotators with resources</a>. The same approach can be used with
+			consumers, collection readers and indeed other resources
+		</p>
+		<p>Resources are configured from the global and pipeline
+			configuration (the pipeline overrides the global configuration as usual).</p>
+	</div>
+
+</body>
+
+
+</html>

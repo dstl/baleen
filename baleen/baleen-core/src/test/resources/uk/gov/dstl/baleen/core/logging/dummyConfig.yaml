@@ -1,0 +1,15 @@
+logging:
+  loggers:
+  - name: console
+  - name: testing_file
+    file: testing.log
+    daily: true
+    size: 10
+    history: 5
+  - name: testing_file
+    file: testing.log
+    daily: false
+  - name: console
+    pattern: "%date"
+    minLevel: INFO
+    maxLevel: WARN

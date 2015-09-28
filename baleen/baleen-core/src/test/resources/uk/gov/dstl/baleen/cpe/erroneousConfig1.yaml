@@ -1,0 +1,9 @@
+#Test pipeline where there are no valid annotators
+
+collectionreader:
+  class: uk.gov.dstl.baleen.testing.DummyCollectionReader
+
+annotators:
+  - class: uk.gov.dstl.baleen.testing.MissingAnnotator
+  - class: AnotherMissingAnnotator
+  - name: MissingClassProperty

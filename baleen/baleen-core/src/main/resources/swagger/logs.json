@@ -1,0 +1,34 @@
+{
+	"apiVersion": "1",
+	"basePath": "/api/1",
+	"apis": [
+		{
+			"path":"/logs",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"getLogs",
+					"type":"Log",
+					"parameters":[
+					],
+					"summary":"Access recent logs",
+					"notes":"Access recent log events, a limited to a maximum number as defined in the configuration. If using authentication, the user will need the 'logging' role to access this resource.",
+					"produces":"application/json",
+					"consumes":"multipart/form-data"
+				}
+			]
+		}
+	],
+	"models": {
+		"Log": {
+			"id":"Log",
+			"properties": {
+				"message": { "type":"string", "description":"The log message" },
+				"level": { "type":"string", "description":"The log level" },
+				"logger": { "type":"string", "description":"The name of the logger" },
+				"thread": { "type":"string", "description":"The thread from which the log was sent" },
+				"timestamp": { "type":"integer", "format":"int64", "description":"The timstamp (since epoch) of the log" }
+			}
+		}
+	}
+}

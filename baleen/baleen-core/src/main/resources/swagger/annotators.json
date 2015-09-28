@@ -1,0 +1,19 @@
+{
+	"apiVersion": "1",
+	"basePath": "/api/1",
+	"apis": [
+		{
+			"path":"/annotators",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"annotators",
+					"parameters":[],
+					"summary":"List annotators currently available to Baleen",
+					"notes":"Produces a YAML formatted list of all the annotators (classes extending BaleenAnnotator) currently available on the class path. If using authentication, the user will need the 'annotators' role to access this resource.",
+					"produces":"text/x-yaml"
+				}
+			]
+		}
+	]
+}
