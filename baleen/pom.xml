@@ -7,6 +7,7 @@
 	<packaging>pom</packaging>
 	<name>Baleen</name>
 	<description>Structured information from unstructured data</description>
+	<url>https://github.com/dstl/baleen</url>
 	<inceptionYear>2015</inceptionYear>
 
 	<licenses>
@@ -30,6 +31,10 @@
 			<name>Alan Knox</name>
 		</developer>
 	</developers>
+	
+	<scm>
+		<url>https://github.com/dstl/baleen</url>
+	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
