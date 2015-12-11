@@ -2,6 +2,7 @@
 package uk.gov.dstl.baleen.history.elasticsearch;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.concurrent.LinkedBlockingDeque;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -144,8 +145,13 @@ public class ElasticsearchHistory extends AbstractCachingBaleenHistory<Elasticse
 				return null;
 			} else {
 				ESHistory esh = mapper.readValue(response.getSourceAsBytes(), ESHistory.class);
-				return new ElasticsearchDocumentHistory(this, documentId, new LinkedBlockingDeque<HistoryEvent>(
+				if(esh == null){
+					return new ElasticsearchDocumentHistory(this, documentId, new LinkedBlockingDeque<HistoryEvent>(
+						Collections.emptyList()));
+				}else{
+					return new ElasticsearchDocumentHistory(this, documentId, new LinkedBlockingDeque<HistoryEvent>(
 						esh.getEvents()));
+				}
 			}
 		} catch (IOException e) {
 			throw new BaleenException(e);

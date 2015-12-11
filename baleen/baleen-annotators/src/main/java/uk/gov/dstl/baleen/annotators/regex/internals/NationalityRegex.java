@@ -1,13 +1,17 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.annotators.regex.internals;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.resources.SharedCountryResource;
 import uk.gov.dstl.baleen.types.common.Nationality;
@@ -30,13 +34,22 @@ public class NationalityRegex extends BaleenAnnotator {
 	@ExternalResource(key = KEY_COUNTRY)
 	private SharedCountryResource country;
 
+	private Map<String, Pattern> countryPatterns = new HashMap<>();
+	
+	@Override
+	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+		for(Entry<String, String> e : country.getDemonyms().entrySet()){
+			Pattern p = Pattern.compile("\\b" + e.getKey() + "\\b", Pattern.CASE_INSENSITIVE);
+			countryPatterns.put(e.getValue(), p);
+		}
+	}
+	
 	@Override
 	public void doProcess(JCas aJCas) throws AnalysisEngineProcessException {
 		String text = aJCas.getDocumentText();
 
-		for(Entry<String, String> e : country.getDemonyms().entrySet()){
-			Pattern p = Pattern.compile("\\b" + e.getKey() + "\\b", Pattern.CASE_INSENSITIVE);
-			Matcher matcher = p.matcher(text);
+		for(Entry<String, Pattern> e : countryPatterns.entrySet()){
+			Matcher matcher = e.getValue().matcher(text);
 			
 			while(matcher.find()){
 				getMonitor().debug("Found nationality '{}' in text", matcher.group(0));
@@ -49,7 +62,7 @@ public class NationalityRegex extends BaleenAnnotator {
 				n.setEnd(matcher.end());
 				n.setValue(matcher.group(0));
 				
-				n.setCountryCode(e.getValue());
+				n.setCountryCode(e.getKey());
 				
 				addToJCasIndex(n);
 			}

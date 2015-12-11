@@ -71,7 +71,7 @@ public class SharedMongoResource extends BaleenResource {
 	 * @baleen.config
 	 */
 	public static final String PARAM_USER = "mongo.user";
-	@ConfigurationParameter(name = PARAM_PASS, defaultValue="")
+	@ConfigurationParameter(name = PARAM_USER, defaultValue="")
 	private String mongoUser;
 
 	/**

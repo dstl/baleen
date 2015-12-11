@@ -14,6 +14,28 @@
 					"produces":"text/x-yaml"
 				}
 			]
+		},
+		{
+			"path":"/consumers/{consumerName}",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"consumerParameters",
+					"parameters":[
+						{
+							"paramType":"path",
+							"name":"consumerName",
+							"description":"The name of the consumer to query, as it would appear in a pipeline configuration file.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":false
+						}
+					],
+					"summary":"List the parameters and resources associated with a particular consumer",
+					"notes":"Returns a JSON list of the parameters and resources",
+					"produces":"application/json"
+				}
+			]
 		}
 	]
 }

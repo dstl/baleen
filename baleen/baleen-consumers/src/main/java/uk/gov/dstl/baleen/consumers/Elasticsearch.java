@@ -25,6 +25,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
@@ -357,7 +358,11 @@ public class Elasticsearch extends BaleenConsumer {
 		json.put("entities", entitiesList);
 
 		//Persist to ElasticSearch
-		esResource.getClient().prepareIndex(index, type, id).setSource(json).execute().actionGet();
+		try{
+			esResource.getClient().prepareIndex(index, type, id).setSource(json).execute().actionGet();
+		}catch(ElasticsearchException ee){
+			getMonitor().error("Couldn't persist document to Elasticsearch", ee);
+		}
 	}
 
 	/**

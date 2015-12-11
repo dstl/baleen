@@ -40,7 +40,6 @@ import uk.gov.dstl.baleen.uima.IContentExtractor;
  * Inspect a folder for unprocessed files, and process them through the pipeline.
  * Currently, the list of previously processed files is held in memory and so will be lost if the server is restarted.
  * This can be avoided by using the MoveSourceConsumer (for example), and removing the files after processing
- *
  * 
  * @baleen.javadoc
  */
@@ -166,6 +165,11 @@ public class FolderReader extends BaleenCollectionReader {
 
 	private void addFilesFromDir(File dir){
 		File[] files = dir.listFiles();
+		
+		if(files == null){
+			return;
+		}
+		
 		for (int i = 0; i < files.length; i++) {
 			if(!files[i].isDirectory()){
 				addFile(files[i].toPath());

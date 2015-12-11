@@ -2,7 +2,6 @@
 package uk.gov.dstl.baleen.resources.gazetteer;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
@@ -49,7 +48,7 @@ public class CountryGazetteerTest {
 		assertTrue(vals.contains(AFGHANISTAN));
 		
 		assertNotNull(gaz.getAdditionalData(JAMAICA));
-		assertNull(gaz.getAdditionalData("FOO"));
+		assertTrue(gaz.getAdditionalData("FOO").isEmpty());
 	}
 	
 	@Test
@@ -67,7 +66,7 @@ public class CountryGazetteerTest {
 		assertTrue(vals.contains("Islamic Republic of Afghanistan"));
 		
 		assertNotNull(gaz.getAdditionalData(JAMAICA));
-		assertNull(gaz.getAdditionalData("jamaica"));
-		assertNull(gaz.getAdditionalData("FOO"));
+		assertTrue(gaz.getAdditionalData("jamaica").isEmpty());
+		assertTrue(gaz.getAdditionalData("FOO").isEmpty());
 	}
 }

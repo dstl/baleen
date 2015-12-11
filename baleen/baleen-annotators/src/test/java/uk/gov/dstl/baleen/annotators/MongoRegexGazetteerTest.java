@@ -24,7 +24,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
-public class MongoRegexRadixTreeGazetteerTest extends AnnotatorTestBase{
+public class MongoRegexGazetteerTest extends AnnotatorTestBase{
 	private static final String COLLECTION = "collection";
 	private static final String LONDON_REGEX = "\\blon\\w*\\b";
 	private static final String REGEX = "regex";

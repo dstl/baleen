@@ -1,6 +1,7 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.resources.gazetteer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,23 +9,21 @@ import java.util.Map;
 import org.apache.uima.resource.Resource;
 import org.bson.types.ObjectId;
 
-import uk.gov.dstl.baleen.exceptions.BaleenException;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
-import uk.gov.dstl.baleen.resources.SharedMongoResource;
-
-import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
-import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharArrayNodeFactory;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+
+import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.resources.SharedMongoResource;
 
 /**
  * Connect to MongoDB and use as the backend for a Gazetteer
  * 
  * 
  */
-public class MongoGazetteer extends AbstractRadixTreeGazetteer<ObjectId> {
+public class MongoGazetteer extends AbstractMultiMapGazetteer<ObjectId> {
 	public static final String CONFIG_COLLECTION = "collection";
 	public static final String CONFIG_VALUE_FIELD = "valueField";
 	
@@ -73,14 +72,14 @@ public class MongoGazetteer extends AbstractRadixTreeGazetteer<ObjectId> {
 	
 	@Override
 	public Map<String, Object> getAdditionalData(String key) {
-		ObjectId id = terms.getValueForExactKey(caseSensitive ? key : key.toLowerCase());
+		ObjectId id = getId(key);
 		if(id == null){
-			return null;
+			return Collections.emptyMap();
 		}
 		
 		DBObject doc = coll.findOne(new BasicDBObject("_id", id), new BasicDBObject().append(valueField, 0).append("_id", 0));
 		if(doc == null){
-			return null;
+			return Collections.emptyMap();
 		}
 		
 		Map<String, Object> ret = new HashMap<>();
@@ -102,7 +101,7 @@ public class MongoGazetteer extends AbstractRadixTreeGazetteer<ObjectId> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void reloadValues(){
-		terms = new ConcurrentRadixTree<>(new DefaultCharArrayNodeFactory());
+		reset();
 		
 		DBCursor cursor = coll.find();
 		while(cursor.hasNext()){
@@ -113,22 +112,13 @@ public class MongoGazetteer extends AbstractRadixTreeGazetteer<ObjectId> {
 			if(val instanceof String){
 				String s = (String) val;
 				
-				addTerm(s, id);
+				addTerm(id, s);
 			}else if(val instanceof List){
 				for(String s : (List<String>)val){
-					addTerm(s, id);
+					addTerm(id, s);
 				}
 			}
 		}
-	}
-	
-	private void addTerm(String s, ObjectId id){
-		if(!s.isEmpty()){
-			terms.put(correctCase(s), id);
-		}
-	}
-
-	private String correctCase(String s){
-		return caseSensitive ? s : s.toLowerCase();
+		cursor.close();
 	}
 }

@@ -30,7 +30,7 @@ public class ReporterUtilsTest {
 	}
 
 	@Test
-	public void testCreateCsvReporter() {
+	public void testCreateCsvReporter() throws BaleenException{
 		ScheduledReporter reporter = ReporterUtils.createCsvReporter(registry, new HashMap<String, Object>());
 		assertNotNull(reporter);
 	}

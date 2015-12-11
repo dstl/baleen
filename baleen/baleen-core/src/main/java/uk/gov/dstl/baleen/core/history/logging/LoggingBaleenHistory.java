@@ -65,7 +65,7 @@ public class LoggingBaleenHistory extends AbstractBaleenHistory {
 
 		historyLogger = LoggerFactory.getLogger(loggerName);
 
-		LOGGER.info("Configued a logging history with name '{}' at level '{}'", loggerName, loggerLevel);
+		LOGGER.info("Configured a logging history with name '{}' at level '{}'", loggerName, loggerLevel);
 	}
 
 	@Override

@@ -25,9 +25,6 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /**
  * Test for {@link BaleenPipelineManager}
- *
- * 
- *
  */
 @RunWith(MockitoJUnitRunner.class)
 public class BaleenPipelineManagerTest {

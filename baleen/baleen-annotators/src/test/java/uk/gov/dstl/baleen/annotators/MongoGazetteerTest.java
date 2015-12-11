@@ -27,7 +27,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
-public class MongoRadixTreeGazetteerTest extends AnnotatorTestBase{
+public class MongoGazetteerTest extends AnnotatorTestBase{
 	private static final String WORLD = "world";
 	private static final String LOCATION = "Location";
 	private static final String TYPE = "type";
@@ -36,7 +36,7 @@ public class MongoRadixTreeGazetteerTest extends AnnotatorTestBase{
 	private static final String FONGO_COLLECTION = "fongo.collection";
 	private static final String MONGO = "mongo";
 	private static final String VALUE = "value";
-	private static final String MONGO_COLL = "baleen_testing_MongoRadixTreeGazetteerTest";
+	private static final String MONGO_COLL = "baleen_testing_MongoGazetteerTest";
 	private static final DBObject LONDON_GEOJSON = new BasicDBObject(TYPE, "Point").append("coordinates", new Double[]{-0.1275, 51.5072});
 	
 	private static final List<DBObject> GAZ_DATA = Lists.newArrayList(

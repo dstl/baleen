@@ -65,6 +65,36 @@ private static final String JAMES = "James"		;
 	}
 	
 	@Test
+	public void testTwoExistingReferent() throws Exception{
+		AnalysisEngine corefCapAE = AnalysisEngineFactory.createEngine(CorefCapitalisationAndApostrophe.class);
+
+		jCas.setDocumentText(TEXT+" James has not been to Guatemala.");
+		
+		ReferenceTarget rt = Annotations.createReferenceTarget(jCas);	
+		
+		Person p1 = Annotations.createPerson(jCas, 0, 5, JAMES);
+		p1.setReferent(rt);
+		
+		Person p2 = Annotations.createPerson(jCas, 22, 27, JAMES_UC);
+		p2.setReferent(rt);
+		
+		Annotations.createPerson(jCas, 56, 61, JAMES);
+		
+		corefCapAE.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, ReferenceTarget.class).size());
+		
+		ReferenceTarget rtt = JCasUtil.selectByIndex(jCas, ReferenceTarget.class, 0);
+		Person p1t = JCasUtil.selectByIndex(jCas, Person.class, 0);
+		Person p2t = JCasUtil.selectByIndex(jCas, Person.class, 1);
+		Person p3t = JCasUtil.selectByIndex(jCas, Person.class, 2);
+		
+		assertEquals(rtt, p1t.getReferent());
+		assertEquals(rtt, p2t.getReferent());
+		assertEquals(rtt, p3t.getReferent());
+	}
+	
+	@Test
 	public void testExistingReferentsMerge() throws Exception{
 		AnalysisEngine corefCapAE = AnalysisEngineFactory.createEngine(CorefCapitalisationAndApostrophe.class, "mergeReferents", true);
 

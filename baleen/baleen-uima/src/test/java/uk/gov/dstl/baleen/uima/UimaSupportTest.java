@@ -30,6 +30,7 @@ import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.ProtectiveMarking;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
+import uk.gov.dstl.baleen.types.semantic.Relation;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UimaSupportTest {
@@ -274,6 +275,47 @@ public class UimaSupportTest {
 		assertFalse( support.getDocumentHistory(jCas).getHistory(locationRT2Again.getInternalId()).isEmpty() );
 
 	}
+	
+	@Test
+	public void testMergeWithRelation() {
+		UimaSupport support = new UimaSupport(PIPELINE, UimaSupportTest.class, history, monitor, false);
+
+		Person p1 = new Person(jCas);
+		p1.setBegin(0);
+		p1.setEnd(0);
+		p1.addToIndexes();
+
+		Person p2 = new Person(jCas);
+		p2.setBegin(0);
+		p2.setEnd(0);
+		p2.addToIndexes();
+
+		Person p3 = new Person(jCas);
+		p3.setBegin(1);
+		p3.setEnd(1);
+		p3.addToIndexes();
+		
+		Relation r = new Relation(jCas);
+		r.setBegin(0);
+		r.setEnd(1);
+		r.setSource(p2);
+		r.setTarget(p3);
+		r.addToIndexes();
+
+		support.mergeWithExisting(p1, p2);
+
+		List<Person> people = new ArrayList<>(JCasUtil.select(jCas, Person.class));
+		List<Relation> relations = new ArrayList<>(JCasUtil.select(jCas, Relation.class));
+
+		assertEquals(2, people.size());
+		assertEquals(p1, people.get(0));
+		assertEquals(p3, people.get(1));
+
+		assertEquals(1, relations.size());
+		assertEquals(r, relations.get(0));
+		assertEquals(p1, relations.get(0).getSource());
+		assertEquals(p3, relations.get(0).getTarget());
+	}
 
 
 	@Test
@@ -282,4 +324,53 @@ public class UimaSupportTest {
 		assertNotNull(support.getDocumentAnnotation(jCas));
 	}
 
+	@Test
+	public void testGetRelations() {
+		UimaSupport support = new UimaSupport(PIPELINE, UimaSupportTest.class, history, monitor, false);
+
+		Person p1 = new Person(jCas);
+		p1.setBegin(0);
+		p1.setEnd(0);
+		p1.addToIndexes();
+
+		Person p2 = new Person(jCas);
+		p2.setBegin(0);
+		p2.setEnd(0);
+		p2.addToIndexes();
+
+		Person p3 = new Person(jCas);
+		p3.setBegin(1);
+		p3.setEnd(1);
+		p3.addToIndexes();
+		
+		Relation r1 = new Relation(jCas);
+		r1.setBegin(0);
+		r1.setEnd(1);
+		r1.setSource(p2);
+		r1.setTarget(p3);
+		r1.addToIndexes();
+		
+		Relation r2 = new Relation(jCas);
+		r2.setBegin(0);
+		r2.setEnd(0);
+		r2.setSource(p1);
+		r2.setTarget(p2);
+		r2.addToIndexes();
+
+		List<Relation> relations = new ArrayList<>(support.getRelations(p1));
+
+		assertEquals(1, relations.size());
+		assertEquals(r2, relations.get(0));
+		
+		relations = new ArrayList<>(support.getRelations(p2));
+
+		assertEquals(2, relations.size());
+		assertEquals(r1, relations.get(0));
+		assertEquals(r2, relations.get(1));
+		
+		relations = new ArrayList<>(support.getRelations(p3));
+
+		assertEquals(1, relations.size());
+		assertEquals(r1, relations.get(0));
+	}
 }

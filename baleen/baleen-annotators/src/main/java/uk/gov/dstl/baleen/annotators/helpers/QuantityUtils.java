@@ -60,7 +60,7 @@ public class QuantityUtils {
 		quant.setQuantity(amount);
 		quant.setUnit(unit);
 		
-		if((Double.doubleToRawLongBits(scale) | 0) != 0){
+		if(Math.abs(scale) > 2*Double.MIN_VALUE){
 			quant.setNormalizedQuantity(amount * scale);
 			quant.setNormalizedUnit(normalizedUnit);
 		}

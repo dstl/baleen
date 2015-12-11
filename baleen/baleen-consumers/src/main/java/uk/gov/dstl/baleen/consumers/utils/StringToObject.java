@@ -60,7 +60,7 @@ public class StringToObject {
 	 * @return A Java object of the correct type
 	 */
 	public static Object convertStringToObject(String s, Properties config) {
-		Boolean precedingZeroIsntNumber = config.get(CONFIG_PRECEDING_ZERO_ISNT_NUMBER) == null ? true : Boolean.valueOf(config.get(CONFIG_PRECEDING_ZERO_ISNT_NUMBER).toString());
+		Boolean precedingZeroIsntNumber = getConfigPrecedingZero(config);
 		
 		if (s == null) {
 			return null;
@@ -77,6 +77,21 @@ public class StringToObject {
 		}
 
 		return convertToDate(s, config);
+	}
+	
+	private static boolean getConfigPrecedingZero(Properties config){
+		Boolean precedingZeroIsntNumber = true;
+		
+		if(config.containsKey(CONFIG_PRECEDING_ZERO_ISNT_NUMBER)){
+			Object o = config.get(CONFIG_PRECEDING_ZERO_ISNT_NUMBER);
+			if(o instanceof Boolean){
+				precedingZeroIsntNumber = (Boolean) o;
+			}else{
+				precedingZeroIsntNumber = Boolean.valueOf(o.toString());
+			}
+		}
+		
+		return precedingZeroIsntNumber;
 	}
 	
 	private static Number parseNumber(String s) throws InvalidParameterException{

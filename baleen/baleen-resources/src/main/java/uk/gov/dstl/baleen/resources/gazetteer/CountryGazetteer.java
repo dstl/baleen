@@ -1,6 +1,7 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.resources.gazetteer;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,15 +12,12 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedCountryResource;
 
-import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
-import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharArrayNodeFactory;
-
 /**
  * Gazetteer implementation of SharedCountryResource which allows gazetteer searching for country names
  * 
  * 
  */
-public class CountryGazetteer extends AbstractRadixTreeGazetteer<String> {
+public class CountryGazetteer extends AbstractMultiMapGazetteer<String> {
 	private SharedCountryResource country;
 	
 	@Override
@@ -34,17 +32,17 @@ public class CountryGazetteer extends AbstractRadixTreeGazetteer<String> {
 	
 	@Override
 	public void reloadValues() throws BaleenException {
-		terms = new ConcurrentRadixTree<>(new DefaultCharArrayNodeFactory());
+		reset();
 		for(Entry<String, String> countryEntry : country.getCountryNames().entrySet()){
-			terms.put(caseSensitive ? countryEntry.getKey() : countryEntry.getKey().toLowerCase(), countryEntry.getValue());
+			addTerm(countryEntry.getValue(), caseSensitive ? countryEntry.getKey() : countryEntry.getKey().toLowerCase());
 		}
 	}
 	
 	@Override
 	public Map<String, Object> getAdditionalData(String key) {
-		String cca3 = terms.getValueForExactKey(caseSensitive ? key : key.toLowerCase());
+		String cca3 = getId(caseSensitive ? key : key.toLowerCase());
 		if(cca3 == null){
-			return null;
+			return Collections.emptyMap();
 		}
 		
 		Map<String, Object> data = new HashMap<>();

@@ -112,7 +112,9 @@ public class SharedCountryResource extends BaleenResource {
 	private String getProperty(JsonNode node, String propertyName){
 		if(node != null && node.has(propertyName)){
 			JsonNode property = node.get(propertyName);
-			if(property.isValueNode()){
+			if(property == null){
+				return "";
+			}else if(property.isValueNode()){
 				return node.get(propertyName).asText().trim();
 			}else{
 				return node.get(propertyName).toString().trim();

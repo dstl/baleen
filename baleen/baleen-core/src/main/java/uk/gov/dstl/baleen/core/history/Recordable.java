@@ -50,7 +50,11 @@ public interface Recordable {
 	 * @return get type name (non-null)
 	 */
 	default String getTypeName() {
-		return getType().getName();
+		if(getType() != null){
+			return getType().getName();
+		}else{
+			return "";
+		}
 	}
 
 }

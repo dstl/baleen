@@ -29,6 +29,7 @@ import org.elasticsearch.common.base.Strings;
 
 import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedPostgresResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.semantic.Entity;
@@ -277,6 +278,11 @@ public class Postgres extends BaleenConsumer {
 			type = getSuperclass(type, e.getClass());
 		}
 		
+		if(type == null){
+			//No entities processed
+			return;
+		}
+		
 		Integer entityKey = executeEntityInsert(docKey, values, externalIds, type.getName());
 		if(entityKey != null){
 			for(String geoJson : geoJsons){
@@ -318,6 +324,9 @@ public class Postgres extends BaleenConsumer {
 		
 		try{
 			Map<String, Object> geoJsonObj = MAPPER.readValue(geoJson, MAP_LIKE_TYPE);
+			if(geoJsonObj == null){
+				throw new InvalidParameterException("Mapper returned null");
+			}
 			if(geoJsonObj.get("crs") == null){
 				Map<String, Object> crs = new HashMap<>();
 				crs.put("type", "name");

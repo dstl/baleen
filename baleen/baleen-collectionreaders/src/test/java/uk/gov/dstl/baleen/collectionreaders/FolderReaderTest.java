@@ -20,7 +20,6 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
@@ -32,19 +31,6 @@ public class FolderReaderTest {
 	private static final String DIR = "baleen-test";
 	File inputDir;
 	JCas jCas;
-	
-	private static Long TIMEOUT = 1000L;
-	
-	@BeforeClass
-	public static void beforeClass(){
-		//If we're testing on a Mac, then we need to set the time out higher,
-		//as currently the WatchService on a Mac uses polling rather than a
-		//native implementation and therefore we need to ensure we wait longer
-		//than the poll interval
-		if(System.getProperty("os.name").toLowerCase().startsWith("mac os x")){
-			TIMEOUT = 15000L;
-		}
-	}
 
 	@Before
 	public void beforeTest() throws Exception{
@@ -59,9 +45,11 @@ public class FolderReaderTest {
 	@After
 	public void afterTest() throws IOException{
 		String[] entries = inputDir.list();
-		for(String s : entries){
-			File currentFile = new File(inputDir.getPath(), s);
-			currentFile.delete();
+		if(entries != null){
+			for(String s : entries){
+				File currentFile = new File(inputDir.getPath(), s);
+				currentFile.delete();
+			}
 		}
 		inputDir.delete();
 	}
@@ -87,7 +75,7 @@ public class FolderReaderTest {
 		f.createNewFile();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertTrue(bcr.doHasNext());
 
@@ -118,7 +106,7 @@ public class FolderReaderTest {
 		File f22 = new File(inputDir2, TEST2_FILE);
 		f22.createNewFile();
 
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);
@@ -134,7 +122,7 @@ public class FolderReaderTest {
 	public void testSubDirectories() throws Exception{
 		File subdir = new File(inputDir, "subdir");
 		subdir.mkdir();
-		
+
 		File f1 = new File(subdir, TEXT1_FILE);
 		f1.createNewFile();
 
@@ -145,7 +133,7 @@ public class FolderReaderTest {
 		File f2 = new File(subdir, TEST2_FILE);
 		f2.createNewFile();
 
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertNextSourceNotNull(bcr);
 
@@ -178,7 +166,7 @@ public class FolderReaderTest {
 		File f3 = new File(inputDir, TEST3_FILE);
 		f3.createNewFile();
 		
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 		
 		assertTrue(bcr.hasNext());
 		bcr.getNext(jCas.getCas());
@@ -201,7 +189,7 @@ public class FolderReaderTest {
 		f.createNewFile();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertTrue(bcr.doHasNext());
 
@@ -215,7 +203,7 @@ public class FolderReaderTest {
 		writer.write("Test");
 		writer.close();
 
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertTrue(bcr.doHasNext());
 
@@ -239,12 +227,12 @@ public class FolderReaderTest {
 		f.createNewFile();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		f.delete();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertFalse(bcr.doHasNext());
 
@@ -298,9 +286,9 @@ public class FolderReaderTest {
 	}
 	
 	private void assertFilesEquals(String s1, String s2) throws IOException{
-        File f1 = new File(s1);
-        File f2 = new File(s2);
-
-        assertTrue(Files.isSameFile(f1.toPath(), f2.toPath()));
+		File f1 = new File(s1);
+		File f2 = new File(s2);
+		
+		assertTrue(Files.isSameFile(f1.toPath(), f2.toPath()));
 	}
 }

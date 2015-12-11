@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
@@ -150,9 +151,9 @@ public class Html5 extends BaleenConsumer {
 
 		String text = jCas.getDocumentText();
 		Integer offset = 0;
-		for(Integer pos : insertPositions.keySet()){
-			String insert = insertPositions.get(pos);
-			text = text.substring(0, pos + offset) + insert + text.substring(pos + offset);
+		for(Entry<Integer, String> pos : insertPositions.entrySet()){
+			String insert = pos.getValue();
+			text = text.substring(0, pos.getKey() + offset) + insert + text.substring(pos.getKey() + offset);
 			offset += insert.length();
 		}
 		
@@ -205,19 +206,19 @@ public class Html5 extends BaleenConsumer {
 	 * @return
 	 */
 	private String joinSpans(long eCount, Entity e, String[] spans){
-		String joinedSpans = eCount == 0 ? generateSpanStart(e) : "";
+		StringBuilder joinedSpans = new StringBuilder(eCount == 0 ? generateSpanStart(e) : "");
 		
 		Integer i = 0;
 		for(String span : spans){
-			joinedSpans += span;
+			joinedSpans.append(span);
 			i++;
 			
 			if(i == eCount){
-				joinedSpans += generateSpanStart(e);
+				joinedSpans.append(generateSpanStart(e));
 			}
 		}
 		
-		return joinedSpans;
+		return joinedSpans.toString();
 	}
 
 	private File getFileName(JCas jCas){

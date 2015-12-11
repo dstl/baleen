@@ -17,7 +17,7 @@ import uk.gov.dstl.baleen.resources.SharedFileResource;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 
-public class FileRadixTreeGazetteerTest extends AnnotatorTestBase{
+public class FileGazetteerTest extends AnnotatorTestBase{
 
 	private static final String WORLD = "world";
 	private static final String NEW_YORK = "New York";

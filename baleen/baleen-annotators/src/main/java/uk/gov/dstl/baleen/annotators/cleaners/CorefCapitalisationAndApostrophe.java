@@ -4,8 +4,10 @@ package uk.gov.dstl.baleen.annotators.cleaners;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -59,7 +61,7 @@ public class CorefCapitalisationAndApostrophe extends BaleenAnnotator {
 				continue;
 			}
 
-			List<ReferenceTarget> rts = new ArrayList<>();
+			Set<ReferenceTarget> rts = new HashSet<>();
 			for(Entity e : group){
 				if(e.getReferent() != null){
 					rts.add(e.getReferent());
@@ -92,7 +94,6 @@ public class CorefCapitalisationAndApostrophe extends BaleenAnnotator {
 	
 	private String normalizeValue(String value){
 		String s = value.trim().toLowerCase();
-		s = s.toLowerCase();
 		
 		if(s.endsWith("'s")){
 			s = s.substring(0, s.length() - 2);
@@ -103,13 +104,13 @@ public class CorefCapitalisationAndApostrophe extends BaleenAnnotator {
 		return s;
 	}
 	
-	private ReferenceTarget selectAppropriateReferenceTarget(JCas jCas, List<ReferenceTarget> referenceTargets){
+	private ReferenceTarget selectAppropriateReferenceTarget(JCas jCas, Collection<ReferenceTarget> referenceTargets){
 		ReferenceTarget rt = null;
 		
 		if(referenceTargets.isEmpty()){
 			rt = createReferenceTarget(jCas);
 		}else if(referenceTargets.size() == 1){
-			rt = referenceTargets.get(0);
+			rt = referenceTargets.toArray(new ReferenceTarget[0])[0];
 		}else if(mergeReferents){
 			rt = createReferenceTarget(jCas);
 			

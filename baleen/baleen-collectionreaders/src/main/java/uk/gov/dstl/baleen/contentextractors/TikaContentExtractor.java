@@ -14,9 +14,8 @@ import org.xml.sax.SAXException;
 
 import uk.gov.dstl.baleen.contentextractors.helpers.AbstractContentExtractor;
 
-/** Extracts metadata and text content from the supplied input, using Apache Tika.
- * 
- *
+/** 
+ * Extracts metadata and text content from the supplied input, using Apache Tika.
  */
 public class TikaContentExtractor extends AbstractContentExtractor {
 

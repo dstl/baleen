@@ -96,8 +96,10 @@ public class MongoGazetteerTest {
 		
 		assertEquals(0, helloAliases.length);
 		assertEquals(2, hiAliases.length);
-		assertEquals("heya", hiAliases[0]);
-		assertEquals(EN_HELLO, hiAliases[1]);
+		
+		List<String> hiAliasesList = Arrays.asList(hiAliases);
+		assertTrue(hiAliasesList.contains("heya"));
+		assertTrue(hiAliasesList.contains(EN_HELLO));
 		
 		gaz.destroy();
 	}

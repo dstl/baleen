@@ -46,7 +46,7 @@ public class MoneyRegex extends AbstractRegexAnnotator<Money> {
 				if(matcher.group(20).toLowerCase().startsWith("p")){
 					money.setCurrency("GBP");
 				}
-				money.setAmount(Float.parseFloat(matcher.group(19))/100);
+				money.setAmount(Double.parseDouble(matcher.group(19))/100);
 			}else if(matcher.group(25) != null){	//e.g. 42 euros
 				if(matcher.group(30).toLowerCase().startsWith("euro")){
 					money.setCurrency("EUR");

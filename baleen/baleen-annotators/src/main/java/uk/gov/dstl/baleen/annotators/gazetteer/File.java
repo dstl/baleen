@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 
-import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractRadixTreeGazetteerAnnotator;
+import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractAhoCorasickAnnotator;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.resources.SharedFileResource;
 import uk.gov.dstl.baleen.resources.gazetteer.FileGazetteer;
@@ -19,7 +19,7 @@ import uk.gov.dstl.baleen.resources.gazetteer.IGazetteer;
  * 
  * @baleen.javadoc
  */
-public class File extends AbstractRadixTreeGazetteerAnnotator {
+public class File extends AbstractAhoCorasickAnnotator {
 
 	/**
 	 * Connection to File Gazetteer

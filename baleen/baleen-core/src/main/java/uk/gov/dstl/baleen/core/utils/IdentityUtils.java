@@ -1,6 +1,7 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.core.utils;
 
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.atomic.AtomicLong;
@@ -57,7 +58,7 @@ public class IdentityUtils {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			md.reset();
 			
-			byte[] buffer = concat.toString().getBytes();
+			byte[] buffer = concat.toString().getBytes(StandardCharsets.UTF_8);
 			md.update(buffer);
 				
 			byte[] digest = md.digest();
@@ -66,7 +67,6 @@ public class IdentityUtils {
 			}
 		}
 		catch (NoSuchAlgorithmException e) {
-			
 			throw new BaleenException("Can't get MessageDigest instance for constructing hashes", e);
 		}
 

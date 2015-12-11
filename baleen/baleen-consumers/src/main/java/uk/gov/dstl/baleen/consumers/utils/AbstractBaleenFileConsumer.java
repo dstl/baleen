@@ -2,6 +2,7 @@
 package uk.gov.dstl.baleen.consumers.utils;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -36,18 +37,16 @@ public abstract class AbstractBaleenFileConsumer extends BaleenConsumer {
 	private File basePath;
 
 	@Override
-	public void doInitialize(UimaContext aContext)
-			throws ResourceInitializationException {
+	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
 		super.doInitialize(aContext);
 
 		if (!Strings.isNullOrEmpty(basePathString)) {
 			basePath = new File(basePathString);
 
 			if (basePath.exists() && !basePath.isDirectory()) {
-				throw new ResourceInitializationException(
-						"Path already exists and is not a directory", null);
-			} else if (!basePath.exists()) {
-				basePath.mkdirs();
+				throw new ResourceInitializationException(new IOException("Path already exists and is not a directory"));
+			} else if (!basePath.exists() && !basePath.mkdirs()){
+				throw new ResourceInitializationException(new IOException("Unable to create directory structure"));
 			}
 		} else {
 			basePath = null;
@@ -74,7 +73,9 @@ public abstract class AbstractBaleenFileConsumer extends BaleenConsumer {
 			writeToFile(jCas, file);
 		} catch(Exception e) {
 			getMonitor().warn("Failed to write file {}, deleting", file.getAbsolutePath(), e);
-			file.delete();
+			if(!file.delete()){
+				getMonitor().warn("Failed to delete file {}", file.getAbsolutePath(), e);	
+			}
 		}
 	}
 

@@ -4,7 +4,7 @@ package uk.gov.dstl.baleen.annotators.gazetteer;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 
-import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractRadixTreeGazetteerAnnotator;
+import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractAhoCorasickAnnotator;
 import uk.gov.dstl.baleen.annotators.gazetteer.helpers.GazetteerUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
@@ -17,7 +17,7 @@ import uk.gov.dstl.baleen.resources.gazetteer.MongoGazetteer;
  * 
  * @baleen.javadoc
  */
-public class Mongo extends AbstractRadixTreeGazetteerAnnotator {
+public class Mongo extends AbstractAhoCorasickAnnotator {
 	/**
 	 * Connection to Mongo
 	 * 

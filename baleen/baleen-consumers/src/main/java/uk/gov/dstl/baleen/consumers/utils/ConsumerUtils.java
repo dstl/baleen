@@ -33,7 +33,7 @@ public class ConsumerUtils {
 			try {
 				return IdentityUtils.hashStrings(da.getSourceUri());
 			} catch (BaleenException e) {
-				LOGGER.trace("Generating a id, neither source nor hash available", e);
+				LOGGER.warn("Generating a random id, unable to hash string", e);
 				return UUID.randomUUID().toString();
 			}
 		}

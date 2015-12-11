@@ -1,6 +1,6 @@
 {
 	"swaggerVersion":"1.1",
-	"apiVersion": "2.1.0-SNAPSHOT",
+	"apiVersion": "2.1.0",
 	"apis": [
 		{
 			"path":"/../annotators.{format}"
@@ -36,7 +36,7 @@
 	"info": {
 		"title":"Baleen",
 		"description":"Baleen is a Dstl developed text processing tool. It performs information extraction - for example, entity extraction and metadata extraction - on unstructured documents. This web service provides the ability to submit documents to Baleen via a REST API.",
-		"version":"2.1.0-SNAPSHOT",
+		"version":"2.1.0",
 		"licence": {
 			"name":"Apache Software License 2.0",
 			"url":"http://www.apache.org/licenses/LICENSE-2.0"

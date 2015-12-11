@@ -18,16 +18,15 @@ import org.apache.uima.resource.ResourceInitializationException;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.resources.gazetteer.IGazetteer;
 import uk.gov.dstl.baleen.types.semantic.Entity;
-import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 
 /**
- * Abstract class that builds on AbstractRadixTreeGazetteerAnnotator, but rather than searching the entire document for gazetteer matches,
+ * Abstract class that builds on AbstractAhoCorasickAnnotator, but rather than searching the entire document for gazetteer matches,
  * it uses a regular expression to find potential matches and then checks to see whether they appear in the Gazetteer.
  * 
  * 
  * @baleen.javadoc
  */
-public abstract class AbstractRegexRadixTreeGazetteerAnnotator extends AbstractRadixTreeGazetteerAnnotator{
+public abstract class AbstractRegexAhoCorasickAnnotator extends AbstractAhoCorasickAnnotator{
 	
 	/**
 	 * The regular expression to check against
@@ -43,7 +42,7 @@ public abstract class AbstractRegexRadixTreeGazetteerAnnotator extends AbstractR
 	/**
 	 * Constructor
 	 */
-	public AbstractRegexRadixTreeGazetteerAnnotator() {
+	public AbstractRegexAhoCorasickAnnotator() {
 		// Do nothing
 	}
 
@@ -87,15 +86,6 @@ public abstract class AbstractRegexRadixTreeGazetteerAnnotator extends AbstractR
 			}
 		}
 		
-		for(List<Entity> group : entities.values()){
-			ReferenceTarget rt = new ReferenceTarget(jCas);
-			rt.setBegin(0);
-			rt.setEnd(jCas.getDocumentText().length());
-			addToJCasIndex(rt);
-			
-			for(Entity e : group){
-				e.setReferent(rt);
-			}
-		}
+		createReferenceTargets(jCas, entities.values());
 	}
 }

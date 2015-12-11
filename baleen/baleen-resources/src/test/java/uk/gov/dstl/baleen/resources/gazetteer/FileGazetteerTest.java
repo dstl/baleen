@@ -83,8 +83,10 @@ public class FileGazetteerTest {
 		
 		assertEquals(0, helloAliases.length);
 		assertEquals(2, hiAliases.length);
-		assertEquals("heya", hiAliases[0]);
-		assertEquals("howdy", hiAliases[1]);
+
+		List<String> hiAliasesList = Arrays.asList(hiAliases);
+		assertTrue(hiAliasesList.contains("heya"));
+		assertTrue(hiAliasesList.contains("howdy"));
 		
 		gaz.destroy();
 	}

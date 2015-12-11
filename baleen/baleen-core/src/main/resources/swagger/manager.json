@@ -1,9 +1,9 @@
 {
 	"apiVersion": "1",
-	"basePath": "/api/1/manager",
+	"basePath": "/api/1",
 	"apis": [
 		{
-			"path":"/stop",
+			"path":"/manager/stop",
 			"operations":[
 				{
 					"httpMethod":"POST",

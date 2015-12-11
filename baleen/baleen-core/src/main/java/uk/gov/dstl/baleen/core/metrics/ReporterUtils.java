@@ -54,12 +54,13 @@ public class ReporterUtils {
 	 *            the configuration map (see {@link MetricsFactory})
 	 * @return the reporter instance
 	 */
-	public static ScheduledReporter createCsvReporter(MetricRegistry metricRegistry, Map<String, Object> config) {
+	public static ScheduledReporter createCsvReporter(MetricRegistry metricRegistry, Map<String, Object> config)
+		throws BaleenException{
 		String directoryPath = (String) config.getOrDefault("directory", "metrics");
 		File directory = new File(directoryPath);
 
-		if (!directory.exists()) {
-			directory.mkdirs();
+		if (!directory.exists() && !directory.mkdirs()){
+			throw new BaleenException("Unable to create directories for CSV Reporter");
 		}
 
 		return CsvReporter.forRegistry(metricRegistry).convertRatesTo(getRatesUnit(config))

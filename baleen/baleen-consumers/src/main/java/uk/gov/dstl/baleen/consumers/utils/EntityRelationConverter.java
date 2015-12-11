@@ -135,7 +135,7 @@ public class EntityRelationConverter {
 				getMonitor().trace("Converting primitive feature to an object");
 				map.put(ConsumerUtils.toCamelCase(f.getShortName()), FeatureUtils.featureToObject(f, base));
 			}
-		} else if (f.getRange().isArray() && f.getRange().getComponentType().isPrimitive()) {
+		} else if (f.getRange().isArray() && f.getRange().getComponentType() != null && f.getRange().getComponentType().isPrimitive()) {
 			getMonitor().trace("Converting primitive feature to an array");
 			map.put(ConsumerUtils.toCamelCase(f.getShortName()), FeatureUtils.featureToArray(f, base));
 		} else {

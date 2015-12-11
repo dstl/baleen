@@ -2,10 +2,13 @@
 package uk.gov.dstl.baleen.core.web.servlets;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -14,10 +17,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.descriptor.ExternalResource;
+import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.net.MediaType;
+
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
 /**
  * Abstract class for listing components based on their super type (for example,
@@ -186,11 +194,129 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (!getComponents().isPresent()) {
-			respondWithError(resp, 503, "Unable to load annotator class");
-			return;
+		String path = req.getPathInfo();
+		if(path == null){
+			path = "";
+		}else if(path.startsWith("/")){
+			path = path.substring(1);
 		}
-		respond(resp, MediaType.create("text", "x-yaml"), getComponents().get());
+		
+		if(path.isEmpty()){
+			if (!getComponents().isPresent()) {
+				respondWithError(resp, 503, "Unable to load annotator class");
+				return;
+			}
+			respond(resp, MediaType.create("text", "x-yaml"), getComponents().get());
+		}else{
+			try{
+				Class<?> component = getClassFromString(path, componentPackage);
+				List<Map<String, Object>> parameters = getParameters(component);
+				
+				respondWithJson(resp, parameters);
+			}catch(InvalidParameterException ipe){
+				LoggerFactory.getLogger(clazz).warn("Could not find requested resource", ipe);
+				respondWithNotFound(resp);
+			}
+		}
+	}
+	
+	/**
+	 * Takes a string of the class name and return a Class. First tries looking in the default packages,
+	 * and then if not found it will assume the class is fully qualified and try to use the name as it is provided
+	 *
+	 * @param className
+	 *            The name of the class
+	 * @param type
+	 *            The type that the class should extend
+	 * @param defaultPackage
+	 *            The package to look in if the className isn't a fully qualified name
+	 * @return The class specified
+	 */
+	@SuppressWarnings("unchecked")
+	protected <S extends T, T> Class<S> getClassFromString(String className, String... defaultPackage) throws InvalidParameterException {
+		for(String pkg : defaultPackage){
+			try {
+				return (Class<S>) Class.forName(pkg + "." + className);
+			} catch (Exception e) {
+				LoggerFactory.getLogger(clazz).debug("Couldn't find class {} in package {}", className, pkg, e);
+			}
+		}
+
+		try {
+			return (Class<S>) Class.forName(className);
+		} catch (Exception e) {
+			throw new InvalidParameterException("Could not find or instantiate analysis engine " + className, e);
+		}
+	}
+	
+	/**
+	 * Get all the parameters (fields annotated with @ConfigurationParameter) and resources (fields
+	 * annotated with @ExternalResource) for the given class
+	 * 
+	 * @param clazz
+	 * @return A list containing maps which contains information about each parameter and resource
+	 */
+	protected static List<Map<String, Object>> getParameters(Class<?> clazz){
+		List<Map<String, Object>> parametersOutput = new ArrayList<>();
+		
+		Field[] fields = clazz.getDeclaredFields();
+		if(fields != null){
+			for(Field field : fields){
+				parametersOutput.addAll(processParameters(field));
+				parametersOutput.addAll(processResources(field));
+			}
+		}
+		
+		if(clazz.getSuperclass() != null){
+			parametersOutput.addAll(getParameters(clazz.getSuperclass()));
+		}
+		
+		return parametersOutput;
+	}
+	
+	private static List<Map<String, Object>> processParameters(Field field){
+		List<Map<String, Object>> parametersOutput = new ArrayList<>();
+		ConfigurationParameter[] parameters = field.getAnnotationsByType(ConfigurationParameter.class);
+		
+		for(ConfigurationParameter param : parameters){
+			if(ExternalResourceFactory.PARAM_RESOURCE_NAME.equals(param.name()))
+				continue;
+			
+			Map<String, Object> parameterOutput = new HashMap<>();
+			parameterOutput.put("name", param.name());
+			parameterOutput.put("defaultValue", stringArrayToString(param.defaultValue()));
+			parameterOutput.put("type", "parameter");
+			
+			parametersOutput.add(parameterOutput);
+		}
+		
+		return parametersOutput;
+	}
+	
+	private static List<Map<String, Object>> processResources(Field field){
+		List<Map<String, Object>> resourcesOutput = new ArrayList<>();
+		ExternalResource[] resources = field.getAnnotationsByType(ExternalResource.class);
+		
+		for(ExternalResource resource : resources){
+			Map<String, Object> resourceOutput = new HashMap<>();
+			resourceOutput.put("key", resource.key());
+			resourceOutput.put("class", field.getType().getName());
+			resourceOutput.put("type", "resource");
+			
+			resourceOutput.put("parameters", getParameters(field.getType()));
+			
+			resourcesOutput.add(resourceOutput);
+		}
+		
+		return resourcesOutput;
+	}
+	
+	protected static Object stringArrayToString(String[] arr){
+		if(arr.length == 1){
+			return arr[0];
+		}else{
+			return arr;
+		}
 	}
 
 	protected Optional<String> getComponents() {

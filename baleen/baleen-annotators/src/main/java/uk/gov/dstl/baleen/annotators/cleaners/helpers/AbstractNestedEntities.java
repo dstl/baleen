@@ -91,7 +91,7 @@ public abstract class AbstractNestedEntities<T extends Entity> extends
 	}
 	
 	/**
-	 * Is e2 contained within e2?
+	 * Is e2 contained within e1?
 	 */
 	private boolean containedWithin(T e1, T e2){
 		return e1.getBegin() <= e2.getBegin() && e1.getEnd() >= e2.getEnd();

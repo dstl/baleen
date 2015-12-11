@@ -43,7 +43,7 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
 	}
 
 	protected static String processExternalResources(ClassDoc classDoc){
-		String cpText = "<dt><b>Configuration Parameters:</b></dt><dd><table><tr style=\"text-align: left\"><th>Parameter</th><th>Description</th><th>Default Value(s)</th></tr>";
+		StringBuilder cpText = new StringBuilder("<dt><b>Configuration Parameters:</b></dt><dd><table><tr style=\"text-align: left\"><th>Parameter</th><th>Description</th><th>Default Value(s)</th></tr>");
 		Map<String, String> rows = new TreeMap<>();
 
 		for(FieldDoc field : getFields(classDoc)){
@@ -54,19 +54,19 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
 		}
 		
 		if(rows.isEmpty()){
-			cpText = "";
+			cpText.setLength(0);
 		}else{
 			for(String s : rows.values()){
-				cpText += s;
+				cpText.append(s);
 			}
 		}
 		
-		cpText += "</table></dd>";
-		return cpText;
+		cpText.append("</table></dd>");
+		return cpText.toString();
 	}
 	
 	protected static String processConfigurationParameters(ClassDoc classDoc){
-		String erText = "<dt><b>External Resources:</b></dt><dd><ul>";
+		StringBuilder erText = new StringBuilder("<dt><b>External Resources:</b></dt><dd><ul>");
 		
 		List<String> resources = new ArrayList<>();
 		for(FieldDoc field : getFields(classDoc)){
@@ -77,12 +77,12 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
 			return null;
 		}else{
 			for(String s : resources){
-				erText += wrapWithTag("li", s, null);
+				erText.append(wrapWithTag("li", s, null));
 			}
 		}
 		
-		erText += "</ul></dd>";
-		return erText;
+		erText.append("</ul></dd>");
+		return erText.toString();
 	}
 	
 	private static Entry<String, String> createParameterRow(FieldDoc field){
@@ -94,11 +94,12 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
 		String name = wrapWithTag("td", field.constantValue(), "padding-right: 20px");
 		String desc = wrapWithTag("td", field.commentText(), "padding-right: 20px");
 		
-		String defaultValues = "";
+		StringBuilder defaultValues = new StringBuilder("");
 		for(Tag tag : tags){
-			defaultValues += tag.text() + "<br />";
+			defaultValues.append(tag.text());
+			defaultValues.append("<br />");
 		}
-		String values = wrapWithTag("td", defaultValues, null);
+		String values = wrapWithTag("td", defaultValues.toString(), null);
 		
 		String row = wrapWithTag("tr", name + desc + values, null);
 
@@ -116,13 +117,13 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
 		String pkg = field.containingPackage().name();
 		int levels = pkg.length() - pkg.replaceAll("\\.", "").length() + 1;
 		
-		String linkLevels = "";
+		StringBuilder linkLevels = new StringBuilder("");
 		for(int i = 0; i < levels; i++){
-			linkLevels += "../";
+			linkLevels.append("../");
 		}
 		
 		for(Tag tag : tags){
-			ret.add("<a href=\""+linkLevels+tag.text().replaceAll("\\.", "/")+".html\">" + tag.text() + "</a> (key = " + field.constantValue() + ")");
+			ret.add("<a href=\""+linkLevels.toString()+tag.text().replaceAll("\\.", "/")+".html\">" + tag.text() + "</a> (key = " + field.constantValue() + ")");
 		}
 		
 		return ret;

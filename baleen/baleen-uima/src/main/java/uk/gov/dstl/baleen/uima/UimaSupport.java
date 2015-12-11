@@ -3,9 +3,13 @@ package uk.gov.dstl.baleen.uima;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
+import org.apache.uima.UIMAException;
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CASException;
+import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
@@ -19,6 +23,7 @@ import uk.gov.dstl.baleen.core.history.noop.NoopBaleenHistory;
 import uk.gov.dstl.baleen.types.Base;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
+import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
 import com.google.common.base.Strings;
@@ -31,9 +36,6 @@ import com.google.common.collect.Lists;
  *
  * Users of Baleen do not need to create this object, as it is typically access through BaleenAnnotator,
  * BaleenConsumer, etc and will be preconfigured.
- *
- * 
- *
  */
 public class UimaSupport {
 
@@ -97,16 +99,16 @@ public class UimaSupport {
 					entity.setValue( annot.getCoveredText() );
 				}
 
-				if(annot instanceof Recordable) {
-					addToHistory(annot.getCAS(), HistoryEvents.createAdded((Recordable)annot, referrer));
-				}
+				addToHistory(annot.getCAS(), HistoryEvents.createAdded((Recordable)annot, referrer));
 			}
 		}
 	}
 
 	/**
 	 * Remove an annotation to the JCas index, notifying UimaMonitor of the fact
-	 * we have done so
+	 * we have done so.
+	 * 
+	 * Relations that refer to the given annotation will also be removed.
 	 *
 	 * @param annot
 	 *            Annotation(s) to remove
@@ -122,6 +124,13 @@ public class UimaSupport {
 				}
 			}
 
+			if(annot instanceof Entity){
+				for(Relation r : getRelations((Entity)annot)){
+					monitor.entityRemoved(r.getType().getName());
+					r.removeFromIndexes();
+				}
+			}
+			
 			monitor.entityRemoved(annot.getType().getName());
 
 			annot.removeFromIndexes();
@@ -131,7 +140,9 @@ public class UimaSupport {
 
 	/**
 	 * Remove an annotation to the JCas index, notifying UimaMonitor of the fact
-	 * we have done so
+	 * we have done so.
+	 * 
+	 * Relations that refer to the given annotation will also be removed.
 	 *
 	 * @param annot
 	 *            Annotation(s) to remove
@@ -186,7 +197,7 @@ public class UimaSupport {
 	 *            Annotation(s) which will be merged with existingAnnotation and then removed
 	 */
 	public void mergeWithExisting(Annotation existingAnnotation, Collection<? extends Annotation> annotations) {
-		if(annotations != null && annotations.isEmpty()) {
+		if(annotations == null || annotations.isEmpty()) {
 			return;
 		}
 
@@ -206,19 +217,42 @@ public class UimaSupport {
 				// If an entity we check if they point to the same reference target
 				Entity entity = (Entity)a;
 
-				ReferenceTarget existingRef = existingEntity.getReferent();
-				ReferenceTarget entityRef = entity.getReferent();
-
-				if(mergeDistinctEntities || isSameTarget(existingRef, entityRef)) {
-					addMergeToHistory(existingAnnotation, entity);
-					remove(entity);
-				} else {
-					monitor.info("Not merging objects {} and {} as they have different referents", existingEntity.getInternalId(), entity.getInternalId());
-				}
+				mergeEntities(entity, existingEntity);
 			} else {
 				// If an annotation just remove
 				mergeWithExistingNoCoref(existingAnnotation, Lists.newArrayList(a));
 			}
+		}
+	}
+	
+	/**
+	 * Merge entity onto targetEntity (assuming they have the same ReferentTarget), updating relationships as required.
+	 * 
+	 * @return True if merge was successful, false otherwise
+	 */
+	private boolean mergeEntities(Entity entity, Entity targetEntity){
+		ReferenceTarget targetRef = targetEntity.getReferent();
+		ReferenceTarget entityRef = entity.getReferent();
+
+		if(mergeDistinctEntities || isSameTarget(targetRef, entityRef)) {
+			addMergeToHistory(targetEntity, entity);
+			
+			//Update relationship pointers
+			for(Relation r : getRelations(entity)){
+				if(r.getSource() == entity){
+					r.setSource(targetEntity);
+				}
+				if(r.getTarget() == entity){
+					r.setTarget(targetEntity);
+				}
+			}
+			
+			remove(entity);
+			
+			return true;
+		} else {
+			monitor.info("Not merging objects {} and {} as they have different referents", targetEntity.getInternalId(), entity.getInternalId());
+			return false;
 		}
 	}
 
@@ -292,5 +326,23 @@ public class UimaSupport {
 	 */
 	public DocumentAnnotation getDocumentAnnotation(JCas jCas){
 		return (DocumentAnnotation) jCas.getDocumentAnnotationFs();
+	}
+	
+	/**
+	 * Get relations that have a given entity as either the source or the target
+	 * 
+	 * @param e The given entity
+	 * @return Collection of relations that refer to the given Entity
+	 */
+	public Collection<Relation> getRelations(Entity e){
+		try{
+			JCas jCas = e.getCAS().getJCas();
+			Collection<Relation> relations = JCasUtil.select(jCas, Relation.class);
+			
+			return relations.stream().filter(r -> r.getSource() == e || r.getTarget() == e).collect(Collectors.toList());
+		}catch(UIMAException ue){
+			monitor.warn("Unable to get relations from entity", ue);
+			return Collections.emptyList();
+		}
 	}
 }

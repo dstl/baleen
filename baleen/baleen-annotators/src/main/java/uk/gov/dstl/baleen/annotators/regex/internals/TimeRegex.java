@@ -17,7 +17,7 @@ import uk.gov.dstl.baleen.types.temporal.Time;
  * 
  * <p>The document content is run through a regular expression matcher looking for things that match the following time regular expression,
  * where UTC is being used to represent all time zone acronyms defined in Java:</p>
- * <pre>\\b(((0?[0-9])|([0-9]{2}))[:][0-9]{2}\\h*((UTC)([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?\\h*(pm|am)?)\\b|\\b(((1[0-2])|([1-9]))(pm|am))\\b|\\b(midnight)\\b|\\b(midday)\\b|\\b((12\\h)?noon)\\b|\\b([0-2][0-9][0-5][0-9][ ]?((UTC)([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)\\b</pre>
+ * <pre>\\b(((0?[0-9])|([0-9]{2}))[:][0-9]{2}\\h*((UTC)([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?\\h*(pm|am)?)\\b|\\b(((1[0-2])|([1-9]))(pm|am))\\b|\\b(midnight)\\b|\\b(midday)\\b|\\b((12\\h)?noon)\\b|\\b([0-2][0-9][0-5][0-9][ ]?(hr(s)?)?[ ]?((UTC)([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?)\\b</pre>
  * <p>This will only capture times that match the regular expression, and will miss times expressed in a different format.</p>
  * 
  * 
@@ -29,8 +29,7 @@ public class TimeRegex extends AbstractRegexAnnotator<Time> {
 			.collect(Collectors.toList()),
 		"|");
 	
-	private static final String TIME_REGEX = "\\b(((0?[0-9])|([0-9]{2}))[:][0-9]{2}\\h*(("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?\\h*(pm|am)?)\\b|\\b(((1[0-2])|([1-9]))(pm|am))\\b|\\b(midnight)\\b|\\b(midday)\\b|\\b((12\\h)?noon)\\b|\\b([0-2][0-9][0-5][0-9][ ]?("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)\\b";
-	
+    private static final String TIME_REGEX = "\\b(((0?[0-9])|([0-9]{2}))[:][0-9]{2}\\h*(("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?\\h*(pm|am)?)\\b|\\b(((1[0-2])|([1-9]))(pm|am))\\b|\\b(midnight)\\b|\\b(midday)\\b|\\b((12\\h)?noon)\\b|\\b([0-2][0-9][0-5][0-9][ ]?(hr(s)?)?[ ]?(("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?)\\b";	
 	/** New instance.
 	 * 
 	 */

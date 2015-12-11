@@ -232,7 +232,9 @@ public class AddTimeSpans extends BaleenAnnotator {
 		Integer year;
 		if (m.length() == 2) {
 			year = Ints.tryParse(m);
-			if (year < 70) {
+			if (year == null){
+				return Optional.empty();
+			}else if (year < 70) {
 				year += 2000;
 			} else {
 				year += 1900;

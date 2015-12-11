@@ -5,7 +5,7 @@ import org.apache.uima.UimaContext;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractRadixTreeGazetteerAnnotator;
+import uk.gov.dstl.baleen.annotators.gazetteer.helpers.AbstractAhoCorasickAnnotator;
 import uk.gov.dstl.baleen.annotators.gazetteer.helpers.GazetteerUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.resources.SharedCountryResource;
@@ -20,7 +20,7 @@ import uk.gov.dstl.baleen.resources.gazetteer.IGazetteer;
  * 
  * 
  */
-public class Country extends AbstractRadixTreeGazetteerAnnotator {
+public class Country extends AbstractAhoCorasickAnnotator {
 	/**
 	 * Connection to Country Resource
 	 * 

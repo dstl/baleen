@@ -28,6 +28,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,10 @@ import com.google.common.primitives.Ints;
  *   host: 0.0.0.0
  *   port: 80
  *   root: baleen_web/
+ *   wars:
+ *   - file: MyWebApplication.war
+ *     context: MyWebApp
+ *   - MySecondApplication.war
  *   auth:
  *     name: baleen
  *     type: none
@@ -98,6 +103,9 @@ import com.google.common.primitives.Ints;
  * <li><b>port</b> - The port to configure the server on; defaults to 6413.</li>
  * <li><b>root</b> - The root directory to serve static web content from;
  * defaults to null, i.e. no static web content.</li>
+ * <li><b>wars</b> - A list of WAR files to deploy as part of the server.
+ * The WAR will be deployed to the path specified by context or, if not provided,
+ * at the same name as the WAR file.</li>
  * <li><b>auth</b> - The authentication configuration. This compromises a name
  * (which will be the realm name for basic authentication, defaulting to
  * baleen), a type (basic or none, see {@link AuthType}, defaults to none), and
@@ -114,9 +122,7 @@ import com.google.common.primitives.Ints;
  * this is useful for running multiple Baleens such as in Jenkins or a
  * development and testing version alongside production (but otherwise using the
  * same configuration).
- *
  * 
- *
  */
 public class BaleenWebApi extends AbstractBaleenComponent {
 	private static final Logger LOGGER = LoggerFactory
@@ -182,8 +188,10 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 						"Configuration of authentication failed");
 			}
 		}
+		
+		List<Object> wars = configuration.getAsList(CONFIG_BASE + "wars");
 
-		configure(host, port, webRoot, authConfig);
+		configure(host, port, webRoot, authConfig, wars);
 	}
 
 	/**
@@ -199,10 +207,13 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 	 * @param authConfig
 	 *            The authentication configuration (may be null for no
 	 *            authentication)
+	 * @param wars
+	 * 			  A list of objects, either configuration objects with a file and a context specified,
+	 * 			  or just a file name
 	 * @throws BaleenException
 	 */
 	public void configure(String host, int suppliedPort, String webResourceRoot,
-			WebAuthConfig authConfig) throws BaleenException {
+			WebAuthConfig authConfig, List<Object> wars) throws BaleenException {
 
 		int port = getPort(suppliedPort);
 
@@ -235,14 +246,16 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 				"/config/pipelines");
 		addServlet(new BaleenManagerConfigServlet(baleenManager),
 				"/config/manager");
-		addServlet(new AnnotatorsServlet(), "/annotators");
-		addServlet(new CollectionReadersServlet(), "/collectionreaders");
-		addServlet(new ConsumersServlet(), "/consumers");
-		addServlet(new ContentExtractorsServlet(), "/contentextractors");
+		addServlet(new AnnotatorsServlet(), "/annotators/*");
+		addServlet(new CollectionReadersServlet(), "/collectionreaders/*");
+		addServlet(new ConsumersServlet(), "/consumers/*");
+		addServlet(new ContentExtractorsServlet(), "/contentextractors/*");
 
 		installJavadocs(handlers);
 
 		installWebRoot(handlers, webResourceRoot);
+		
+		installWars(handlers, wars);
 
 		installSwagger(handlers);
 
@@ -328,6 +341,57 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		}
 	}
 
+	private void installWars(HandlerList handlers, List<Object> wars){
+		// NOTE: There is no security (via webauth) applied to this at present
+		if(wars == null || wars.isEmpty()){
+			return;
+		}
+		
+		for(Object war : wars){
+			String file = null;
+			String context = null;
+			
+			if(war instanceof String){
+				LOGGER.debug("Adding shorthand described WAR");
+				
+				file = (String) war;
+				context = (String) war;
+				if(context.toLowerCase().endsWith(".war")){
+					context = context.substring(0, context.length() - 4);
+				}
+				
+				installWar(handlers, file, context);
+			}else if(war instanceof Map){
+				LOGGER.debug("Adding fully described WAR");
+				
+				try{
+					@SuppressWarnings("unchecked")
+					Map<String, Object> warDesc = (Map<String, Object>) war;
+					file = (String) warDesc.get("file");
+					context = (String) warDesc.get("context");
+				}catch(ClassCastException cce){
+					LOGGER.warn("Malformed WAR configuration; skipping", cce);
+					file = null;
+				}
+				
+				installWar(handlers, file, context);
+			}else{
+				LOGGER.warn("Unexpected WAR configuration found; skipping");
+			}
+		}
+	}
+	
+	private void installWar(HandlerList handlers, String file, String context){
+		if(Strings.isNullOrEmpty(file) || Strings.isNullOrEmpty(context)){
+			LOGGER.warn("Incomplete WAR configuration; skipping");
+			return;
+		}
+		
+		LOGGER.info("Adding {} to server at context /{}", file, context);
+		WebAppContext webapp = new WebAppContext(file, "/" + context);
+		handlers.addHandler(webapp);
+	}
+	
 	private void installJavadocs(HandlerList handlers) {
 		// Does JavaDoc exist?
 		File javadocJar = null;

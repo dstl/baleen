@@ -95,7 +95,7 @@ public class TimeRegexTest extends AnnotatorTestBase{
 	
 	//Catch a single time with a timezone qualifier 
 	@Test
-	public void testSinglegmtTimeZone() throws Exception{
+	public void testSingleGmtTimeZone() throws Exception{
 		
 		jCas.setDocumentText("It is currently 11:00 GMT");
 		timeRegexAE.process(jCas);
@@ -104,7 +104,7 @@ public class TimeRegexTest extends AnnotatorTestBase{
 	
 	//Catch Central Europe Time zone 
 	@Test
-	public void testSinglegmtOtherTimeZone() throws Exception{
+	public void testSingleGmtOtherTimeZone() throws Exception{
 		
 		jCas.setDocumentText("It is currently 11:00 CET");
 		timeRegexAE.process(jCas);
@@ -120,4 +120,21 @@ public class TimeRegexTest extends AnnotatorTestBase{
 		timeRegexCountAndValueCheck(3d, "noon", "12:03pm", "20:00");
 	}
 	
+    //Catch a single reference in 24hr clock
+    @Test
+    public void testSingleTime24hrClock() throws Exception{
+        
+        jCas.setDocumentText("It is currently 1700hrs.");
+        timeRegexAE.process(jCas);
+        timeRegexCountAndValueCheck(1d, "1700hrs");
+    }
+    
+    //Catch a single reference in 24hr clock
+    @Test
+    public void testSingleTime24hrClockTimeZone() throws Exception{
+        
+        jCas.setDocumentText("It is currently 1700hrs CET.");
+        timeRegexAE.process(jCas);
+        timeRegexCountAndValueCheck(1d, "1700hrs CET");
+    }
 }

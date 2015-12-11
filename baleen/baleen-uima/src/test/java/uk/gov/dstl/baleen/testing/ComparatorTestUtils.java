@@ -20,16 +20,17 @@ public class ComparatorTestUtils {
 	 * @param b
 	 */
 	public static <T extends Comparable<T>> void comparedEqual(T a, T b) {
-		if(a == null && b != null || a != null && b == null) {
+		if(a == null && b == null){
+			return;
+		}else if(a == null || b == null) {
 			fail("Not both null");
+		}else{
+			boolean equals = a.equals(b);
+			boolean hashCode = a.hashCode() == b.hashCode();
+			boolean compareTo = a.compareTo(b) == 0;
+	
+			assertTrue(equals && hashCode && compareTo);
 		}
-
-		boolean equals = a.equals(b);
-		boolean hashCode = a.hashCode() == b.hashCode();
-		boolean compareTo = a.compareTo(b) == 0;
-
-		assertTrue(equals && hashCode && compareTo);
-
 	}
 
 	/** Assert that the two parameters are different (in hashcode, equals and compareTo).
@@ -39,13 +40,15 @@ public class ComparatorTestUtils {
 	public static <T extends Comparable<T>> void comparedNotEqual(T a, T b) {
 		if(a == null && b == null) {
 			fail("Both null");
+		}else if(a == null || b == null){
+			return;	//If one is null and the other isn't, they must be not equal
+		}else{
+			boolean equals = a.equals(b);
+			boolean hashCode = a.hashCode() == b.hashCode();
+			boolean compareTo = a.compareTo(b) == 0;
+			
+			assertTrue(!equals && !hashCode && !compareTo);
 		}
-
-		boolean equals = a.equals(b);
-		boolean hashCode = a.hashCode() == b.hashCode();
-		boolean compareTo = a.compareTo(b) == 0;
-
-		assertTrue(!equals && !hashCode && !compareTo);
 	}
 
 	/** Asserts that lower is less than higher (and that they are not equal, or hashcode).

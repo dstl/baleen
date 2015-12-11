@@ -118,6 +118,11 @@ public class MongoReader extends BaleenCollectionReader {
 		DBObject docIdField = new BasicDBObject(idField, id);
 		DBObject document = coll.findOne(docIdField);
 		
+		if(document == null){
+			getMonitor().error("No document returned from Mongo");
+			throw new CollectionException();
+		}
+		
 		String content = (String) document.get(contentField);
 		InputStream is = IOUtils.toInputStream(content);
 		
@@ -189,5 +194,6 @@ public class MongoReader extends BaleenCollectionReader {
 			queue.add(id);
 			lastId = id;
 		}
+		cur.close();
 	}
 }

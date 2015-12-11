@@ -3,10 +3,11 @@ package uk.gov.dstl.baleen.consumers;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -42,8 +43,8 @@ public class EntityCount extends BaleenConsumer {
 		output = new File(outputFile);
 		
 		try{
-			if(!output.exists()){
-				output.createNewFile();
+			if(!output.exists() && !output.createNewFile()){
+				throw new IOException("Can not create output file");
 			}
 			
 			if(!output.canWrite()){
@@ -58,7 +59,7 @@ public class EntityCount extends BaleenConsumer {
 	public void doProcess(JCas jCas) throws AnalysisEngineProcessException {
 		DocumentAnnotation da = getDocumentAnnotation(jCas);
 		
-		try( PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(output, true))) ) {
+		try( PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriterWithEncoding(output, StandardCharsets.UTF_8, true))) ) {
 			int count = JCasUtil.select(jCas, Entity.class).size();
 			pw.println(da.getSourceUri()+"\t"+count);
 		} catch (IOException e) {

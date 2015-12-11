@@ -11,15 +11,12 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedFileResource;
 
-import com.googlecode.concurrenttrees.radix.ConcurrentRadixTree;
-import com.googlecode.concurrenttrees.radix.node.concrete.DefaultCharArrayNodeFactory;
-
 /**
  * Read from a file as the back-end of a gazetteer
  * 
  * 
  */
-public class FileGazetteer extends AbstractRadixTreeGazetteer<Integer> {
+public class FileGazetteer extends AbstractMultiMapGazetteer<Integer> {
 	public static final String CONFIG_FILE = "fileName";
 	public static final String CONFIG_TERM_SEPARATOR = "termSeparator";
 
@@ -62,7 +59,7 @@ public class FileGazetteer extends AbstractRadixTreeGazetteer<Integer> {
 
 	@Override
 	public void reloadValues() throws BaleenException {
-		terms = new ConcurrentRadixTree<>(new DefaultCharArrayNodeFactory());
+		reset();
 
 		String[] content;
 		try {
@@ -87,7 +84,7 @@ public class FileGazetteer extends AbstractRadixTreeGazetteer<Integer> {
 					continue;
 				}
 
-				terms.put(t.trim(), lineNumber);
+				addTerm(lineNumber, t.trim());
 			}
 		}
 	}

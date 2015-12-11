@@ -11,8 +11,6 @@ import uk.gov.dstl.baleen.types.common.CommsIdentifier;
 /**
  * Tests to ensure IP V4 regex annotator works as expected, ignoring incorrect octets and extracts multiple IPs in any document.
  * 
- *  , Rich Brantingham
- * 
  */
 public class IpV4AddressRegexTest extends AbstractAnnotatorTest {
 

@@ -1,9 +1,9 @@
 {
 	"apiVersion": "1",
-	"basePath": "/api/1/pipelines",
+	"basePath": "/api/1",
 	"apis": [
 		{
-			"path":"/",
+			"path":"/pipelines",
 			"operations":[
 				{
 					"httpMethod":"GET",
@@ -28,7 +28,7 @@
 			]
 		},
 		{
-			"path":"/",
+			"path":"/pipelines",
 			"operations":[
 				{
 					"httpMethod":"POST",
@@ -67,7 +67,7 @@
 			]
 		},
 		{
-			"path":"/",
+			"path":"/pipelines",
 			"operations":[
 				{
 					"httpMethod":"DELETE",
@@ -88,7 +88,7 @@
 			]
 		},
 		{
-			"path":"/start",
+			"path":"/pipelines/start",
 			"operations":[
 				{
 					"httpMethod":"POST",
@@ -113,7 +113,7 @@
 			]
 		},
 		{
-			"path":"/stop",
+			"path":"/pipelines/stop",
 			"operations":[
 				{
 					"httpMethod":"POST",
@@ -136,7 +136,7 @@
 			]
 		},
 		{
-			"path":"/restart",
+			"path":"/pipelines/restart",
 			"operations":[
 				{
 					"httpMethod":"POST",

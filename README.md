@@ -14,7 +14,7 @@ Baleen includes an in-built server, which hosts full documentation and guides on
 To get started, you will need to launch this server and read this documentation.
 To launch the server, run the following command.
 
-> java -jar baleen-2.0.0.jar
+> java -jar baleen-2.1.0.jar
 
 Once running, the server can be accessed at [http://localhost:6413](http://localhost:6413) 
 

@@ -27,7 +27,7 @@
 				"level": { "type":"string", "description":"The log level" },
 				"logger": { "type":"string", "description":"The name of the logger" },
 				"thread": { "type":"string", "description":"The thread from which the log was sent" },
-				"timestamp": { "type":"integer", "format":"int64", "description":"The timstamp (since epoch) of the log" }
+				"timestamp": { "type":"integer", "format":"int64", "description":"The timestamp (since epoch) of the log" }
 			}
 		}
 	}
