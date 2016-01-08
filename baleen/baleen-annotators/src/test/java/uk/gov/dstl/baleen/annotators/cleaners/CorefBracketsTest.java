@@ -1,7 +1,9 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.annotators.cleaners;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -9,27 +11,98 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.annotators.cleaners.CorefLocationCoordinate;
 import uk.gov.dstl.baleen.annotators.testing.Annotations;
 import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
+import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.geo.Coordinate;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 
-/**
- * 
- */
-public class CorefLocationCoordinateTest extends AnnotatorTestBase {
+public class CorefBracketsTest extends AnnotatorTestBase {
 	
 	private static final String MRGS = "4QFJ1267";
 	private static final String SOMEWHERE = "Somewhere";
-	private static final String TEXT = "Somewhere (4QFJ1267)";
+	private static final String LOC_TEXT = "Somewhere (4QFJ1267)";
+	
+	private static final String PERSON_TEXT = "William Tell (Bill) (Billy) is a famous character";
+	private static final String WILLIAM = "William Tell";
+	private static final String BILL = "Bill";
+	private static final String BILLY = "Billy";
 
 	@Test
-	public void testNoExistingReferents() throws Exception{
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefLocationCoordinate.class);
+	public void testMultipleEntities() throws Exception{
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
 		
-		jCas.setDocumentText(TEXT);
+		jCas.setDocumentText(PERSON_TEXT);
+		
+		Annotations.createPerson(jCas, 0, 12, WILLIAM);
+		Annotations.createPerson(jCas, 14, 18, BILL);
+		Annotations.createPerson(jCas, 21, 26, BILLY);
+		
+		ae.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, ReferenceTarget.class).size());
+		
+		ReferenceTarget rt = JCasUtil.selectByIndex(jCas, ReferenceTarget.class, 0);
+		Person p1 = JCasUtil.selectByIndex(jCas, Person.class, 0);
+		Person p2 = JCasUtil.selectByIndex(jCas, Person.class, 1);
+		Person p3 = JCasUtil.selectByIndex(jCas, Person.class, 2);
+		
+		assertEquals(rt, p1.getReferent());
+		assertEquals(rt, p2.getReferent());
+		assertEquals(rt, p3.getReferent());
+	}
+	
+	@Test
+	public void testIncorrectEntities() throws Exception{
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
+		
+		jCas.setDocumentText(PERSON_TEXT);
+		
+		Annotations.createPerson(jCas, 0, 12, WILLIAM);
+		Annotations.createLocation(jCas, 14, 18, BILL, null);
+		Annotations.createPerson(jCas, 21, 26, BILLY);
+		
+		ae.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, ReferenceTarget.class).size());
+		
+		ReferenceTarget rt = JCasUtil.selectByIndex(jCas, ReferenceTarget.class, 0);
+		Person p1 = JCasUtil.selectByIndex(jCas, Person.class, 0);
+		Person p2 = JCasUtil.selectByIndex(jCas, Person.class, 1);
+		Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
+		
+		assertEquals(rt, p1.getReferent());
+		assertEquals(rt, p2.getReferent());
+		assertNull(l.getReferent());
+	}
+	
+	@Test
+	public void testSkippedEntities() throws Exception{
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
+		
+		jCas.setDocumentText(PERSON_TEXT);
+		
+		Annotations.createPerson(jCas, 0, 12, WILLIAM);
+		Annotations.createPerson(jCas, 21, 26, BILLY);
+		
+		ae.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, ReferenceTarget.class).size());
+		
+		ReferenceTarget rt = JCasUtil.selectByIndex(jCas, ReferenceTarget.class, 0);
+		Person p1 = JCasUtil.selectByIndex(jCas, Person.class, 0);
+		Person p2 = JCasUtil.selectByIndex(jCas, Person.class, 1);
+		
+		assertEquals(rt, p1.getReferent());
+		assertEquals(rt, p2.getReferent());
+	}
+	
+	@Test
+	public void testNoExistingReferents() throws Exception{
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
+		
+		jCas.setDocumentText(LOC_TEXT);
 		
 		Annotations.createLocation(jCas, 0, 9, SOMEWHERE, null);
 		Annotations.createCoordinate(jCas, 11, 19, MRGS);
@@ -48,9 +121,9 @@ public class CorefLocationCoordinateTest extends AnnotatorTestBase {
 	
 	@Test
 	public void testExistingLocReferent() throws Exception{
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefLocationCoordinate.class);
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
 		
-		jCas.setDocumentText(TEXT);
+		jCas.setDocumentText(LOC_TEXT);
 		
 		ReferenceTarget rt1 = Annotations.createReferenceTarget(jCas);
 
@@ -74,9 +147,9 @@ public class CorefLocationCoordinateTest extends AnnotatorTestBase {
 	
 	@Test
 	public void testExistingCoordReferent() throws Exception{
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefLocationCoordinate.class);
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
 		
-		jCas.setDocumentText(TEXT);
+		jCas.setDocumentText(LOC_TEXT);
 		
 		ReferenceTarget rt1 = Annotations.createReferenceTarget(jCas);
 
@@ -99,7 +172,7 @@ public class CorefLocationCoordinateTest extends AnnotatorTestBase {
 
 	@Test
 	public void testExistingReferentsNoMerge() throws Exception{
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefLocationCoordinate.class);
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
 		
 		populateJCasMergeTest(jCas);
 		ae.process(jCas);
@@ -117,7 +190,7 @@ public class CorefLocationCoordinateTest extends AnnotatorTestBase {
 	
 	@Test
 	public void testExistingReferentsMerge() throws Exception{
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefLocationCoordinate.class, "mergeReferents", true);
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class, "mergeReferents", true);
 		
 		populateJCasMergeTest(jCas);
 		ae.process(jCas);
@@ -135,7 +208,7 @@ public class CorefLocationCoordinateTest extends AnnotatorTestBase {
 	}
 	
 	private void populateJCasMergeTest(JCas jCas){
-		jCas.setDocumentText(TEXT);
+		jCas.setDocumentText(LOC_TEXT);
 		
 		ReferenceTarget rt1 = Annotations.createReferenceTarget(jCas);
 		ReferenceTarget rt2 =  Annotations.createReferenceTarget(jCas);
@@ -149,7 +222,7 @@ public class CorefLocationCoordinateTest extends AnnotatorTestBase {
 	
 	@Test
 	public void testMultipleSpaces() throws Exception{
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefLocationCoordinate.class);
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class);
 		
 		jCas.setDocumentText("Somewhere   \t(4QFJ1267)");
 		

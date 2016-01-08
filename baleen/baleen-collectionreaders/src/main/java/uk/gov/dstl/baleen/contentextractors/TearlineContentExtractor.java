@@ -36,7 +36,7 @@ public class TearlineContentExtractor extends AbstractContentExtractor {
 	 * @baleen.config
 	 */
 	public static final String PARAM_BOILERPLATE = "boilerplate";
-	@ConfigurationParameter(defaultValue = {})
+	@ConfigurationParameter(name = PARAM_BOILERPLATE, defaultValue = {})
 	List<String> boilerplate;
 	
 	/**

@@ -285,7 +285,7 @@ public class BaleenManager {
 	 * 
 	 * @return
 	 */
-	public String getYaml() {
+	public synchronized String getYaml() {
 		return yaml;
 	}
 

@@ -3,9 +3,11 @@ package uk.gov.dstl.baleen.collectionreaders;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
@@ -63,7 +65,7 @@ public class LineReader extends BaleenCollectionReader {
 		}
 		
 		try{
-			br = new BufferedReader(new FileReader(file));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 		}catch(IOException ioe){
 			throw new ResourceInitializationException(ioe);
 		}

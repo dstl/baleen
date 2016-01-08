@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.contentextractors;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -29,7 +30,7 @@ public class CsvContentExtractor extends AbstractContentExtractor {
 	 * @baleen.config ,
 	 */
 	public static final String PARAM_SEPARATOR = "separator";
-	@ConfigurationParameter(defaultValue = ",")
+	@ConfigurationParameter(name = PARAM_SEPARATOR, defaultValue = ",")
 	String separator;
 	
 	/**
@@ -38,7 +39,7 @@ public class CsvContentExtractor extends AbstractContentExtractor {
 	 * @baleen.config 1
 	 */
 	public static final String PARAM_CONTENT_COLUMN = "contentColumn";
-	@ConfigurationParameter(defaultValue = "1")
+	@ConfigurationParameter(name = PARAM_CONTENT_COLUMN, defaultValue = "1")
 	Integer contentColumn;
 	
 	/**
@@ -48,16 +49,17 @@ public class CsvContentExtractor extends AbstractContentExtractor {
 	 * @baleen.config
 	 */
 	public static final String PARAM_COLUMNS = "columns";
-	@ConfigurationParameter(defaultValue = {})
+	@ConfigurationParameter(name = PARAM_COLUMNS, defaultValue = {})
 	List<String> columns;
 	
 	@Override
 	public void doProcessStream(InputStream stream, String source, JCas jCas) throws IOException {
+		super.doProcessStream(stream, source, jCas);
 		try(
-			CSVReader reader = new CSVReader(new InputStreamReader(stream), separator.charAt(0))
+			CSVReader reader = new CSVReader(new InputStreamReader(stream, StandardCharsets.UTF_8), separator.charAt(0))
 		){
 			String[] cols = reader.readNext();
-			if(cols.length < contentColumn){
+			if(cols == null || cols.length < contentColumn){
 				throw new IOException("Not enough columns");
 			}
 			

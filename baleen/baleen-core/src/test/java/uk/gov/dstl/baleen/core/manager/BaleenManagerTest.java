@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import uk.gov.dstl.baleen.core.manager.BaleenManager.BaleenManagerListener;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
@@ -14,9 +15,6 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /**
  * Basic test of baleen manager,
- *
- * 
- *
  */
 public class BaleenManagerTest {
 
@@ -52,6 +50,7 @@ public class BaleenManagerTest {
 				@Override
 				public void onStarted(BaleenManager manager) {
 					// Do nothing
+					assertNotNull(manager.getYaml());
 				}
 			});
 		} finally {

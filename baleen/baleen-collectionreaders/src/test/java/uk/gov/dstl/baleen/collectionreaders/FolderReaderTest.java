@@ -45,7 +45,7 @@ public class FolderReaderTest {
 			TIMEOUT = 15000L;
 		}
 	}
-	
+
 	@Before
 	public void beforeTest() throws Exception{
 		inputDir = Files.createTempDirectory(DIR).toFile();
