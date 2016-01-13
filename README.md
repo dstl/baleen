@@ -1,5 +1,7 @@
 # Baleen
 
+[![Join the chat at https://gitter.im/dstl/baleen](https://badges.gitter.im/dstl/baleen.svg)](https://gitter.im/dstl/baleen?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Baleen is an extensible text processing capability that allows entity-related information to be extracted from unstructured and semi-structured data sources. It makes available in a structured format things of interest otherwise stored in formats such as text documents - references to people, organisations, unique identifiers, location information.
 
 Baleen is written in [Java 8](http://www.oracle.com/java/javase/downloads/jre8-downloads-2133155.html) using the software project management tool [Maven 3](http://maven.apache.org) and draws heavily on the [Apache Unstructured Information Management Architecture (UIMA)](http://uima.apache.org) which provides a framework, components and infrastructure to handle unstructured information management.    
