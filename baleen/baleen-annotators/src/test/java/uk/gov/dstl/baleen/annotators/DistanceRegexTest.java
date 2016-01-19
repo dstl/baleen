@@ -75,7 +75,7 @@ public class DistanceRegexTest extends AbstractAnnotatorTest {
 											 new TestEntity<>(2, "1mile", "1mile"));
 	}
 	
-	// yards
+	// Yards
 	@Test
 	public void testDetectYards() throws Exception{
 		jCas.setDocumentText("It was 20 yards, 10yds, 1yd away");
@@ -96,13 +96,25 @@ public class DistanceRegexTest extends AbstractAnnotatorTest {
 											 new TestEntity<>(3, "1ft", "1ft"));
 	}
 	
-	// Feet
+	// Inches
 	@Test
-	public void testDetectinches() throws Exception{
-		jCas.setDocumentText("It was 20 inches, 1inch");
+	public void testDetectInches() throws Exception{
+		jCas.setDocumentText("It was 20 inches, 1inch away");
 		processJCas();
 		assertAnnotations(2, Quantity.class, new TestEntity<>(0, "20 inches", "20 inches"),
 											 new TestEntity<>(1, "1inch", "1inch"));
+	}
+	
+	// Nautical Miles
+	@Test
+	public void testDetectNauticalMiles() throws Exception{
+		jCas.setDocumentText("It was 20 nautical miles, 1nm, 5 nmi, 1 nautical mile away");
+		processJCas();
+		assertAnnotations(4, Quantity.class, new TestEntity<>(0, "20 nautical miles", "20 nautical miles"),
+											 new TestEntity<>(1, "1nm", "1nm"),
+											 new TestEntity<>(2, "5 nmi", "5 nmi"),
+											 new TestEntity<>(3, "1 nautical mile", "1 nautical mile")
+						);
 	}
 	
 	/*
@@ -192,5 +204,12 @@ public class DistanceRegexTest extends AbstractAnnotatorTest {
 		checkQuantityProperties(q, 7, 14, "60 inch", 60d, 1.524, "in", "m");
 	}	
 
-
+	// Inches
+	@Test
+	public void testNauticalMiles() throws Exception{
+		jCas.setDocumentText("It was 4 nautical miles wide.");
+		processJCas();
+		Quantity q = JCasUtil.selectByIndex(jCas, Quantity.class, 0);
+		checkQuantityProperties(q, 7, 23, "4 nautical miles", 4d, 7408d, "nmi", "m");
+	}	
 }
