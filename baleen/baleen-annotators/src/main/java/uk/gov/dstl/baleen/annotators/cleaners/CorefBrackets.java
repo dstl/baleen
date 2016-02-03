@@ -118,15 +118,9 @@ public class CorefBrackets extends BaleenAnnotator {
 		}
 		
 		if(rts.isEmpty()){
-			ReferenceTarget rt = createReferenceTarget(jCas);
-			for(Entity e : entities){
-				e.setReferent(rt);
-			}
+			setAllReferents(createReferenceTarget(jCas), entities);
 		}else if(rts.size() == 1){
-			ReferenceTarget rt = rts.toArray(new ReferenceTarget[0])[0];
-			for(Entity e : entities){
-				e.setReferent(rt);
-			}
+			setAllReferents(rts.toArray(new ReferenceTarget[0])[0], entities);
 		}else{
 			if(mergeReferents){
 				ReferenceTarget rt = createReferenceTarget(jCas);
@@ -135,17 +129,36 @@ public class CorefBrackets extends BaleenAnnotator {
 			}else{
 				getMonitor().warn("Multiple existing referents found, only those entities without existing referents will be modified");
 				
-				ReferenceTarget rt = null;
-				for(Entity e : entities){
-					if(e.getReferent() == null){
-						if(rt == null){
-							rt = createReferenceTarget(jCas);
-						}
-						e.setReferent(rt);
-					}
-				}
+				setNewReferentIfNull(jCas, entities);
 			}
 		}
+	}
+	
+	/**
+	 * Set the referents of all entities in <em>entities</em> to the ReferenceTarget specified by <em>target</em>
+	 */
+	private void setAllReferents(ReferenceTarget target, Collection<Entity> entities){
+		for(Entity e : entities){
+			e.setReferent(target);
+		}
+	}
+	
+	/**
+	 * For all entities in <em>entities</em> that don't have an existing referent, set them to the same new ReferenceTarget.
+	 * This ReferenceTarget is returned if created, else null is returned.
+	 */
+	private ReferenceTarget setNewReferentIfNull(JCas jCas, Collection<Entity> entities){
+		ReferenceTarget rt = null;
+		for(Entity e : entities){
+			if(e.getReferent() == null){
+				if(rt == null){
+					rt = createReferenceTarget(jCas);
+				}
+				e.setReferent(rt);
+			}
+		}
+		
+		return rt;
 	}
 	
 	/**

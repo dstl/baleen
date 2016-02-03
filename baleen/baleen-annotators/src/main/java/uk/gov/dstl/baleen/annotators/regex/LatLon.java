@@ -200,14 +200,14 @@ public class LatLon extends BaleenAnnotator {
 			lat += Double.parseDouble(m.group(4))/60;
 			if(m.group(7) != null)
 				lat += Double.parseDouble(m.group(7))/3600;
-			if(m.group(9).equalsIgnoreCase("S"))
+			if("S".equalsIgnoreCase(m.group(9)))
 				lat = -lat;
 			
 			Double lon = Double.parseDouble(m.group(11));
 			lon += Double.parseDouble(m.group(12))/60;
 			if(m.group(15) != null)
 				lon += Double.parseDouble(m.group(15))/3600;
-			if(m.group(17).equalsIgnoreCase("W"))
+			if("W".equalsIgnoreCase(m.group(17)))
 				lon = -lon;
 			
 			addCoordinate(aJCas, m, lon, lat, "dms");
@@ -218,13 +218,13 @@ public class LatLon extends BaleenAnnotator {
 			Double lat = Double.parseDouble(m.group(3));
 			lat += Double.parseDouble(m.group(4))/60;
 			lat += Double.parseDouble(m.group(5))/3600;
-			if(m.group(6).equalsIgnoreCase("S"))
+			if("S".equalsIgnoreCase(m.group(6)))
 				lat = -lat;
 			
 			Double lon = Double.parseDouble(m.group(8));
 			lon += Double.parseDouble(m.group(9))/60;
 			lon += Double.parseDouble(m.group(10))/3600;
-			if(m.group(11).equalsIgnoreCase("W"))
+			if("S".equalsIgnoreCase(m.group(11)))
 				lon = -lon;
 			
 			addCoordinate(aJCas, m, lon, lat, "dms");
