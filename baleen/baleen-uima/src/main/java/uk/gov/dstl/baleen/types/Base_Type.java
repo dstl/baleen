@@ -14,7 +14,7 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 
 /** Base annotation with confidence and annotator properties.
- * Updated by JCasGen Thu Feb 26 09:49:59 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
  * @generated */
 public class Base_Type extends BaleenAnnotation_Type {
   /** @generated 

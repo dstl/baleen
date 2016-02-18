@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** A Person named entitiy, as defined by an explict name reference within the source document.
- * Updated by JCasGen Wed Aug 26 12:20:46 BST 2015
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
  * @generated */
 public class Person_Type extends Entity_Type {
   /** @generated 

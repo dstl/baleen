@@ -22,8 +22,8 @@ import com.google.common.base.Strings;
 
 
 /** A base class for annotations used by Baleen. Includes things like an internal ID and a function to generate an external ID.
- * Updated by JCasGen Thu Feb 26 09:49:58 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/base_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class BaleenAnnotation extends Annotation {
 	/** @generated
@@ -41,28 +41,28 @@ public class BaleenAnnotation extends Annotation {
 	 */
 	@Override
 	public              int getTypeIndexID() {return typeIndexID;}
-
+ 
 	/** Never called.  Disable default constructor
 	 * @generated */
 	protected BaleenAnnotation() {/* intentionally empty block */}
-
+    
 	/** Internal - constructor used by generator 
 	 * @generated
 	 * @param addr low level Feature Structure reference
 	 * @param type the type of this Feature Structure 
 	 */
 	public BaleenAnnotation(int addr, TOP_Type type) {
-		super(addr, type);
-		readObject();
-	}
-
+    super(addr, type);
+    readObject();
+  }
+  
 	/** @generated
 	 * @param jcas JCas to which this Feature Structure belongs 
 	 */
 	public BaleenAnnotation(JCas jcas) {
-		super(jcas);
-		readObject();   
-	} 
+    super(jcas);
+    readObject();   
+  } 
 
 	/** @generated
 	 * @param jcas JCas to which this Feature Structure belongs
@@ -70,19 +70,19 @@ public class BaleenAnnotation extends Annotation {
 	 * @param end offset to the end spot in the SofA 
 	 */  
 	public BaleenAnnotation(JCas jcas, int begin, int end) {
-		super(jcas);
-		setBegin(begin);
-		setEnd(end);
-		readObject();
-	}   
+    super(jcas);
+    setBegin(begin);
+    setEnd(end);
+    readObject();
+  }   
 
-	/** 
-	 * <!-- begin-user-doc -->
+  /** 
+   * <!-- begin-user-doc -->
 	 * Write your own initialization here
 	 * <!-- end-user-doc -->
 	 *
-	 * @generated modifiable 
-	 */
+   * @generated modifiable 
+   */
 	private void readObject() {
 		if(getInternalId() == 0L){
 			IdentityUtils iu = IdentityUtils.getInstance();
@@ -90,32 +90,27 @@ public class BaleenAnnotation extends Annotation {
 		}
 	}
 
-	//*--------------*
-	//* Feature: internalId
+  //*--------------*
+  //* Feature: internalId
 
-	/** getter for internalId - gets An ID that is used internally to refer to the entity
-	 * @generated
-	 * @return value of the feature 
-	 */
+  /** getter for internalId - gets An ID that is used internally to refer to the entity
+   * @generated
+   * @return value of the feature 
+   */
 	public long getInternalId() {
-		if (BaleenAnnotation_Type.featOkTst && ((BaleenAnnotation_Type)jcasType).casFeat_internalId == null)
-			jcasType.jcas.throwFeatMissing("internalId", "uk.gov.dstl.baleen.types.BaleenAnnotation");
-		return jcasType.ll_cas.ll_getLongValue(addr, ((BaleenAnnotation_Type)jcasType).casFeatCode_internalId);}
-
-	/** setter for internalId - sets An ID that is used internally to refer to the entity 
-	 * @generated
-	 * @param v value to set into the feature 
-	 */
+    if (BaleenAnnotation_Type.featOkTst && ((BaleenAnnotation_Type)jcasType).casFeat_internalId == null)
+      jcasType.jcas.throwFeatMissing("internalId", "uk.gov.dstl.baleen.types.BaleenAnnotation");
+    return jcasType.ll_cas.ll_getLongValue(addr, ((BaleenAnnotation_Type)jcasType).casFeatCode_internalId);}
+    
+  /** setter for internalId - sets An ID that is used internally to refer to the entity 
+   * @generated
+   * @param v value to set into the feature 
+   */
 	public void setInternalId(long v) {
-		if(getInternalId() != 0L){
-			LOGGER.warn("Changing the internal ID is not recommended as it may break some aspects of Baleen. Internal ID has been changed from {} to {}.", getInternalId(), v);
-		}
-		if (BaleenAnnotation_Type.featOkTst && ((BaleenAnnotation_Type)jcasType).casFeat_internalId == null)
-			jcasType.jcas.throwFeatMissing("internalId", "uk.gov.dstl.baleen.types.BaleenAnnotation");
-		jcasType.ll_cas.ll_setLongValue(addr, ((BaleenAnnotation_Type)jcasType).casFeatCode_internalId, v);}
-
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaleenAnnotation.class);
+    if (BaleenAnnotation_Type.featOkTst && ((BaleenAnnotation_Type)jcasType).casFeat_internalId == null)
+      jcasType.jcas.throwFeatMissing("internalId", "uk.gov.dstl.baleen.types.BaleenAnnotation");
+    jcasType.ll_cas.ll_setLongValue(addr, ((BaleenAnnotation_Type)jcasType).casFeatCode_internalId, v);}    
+                	private static final Logger LOGGER = LoggerFactory.getLogger(BaleenAnnotation.class);
 
 	/**
 	 * Produces an ID that is based on the properties of the current annotation.

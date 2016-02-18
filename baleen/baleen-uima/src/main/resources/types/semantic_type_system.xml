@@ -25,6 +25,11 @@ This XML file classified as UK OFFICIAL.</description>
           <description>Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text.</description>
           <rangeTypeName>uk.gov.dstl.baleen.types.semantic.ReferenceTarget</rangeTypeName>
         </featureDescription>
+        <featureDescription>
+          <name>subType</name>
+          <description>String identifying sub type of entity.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
       </features>
     </typeDescription>
     <typeDescription>

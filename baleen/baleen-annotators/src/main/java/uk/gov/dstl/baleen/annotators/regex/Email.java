@@ -31,7 +31,7 @@ public class Email extends AbstractRegexAnnotator<CommsIdentifier> {
 	@Override
 	protected CommsIdentifier create(JCas jCas, Matcher matcher) {
 		CommsIdentifier ci = new CommsIdentifier(jCas);
-		ci.setIdentifierType("email");
+		ci.setSubType("email");
 		return ci;
 	}
 

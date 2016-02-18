@@ -87,7 +87,7 @@ public class Postcode extends AbstractRegexAnnotator<Coordinate> {
 		if(pcLonlat != null){
 			loc.setGeoJson("{\"type\": \"Point\", \"coordinates\": ["+pcLonlat+"]}");
 			loc.setCoordinateValue(pcLonlat);
-			loc.setCoordinateType("postcode");
+			loc.setSubType("postcode");
 			return loc;
 		} else if(postcodes.isEmpty()){
 			return loc;

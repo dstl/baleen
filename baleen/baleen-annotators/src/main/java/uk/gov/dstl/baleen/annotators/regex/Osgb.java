@@ -31,7 +31,7 @@ public class Osgb extends AbstractRegexAnnotator<Coordinate>{
 	@Override
 	protected Coordinate create(JCas jCas, Matcher matcher) {
 		Coordinate loc = new Coordinate(jCas);
-		loc.setCoordinateType("osgb");
+		loc.setSubType("osgb");
 		try {
 			// Attempt to conver to a lat lon
 			double[] en = NationalGrid.fromNationalGrid(matcher.group());

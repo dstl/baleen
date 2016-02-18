@@ -246,7 +246,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		CommsIdentifier ci = new CommsIdentifier(jCas);
 		ci.setBegin(66);
 		ci.setEnd(83);
-		ci.setIdentifierType("email");
+		ci.setSubType("email");
 		ci.setValue("james@example.com");
 		ci.addToIndexes();
 

@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP_Type;
 
 
 /** An temporal interaction of interest, covering political, organisational, miltiary, criminal or social interactions mentioned within the document.
- * Updated by JCasGen Thu Feb 05 12:06:54 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class Event extends Entity {
   /** @generated

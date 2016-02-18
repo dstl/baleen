@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import org.apache.uima.jcas.tcas.Annotation_Type;
 
 /** A base class for annotations used by Baleen. Includes things like an internal ID and a function to generate an external ID.
- * Updated by JCasGen Thu Feb 26 09:49:59 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
  * @generated */
 public class BaleenAnnotation_Type extends Annotation_Type {
   /** @generated 

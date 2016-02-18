@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** Type to represent named entities - values that are assigned a semantic type.
- * Updated by JCasGen Thu Feb 05 12:06:54 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
  * @generated */
 public class Entity_Type extends Base_Type {
   /** @generated 
@@ -94,6 +94,30 @@ public class Entity_Type extends Base_Type {
     ll_cas.ll_setRefValue(addr, casFeatCode_referent, v);}
     
   
+ 
+  /** @generated */
+  final Feature casFeat_subType;
+  /** @generated */
+  final int     casFeatCode_subType;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public String getSubType(int addr) {
+        if (featOkTst && casFeat_subType == null)
+      jcas.throwFeatMissing("subType", "uk.gov.dstl.baleen.types.semantic.Entity");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_subType);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setSubType(int addr, String v) {
+        if (featOkTst && casFeat_subType == null)
+      jcas.throwFeatMissing("subType", "uk.gov.dstl.baleen.types.semantic.Entity");
+    ll_cas.ll_setStringValue(addr, casFeatCode_subType, v);}
+    
+  
 
 
 
@@ -113,6 +137,10 @@ public class Entity_Type extends Base_Type {
  
     casFeat_referent = jcas.getRequiredFeatureDE(casType, "referent", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget", featOkTst);
     casFeatCode_referent  = (null == casFeat_referent) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_referent).getCode();
+
+ 
+    casFeat_subType = jcas.getRequiredFeatureDE(casType, "subType", "uima.cas.String", featOkTst);
+    casFeatCode_subType  = (null == casFeat_subType) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_subType).getCode();
 
   }
 }

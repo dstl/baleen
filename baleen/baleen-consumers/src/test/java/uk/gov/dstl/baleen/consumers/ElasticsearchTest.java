@@ -159,7 +159,7 @@ public class ElasticsearchTest extends ElasticsearchConsumerTestBase{
 		assertEquals(83, email.get(END));
 		assertEquals(0.0, email.get(CONFIDENCE));
 		assertEquals("CommsIdentifier", email.get(TYPE));
-		assertEquals("email", email.get("identifierType"));
+		assertEquals("email", email.get("subType"));
 		assertEquals("james@example.com", email.get(VALUE));
 		assertNotNull(email.get(EXTERNAL_ID));
 	}

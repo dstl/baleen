@@ -30,7 +30,7 @@ public class Telephone extends AbstractRegexAnnotator<CommsIdentifier> {
 	@Override
 	protected CommsIdentifier create(JCas jCas, Matcher matcher) {
 		CommsIdentifier tel = new CommsIdentifier(jCas);
-		tel.setIdentifierType("telephone");
+		tel.setSubType("telephone");
 		return tel;
 
 	}

@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
 /** A specific frequency value in the electro-magnetic spectrum (Hertz - Hz, MHz, GHz etc.).
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class Frequency extends Entity {
   /** @generated

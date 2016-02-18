@@ -30,7 +30,7 @@ public class TestQuantity extends TestAnnotation<Quantity> {
 		assertEquals(normalizedQuantity, t.getNormalizedQuantity(), 0.00001);
 		assertEquals(unit, t.getUnit());
 		assertEquals(normalizedUnit, t.getNormalizedUnit());
-		assertEquals(quantityType, t.getQuantityType());
+		assertEquals(quantityType, t.getSubType());
 	}
 
 }

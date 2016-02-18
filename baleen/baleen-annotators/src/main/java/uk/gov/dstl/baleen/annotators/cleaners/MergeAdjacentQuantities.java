@@ -38,7 +38,7 @@ public class MergeAdjacentQuantities extends MergeAdjacent {
 		Quantity q1 = (Quantity) e1;
 		Quantity q2 = (Quantity) e2;
 		
-		return q1.getNormalizedQuantity() >= q2.getNormalizedQuantity() && StringUtils.equals(q1.getQuantityType(), q2.getQuantityType()) && StringUtils.equals(q1.getNormalizedUnit(), q2.getNormalizedUnit());
+		return q1.getNormalizedQuantity() >= q2.getNormalizedQuantity() && StringUtils.equals(q1.getSubType(), q2.getSubType()) && StringUtils.equals(q1.getNormalizedUnit(), q2.getNormalizedUnit());
 	}
 	
 	@Override
@@ -66,7 +66,7 @@ public class MergeAdjacentQuantities extends MergeAdjacent {
 			normalizedQuantity += q.getNormalizedQuantity();
 			
 			setNormalizedUnit(qMerged, q.getNormalizedUnit());
-			setQuantityType(qMerged, q.getQuantityType());
+			setSubType(qMerged, q.getSubType());
 		}
 		
 		qMerged.setNormalizedQuantity(normalizedQuantity);
@@ -80,9 +80,9 @@ public class MergeAdjacentQuantities extends MergeAdjacent {
 		}
 	}
 	
-	private void setQuantityType(Quantity qMerged, String type){
-		if(StringUtils.isBlank(qMerged.getQuantityType())){
-			qMerged.setQuantityType(type);
+	private void setSubType(Quantity qMerged, String type){
+		if(StringUtils.isBlank(qMerged.getSubType())){
+			qMerged.setSubType(type);
 		}
 	}
 }

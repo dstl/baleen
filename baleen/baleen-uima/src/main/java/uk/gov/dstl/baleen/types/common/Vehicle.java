@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
 /** Specific vehicle or vessel
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class Vehicle extends Entity {
   /** @generated
@@ -76,28 +76,6 @@ public class Vehicle extends Entity {
   private void readObject() {/*default - does nothing empty block */}
      
  
-    
-  //*--------------*
-  //* Feature: vehicleType
-
-  /** getter for vehicleType - gets The type of vehicle
-   * @generated
-   * @return value of the feature 
-   */
-  public String getVehicleType() {
-    if (Vehicle_Type.featOkTst && ((Vehicle_Type)jcasType).casFeat_vehicleType == null)
-      jcasType.jcas.throwFeatMissing("vehicleType", "uk.gov.dstl.baleen.types.common.Vehicle");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Vehicle_Type)jcasType).casFeatCode_vehicleType);}
-    
-  /** setter for vehicleType - sets The type of vehicle 
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setVehicleType(String v) {
-    if (Vehicle_Type.featOkTst && ((Vehicle_Type)jcasType).casFeat_vehicleType == null)
-      jcasType.jcas.throwFeatMissing("vehicleType", "uk.gov.dstl.baleen.types.common.Vehicle");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Vehicle_Type)jcasType).casFeatCode_vehicleType, v);}    
-   
     
   //*--------------*
   //* Feature: vehicleIdentifier

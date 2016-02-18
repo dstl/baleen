@@ -31,7 +31,7 @@ public class IpV4 extends AbstractRegexAnnotator<CommsIdentifier> {
 	@Override
 	protected CommsIdentifier create(JCas jCas, Matcher matcher) {
 		CommsIdentifier ipaddress = new CommsIdentifier(jCas);
-		ipaddress.setIdentifierType("ipv4address");
+		ipaddress.setSubType("ipv4address");
 		return ipaddress;
 	}
 

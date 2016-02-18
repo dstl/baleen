@@ -31,7 +31,7 @@ public class FlightNumber extends AbstractRegexAnnotator<Vehicle> {
 	@Override
 	protected Vehicle create(JCas jCas, Matcher matcher) {
 		Vehicle flight = new Vehicle(jCas);
-		flight.setVehicleType("flight");
+		flight.setSubType("flight");
 		flight.setVehicleIdentifier(matcher.group(2));
 		return flight;
 	}

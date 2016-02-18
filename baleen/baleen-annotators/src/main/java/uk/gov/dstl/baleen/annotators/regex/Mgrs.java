@@ -67,7 +67,7 @@ public class Mgrs extends BaleenAnnotator {
 			loc.setEnd(matcher.end());
 			loc.setValue(matcher.group(0));
 
-			loc.setCoordinateType("mgrs");
+			loc.setSubType("mgrs");
 
 			enhanceCoordinate(matcher, loc);
 

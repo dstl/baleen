@@ -17,8 +17,8 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 
 /** Overriding the base DocumentAnntation to add additional features. The JCasGen code generated from this annotation replaces the default type in uima-document-annotation.jar (which should be removed from the classpath).
- * Updated by JCasGen Thu Feb 26 09:49:58 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/base_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class DocumentAnnotation extends Annotation {
   /** @generated
@@ -278,7 +278,7 @@ public class DocumentAnnotation extends Annotation {
       jcasType.jcas.throwFeatMissing("documentReleasability", "uima.tcas.DocumentAnnotation");
     jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((DocumentAnnotation_Type)jcasType).casFeatCode_documentReleasability), i);
     jcasType.ll_cas.ll_setStringArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((DocumentAnnotation_Type)jcasType).casFeatCode_documentReleasability), i, v);}
-        /**
+                        /**
 	 * Get hash of current document text
 	 */
 	public String getHash() {

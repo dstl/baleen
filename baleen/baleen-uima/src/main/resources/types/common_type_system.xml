@@ -21,11 +21,6 @@ This XML file classified as UK OFFICIAL.</description>
       <description>Specific vehicle or vessel</description>
       <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
       <features>
-        <featureDescription>
-          <name>vehicleType</name>
-          <description>The type of vehicle</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
       <featureDescription>
           <name>vehicleIdentifier</name>
           <description>An identifying name or number for the vehicle</description>
@@ -110,11 +105,6 @@ This XML file classified as UK OFFICIAL.</description>
           <description>The raw quantity</description>
           <rangeTypeName>uima.cas.Double</rangeTypeName>
         </featureDescription>
-      <featureDescription>
-          <name>quantityType</name>
-          <description>The type of quantity - e.g. distance, weight, volume, etc.</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
       </features>
     </typeDescription>
   <typeDescription>
@@ -133,13 +123,6 @@ This XML file classified as UK OFFICIAL.</description>
       <name>uk.gov.dstl.baleen.types.common.CommsIdentifier</name>
       <description>A communication identifier - including equipent, user, accounts or subscription.  Includes (but not limited to) the following types: emailAddress, IPv4, IPv6, MSISDN, IMEI, IMSI values.</description>
       <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
-      <features>
-        <featureDescription>
-          <name>identifierType</name>
-          <description>A string description of the underlying type of comms identifier described by the annotation type.</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-      </features>
     </typeDescription>
   <typeDescription>
       <name>uk.gov.dstl.baleen.types.common.DocumentReference</name>

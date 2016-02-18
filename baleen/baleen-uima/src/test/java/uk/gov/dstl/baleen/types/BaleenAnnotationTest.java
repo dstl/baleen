@@ -37,7 +37,7 @@ public class BaleenAnnotationTest {
 		CommsIdentifier ci = new CommsIdentifier(jCas);
 		ci.setBegin(16);
 		ci.setEnd(31);
-		ci.setIdentifierType("email");
+		ci.setSubType("email");
 		ci.addToIndexes();
 		
 		assertEquals(currId + 4, ci.getInternalId());

@@ -15,13 +15,6 @@ This XML file classified as UK OFFICIAL.</description>
       <name>uk.gov.dstl.baleen.types.military.MilitaryPlatform</name>
       <description>A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.</description>
       <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
-      <features>
-        <featureDescription>
-          <name>platformType</name>
-          <description>The platform type</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
-      </features>
     </typeDescription>
     </types>
 </typeSystemDescription>
