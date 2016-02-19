@@ -2,8 +2,11 @@
 package uk.gov.dstl.baleen.annotators;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -267,4 +270,23 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
 		
 		ae.destroy();
 	}
+	
+	@Test
+	public void testLongDocument() throws Exception{
+		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(STOPWORDS, SharedStopwordResource.class);
+		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(RakeKeywords.class, STOPWORDS, erd, RakeKeywords.PARAM_MAX_KEYWORDS, 12, RakeKeywords.PARAM_ADD_BUZZWORDS, true);
+		
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
+		
+		jCas.setDocumentText(new String(Files.readAllBytes(Paths.get(getClass().getResource("turing.txt").toURI()))));
+		ae.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, Metadata.class).size());
+		Metadata md = JCasUtil.selectByIndex(jCas, Metadata.class, 0);
+		assertEquals("keywords", md.getKey());
+		assertNotNull(md.getValue());
+		
+		ae.destroy();
+	}
+	
 }
