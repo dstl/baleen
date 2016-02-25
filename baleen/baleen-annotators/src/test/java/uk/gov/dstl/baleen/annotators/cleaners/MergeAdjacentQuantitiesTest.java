@@ -42,7 +42,7 @@ public class MergeAdjacentQuantitiesTest extends AbstractAnnotatorTest {
 		assertEquals(0.0, q.getQuantity(), 0.0);
 		assertEquals("kg", q.getNormalizedUnit());
 		assertEquals(25.599647, q.getNormalizedQuantity(), 0.0);
-		assertEquals("weight", q.getQuantityType());
+		assertEquals("weight", q.getSubType());
 
 		assertEquals(q3, JCasUtil.selectByIndex(jCas, Quantity.class, 1));
 	}

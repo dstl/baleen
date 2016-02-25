@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.
- * Updated by JCasGen Tue Feb 03 15:25:17 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:52:23 GMT 2016
  * @generated */
 public class MilitaryPlatform_Type extends Entity_Type {
   /** @generated 
@@ -47,32 +47,6 @@ public class MilitaryPlatform_Type extends Entity_Type {
   @SuppressWarnings ("hiding")
   public final static boolean featOkTst = JCasRegistry.getFeatOkTst("uk.gov.dstl.baleen.types.military.MilitaryPlatform");
  
-  /** @generated */
-  final Feature casFeat_platformType;
-  /** @generated */
-  final int     casFeatCode_platformType;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public String getPlatformType(int addr) {
-        if (featOkTst && casFeat_platformType == null)
-      jcas.throwFeatMissing("platformType", "uk.gov.dstl.baleen.types.military.MilitaryPlatform");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_platformType);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setPlatformType(int addr, String v) {
-        if (featOkTst && casFeat_platformType == null)
-      jcas.throwFeatMissing("platformType", "uk.gov.dstl.baleen.types.military.MilitaryPlatform");
-    ll_cas.ll_setStringValue(addr, casFeatCode_platformType, v);}
-    
-  
-
-
-
   /** initialize variables to correspond with Cas Type and Features
 	 * @generated
 	 * @param jcas JCas
@@ -81,10 +55,6 @@ public class MilitaryPlatform_Type extends Entity_Type {
   public MilitaryPlatform_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
-
- 
-    casFeat_platformType = jcas.getRequiredFeatureDE(casType, "platformType", "uima.cas.String", featOkTst);
-    casFeatCode_platformType  = (null == casFeat_platformType) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_platformType).getCode();
 
   }
 }

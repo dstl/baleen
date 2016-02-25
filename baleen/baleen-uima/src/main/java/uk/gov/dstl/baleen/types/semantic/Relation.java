@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.Base;
 
 
 /** Records a relationship between named entities, explicitly mentioned within the source document.
- * Updated by JCasGen Thu Feb 05 12:06:55 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:54:31 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class Relation extends Base {
   /** @generated

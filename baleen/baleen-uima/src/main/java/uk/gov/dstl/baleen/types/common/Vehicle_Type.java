@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** Specific vehicle or vessel
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
  * @generated */
 public class Vehicle_Type extends Entity_Type {
   /** @generated 
@@ -46,30 +46,6 @@ public class Vehicle_Type extends Entity_Type {
      @modifiable */
   @SuppressWarnings ("hiding")
   public final static boolean featOkTst = JCasRegistry.getFeatOkTst("uk.gov.dstl.baleen.types.common.Vehicle");
- 
-  /** @generated */
-  final Feature casFeat_vehicleType;
-  /** @generated */
-  final int     casFeatCode_vehicleType;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public String getVehicleType(int addr) {
-        if (featOkTst && casFeat_vehicleType == null)
-      jcas.throwFeatMissing("vehicleType", "uk.gov.dstl.baleen.types.common.Vehicle");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_vehicleType);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setVehicleType(int addr, String v) {
-        if (featOkTst && casFeat_vehicleType == null)
-      jcas.throwFeatMissing("vehicleType", "uk.gov.dstl.baleen.types.common.Vehicle");
-    ll_cas.ll_setStringValue(addr, casFeatCode_vehicleType, v);}
-    
-  
  
   /** @generated */
   final Feature casFeat_vehicleIdentifier;
@@ -105,10 +81,6 @@ public class Vehicle_Type extends Entity_Type {
   public Vehicle_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
-
- 
-    casFeat_vehicleType = jcas.getRequiredFeatureDE(casType, "vehicleType", "uima.cas.String", featOkTst);
-    casFeatCode_vehicleType  = (null == casFeat_vehicleType) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_vehicleType).getCode();
 
  
     casFeat_vehicleIdentifier = jcas.getRequiredFeatureDE(casType, "vehicleIdentifier", "uima.cas.String", featOkTst);

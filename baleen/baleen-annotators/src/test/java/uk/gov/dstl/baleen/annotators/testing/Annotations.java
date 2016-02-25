@@ -42,7 +42,7 @@ public class Annotations {
 		q.setUnit(unit);
 		q.setNormalizedQuantity(normalizedQuantity);
 		q.setNormalizedUnit("kg");
-		q.setQuantityType(WEIGHT);
+		q.setSubType(WEIGHT);
 		q.addToIndexes();
 		return q;
 	}
@@ -58,7 +58,7 @@ public class Annotations {
 		q.setUnit(unit);
 		q.setNormalizedQuantity(normalizedQuantity);
 		q.setNormalizedUnit("m");
-		q.setQuantityType("length");
+		q.setSubType("length");
 		q.addToIndexes();
 		return q;
 	}

@@ -13,7 +13,7 @@ import org.apache.uima.cas.Type;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** A well-formed uniform resource location (URL) value
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
  * @generated */
 public class Url_Type extends Entity_Type {
   /** @generated 

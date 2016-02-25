@@ -9,8 +9,8 @@ import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
 /** Base annotation with confidence and annotator properties.
- * Updated by JCasGen Thu Feb 26 09:49:59 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/base_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class Base extends BaleenAnnotation {
   /** @generated

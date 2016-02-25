@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Location_Type;
 
 /** A well-formed coordinate value - MGRS or WGS84 DD or DMS cooridate system - explictly defined in source document.
- * Updated by JCasGen Wed Jan 21 12:48:50 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:51:56 GMT 2016
  * @generated */
 public class Coordinate_Type extends Location_Type {
   /** @generated 
@@ -70,30 +70,6 @@ public class Coordinate_Type extends Location_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_coordinateValue, v);}
     
   
- 
-  /** @generated */
-  final Feature casFeat_coordinateType;
-  /** @generated */
-  final int     casFeatCode_coordinateType;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public String getCoordinateType(int addr) {
-        if (featOkTst && casFeat_coordinateType == null)
-      jcas.throwFeatMissing("coordinateType", "uk.gov.dstl.baleen.types.geo.Coordinate");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_coordinateType);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setCoordinateType(int addr, String v) {
-        if (featOkTst && casFeat_coordinateType == null)
-      jcas.throwFeatMissing("coordinateType", "uk.gov.dstl.baleen.types.geo.Coordinate");
-    ll_cas.ll_setStringValue(addr, casFeatCode_coordinateType, v);}
-    
-  
 
 
 
@@ -109,10 +85,6 @@ public class Coordinate_Type extends Location_Type {
  
     casFeat_coordinateValue = jcas.getRequiredFeatureDE(casType, "coordinateValue", "uima.cas.String", featOkTst);
     casFeatCode_coordinateValue  = (null == casFeat_coordinateValue) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_coordinateValue).getCode();
-
- 
-    casFeat_coordinateType = jcas.getRequiredFeatureDE(casType, "coordinateType", "uima.cas.String", featOkTst);
-    casFeatCode_coordinateType  = (null == casFeat_coordinateType) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_coordinateType).getCode();
 
   }
 }

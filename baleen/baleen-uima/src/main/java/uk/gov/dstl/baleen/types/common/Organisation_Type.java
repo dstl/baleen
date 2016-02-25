@@ -13,7 +13,7 @@ import org.apache.uima.cas.Type;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** An explicit refrence to a formal organisation, including governmental, political, religious, charitable, economic/financial, business or criminal bodies.
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
  * @generated */
 public class Organisation_Type extends Entity_Type {
   /** @generated 

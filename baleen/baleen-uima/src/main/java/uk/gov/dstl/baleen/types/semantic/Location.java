@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP_Type;
 
 
 /** A reference to a place, country, administrative region or geo-political entity within the source document. This is a general purpose type that is extended in "geo" types.
- * Updated by JCasGen Thu Feb 05 12:06:55 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class Location extends Entity {
   /** @generated

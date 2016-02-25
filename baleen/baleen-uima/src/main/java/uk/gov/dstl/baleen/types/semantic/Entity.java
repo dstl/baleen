@@ -13,8 +13,8 @@ import uk.gov.dstl.baleen.types.Base;
 
 
 /** Type to represent named entities - values that are assigned a semantic type.
- * Updated by JCasGen Thu Feb 05 12:06:54 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class Entity extends Base implements Recordable {
   @SuppressWarnings ("hiding")
@@ -29,11 +29,11 @@ public class Entity extends Base implements Recordable {
    */
   @Override
   public              int getTypeIndexID() {return typeIndexID;}
-
+ 
   /** Never called.  Disable default constructor
    * @generated */
   protected Entity() {/* intentionally empty block */}
-
+    
   /** Internal - constructor used by generator
    * @generated
    * @param addr low level Feature Structure reference
@@ -43,14 +43,14 @@ public class Entity extends Base implements Recordable {
     super(addr, type);
     readObject();
   }
-
+  
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs
    */
   public Entity(JCas jcas) {
     super(jcas);
-    readObject();
-  }
+    readObject();   
+  } 
 
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs
@@ -62,14 +62,14 @@ public class Entity extends Base implements Recordable {
     setBegin(begin);
     setEnd(end);
     readObject();
-  }
+  }   
 
-  /**
+  /** 
    * <!-- begin-user-doc -->
    * Write your own initialization here
    * <!-- end-user-doc -->
    *
-   * @generated modifiable
+   * @generated modifiable 
    */
   private void readObject() {/*default - does nothing empty block */}
 
@@ -78,46 +78,64 @@ public class Entity extends Base implements Recordable {
 
   /** getter for value - gets A value which reflects the name of the entity. May or may not differ from underlying span from the document.
    * @generated
-   * @return value of the feature
+   * @return value of the feature 
    */
   public String getValue() {
-    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_value == null) {
-		jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
-	}
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_value == null)
+      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
     return jcasType.ll_cas.ll_getStringValue(addr, ((Entity_Type)jcasType).casFeatCode_value);}
-
-  /** setter for value - sets A value which reflects the name of the entity. May or may not differ from underlying span from the document.
+    
+  /** setter for value - sets A value which reflects the name of the entity. May or may not differ from underlying span from the document. 
    * @generated
-   * @param v value to set into the feature
+   * @param v value to set into the feature 
    */
   public void setValue(String v) {
-    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_value == null) {
-		jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
-	}
-    jcasType.ll_cas.ll_setStringValue(addr, ((Entity_Type)jcasType).casFeatCode_value, v);}
-
-
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_value == null)
+      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Entity_Type)jcasType).casFeatCode_value, v);}    
+   
+    
   //*--------------*
   //* Feature: referent
 
   /** getter for referent - gets Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text.
    * @generated
-   * @return value of the feature
+   * @return value of the feature 
    */
   public ReferenceTarget getReferent() {
-    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_referent == null) {
-		jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
-	}
-    return (ReferenceTarget)jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Entity_Type)jcasType).casFeatCode_referent));}
-
-  /** setter for referent - sets Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text.
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_referent == null)
+      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
+    return (ReferenceTarget)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Entity_Type)jcasType).casFeatCode_referent)));}
+    
+  /** setter for referent - sets Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text. 
    * @generated
-   * @param v value to set into the feature
+   * @param v value to set into the feature 
    */
   public void setReferent(ReferenceTarget v) {
-    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_referent == null) {
-		jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
-	}
-    jcasType.ll_cas.ll_setRefValue(addr, ((Entity_Type)jcasType).casFeatCode_referent, jcasType.ll_cas.ll_getFSRef(v));}
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_referent == null)
+      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Entity_Type)jcasType).casFeatCode_referent, jcasType.ll_cas.ll_getFSRef(v));}    
+   
+    
+  //*--------------*
+  //* Feature: subType
+
+  /** getter for subType - gets String identifying sub type of entity.
+   * @generated
+   * @return value of the feature 
+   */
+  public String getSubType() {
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_subType == null)
+      jcasType.jcas.throwFeatMissing("subType", "uk.gov.dstl.baleen.types.semantic.Entity");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Entity_Type)jcasType).casFeatCode_subType);}
+    
+  /** setter for subType - sets String identifying sub type of entity. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setSubType(String v) {
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_subType == null)
+      jcasType.jcas.throwFeatMissing("subType", "uk.gov.dstl.baleen.types.semantic.Entity");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Entity_Type)jcasType).casFeatCode_subType, v);}    
   }
 

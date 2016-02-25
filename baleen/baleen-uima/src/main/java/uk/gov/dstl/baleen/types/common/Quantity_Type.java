@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** Type to annotate references to quantities within text
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
  * @generated */
 public class Quantity_Type extends Entity_Type {
   /** @generated 
@@ -142,30 +142,6 @@ public class Quantity_Type extends Entity_Type {
     ll_cas.ll_setDoubleValue(addr, casFeatCode_quantity, v);}
     
   
- 
-  /** @generated */
-  final Feature casFeat_quantityType;
-  /** @generated */
-  final int     casFeatCode_quantityType;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public String getQuantityType(int addr) {
-        if (featOkTst && casFeat_quantityType == null)
-      jcas.throwFeatMissing("quantityType", "uk.gov.dstl.baleen.types.common.Quantity");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_quantityType);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setQuantityType(int addr, String v) {
-        if (featOkTst && casFeat_quantityType == null)
-      jcas.throwFeatMissing("quantityType", "uk.gov.dstl.baleen.types.common.Quantity");
-    ll_cas.ll_setStringValue(addr, casFeatCode_quantityType, v);}
-    
-  
 
 
 
@@ -193,10 +169,6 @@ public class Quantity_Type extends Entity_Type {
  
     casFeat_quantity = jcas.getRequiredFeatureDE(casType, "quantity", "uima.cas.Double", featOkTst);
     casFeatCode_quantity  = (null == casFeat_quantity) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_quantity).getCode();
-
- 
-    casFeat_quantityType = jcas.getRequiredFeatureDE(casType, "quantityType", "uima.cas.String", featOkTst);
-    casFeatCode_quantityType  = (null == casFeat_quantityType) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_quantityType).getCode();
 
   }
 }

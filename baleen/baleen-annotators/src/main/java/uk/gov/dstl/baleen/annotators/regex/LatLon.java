@@ -334,7 +334,7 @@ public class LatLon extends BaleenAnnotator {
 						+ coords + "}");
 	
 				loc.setCoordinateValue(lon + "," + lat);
-				loc.setCoordinateType(coordinateType);
+				loc.setSubType(coordinateType);
 	
 				addToJCasIndex(loc);
 			}

@@ -12,6 +12,8 @@ import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import com.google.common.base.Strings;
+
 import uk.gov.dstl.baleen.core.utils.ConfigUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.types.semantic.Entity;
@@ -71,6 +73,15 @@ public class Custom extends BaleenAnnotator {
 	private String type = "uk.gov.dstl.baleen.types.semantic.Entity";
 	
 	/**
+	 * The entity subType to use for matched entities
+	 * 
+	 * @baleen.config
+	 */
+	public static final String PARAM_SUB_TYPE = "subType";
+	@ConfigurationParameter(name = PARAM_SUB_TYPE, defaultValue="")
+	private String subType = "";
+	
+	/**
 	 * The confidence to assign to matched entities
 	 * 
 	 * @baleen.config 1.0
@@ -93,7 +104,6 @@ public class Custom extends BaleenAnnotator {
 		}else{
 			p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
 		}
-		
 		try{
 			et = TypeUtils.getEntityClass(type, JCasFactory.createJCas());
 		}catch(UIMAException | BaleenException e){
@@ -120,6 +130,9 @@ public class Custom extends BaleenAnnotator {
 			ret.setEnd(m.end());
 			
 			ret.setConfidence(confidence);
+			if (!Strings.isNullOrEmpty(subType)) {
+				ret.setSubType(subType);
+			}
 			
 			addToJCasIndex(ret);
 		}

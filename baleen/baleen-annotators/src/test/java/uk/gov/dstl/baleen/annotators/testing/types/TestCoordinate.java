@@ -20,7 +20,7 @@ public class TestCoordinate extends TestAnnotation<Coordinate> {
 	public void validate(Coordinate t) {
 		super.validate(t);
 		
-		assertEquals(coordinateType, t.getCoordinateType());
+		assertEquals(coordinateType, t.getSubType());
 		assertEquals(geometry, t.getGeoJson());
 	}
 

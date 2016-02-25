@@ -21,11 +21,6 @@ This XML file classified as UK OFFICIAL.</description>
           <description>A normalised value for the coordinate.</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
-        <featureDescription>
-          <name>coordinateType</name>
-          <description>A designator for the coordinate system of the extracted coordinate value.  Likely to be DD (decimal degree) , DMS (degrees, minutes seconds) or MGRS (military grid reference system) within WGS84.</description>
-          <rangeTypeName>uima.cas.String</rangeTypeName>
-        </featureDescription>
       </features>
     </typeDescription>
   </types>

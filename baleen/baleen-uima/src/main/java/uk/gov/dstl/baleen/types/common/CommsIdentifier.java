@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
 /** A communication identifier - including equipent, user, accounts or subscription.  Includes (but not limited to) the following types: emailAddress, IPv4, IPv6, MSISDN, IMEI, IMSI values.
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class CommsIdentifier extends Entity {
   /** @generated
@@ -77,26 +77,6 @@ public class CommsIdentifier extends Entity {
      
  
     
-  //*--------------*
-  //* Feature: identifierType
-
-  /** getter for identifierType - gets A string description of the underlying type of comms identifier described by the annotation type.
-   * @generated
-   * @return value of the feature 
-   */
-  public String getIdentifierType() {
-    if (CommsIdentifier_Type.featOkTst && ((CommsIdentifier_Type)jcasType).casFeat_identifierType == null)
-      jcasType.jcas.throwFeatMissing("identifierType", "uk.gov.dstl.baleen.types.common.CommsIdentifier");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((CommsIdentifier_Type)jcasType).casFeatCode_identifierType);}
-    
-  /** setter for identifierType - sets A string description of the underlying type of comms identifier described by the annotation type. 
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setIdentifierType(String v) {
-    if (CommsIdentifier_Type.featOkTst && ((CommsIdentifier_Type)jcasType).casFeat_identifierType == null)
-      jcasType.jcas.throwFeatMissing("identifierType", "uk.gov.dstl.baleen.types.common.CommsIdentifier");
-    jcasType.ll_cas.ll_setStringValue(addr, ((CommsIdentifier_Type)jcasType).casFeatCode_identifierType, v);}    
-  }
+}
 
     

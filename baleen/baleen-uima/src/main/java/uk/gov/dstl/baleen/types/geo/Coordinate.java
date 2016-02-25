@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Location;
 
 
 /** A well-formed coordinate value - MGRS or WGS84 DD or DMS cooridate system - explictly defined in source document.
- * Updated by JCasGen Wed Jan 21 12:48:50 GMT 2015
- * XML source: H:/git/core/baleen/baleen-uima/src/main/resources/geo_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:51:56 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/geo_type_system.xml
  * @generated */
 public class Coordinate extends Location {
   /** @generated
@@ -97,28 +97,6 @@ public class Coordinate extends Location {
     if (Coordinate_Type.featOkTst && ((Coordinate_Type)jcasType).casFeat_coordinateValue == null)
       jcasType.jcas.throwFeatMissing("coordinateValue", "uk.gov.dstl.baleen.types.geo.Coordinate");
     jcasType.ll_cas.ll_setStringValue(addr, ((Coordinate_Type)jcasType).casFeatCode_coordinateValue, v);}    
-   
-    
-  //*--------------*
-  //* Feature: coordinateType
-
-  /** getter for coordinateType - gets A designator for the coordinate system of the extracted coordinate value.  Likely to be DD (decimal degree) , DMS (degrees, minutes seconds) or MGRS (military grid reference system) within WGS84.
-   * @generated
-   * @return value of the feature 
-   */
-  public String getCoordinateType() {
-    if (Coordinate_Type.featOkTst && ((Coordinate_Type)jcasType).casFeat_coordinateType == null)
-      jcasType.jcas.throwFeatMissing("coordinateType", "uk.gov.dstl.baleen.types.geo.Coordinate");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Coordinate_Type)jcasType).casFeatCode_coordinateType);}
-    
-  /** setter for coordinateType - sets A designator for the coordinate system of the extracted coordinate value.  Likely to be DD (decimal degree) , DMS (degrees, minutes seconds) or MGRS (military grid reference system) within WGS84. 
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setCoordinateType(String v) {
-    if (Coordinate_Type.featOkTst && ((Coordinate_Type)jcasType).casFeat_coordinateType == null)
-      jcasType.jcas.throwFeatMissing("coordinateType", "uk.gov.dstl.baleen.types.geo.Coordinate");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Coordinate_Type)jcasType).casFeatCode_coordinateType, v);}    
   }
 
     

@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** A communication identifier - including equipent, user, accounts or subscription.  Includes (but not limited to) the following types: emailAddress, IPv4, IPv6, MSISDN, IMEI, IMSI values.
- * Updated by JCasGen Tue Feb 03 15:26:49 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
  * @generated */
 public class CommsIdentifier_Type extends Entity_Type {
   /** @generated 
@@ -47,32 +47,6 @@ public class CommsIdentifier_Type extends Entity_Type {
   @SuppressWarnings ("hiding")
   public final static boolean featOkTst = JCasRegistry.getFeatOkTst("uk.gov.dstl.baleen.types.common.CommsIdentifier");
  
-  /** @generated */
-  final Feature casFeat_identifierType;
-  /** @generated */
-  final int     casFeatCode_identifierType;
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @return the feature value 
-   */ 
-  public String getIdentifierType(int addr) {
-        if (featOkTst && casFeat_identifierType == null)
-      jcas.throwFeatMissing("identifierType", "uk.gov.dstl.baleen.types.common.CommsIdentifier");
-    return ll_cas.ll_getStringValue(addr, casFeatCode_identifierType);
-  }
-  /** @generated
-   * @param addr low level Feature Structure reference
-   * @param v value to set 
-   */    
-  public void setIdentifierType(int addr, String v) {
-        if (featOkTst && casFeat_identifierType == null)
-      jcas.throwFeatMissing("identifierType", "uk.gov.dstl.baleen.types.common.CommsIdentifier");
-    ll_cas.ll_setStringValue(addr, casFeatCode_identifierType, v);}
-    
-  
-
-
-
   /** initialize variables to correspond with Cas Type and Features
 	 * @generated
 	 * @param jcas JCas
@@ -81,10 +55,6 @@ public class CommsIdentifier_Type extends Entity_Type {
   public CommsIdentifier_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl)this.casType, getFSGenerator());
-
- 
-    casFeat_identifierType = jcas.getRequiredFeatureDE(casType, "identifierType", "uima.cas.String", featOkTst);
-    casFeatCode_identifierType  = (null == casFeat_identifierType) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_identifierType).getCode();
 
   }
 }

@@ -65,7 +65,7 @@ public class QuantityUtils {
 			quant.setNormalizedUnit(normalizedUnit);
 		}
 
-		quant.setQuantityType(quantityType);
+		quant.setSubType(quantityType);
 
 		return quant;
 	}

@@ -14,7 +14,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** A reference to a place, country, administrative region or geo-political entity within the source document. This is a general purpose type that is extended in "geo" types.
- * Updated by JCasGen Thu Feb 05 12:06:55 GMT 2015
+ * Updated by JCasGen Fri Feb 05 14:54:31 GMT 2016
  * @generated */
 public class Location_Type extends Entity_Type {
   /** @generated 

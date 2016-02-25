@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
 /** A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.
- * Updated by JCasGen Tue Feb 03 15:25:17 GMT 2015
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/military_type_system.xml
+ * Updated by JCasGen Fri Feb 05 14:52:23 GMT 2016
+ * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/military_type_system.xml
  * @generated */
 public class MilitaryPlatform extends Entity {
   /** @generated
@@ -77,26 +77,6 @@ public class MilitaryPlatform extends Entity {
      
  
     
-  //*--------------*
-  //* Feature: platformType
-
-  /** getter for platformType - gets The platform type
-   * @generated
-   * @return value of the feature 
-   */
-  public String getPlatformType() {
-    if (MilitaryPlatform_Type.featOkTst && ((MilitaryPlatform_Type)jcasType).casFeat_platformType == null)
-      jcasType.jcas.throwFeatMissing("platformType", "uk.gov.dstl.baleen.types.military.MilitaryPlatform");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((MilitaryPlatform_Type)jcasType).casFeatCode_platformType);}
-    
-  /** setter for platformType - sets The platform type 
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setPlatformType(String v) {
-    if (MilitaryPlatform_Type.featOkTst && ((MilitaryPlatform_Type)jcasType).casFeat_platformType == null)
-      jcasType.jcas.throwFeatMissing("platformType", "uk.gov.dstl.baleen.types.military.MilitaryPlatform");
-    jcasType.ll_cas.ll_setStringValue(addr, ((MilitaryPlatform_Type)jcasType).casFeatCode_platformType, v);}    
-  }
+}
 
     

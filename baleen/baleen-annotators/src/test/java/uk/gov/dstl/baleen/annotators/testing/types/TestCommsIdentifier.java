@@ -16,7 +16,7 @@ public class TestCommsIdentifier extends TestEntity<CommsIdentifier> {
 	@Override
 	public void validate(CommsIdentifier t) {
 		super.validate(t);
-		assertEquals(identifierType, t.getIdentifierType());
+		assertEquals(identifierType, t.getSubType());
 	}
 	
 }

@@ -19,7 +19,7 @@ public class TestVehicle extends TestAnnotation<Vehicle> {
 	public void validate(Vehicle t) {
 		super.validate(t);
 		
-		assertEquals(vehicleType, t.getVehicleType());
+		assertEquals(vehicleType, t.getSubType());
 	}
 
 }
