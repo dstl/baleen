@@ -2,7 +2,9 @@
 package uk.gov.dstl.baleen.annotators.regex;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +40,11 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * <pre>\\b(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])[,\\h]*(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])</pre>
  * <p>A similar regex is used to find pairs that have spaces instead of symbols in them (e.g. 10 12 14 N, 11 13 15 E),
  * and another regex to find pairs with no spaces.</p>
+ * <p>The following regexes are also used to pick up other formats:</p>
+ * <ul>
+ * <li><pre>\\b(lat|latitude)\\h*(\\d{1,2})°\\h*(\\d{1,2}(\\.\\d+)?)'(\\h*(\\d{1,2}(\\.\\d+)?)\")?\\h*([NS])\\.?,?\\h*(lon|long|longitude)\\h*(\\d{1,3})°\\h*(\\d{1,2}(\\.\\d+)?)'(\\h*(\\d{1,2}(\\.\\d+)?)\")?\\h*([EW])\\b</pre></li>
+ * <li><pre>\\b(lat|latitude)\\h*(\\d{1,2})°\\h*(\\d{1,2})'\\.(\\d+)\\h*([NS])\\.?,?\\h*(lon|long|longitude)\\h*(\\d{1,3})°\\h*(\\d{1,2})'\\.(\\d+)\\h*([EW])\\b</pre></li>
+ * </ul>
  * <p>Some validation is done on the extracted text, then the latitude and longitude are extracted and a GeoJSON object is
  * built representing this location.</p>
  * 
@@ -52,6 +59,13 @@ public class LatLon extends BaleenAnnotator {
 			.compile("\\b(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])[,/\\h]*(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])\\b");
 	private final Pattern llDMSNumericPattern = Pattern
 			.compile("\\b(\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])[,/\\h]*(\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])\\b");
+	private final Pattern llDMSPunctuationPattern = Pattern
+			.compile("\\b(\\d{2,3})-(\\d{2}),(\\d{2})?( )?([NSEW])[,/\\h]*(\\d{2,3})-(\\d{2}),(\\d{2})?( )?([NSEW])\\b");
+	
+	private final Pattern llDMSTextPattern = Pattern
+			.compile("\\b((lat|latitude)\\h*)?(\\d{1,2})°\\h*(\\d{1,2}(\\.\\d+)?)'(\\h*(\\d{1,2}(\\.\\d+)?)\")?\\h*([NS])\\.?,?\\h*(lon|long|longitude)?\\h*(\\d{1,3})°\\h*(\\d{1,2}(\\.\\d+)?)'(\\h*(\\d{1,2}(\\.\\d+)?)\")?\\h*([EW])\\b", Pattern.CASE_INSENSITIVE);
+	private final Pattern llDMTextPattern = Pattern
+			.compile("\\b((lat|latitude)\\h*)?(\\d{1,2})°\\h*(\\d{1,2})'\\.(\\d+)\\h*([NS])\\.?,?\\h*(lon|long|longitude)?\\h*(\\d{1,3})°\\h*(\\d{1,2})'\\.(\\d+)\\h*([EW])\\b", Pattern.CASE_INSENSITIVE);
 
 	/**
 	 * Tell the annotator that coordinates are specified with the longitude first rather than the latitude.
@@ -85,6 +99,11 @@ public class LatLon extends BaleenAnnotator {
 	private List<String> currencySymbols = Arrays.asList("£", "$", "€");
 
 	/**
+	 * Set of already found coordinates (per document) to avoid different patterns picking out the same coordinate
+	 */
+	private Set<String> found;
+	
+	/**
 	 * Initialise the annotator - primarily, this sets the regular expression to
 	 * the correct pattern for the user specified minDP (minimum decimal places)
 	 */
@@ -109,8 +128,11 @@ public class LatLon extends BaleenAnnotator {
 	 */
 	@Override
 	public void doProcess(JCas aJCas) throws AnalysisEngineProcessException {
+		found = new HashSet<>();
+		
 		processDD(aJCas);
 		processDMS(aJCas);
+		processDMSText(aJCas);
 	}
 
 	private void processDD(JCas aJCas) {
@@ -147,10 +169,9 @@ public class LatLon extends BaleenAnnotator {
 	}
 
 	private void processDMS(JCas aJCas) throws AnalysisEngineProcessException {
-		String text = aJCas.getDocumentText();
+		String text = normalizeQuotesAndDots(aJCas.getDocumentText());
 
-		Pattern[] patterns = new Pattern[] { llDMSPattern, llDMSSpacePattern,
-				llDMSNumericPattern };
+		Pattern[] patterns = new Pattern[] { llDMSPattern, llDMSSpacePattern, llDMSNumericPattern, llDMSPunctuationPattern };
 
 		for (Pattern p : patterns) {
 			Matcher matcher = p.matcher(text);
@@ -167,6 +188,46 @@ public class LatLon extends BaleenAnnotator {
 					getMonitor().warn("Couldn't parse extracted coordinates - coordinate will be skipped", e);
 				}
 			}
+		}
+	}
+	
+	private void processDMSText(JCas aJCas) throws AnalysisEngineProcessException {
+		String text = normalizeQuotesAndDots(aJCas.getDocumentText());
+
+		Matcher m = llDMSTextPattern.matcher(text);
+		while(m.find()){
+			Double lat = Double.parseDouble(m.group(3));
+			lat += Double.parseDouble(m.group(4))/60;
+			if(m.group(7) != null)
+				lat += Double.parseDouble(m.group(7))/3600;
+			if("S".equalsIgnoreCase(m.group(9)))
+				lat = -lat;
+			
+			Double lon = Double.parseDouble(m.group(11));
+			lon += Double.parseDouble(m.group(12))/60;
+			if(m.group(15) != null)
+				lon += Double.parseDouble(m.group(15))/3600;
+			if("W".equalsIgnoreCase(m.group(17)))
+				lon = -lon;
+			
+			addCoordinate(aJCas, m, lon, lat, "dms");
+		}
+		
+		m = llDMTextPattern.matcher(text);
+		while(m.find()){
+			Double lat = Double.parseDouble(m.group(3));
+			lat += Double.parseDouble(m.group(4))/60;
+			lat += Double.parseDouble(m.group(5))/3600;
+			if("S".equalsIgnoreCase(m.group(6)))
+				lat = -lat;
+			
+			Double lon = Double.parseDouble(m.group(8));
+			lon += Double.parseDouble(m.group(9))/60;
+			lon += Double.parseDouble(m.group(10))/3600;
+			if("S".equalsIgnoreCase(m.group(11)))
+				lon = -lon;
+			
+			addCoordinate(aJCas, m, lon, lat, "dms");
 		}
 	}
 
@@ -254,27 +315,37 @@ public class LatLon extends BaleenAnnotator {
 		}
 	}
 
-	private void addCoordinate(JCas aJCas, Matcher matcher, Double lon,
-			Double lat, String coordinateType) {
+	private void addCoordinate(JCas aJCas, Matcher matcher, Double lon, Double lat, String coordinateType) {
 		if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-			Coordinate loc = new Coordinate(aJCas);
+			String textLoc = matcher.start() + "," + matcher.end();
 
-			loc.setConfidence(1.0f);
-
-			loc.setBegin(matcher.start());
-			loc.setEnd(matcher.end());
-			loc.setValue(matcher.group(0));
-
-			String coords = "[" + lon + "," + lat + "]";
-
-			loc.setGeoJson("{\"type\":\"Point\",\"coordinates\":"
-					+ coords + "}");
-
-			loc.setCoordinateValue(lon + "," + lat);
-			loc.setSubType(coordinateType);
-
-			addToJCasIndex(loc);
+			if(found.add(textLoc)){			
+				Coordinate loc = new Coordinate(aJCas);
+	
+				loc.setConfidence(1.0f);
+	
+				loc.setBegin(matcher.start());
+				loc.setEnd(matcher.end());
+				loc.setValue(matcher.group(0));
+	
+				String coords = "[" + lon + "," + lat + "]";
+	
+				loc.setGeoJson("{\"type\":\"Point\",\"coordinates\":"
+						+ coords + "}");
+	
+				loc.setCoordinateValue(lon + "," + lat);
+				loc.setSubType(coordinateType);
+	
+				addToJCasIndex(loc);
+			}
 		}
 	}
-
+	
+	/**
+	 * Replace smart quotes, curly quotes, back ticks and mid-dots with standard quotes and dots
+	 * to simplify the required regular expressions.
+	 */
+	public static String normalizeQuotesAndDots(String s){
+		return s.replaceAll("[\\u201C\\u201D\\u2033\\u02BA\\u301E\\u3003]", "\"").replaceAll("[\\u2018\\u2019\\u2032\\u00B4\\u02B9`]", "'").replaceAll("[\\u00B7]", ".");
+	}
 }

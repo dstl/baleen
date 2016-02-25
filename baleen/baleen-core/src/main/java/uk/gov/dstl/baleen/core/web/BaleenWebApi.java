@@ -3,6 +3,8 @@ package uk.gov.dstl.baleen.core.web;
 
 import java.io.File;
 import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -396,14 +398,13 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		// Does JavaDoc exist?
 		File javadocJar = null;
 		try {
-			File currentJar = new File(BaleenWebApi.class.getProtectionDomain()
-					.getCodeSource().getLocation().getPath());
+			File currentJar = Paths.get(BaleenWebApi.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toFile();
 			String name = currentJar.getName();
 			if (name.endsWith(".jar")) {
 				name = name.substring(0, name.length() - 4) + "-javadoc.jar";
 				javadocJar = new File(currentJar.getParent(), name);
 				if (!javadocJar.exists()) {
-					LOGGER.debug("Unable to locate Javadoc JAR '" + name + "'");
+					LOGGER.debug("Unable to locate Javadoc JAR '" + name + "' - Javadoc will not be available");
 					javadocJar = null;
 				}
 			} else {
@@ -413,6 +414,10 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 			LOGGER.debug(
 					"Couldn't get name of current JAR - Javadoc will not be available",
 					npe);
+		} catch (URISyntaxException use) {
+			LOGGER.debug(
+					"Couldn't get name of current JAR - Javadoc will not be available",
+					use);
 		}
 
 		// If Javadoc exists, serve it
