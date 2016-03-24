@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -146,5 +147,27 @@ public abstract class AbstractKeywordsAnnotator extends BaleenAnnotator {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Build a regular expression that matches any of the current list of stopwords,
+	 * along with any additional terms provided.
+	 * 
+	 * Any additional terms provided are not escaped, so you can provide your own regular
+	 * expressions to include in the pattern.
+	 */
+	protected Pattern buildStopwordsPattern(String... additionalTerms){
+		StringJoiner sj = new StringJoiner("|");
+		for(String s : stopwords){
+			sj.add(Pattern.quote(s));
+		}
+		
+		if(additionalTerms != null){
+			for(String s : additionalTerms){
+				sj.add(s);
+			}
+		}
+		
+		return Pattern.compile("\\b("+sj.toString()+")\\b", Pattern.CASE_INSENSITIVE);
 	}
 }

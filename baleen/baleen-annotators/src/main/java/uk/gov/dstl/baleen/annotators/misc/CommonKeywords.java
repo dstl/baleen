@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UimaContext;
@@ -27,6 +26,7 @@ import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer.ALGORITHM;
 import uk.gov.dstl.baleen.annotators.misc.helpers.AbstractKeywordsAnnotator;
+import uk.gov.dstl.baleen.annotators.misc.helpers.NoOpStemmer;
 
 /**
  * This annotator attempts to identify keywords using the following process:
@@ -35,7 +35,7 @@ import uk.gov.dstl.baleen.annotators.misc.helpers.AbstractKeywordsAnnotator;
  * 3) Stem each n-gram
  * 4) Count the occurrences of each stemmed n-gram, weighting the count based on n-gram length
  * 5) Select the most commonly occurring n-grams
- * 5) Convert back to the original words
+ * 6) Convert back to the original words
  */
 public class CommonKeywords extends AbstractKeywordsAnnotator {
 	/**
@@ -76,12 +76,7 @@ public class CommonKeywords extends AbstractKeywordsAnnotator {
 			 stemmer = new NoOpStemmer();
 		}
 		
-		StringJoiner sj = new StringJoiner("|");
-		stopwords.forEach(s -> sj.add("\\b" + Pattern.quote(s) + "\\b"));
-		
-		sj.add("[-.!?0-9]");
-		
-		stopwordPattern = sj.toString();
+		stopwordPattern = buildStopwordsPattern("[-.!?0-9]").pattern();
 	}
 	
 	@Override
