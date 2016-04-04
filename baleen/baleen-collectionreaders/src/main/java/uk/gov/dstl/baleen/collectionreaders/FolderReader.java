@@ -24,15 +24,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.resources.SharedDocumentCheckerResource;
+import uk.gov.dstl.baleen.resources.SharedDocumentStatusResource;
+import uk.gov.dstl.baleen.resources.documentchecker.DocumentExistanceStatus;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
 
@@ -40,10 +45,35 @@ import uk.gov.dstl.baleen.uima.IContentExtractor;
  * Inspect a folder for unprocessed files, and process them through the pipeline.
  * Currently, the list of previously processed files is held in memory and so will be lost if the server is restarted.
  * This can be avoided by using the MoveSourceConsumer (for example), and removing the files after processing
- * 
+ *
  * @baleen.javadoc
  */
-public class FolderReader extends BaleenCollectionReader {
+public class FolderReader extends BaleenCollectionReader implements DocumentExistanceStatus {
+
+	/**
+	 * Map document location to modified date
+	 */
+	private Map<String, Long> documents = new ConcurrentHashMap<String, Long>();
+	
+	/**
+	 * Document status resource
+	 * 
+	 * @baleen.resource uk.gov.dstl.baleen.resources.SharedDocumentStatusResource
+	 */
+	public static final String KEY_DOC_STATUS = "documentstatus";
+	@ExternalResource(key = KEY_DOC_STATUS)
+	private SharedDocumentStatusResource docStatus;
+
+
+	/**
+	 * Document checker resource
+	 * 
+	 * @baleen.resource uk.gov.dstl.baleen.resources.SharedDocumentStatusResource
+	 */
+	public static final String KEY_DOC_CHECKER = "documentchecker";
+	@ExternalResource(key = KEY_DOC_CHECKER)
+	private SharedDocumentCheckerResource docChecker;
+	
 	/**
 	 * A list of folders to watch
 	 * 
@@ -71,6 +101,15 @@ public class FolderReader extends BaleenCollectionReader {
 	@ConfigurationParameter(name = PARAM_RECURSIVE, defaultValue="true")
 	private boolean recursive = true;
 
+	/**
+	 * Should content be reingested at start-up
+	 * 
+	 * @baleen.config true
+	 */
+	public static final String PARAM_REINGEST = "reingest";
+	@ConfigurationParameter(name = PARAM_REINGEST, defaultValue="true")
+	private boolean reingest = true;
+	
 	/**
 	 * The content extractor to use to extract content from files
 	 * 
@@ -122,7 +161,15 @@ public class FolderReader extends BaleenCollectionReader {
 		}catch(IOException ioe){
 			throw new ResourceInitializationException(ioe);
 		}
-		
+
+		if (!reingest && null==docStatus) {
+			getMonitor().warn("No doc status resource, setting reingest to true");
+			reingest=true;
+		}
+		if (!reingest) {
+			docChecker.register(this);
+			checkExistingDocuments();
+		}
 		registerFolders();
 	}
 
@@ -165,11 +212,6 @@ public class FolderReader extends BaleenCollectionReader {
 
 	private void addFilesFromDir(File dir){
 		File[] files = dir.listFiles();
-		
-		if(files == null){
-			return;
-		}
-		
 		for (int i = 0; i < files.length; i++) {
 			if(!files[i].isDirectory()){
 				addFile(files[i].toPath());
@@ -209,6 +251,11 @@ public class FolderReader extends BaleenCollectionReader {
 			extractor.destroy();
 			extractor = null;
 		}
+		
+		if (!reingest) {
+			docChecker.unregister(this);
+			documents.clear();
+		}
 	}
 
 	/**
@@ -240,12 +287,26 @@ public class FolderReader extends BaleenCollectionReader {
 			getMonitor().warn("OVERFLOW event received - some files may be missing from the queue");
 		}else if(event.kind() == ENTRY_DELETE){
 			getMonitor().debug("ENTRY_DELETE event received - file '{}' will be removed from queue", pathEvent.context());
-			
+
 			try{
 				Path dir = watchKeys.get(key);
 				if(dir != null){
 					Path resolved = dir.resolve(pathEvent.context());
-					queue.remove(resolved);
+					boolean wasDirectory = false;
+					
+					for (Map.Entry<WatchKey, Path> watch : watchKeys.entrySet()) {
+						if (watch.getValue().equals(resolved)) {
+							getMonitor().debug("Removing dir {} from watch list", resolved);
+							watchKeys.remove(watch.getKey());
+							getMonitor().counter("directories").dec();
+							wasDirectory=true;
+							break;
+						}
+					}
+					if (!wasDirectory) {
+						queue.remove(resolved);
+						docChecker.check(resolved.toString());
+					}
 				}else{
 					getMonitor().warn("WatchKey not found - file '{}' will not be removed from the queue", pathEvent.context());
 				}
@@ -254,13 +315,19 @@ public class FolderReader extends BaleenCollectionReader {
 			}
 			
 			queue.remove(pathEvent.context());
-		}else{
+		}else {
 			getMonitor().debug(event.kind().name() + " event received - file '{}' will be added to the queue", pathEvent.context());
 			try{
 				Path dir = watchKeys.get(key);
 				if(dir != null){
 					Path resolved = dir.resolve(pathEvent.context());
-					addFile(resolved);
+					if (resolved.toFile().isDirectory()) {
+						getMonitor().debug("Adding dir {} to watch list", resolved);
+						registerDirectory(resolved);
+						addFilesFromDir(resolved.toFile());
+					} else {
+						addFile(resolved);
+					}
 				}else{
 					getMonitor().warn("WatchKey not found - file '{}' will not be added to the queue", pathEvent.context());
 				}
@@ -272,7 +339,34 @@ public class FolderReader extends BaleenCollectionReader {
 	
 	private void addFile(Path path){
 		if(allowedExtensionsSet.isEmpty() || allowedExtensionsSet.contains(FilenameUtils.getExtension(path.toString().toLowerCase()))){
-			queue.add(path);
+			/**
+			 * Add file to queue if..
+			 * a. We always reingest OR
+			 * b. Its a new file OR
+			 * c. Its modification time is newer than that stored in DB
+			 */
+			boolean canAdd=reingest ||
+					       !documents.containsKey(path.toString()) ||
+					       documents.get(path.toString())<path.toFile().lastModified();
+			
+			if (canAdd) {
+				queue.add(path);
+			} else {
+				getMonitor().info("Not re-ingesting {}", path);
+			}
+		}
+	}
+
+	@Override
+	public void documentRemoved(String uri) {
+		documents.remove(uri);
+		docStatus.removeDocumentDetails(uri);
+	}
+	
+	private void checkExistingDocuments() {
+		documents.putAll(docStatus.getExistingDocumentDetails());
+		for (Map.Entry<String, Long> entry : documents.entrySet()) {
+			docChecker.check(entry.getKey());
 		}
 	}
 }

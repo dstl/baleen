@@ -13,36 +13,59 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
+import java.util.Map;
 
+import org.apache.uima.collection.CollectionReaderDescription;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
+import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
+import org.apache.uima.resource.ExternalResourceDescription;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.ResourceSpecifier;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.resources.SharedDocumentCheckerResource;
+import uk.gov.dstl.baleen.resources.SharedDocumentStatusResource;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
 public class FolderReaderTest {
+	private static final String DOC_CHECKER = "documentchecker";
+	private static final String DOC_STATUS = "documentstatus";
+
 	private static final String TEST3_FILE = "test3.txt";
 	private static final String TEST2_FILE = "test2.txt";
 	private static final String TEXT1_FILE = "test1.txt";
 	private static final String DIR = "baleen-test";
 	File inputDir;
 	JCas jCas;
+	ExternalResourceDescription checkerErd;
+	ExternalResourceDescription statusErd;
 	
-	private static Long TIMEOUT = 1000L;
-	
-	@BeforeClass
-	public static void beforeClass(){
-		//If we're testing on a Mac, then we need to set the time out higher,
-		//as currently the WatchService on a Mac uses polling rather than a
-		//native implementation and therefore we need to ensure we wait longer
-		//than the poll interval
-		if(System.getProperty("os.name").toLowerCase().startsWith("mac os x")){
-			TIMEOUT = 15000L;
+	/**
+	 * Real SharedDocumentStatusResource tries to access mongo db, this fails if it snot running! However, for these tests
+	 * it is not actually used...
+	 */
+	public static class DummySharedDocumentStatusResource extends SharedDocumentStatusResource {
+		@Override
+		protected boolean doInitialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams) throws ResourceInitializationException {
+			return true;
+		}
+
+		@Override
+		public void persistDocumentDetails(String uri) {
+		}
+		
+		@Override
+		public void removeDocumentDetails(String uri) {
+		}
+
+		@Override
+		public Map<String, Long> getExistingDocumentDetails() {
+			return null;
 		}
 	}
 
@@ -50,6 +73,9 @@ public class FolderReaderTest {
 	public void beforeTest() throws Exception{
 		inputDir = Files.createTempDirectory(DIR).toFile();
 		if(jCas == null){
+			checkerErd = ExternalResourceFactory.createExternalResourceDescription(DOC_CHECKER, SharedDocumentCheckerResource.class);
+			statusErd = ExternalResourceFactory.createExternalResourceDescription(DOC_STATUS, DummySharedDocumentStatusResource.class);
+
 			jCas = JCasFactory.createJCas();
 		}else{
 			jCas.reset();
@@ -59,18 +85,17 @@ public class FolderReaderTest {
 	@After
 	public void afterTest() throws IOException{
 		String[] entries = inputDir.list();
-		if(entries != null){
-			for(String s : entries){
-				File currentFile = new File(inputDir.getPath(), s);
-				currentFile.delete();
-			}
+		for(String s : entries){
+			File currentFile = new File(inputDir.getPath(), s);
+			currentFile.delete();
 		}
 		inputDir.delete();
 	}
 
 	@Test
 	public void testCreateFileDefaultDirectory() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class);
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd);
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertTrue(bcr.doHasNext());	//There will be files in the current directory, so we can just check that it's picked them up.
 		bcr.getNext(jCas.getCas());
@@ -81,7 +106,8 @@ public class FolderReaderTest {
 	
 	@Test
 	public void testCreateFile() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertFalse(bcr.doHasNext());
 
@@ -89,13 +115,13 @@ public class FolderReaderTest {
 		f.createNewFile();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertTrue(bcr.doHasNext());
 
 		bcr.getNext(jCas.getCas());
 
-		assertFilesEquals(f.getPath(), getSource(jCas));
+		assertEquals(f.getPath(), getSource(jCas));
 
 		assertFalse(bcr.doHasNext());
 
@@ -112,7 +138,8 @@ public class FolderReaderTest {
 		File f21 = new File(inputDir2, TEXT1_FILE);
 		f21.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath(), inputDir2.getPath()});
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath(), inputDir2.getPath()});
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		File f12 = new File(inputDir, TEST2_FILE);
 		f12.createNewFile();
@@ -120,7 +147,7 @@ public class FolderReaderTest {
 		File f22 = new File(inputDir2, TEST2_FILE);
 		f22.createNewFile();
 
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);
@@ -140,14 +167,15 @@ public class FolderReaderTest {
 		File f1 = new File(subdir, TEXT1_FILE);
 		f1.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertNextSourceNotNull(bcr);
 
 		File f2 = new File(subdir, TEST2_FILE);
 		f2.createNewFile();
 
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertNextSourceNotNull(bcr);
 
@@ -169,22 +197,23 @@ public class FolderReaderTest {
 		File f2 = new File(inputDir, TEST2_FILE);
 		f2.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_RECURSIVE, false);
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_RECURSIVE, false);
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertTrue(bcr.hasNext());
 		bcr.getNext(jCas.getCas());
-		assertFilesEquals(f2.getPath(), getSource(jCas));
+		assertEquals(f2.getPath(), getSource(jCas));
 		
 		jCas.reset();
 		
 		File f3 = new File(inputDir, TEST3_FILE);
 		f3.createNewFile();
 		
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 		
 		assertTrue(bcr.hasNext());
 		bcr.getNext(jCas.getCas());
-		assertFilesEquals(f3.getPath(), getSource(jCas));
+		assertEquals(f3.getPath(), getSource(jCas));
 		
 		bcr.close();
 
@@ -195,7 +224,8 @@ public class FolderReaderTest {
 
 	@Test
 	public void testModifiedFile() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_REPROCESS_ON_MODIFY, true);
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_REPROCESS_ON_MODIFY, true);
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertFalse(bcr.doHasNext());
 
@@ -203,12 +233,12 @@ public class FolderReaderTest {
 		f.createNewFile();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertTrue(bcr.doHasNext());
 
 		bcr.getNext(jCas.getCas());
-		assertFilesEquals(f.getPath(), getSource(jCas));
+		assertEquals(f.getPath(), getSource(jCas));
 
 		jCas.reset();
 
@@ -217,13 +247,13 @@ public class FolderReaderTest {
 		writer.write("Test");
 		writer.close();
 
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertTrue(bcr.doHasNext());
 
 		bcr.getNext(jCas.getCas());
 
-		assertFilesEquals(f.getPath(), getSource(jCas));
+		assertEquals(f.getPath(), getSource(jCas));
 		assertEquals("Test", jCas.getDocumentText().trim());
 
 		assertFalse(bcr.doHasNext());
@@ -233,7 +263,8 @@ public class FolderReaderTest {
 
 	@Test
 	public void testDeleteFile() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertFalse(bcr.doHasNext());
 
@@ -241,12 +272,12 @@ public class FolderReaderTest {
 		f.createNewFile();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		f.delete();
 
 		//Wait for file to be written and change detected
-		Thread.sleep(TIMEOUT);
+		Thread.sleep(1000);
 
 		assertFalse(bcr.doHasNext());
 
@@ -260,7 +291,8 @@ public class FolderReaderTest {
 		File f2 = new File(inputDir, TEST2_FILE);
 		f2.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);
@@ -278,7 +310,8 @@ public class FolderReaderTest {
 		File f3 = new File(inputDir, "test3.TXT");
 		f3.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ALLOWED_EXTENSIONS, new String[]{"txt"});
+		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(FolderReader.class, DOC_CHECKER, checkerErd, DOC_STATUS, statusErd, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ALLOWED_EXTENSIONS, new String[]{"txt"});
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);
@@ -297,12 +330,5 @@ public class FolderReaderTest {
 	private String getSource(JCas jCas){
 		DocumentAnnotation doc = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
 		return doc.getSourceUri();
-	}
-	
-	private void assertFilesEquals(String s1, String s2) throws IOException{
-		File f1 = new File(s1);
-		File f2 = new File(s2);
-		
-		assertTrue(Files.isSameFile(f1.toPath(), f2.toPath()));
 	}
 }
