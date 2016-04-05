@@ -1,7 +1,7 @@
 # Baleen Build Instructions
 
 ## Prerequisites
-- JDK 8
+- Oracle JDK 8
 - Eclipse IDE for Java EE
 
 ## Instructions

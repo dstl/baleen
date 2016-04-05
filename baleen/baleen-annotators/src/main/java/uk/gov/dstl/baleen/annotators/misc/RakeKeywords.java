@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -25,6 +24,7 @@ import opennlp.tools.stemmer.Stemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer.ALGORITHM;
 import uk.gov.dstl.baleen.annotators.misc.helpers.AbstractKeywordsAnnotator;
+import uk.gov.dstl.baleen.annotators.misc.helpers.NoOpStemmer;
 
 /**
  * Uses the RAKE (Rapid Automatic Keyword Extraction) algorithm to automatically
@@ -77,11 +77,7 @@ public class RakeKeywords extends AbstractKeywordsAnnotator {
 			 stemmer = new NoOpStemmer();
 		}
 		
-		StringJoiner sj = new StringJoiner("|");
-		for(String s : stopwords){
-			sj.add(Pattern.quote(s));
-		}
-		stopwordPattern = Pattern.compile("\\b("+sj.toString()+")\\b", Pattern.CASE_INSENSITIVE);
+		stopwordPattern = buildStopwordsPattern();
 	}
 	
 	@Override
@@ -276,15 +272,5 @@ class StemmedString implements Comparable<StemmedString>{
 	@Override
 	public int hashCode(){
 		return strStemmed.hashCode();
-	}
-}
-
-/**
- * A no-op Stemmer which returns the same string as it is passed.
- */
-class NoOpStemmer implements Stemmer{
-	@Override
-	public CharSequence stem(CharSequence cs) {
-		return cs;
 	}
 }

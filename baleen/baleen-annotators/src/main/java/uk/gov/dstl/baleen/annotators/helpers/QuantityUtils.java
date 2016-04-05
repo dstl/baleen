@@ -94,12 +94,16 @@ public class QuantityUtils {
 			switch (multiplier.toLowerCase()) {
 			case "hundred":
 				return amount * 100;
+			case "k":
 			case "thousand":
 				return amount * 1000;
+			case "m":
 			case "million":
 				return amount * 1000000;
+			case "b":
 			case "billion":
 				return amount * 1000000000;
+			case "t":
 			case "trillion":
 				return amount * 1000000000000L;
 			default:
