@@ -35,7 +35,7 @@ To run Baleen, you will need:
 
 The develop with Baleen, we suggest you use:
 
-* Java JDK 1.8
+* Oracle Java JDK 1.8
 * Eclipse Luna or greater (assumed to include Maven)
 * Maven
 
