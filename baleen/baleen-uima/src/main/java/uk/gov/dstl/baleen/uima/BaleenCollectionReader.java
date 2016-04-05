@@ -1,4 +1,3 @@
-//Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.uima;
 
 import java.io.IOException;
