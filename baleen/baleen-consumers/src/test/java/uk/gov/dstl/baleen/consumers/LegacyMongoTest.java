@@ -296,4 +296,48 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals("james@example.com", email.get(VALUE));
 	}
 
+	@Test
+	public void testMaxContentLimit() throws Exception {
+		// The  maxContentLength resource needs to be configured for this test.
+		// This means supplying it to the createEngineDescription() method, so
+		// means the default analysis engine ae created in the setup method can't be used.
+		// So the following code was stolen from that setup() method with the addition
+		// of the "maxContentLength", "23" parameters.
+		DBCollection myOutputColl;
+		AnalysisEngine myAe;
+
+		// Create a description of an external resource - a fongo instance, in the same way we would have created a shared mongo resource
+		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, "fongo.collection", "test", "fongo.data", JSON.serialize(GAZ_DATA));
+
+		// Create the analysis engine
+		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(LegacyMongo.class, MONGO, erd, "collection", "test", "maxContentLength", "23");
+		myAe = AnalysisEngineFactory.createEngine(aed);
+		myAe.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
+		SharedFongoResource sfr = (SharedFongoResource) myAe.getUimaContext().getResourceObject(MONGO);
+
+		myOutputColl = sfr.getDB().getCollection("test");
+
+		// Ensure we start with no data!
+		assertEquals(0L, outputColl.count());
+
+
+		jCas.setDocumentText("Five exclamation marks, the sure sign of an insane mind.");
+		jCas.setDocumentLanguage("en");
+
+		myAe.process(jCas);
+
+		assertEquals(1, myOutputColl.count());
+		DBObject result = myOutputColl.findOne();
+
+		// Expected, truncated text
+		String expected = "Five exclamation marks" + "\u2026";
+
+		assertEquals(expected, result.get("content"));
+		assertEquals("en", result.get("language"));
+
+		if(myAe != null) {
+			myAe.destroy();
+		}
+	}
+
 }

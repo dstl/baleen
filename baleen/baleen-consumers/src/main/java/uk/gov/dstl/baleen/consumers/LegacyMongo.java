@@ -22,6 +22,7 @@ import uk.gov.dstl.baleen.consumers.utils.EntityRelationConverter;
 import uk.gov.dstl.baleen.consumers.utils.IEntityConverterFields;
 import uk.gov.dstl.baleen.consumers.utils.mongo.AbstractSingleDocumentMongoConsumer;
 import uk.gov.dstl.baleen.consumers.utils.mongo.LegacyMongoFields;
+import uk.gov.dstl.baleen.core.utils.ConfigUtils;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Entity;
@@ -189,6 +190,18 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 	boolean outputContent = false;
 
 	/**
+	 * Maximum number of characters from content to store in Mongo. Set to 0
+	 * to store all content.
+	 * 
+	 * @baleen.config "0"
+	 */
+	public static final String PARAM_MAX_CONTENT_LENGTH = "maxContentLength";
+	@ConfigurationParameter(name = PARAM_MAX_CONTENT_LENGTH, defaultValue = "0")
+	String maxContentLengthString;
+	//Parse the maxContentLengthString config parameter into this variable to avoid issues with parameter types
+	int maxContentLength = 0;
+
+	/**
 	 * Holds the types of features that we're not interested in persisting (stuff from UIMA for example)
 	 * We're storing these so that we can loop through the features (and then ignore some of them)
 	 */
@@ -212,7 +225,6 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 	 *
 	 */
 	public LegacyMongo() {
-
 	}
 
 	/**
@@ -229,6 +241,7 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 		stopFeatures = new HashSet<String>();
 		stopFeatures.add("uima.cas.AnnotationBase:sofa");
 		stopFeatures.add("uk.gov.dstl.baleen.types.BaleenAnnotation:internalId");
+		maxContentLength = ConfigUtils.stringToInteger(maxContentLengthString, 0);
 	}
 
 	@Override
@@ -239,8 +252,13 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 		getMonitor().info("Beginning persistance of document to MongoDB");
 
 		if (outputContent) {
-			getMonitor().debug("Adding content to document object");
-			doc.put("content", aJCas.getDocumentText());
+			if (maxContentLength>0 && aJCas.getDocumentText().length()>maxContentLength) {
+				getMonitor().debug("Adding (truncated) content to document object");
+				doc.put("content", aJCas.getDocumentText().substring(0, maxContentLength-1)+"\u2026");
+			} else {
+				getMonitor().debug("Adding content to document object");
+				doc.put("content", aJCas.getDocumentText());
+			}
 		}
 
 		if (aJCas.getDocumentLanguage() != null && !aJCas.getDocumentLanguage().isEmpty()) {
