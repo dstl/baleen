@@ -126,7 +126,7 @@ public class LegacyElasticsearchTest extends ElasticsearchConsumerTestBase {
 		assertEquals(4, entities.size());
 
 		Map<String, Object> person = entities.get(0);
-		assertEquals(8, person.size());
+		assertEquals(9, person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
 		assertEquals(0.0, person.get(CONFIDENCE));
@@ -135,7 +135,7 @@ public class LegacyElasticsearchTest extends ElasticsearchConsumerTestBase {
 		assertNotNull(person.get(UNIQUE_ID));
 
 		Map<String, Object> location = entities.get(1);
-		assertEquals(8, location.size());
+		assertEquals(9, location.size());
 		assertEquals(14, location.get(BEGIN));
 		assertEquals(20, location.get(END));
 		assertEquals(0.0, location.get(CONFIDENCE));
@@ -153,7 +153,7 @@ public class LegacyElasticsearchTest extends ElasticsearchConsumerTestBase {
 		assertEquals(geoJsonMap, location.get("geoJson"));
 
 		Map<String, Object> date = entities.get(2);
-		assertEquals(7, date.size());
+		assertEquals(8, date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
@@ -162,7 +162,7 @@ public class LegacyElasticsearchTest extends ElasticsearchConsumerTestBase {
 		assertNotNull(date.get(UNIQUE_ID));
 
 		Map<String, Object> email = entities.get(3);
-		assertEquals(7, email.size());
+		assertEquals(8, email.size());
 		assertEquals(66, email.get(BEGIN));
 		assertEquals(83, email.get(END));
 		assertEquals(0.0, email.get(CONFIDENCE));

@@ -259,7 +259,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals(4, entities.size());
 
 		Map<String, Object> person = (Map<String, Object>)entities.get(0);
-		assertEquals(9, person.size());
+		assertEquals(10, person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
 		assertEquals(0.0, person.get(CONFIDENCE));
@@ -267,7 +267,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals("James", person.get(VALUE));
 
 		Map<String, Object> location =(Map<String, Object>) entities.get(1);
-		assertEquals(9, location.size());
+		assertEquals(10, location.size());
 		assertEquals(14, location.get(BEGIN));
 		assertEquals(20, location.get(END));
 		assertEquals(0.0, location.get(CONFIDENCE));
@@ -279,7 +279,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertArrayEquals(new Double[] { -0.1, 51.5 }, ((BasicDBList)((DBObject)((DBObject)location.get(GEO_JSON)).get("geometry")).get("coordinates")).toArray());
 
 		Map<String, Object> date = (Map<String, Object>)entities.get(2);
-		assertEquals(8, date.size());
+		assertEquals(9, date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
@@ -287,7 +287,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals("19th February 2015", date.get(VALUE));
 
 		Map<String, Object> email = (Map<String, Object>) entities.get(3);
-		assertEquals(8, email.size());
+		assertEquals(9, email.size());
 		assertEquals(66, email.get(BEGIN));
 		assertEquals(83, email.get(END));
 		assertEquals(0.0, email.get(CONFIDENCE));
