@@ -302,7 +302,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		// This means supplying it to the createEngineDescription() method, so
 		// means the default analysis engine ae created in the setup method can't be used.
 		// So the following code was stolen from that setup() method with the addition
-		// of the "maxContentLength", "23" parameters.
+		// of the "maxContentLength", "21" parameters.
 		DBCollection myOutputColl;
 		AnalysisEngine myAe;
 
@@ -310,7 +310,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, "fongo.collection", "test", "fongo.data", JSON.serialize(GAZ_DATA));
 
 		// Create the analysis engine
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(LegacyMongo.class, MONGO, erd, "collection", "test", "maxContentLength", "23");
+		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(LegacyMongo.class, MONGO, erd, "collection", "test", "maxContentLength", "21");
 		myAe = AnalysisEngineFactory.createEngine(aed);
 		myAe.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 		SharedFongoResource sfr = (SharedFongoResource) myAe.getUimaContext().getResourceObject(MONGO);
@@ -321,7 +321,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals(0L, outputColl.count());
 
 
-		jCas.setDocumentText("Five exclamation marks, the sure sign of an insane mind.");
+		jCas.setDocumentText("James went to London on 19th February 2015. His e-mail address is james@example.com");
 		jCas.setDocumentLanguage("en");
 
 		myAe.process(jCas);
@@ -330,7 +330,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		DBObject result = myOutputColl.findOne();
 
 		// Expected, truncated text
-		String expected = "Five exclamation marks" + "\u2026";
+		String expected = "James went to London" + "\u2026";
 
 		assertEquals(expected, result.get("content"));
 		assertEquals("en", result.get("language"));
