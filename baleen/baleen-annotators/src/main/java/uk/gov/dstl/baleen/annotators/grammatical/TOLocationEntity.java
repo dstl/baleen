@@ -40,6 +40,11 @@ public class TOLocationEntity extends BaleenAnnotator {
 		for(int j = firstToken + 1; j < tokens.size(); j++){
 			if("NNP".equals(tokens.get(j).getPartOfSpeech())){
 				end = tokens.get(j).getEnd();
+			} else {
+				// Finished sequence of contiguous NNP following VBD, TO,
+				// Need to stop now or may encounter another NNP elsewhere
+				// in the document that has nothing to do with this location.
+				break;
 			}
 		}
 		
