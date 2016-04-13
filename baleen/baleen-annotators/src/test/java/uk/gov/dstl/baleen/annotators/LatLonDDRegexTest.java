@@ -35,6 +35,20 @@ public class LatLonDDRegexTest extends AbstractAnnotatorTest{
 	}
 	
 	@Test
+	public void testNoDelimiter() throws Exception{
+	
+		jCas.setDocumentText("London is located in the UK, at 51.507, -0.125. Edinburgh is also in the UK, at 55.953,-3.188. The following coordinates aren't valid: 87.65432.1; 12.3-56.789.");
+		processJCas();
+		
+		
+		assertAnnotations(2, Coordinate.class,
+				new TestCoordinate(0, "51.507, -0.125", "dd", TYPE_POINT_COORDINATES_0_125_51_507),
+				new TestCoordinate(1, "55.953,-3.188", "dd", TYPE_POINT_COORDINATES_3_188_55_953)
+		);
+
+	}
+	
+	@Test
 	public void testLonlat() throws Exception{
 		
 		jCas.setDocumentText("London is located in the UK, at -0.125, 51.507. Edinburgh is also in the UK, at -3.188,55.953.");

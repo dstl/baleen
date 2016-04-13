@@ -42,6 +42,16 @@ public class LatLonDMSRegexTest extends AbstractAnnotatorTest{
 	}
 	
 	@Test
+	public void testNegatives() throws Exception{
+	
+		jCas.setDocumentText("London is located in the UK, at -51°30'26\"S -0°7'39\"E. The following coordinates aren't valid: 12\234'56\"N; 12\"34'N 12\"34'S.");
+		processJCas();
+		
+		assertAnnotations(1,  Coordinate.class, 
+				new TestCoordinate(0, "-51°30'26\"S -0°7'39\"E", DMS, TYPE_POINT_COORDINATES_0_1275_51_507222222222225));
+	}
+	
+	@Test
 	public void testSpaces() throws Exception{
 	
 		jCas.setDocumentText("London is located in the UK, at (51 30 26 N, 0 7 39 W). The following coordinates aren't valid: 12°34'56\"N; 12°34'N 12°34'S.");

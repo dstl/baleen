@@ -1,6 +1,7 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.annotators.regex;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -24,10 +25,10 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * <p><b>Decimal degree (DD)</b></p>
  * <p>The document content is run through a regular expression matcher looking for latitude-longitude pairs in DD.
  * If the minimum number of decimal places required is 0, the following regular expression is used:</p>
- * <pre>(-?\\d{1,3}(\\.\\d*)?),\\h*(-?\\d{1,3}(\\.\\d*)?)</pre>
+ * <pre>(-?\\d{1,3}(\\.\\d*)?)(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d*)?)</pre>
  * <p>If the minimum number of decimal places required is greater than 0, the following regular expression is used
  * where x is the minimum number of decimal places:</p>
- * <pre>(-?\\d{1,3}(\\.\\d{x,})),\\h*(-?\\d{1,3}(\\.\\d{x,}))</pre>
+ * <pre>(-?\\d{1,3}(\\.\\d{x,}))(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d{x,}))</pre>
  * <p>The latitude and longitude are extracted (optionally the user can specify it should be longitude and latitude instead)
  * and a GeoJSON object is built representing this location.</p>
  * <p>Coordinates that are preceded by a £, $ or € symbol are skipped as they are assumed to be monetary values rather than coordinates (e.g. £3,000).</p>
@@ -37,7 +38,7 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * <p><b>Degrees-minutes-seconds (DMS)</b></p>
  * <p>The document content is run through a regular expression matcher looking for latitude-longitude pairs in DMS format
  * that match the following regular expression:</p>
- * <pre>\\b(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])[,\\h]*(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])</pre>
+ * <pre>\\b(-?\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])[,/\\h]*(-?\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])\\b</pre>
  * <p>A similar regex is used to find pairs that have spaces instead of symbols in them (e.g. 10 12 14 N, 11 13 15 E),
  * and another regex to find pairs with no spaces.</p>
  * <p>The following regexes are also used to pick up other formats:</p>
@@ -54,13 +55,13 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 public class LatLon extends BaleenAnnotator {
 
 	private final Pattern llDMSPattern = Pattern
-			.compile("\\b(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])[,/\\h]*(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])\\b");
+			.compile("(-?\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])[,/\\h]*(-?\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])\\b");
 	private final Pattern llDMSSpacePattern = Pattern
-			.compile("\\b(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])[,/\\h]*(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])\\b");
+			.compile("(-?\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])[,/\\h]*(-?\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])\\b");
 	private final Pattern llDMSNumericPattern = Pattern
-			.compile("\\b(\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])[,/\\h]*(\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])\\b");
+			.compile("(-?\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])[,/\\h]*(-?\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])\\b");
 	private final Pattern llDMSPunctuationPattern = Pattern
-			.compile("\\b(\\d{2,3})-(\\d{2}),(\\d{2})?( )?([NSEW])[,/\\h]*(\\d{2,3})-(\\d{2}),(\\d{2})?( )?([NSEW])\\b");
+			.compile("(-?\\d{2,3})-(\\d{2}),(\\d{2})?( )?([NSEW])[,/\\h]*(-?\\d{2,3})-(\\d{2}),(\\d{2})?( )?([NSEW])\\b");
 	
 	private final Pattern llDMSTextPattern = Pattern
 			.compile("\\b((lat|latitude)\\h*)?(\\d{1,2})°\\h*(\\d{1,2}(\\.\\d+)?)'(\\h*(\\d{1,2}(\\.\\d+)?)\")?\\h*([NS])\\.?,?\\h*(lon|long|longitude)?\\h*(\\d{1,3})°\\h*(\\d{1,2}(\\.\\d+)?)'(\\h*(\\d{1,2}(\\.\\d+)?)\")?\\h*([EW])\\b", Pattern.CASE_INSENSITIVE);
@@ -76,6 +77,16 @@ public class LatLon extends BaleenAnnotator {
 	@ConfigurationParameter(name = PARAM_LONLAT, defaultValue = "false")
 	private boolean lonlat;
 
+	/**
+	 * Use the coordinate translated into decimal as the value of the Entity. This option
+	 * will also format the values to '%fE %fN' where the floats have a maximum of 7.d.p.
+	 * 
+	 * @baleen.config false
+	 */
+	public static final String PARAM_USE_DECIMAL = "useDecimalValue";
+	@ConfigurationParameter(name = PARAM_USE_DECIMAL, defaultValue = "false")
+	private boolean useDecimalValue;
+	
 	/**
 	 * The minimum number of decimal places required.
 	 * 
@@ -115,10 +126,10 @@ public class LatLon extends BaleenAnnotator {
 		if (minDP == 0) {
 			// No word boundary characters as that excludes negative signs
 			llDDPattern = Pattern
-					.compile("(-?\\d{1,3}(\\.\\d*)?),\\h*(-?\\d{1,3}(\\.\\d*)?)");
+					.compile("(-?\\d{1,3}(\\.\\d*)?)(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d*)?)");
 		} else {
 			llDDPattern = Pattern.compile("(-?\\d{1,3}(\\.\\d{" + minDP
-					+ ",})),\\h*(-?\\d{1,3}(\\.\\d{" + minDP + ",}))");
+					+ ",}))(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d{" + minDP + ",}))");
 		}
 	}
 
@@ -154,10 +165,10 @@ public class LatLon extends BaleenAnnotator {
 
 				if (!lonlat) {
 					lat = Double.parseDouble(matcher.group(1));
-					lon = Double.parseDouble(matcher.group(3));
+					lon = Double.parseDouble(matcher.group(4));
 				} else {
 					lon = Double.parseDouble(matcher.group(1));
-					lat = Double.parseDouble(matcher.group(3));
+					lat = Double.parseDouble(matcher.group(4));
 				}
 
 				addCoordinate(aJCas, matcher, lon, lat, "dd");
@@ -235,11 +246,11 @@ public class LatLon extends BaleenAnnotator {
 		Double lat = 0.0;
 		Double lon = 0.0;
 		
-		lat = dmsToDeg(Integer.parseInt(matcher.group(1)),
+		lat = dmsToDeg(matcher.group(1),
 			Integer.parseInt(matcher.group(2)),
 			parseOrNull(matcher.group(3)));
 
-		lon = dmsToDeg(Integer.parseInt(matcher.group(6)),
+		lon = dmsToDeg(matcher.group(6),
 			Integer.parseInt(matcher.group(7)),
 			parseOrNull(matcher.group(8)));
 		
@@ -299,12 +310,25 @@ public class LatLon extends BaleenAnnotator {
 		return false;
 	}
 	
-	private double dmsToDeg(Integer d, Integer m, Double s) {
+	/**
+	 * Converts a Degrees Minutes Seconds coordinate into a decimal degree value
+	 * 
+	 * @param d String representation of the number of degrees. This has to be a
+	 *          String to enable a negative coordinate with 0 degrees to be
+	 *          correctly converted, e.g. -0°7'39" E
+	 * @param m number of minutes
+	 * @param s number of seconds, or null if no seconds supplied
+	 */
+	private double dmsToDeg(String d, Integer m, Double s) {
 		double seconds = m * 60.0;
 		if(s != null){
 			seconds += s;
 		}
-		return d + (seconds / 3600);
+		if (d.startsWith("-")) {
+			return Integer.parseInt(d) - (seconds/3600);
+		} else {
+			return Integer.parseInt(d) + (seconds/3600);
+		}
 	}
 	
 	private Double parseOrNull(String s){
@@ -321,18 +345,27 @@ public class LatLon extends BaleenAnnotator {
 
 			if(found.add(textLoc)){			
 				Coordinate loc = new Coordinate(aJCas);
-	
+
 				loc.setConfidence(1.0f);
-	
+
 				loc.setBegin(matcher.start());
 				loc.setEnd(matcher.end());
-				loc.setValue(matcher.group(0));
-	
+				if (useDecimalValue) {
+					String pattern = "###.#######";
+					DecimalFormat df = new DecimalFormat(pattern);
+					String fLat = df.format(lat);
+					String fLon = df.format(lon);
+					loc.setValue(fLon + "E " + fLat + "N");
+					loc.setIsNormalised(true);
+				} else {
+					loc.setValue(matcher.group(0));
+				}
+
 				String coords = "[" + lon + "," + lat + "]";
 	
 				loc.setGeoJson("{\"type\":\"Point\",\"coordinates\":"
 						+ coords + "}");
-	
+
 				loc.setCoordinateValue(lon + "," + lat);
 				loc.setSubType(coordinateType);
 	
