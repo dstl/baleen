@@ -67,6 +67,14 @@ public class TOLocationEntityTest extends AbstractAnnotatorTest {
 	}
 	
 	@Test
+	public void testFollowingNNP() throws UIMAException {
+		jCas.setDocumentText("James went to South London to ride the London Eye.");
+		process();
+
+		assertAnnotations(1, Location.class, new TestEntity<>(0, "South London"));
+	}
+
+	@Test
 	public void testEndOfSentence() throws UIMAException {
 		jCas.setDocumentText("James went to London");
 		process();
