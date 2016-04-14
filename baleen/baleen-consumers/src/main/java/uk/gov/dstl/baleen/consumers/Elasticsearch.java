@@ -25,17 +25,21 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.elasticsearch.ElasticsearchException;
+import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHitField;
 
 import uk.gov.dstl.baleen.consumers.utils.EntityRelationConverter;
 import uk.gov.dstl.baleen.consumers.utils.IEntityConverterFields;
 import uk.gov.dstl.baleen.consumers.utils.elasticsearch.ElasticsearchFields;
 import uk.gov.dstl.baleen.core.utils.IdentityUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.resources.SharedDocumentCheckerResource;
 import uk.gov.dstl.baleen.resources.SharedElasticsearchResource;
+import uk.gov.dstl.baleen.resources.documentchecker.DocumentExistanceStatus;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Entity;
@@ -138,7 +142,7 @@ import com.google.common.base.Strings;
  * 
  * @baleen.javadoc
  */
-public class Elasticsearch extends BaleenConsumer {
+public class Elasticsearch extends BaleenConsumer implements DocumentExistanceStatus {
 	/**
 	 * Connection to Elasticsearch
 	 *
@@ -147,6 +151,15 @@ public class Elasticsearch extends BaleenConsumer {
 	public static final String KEY_ELASTICSEARCH = "elasticsearch";
 	@ExternalResource(key = KEY_ELASTICSEARCH)
 	private SharedElasticsearchResource esResource;
+
+	/**
+	 * Document checker resource
+	 * 
+	 * @baleen.resource uk.gov.dstl.baleen.resources.SharedDocumentStatusResource
+	 */
+	public static final String KEY_DOC_CHECKER = "documentchecker";
+	@ExternalResource(key = KEY_DOC_CHECKER)
+	private SharedDocumentCheckerResource docChecker;
 
 	/**
 	 * The Elasticsearch index to use
@@ -185,6 +198,15 @@ public class Elasticsearch extends BaleenConsumer {
 	@ConfigurationParameter(name = PARAM_CONTENT_HASH_AS_ID, defaultValue = "true")
 	boolean contentHashAsId = true;
 
+	/**
+	 * Should referecnes to deleted documents be removed from DB.
+	 *
+	 * @baleen.config false
+	 */
+	public static final String REMOVE_DELETED_DOCS = "removeDeletedDocs";
+	@ConfigurationParameter(name = REMOVE_DELETED_DOCS, defaultValue = "false")
+	boolean removeDeletedDocs = false;
+	
 	/**
 	 * A list of keys to look in for dates that could used for sorting.
 	 * Keys are listed in order of preference, and are expected to be in one of the following formats:
@@ -249,6 +271,22 @@ public class Elasticsearch extends BaleenConsumer {
 		stopFeatures.add("uk.gov.dstl.baleen.types.BaleenAnnotation:internalId");
 
 		fields = new ElasticsearchFields(legacy);
+
+		if (removeDeletedDocs) {
+			if (!contentHashAsId) {
+				docChecker.register(this);
+				checkExistingDocuments();
+			} else {
+				removeDeletedDocs=false;
+			}
+		}
+	}
+
+	@Override
+	public void doDestroy() {
+		if (removeDeletedDocs) {
+			docChecker.unregister(this);
+		}
 	}
 
 	/**
@@ -324,6 +362,10 @@ public class Elasticsearch extends BaleenConsumer {
 		String id = getExternalIdContent(da, contentHashAsId);
 		json.put(getExternalIdName(legacy), id);
 
+		if (removeDeletedDocs) {
+			docChecker.check(da.getSourceUri());
+		}
+
 		//Metadata Annotations
 		Collection<PublishedId> publishedIds = JCasUtil.select(jCas, PublishedId.class);
 		if(!publishedIds.isEmpty()){
@@ -358,11 +400,7 @@ public class Elasticsearch extends BaleenConsumer {
 		json.put("entities", entitiesList);
 
 		//Persist to ElasticSearch
-		try{
-			esResource.getClient().prepareIndex(index, type, id).setSource(json).execute().actionGet();
-		}catch(ElasticsearchException ee){
-			getMonitor().error("Couldn't persist document to Elasticsearch", ee);
-		}
+		esResource.getClient().prepareIndex(index, type, id).setSource(json).execute().actionGet();
 	}
 
 	/**
@@ -616,5 +654,43 @@ public class Elasticsearch extends BaleenConsumer {
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void documentRemoved(String uri) {
+		try {
+			String id=IdentityUtils.hashStrings(uri);
+			esResource.getClient().prepareDelete(index, type, id).execute().actionGet();
+            getMonitor().debug("Removed {} / {} from DB", uri, id);
+		} catch (Exception e) {
+			getMonitor().error("Failed to remove {} from DB", uri);
+		}
+	}
+	
+	private void checkExistingDocuments() {
+		try {
+			int scrollSize=1000;
+			
+			for (int i=0; true; ++i) {
+				SearchResponse resp=esResource.getClient().prepareSearch(index)
+						.addFields("link")
+						.setSize(scrollSize)
+						.setFrom(i*scrollSize)
+						.execute().actionGet();
+
+				if (null==resp || 0==resp.getHits().hits().length) {
+					break;
+				}
+
+				for (SearchHit hit : resp.getHits()) {
+					Map<String, SearchHitField> fields=hit.getFields();
+					if (null!=fields && fields.containsKey("link")) {
+						docChecker.check(fields.get("link").getValue().toString());
+					}
+				}
+			}
+		} catch (Exception e) {
+			getMonitor().error("Failed to get existing documents {}", e);
+		}
 	}
 }
