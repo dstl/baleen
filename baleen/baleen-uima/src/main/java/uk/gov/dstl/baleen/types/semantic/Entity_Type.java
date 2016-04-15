@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** Type to represent named entities - values that are assigned a semantic type.
- * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * Updated by JCasGen Tue Nov 24 14:34:04 GMT 2015
  * @generated */
 public class Entity_Type extends Base_Type {
   /** @generated 
@@ -96,6 +96,30 @@ public class Entity_Type extends Base_Type {
   
  
   /** @generated */
+  final Feature casFeat_isNormalised;
+  /** @generated */
+  final int     casFeatCode_isNormalised;
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value 
+   */ 
+  public boolean getIsNormalised(int addr) {
+        if (featOkTst && casFeat_isNormalised == null)
+      jcas.throwFeatMissing("isNormalised", "uk.gov.dstl.baleen.types.semantic.Entity");
+    return ll_cas.ll_getBooleanValue(addr, casFeatCode_isNormalised);
+  }
+  /** @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set 
+   */    
+  public void setIsNormalised(int addr, boolean v) {
+        if (featOkTst && casFeat_isNormalised == null)
+      jcas.throwFeatMissing("isNormalised", "uk.gov.dstl.baleen.types.semantic.Entity");
+    ll_cas.ll_setBooleanValue(addr, casFeatCode_isNormalised, v);}
+    
+  
+ 
+  /** @generated */
   final Feature casFeat_subType;
   /** @generated */
   final int     casFeatCode_subType;
@@ -137,6 +161,10 @@ public class Entity_Type extends Base_Type {
  
     casFeat_referent = jcas.getRequiredFeatureDE(casType, "referent", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget", featOkTst);
     casFeatCode_referent  = (null == casFeat_referent) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_referent).getCode();
+
+ 
+    casFeat_isNormalised = jcas.getRequiredFeatureDE(casType, "isNormalised", "uima.cas.Boolean", featOkTst);
+    casFeatCode_isNormalised  = (null == casFeat_isNormalised) ? JCas.INVALID_FEATURE_CODE : ((FeatureImpl)casFeat_isNormalised).getCode();
 
  
     casFeat_subType = jcas.getRequiredFeatureDE(casType, "subType", "uima.cas.String", featOkTst);

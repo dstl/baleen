@@ -13,8 +13,8 @@ import uk.gov.dstl.baleen.types.Base;
 
 
 /** Type to represent named entities - values that are assigned a semantic type.
- * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Tue Nov 24 14:34:04 GMT 2015
+ * XML source: /home/cd1/projects/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class Entity extends Base implements Recordable {
   @SuppressWarnings ("hiding")
@@ -115,6 +115,28 @@ public class Entity extends Base implements Recordable {
     if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_referent == null)
       jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
     jcasType.ll_cas.ll_setRefValue(addr, ((Entity_Type)jcasType).casFeatCode_referent, jcasType.ll_cas.ll_getFSRef(v));}    
+   
+    
+  //*--------------*
+  //* Feature: isNormalised
+
+  /** getter for isNormalised - gets Marks the entity value as having been normalised from the original value
+   * @generated
+   * @return value of the feature 
+   */
+  public boolean getIsNormalised() {
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_isNormalised == null)
+      jcasType.jcas.throwFeatMissing("isNormalised", "uk.gov.dstl.baleen.types.semantic.Entity");
+    return jcasType.ll_cas.ll_getBooleanValue(addr, ((Entity_Type)jcasType).casFeatCode_isNormalised);}
+    
+  /** setter for isNormalised - sets Marks the entity value as having been normalised from the original value 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setIsNormalised(boolean v) {
+    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_isNormalised == null)
+      jcasType.jcas.throwFeatMissing("isNormalised", "uk.gov.dstl.baleen.types.semantic.Entity");
+    jcasType.ll_cas.ll_setBooleanValue(addr, ((Entity_Type)jcasType).casFeatCode_isNormalised, v);}    
    
     
   //*--------------*

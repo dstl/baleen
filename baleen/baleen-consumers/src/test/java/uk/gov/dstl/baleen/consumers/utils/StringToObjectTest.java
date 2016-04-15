@@ -92,6 +92,15 @@ public class StringToObjectTest {
 		assertTrue(StringToObject.convertStringToObject("0.1234") instanceof Double);
 		assertTrue(StringToObject.convertStringToObject("0.1234", precedingZero) instanceof Double);
 	}
+	
+	@Test
+	public void testNumberPrecedingPlus(){
+		Properties precedingPlus = new Properties();
+		precedingPlus.put("precedingPlusIsntNumber", false);
+
+		assertTrue(StringToObject.convertStringToObject("+1234") instanceof String);
+		assertFalse(StringToObject.convertStringToObject("+1234", precedingPlus) instanceof String);
+	}
 
 	@Test
 	public void testBoolean(){

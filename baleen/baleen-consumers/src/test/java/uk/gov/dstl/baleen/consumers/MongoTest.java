@@ -3,6 +3,7 @@ package uk.gov.dstl.baleen.consumers;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -279,7 +280,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> a = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON));
 		Map<String, Object> person = ((List<Map<String, Object>>)a.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(9, person.size());
+		assertTrue(8 <= person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
 		assertEquals(0.0, person.get(CONFIDENCE));
@@ -288,7 +289,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> b = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON));
 		Map<String, Object> location = ((List<Map<String, Object>>)b.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(9, location.size());
+		assertTrue(8 <= location.size());
 		assertEquals(14, location.get(BEGIN));
 		assertEquals(20, location.get(END));
 		assertEquals(0.0, location.get(CONFIDENCE));
@@ -300,7 +301,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> c = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, DATE));
 		Map<String, Object> date = ((List<Map<String, Object>>)c.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(8, date.size());
+		assertTrue(7 <= date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
@@ -309,7 +310,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> d = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, EMAIL));
 		Map<String, Object> email = ((List<Map<String, Object>>)d.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(8, email.size());
+		assertTrue(8 <= email.size());
 		assertEquals(66, email.get(BEGIN));
 		assertEquals(83, email.get(END));
 		assertEquals(0.0, email.get(CONFIDENCE));
@@ -319,7 +320,7 @@ public class MongoTest extends ConsumerTestBase {
 		
 		Map<String, Object> e = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, WENT));
 		Map<String, Object> went = ((List<Map<String, Object>>)e.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(9, went.size());
+		assertTrue(8 <= went.size());
 		assertEquals(6, went.get(BEGIN));
 		assertEquals(10, went.get(END));
 		assertEquals(0.0, went.get(CONFIDENCE));
@@ -446,7 +447,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> a = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON));
 		Map<String, Object> person = ((List<Map<String, Object>>)a.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(9, person.size());
+		assertTrue(8 <= person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
 		assertEquals(0.0, person.get(CONFIDENCE));
@@ -455,7 +456,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> b = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON));
 		Map<String, Object> location = ((List<Map<String, Object>>)b.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(9, location.size());
+		assertTrue(8 <= location.size());
 		assertEquals(14, location.get(BEGIN));
 		assertEquals(20, location.get(END));
 		assertEquals(0.0, location.get(CONFIDENCE));
@@ -467,7 +468,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> c = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, DATE));
 		Map<String, Object> date = ((List<Map<String, Object>>)c.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(8, date.size());
+		assertTrue(7 <= date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
@@ -475,7 +476,7 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals(DATE, date.get(VALUE));
 		
 		Map<String, Object> relation = (Map<String, Object>)relations.findOne();
-		assertEquals(13, relation.size());
+		assertTrue(13 <= relation.size());
 		assertEquals(0, relation.get(BEGIN));
 		assertEquals(20, relation.get(END));
 		assertEquals(0.7, relation.get(CONFIDENCE));

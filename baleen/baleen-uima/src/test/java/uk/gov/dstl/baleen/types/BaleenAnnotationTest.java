@@ -11,7 +11,7 @@ import uk.gov.dstl.baleen.core.utils.IdentityUtils;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
 
 public class BaleenAnnotationTest {
-	private static final String HASH_TWO = "b7d96a702c8748492a98fc28198b5796490bbc728ac9b623c99ade4dcda131f0";
+	private static final String HASH_TWO = "42e8536751651b04ca051139437c55b0ec26f3a9810014b7e7993c1dc3775aff";
 	private static final String HASH_ONE = "304159f11fd4e939839e2b4e114b03539d16f9a64278cfffc93143d328931de6";
 
 	@Test
