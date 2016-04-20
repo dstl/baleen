@@ -28,7 +28,7 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * 
  */
 public class CleanPunctuation extends BaleenAnnotator {
-	private static final String ALLOWED_CHARACTERS_START_END = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()£$€";
+	private static final String ALLOWED_CHARACTERS_START_END = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789()£$€-";
 
 	@Override
 	public void doProcess(JCas jCas) throws AnalysisEngineProcessException {
