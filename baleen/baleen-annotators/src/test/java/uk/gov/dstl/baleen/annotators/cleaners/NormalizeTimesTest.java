@@ -42,6 +42,19 @@ public class NormalizeTimesTest extends AnnotatorTestBase {
 	}
 	
 	@Test
+	public void testMidNight() throws Exception {
+		AnalysisEngine ntAE = AnalysisEngineFactory.createEngine(NormalizeTimes.class);
+		
+		String entityValue = "Midnight";
+		createAndAddTimeEntity(entityValue);
+		ntAE.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, Time.class).size());
+		assertEquals("00:00", JCasUtil.selectByIndex(jCas, Time.class, 0).getValue());
+		assertEquals(true, JCasUtil.selectByIndex(jCas, Time.class, 0).getIsNormalised());
+	}
+	
+	@Test
 	public void test12HourNoAMPM() throws Exception {
 		AnalysisEngine ntAE = AnalysisEngineFactory.createEngine(NormalizeTimes.class);
 		
@@ -216,6 +229,20 @@ public class NormalizeTimesTest extends AnnotatorTestBase {
 		AnalysisEngine ntAE = AnalysisEngineFactory.createEngine(NormalizeTimes.class);
 		
 		String entityValue = "2300 GMT+08";
+		
+		createAndAddTimeEntity(entityValue);
+		ntAE.process(jCas);
+		
+		assertEquals(1, JCasUtil.select(jCas, Time.class).size());
+		assertEquals("23:00 GMT+8", JCasUtil.selectByIndex(jCas, Time.class, 0).getValue());
+		assertEquals(true, JCasUtil.selectByIndex(jCas, Time.class, 0).getIsNormalised());
+	}
+	
+	@Test
+	public void test24HourSeparatorTimeZone() throws Exception {
+		AnalysisEngine ntAE = AnalysisEngineFactory.createEngine(NormalizeTimes.class);
+		
+		String entityValue = "23:00 GMT+08";
 		
 		createAndAddTimeEntity(entityValue);
 		ntAE.process(jCas);
