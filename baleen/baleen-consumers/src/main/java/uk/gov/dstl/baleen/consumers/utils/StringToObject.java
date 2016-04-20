@@ -10,7 +10,8 @@ import java.util.TimeZone;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
 /**
- * Convert a string into an object. Used by LegacyMongoConsumer - considered legacy code!
+ * Convert a string into an object. Used by LegacyMongoConsumer - considered
+ * legacy code!
  *
  * 
  */
@@ -18,6 +19,7 @@ public class StringToObject {
 
 	private static final String CONFIG_ALLOW_DATES = "allowDates";
 	private static final String CONFIG_PRECEDING_ZERO_ISNT_NUMBER = "precedingZeroIsntNumber";
+	private static final String CONFIG_PRECEDING_PLUS_ISNT_NUMBER = "precedingPlusIsntNumber";
 
 	private StringToObject() {
 		// Singleton
@@ -51,6 +53,7 @@ public class StringToObject {
 	 * <ul>
 	 * <li><b>allowDates</b> - true (default) or false
 	 * <li><b>precedingZeroIsntNumber</b> - true (default) or false
+	 * <li><b>precedingPlusIsntNumber</b> - true (default) or false (to avoid turning phone numbers into doubles)
 	 * </ul>
 	 *
 	 * @param s
@@ -60,11 +63,14 @@ public class StringToObject {
 	 * @return A Java object of the correct type
 	 */
 	public static Object convertStringToObject(String s, Properties config) {
-		Boolean precedingZeroIsntNumber = getConfigPrecedingZero(config);
-		
+		boolean precedingZeroIsntNumber = config.get(CONFIG_PRECEDING_ZERO_ISNT_NUMBER) == null ? true
+				: Boolean.valueOf(config.get(CONFIG_PRECEDING_ZERO_ISNT_NUMBER).toString());
+		boolean precedingPlusIsntNumber = config.get(CONFIG_PRECEDING_PLUS_ISNT_NUMBER) == null ? true
+				: Boolean.valueOf(config.get(CONFIG_PRECEDING_PLUS_ISNT_NUMBER).toString());
+
 		if (s == null) {
 			return null;
-		}else if(tryNumber(s, precedingZeroIsntNumber)){
+		} else if (tryNumber(s, precedingZeroIsntNumber, precedingPlusIsntNumber)) {
 			try {
 				return parseNumber(s);
 			} catch (InvalidParameterException e) {
@@ -78,23 +84,8 @@ public class StringToObject {
 
 		return convertToDate(s, config);
 	}
-	
-	private static boolean getConfigPrecedingZero(Properties config){
-		Boolean precedingZeroIsntNumber = true;
-		
-		if(config.containsKey(CONFIG_PRECEDING_ZERO_ISNT_NUMBER)){
-			Object o = config.get(CONFIG_PRECEDING_ZERO_ISNT_NUMBER);
-			if(o instanceof Boolean){
-				precedingZeroIsntNumber = (Boolean) o;
-			}else{
-				precedingZeroIsntNumber = Boolean.valueOf(o.toString());
-			}
-		}
-		
-		return precedingZeroIsntNumber;
-	}
-	
-	private static Number parseNumber(String s) throws InvalidParameterException{
+
+	private static Number parseNumber(String s) throws InvalidParameterException {
 		try {
 			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
@@ -106,25 +97,23 @@ public class StringToObject {
 		} catch (NumberFormatException e) {
 			// Ignore
 		}
-		
+
 		throw new InvalidParameterException("Couldn't parse number");
 	}
-	
+
 	/**
 	 * Test whether we should attempt to covert a string to a number, based on the current configuration
 	 */
-	private static boolean tryNumber(String s, boolean precedingZeroIsntNumber){
-		if(s.startsWith("0.")){
+	private static boolean tryNumber(String s, boolean precedingZeroIsntNumber, boolean precedingPlusIsntNumber){
+		if (s.startsWith("0.")) {
 			return true;
-		}
-		if(precedingZeroIsntNumber && !s.startsWith("0")){
-			return true;
-		}
-		if(!precedingZeroIsntNumber){
-			return true;
+		} else if (precedingPlusIsntNumber && s.startsWith("+")) {
+			return false;
+		} else if (precedingZeroIsntNumber && s.startsWith("0")) {
+			return false;
 		}
 		
-		return false;
+		return true;
 	}
 
 	private static Object convertToDate(String s, Properties config) {
