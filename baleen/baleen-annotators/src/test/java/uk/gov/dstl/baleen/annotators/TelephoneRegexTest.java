@@ -24,8 +24,8 @@ public class TelephoneRegexTest extends AbstractAnnotatorTest{
 		processJCas();
 		
 		assertAnnotations(2, CommsIdentifier.class, 
-				new TestCommsIdentifier(0, "(+44)1981 634528", "telephone"),
-				new TestCommsIdentifier(1, "0800-123-456", "telephone")
+				new TestCommsIdentifier(0, "telephone no. (+44)1981 634528", "telephone"),
+				new TestCommsIdentifier(1, "tel 0800-123-456", "telephone")
 				);
 		
 
