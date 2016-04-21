@@ -29,7 +29,8 @@ public class TimeRegex extends AbstractRegexAnnotator<Time> {
 			.collect(Collectors.toList()),
 		"|");
 	
-    private static final String TIME_REGEX = "\\b(((0?[0-9])|([0-9]{2}))[:][0-9]{2}\\h*(("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?\\h*(pm|am)?)\\b|\\b(((1[0-2])|([1-9]))(pm|am))\\b|\\b(midnight)\\b|\\b(midday)\\b|\\b((12\\h)?noon)\\b|\\b([0-2][0-9][0-5][0-9][ ]?(hr(s)?)?[ ]?(("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?)\\b";	
+	private static final String TIME_REGEX = "\\b(([0-1]?[0-9]|2[0-4])[:\\.][0-5][0-9]\\h*(("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?\\h*(pm|am)?)\\b|\\b(((1[0-2])|([1-9]))(pm|am))\\b|\\b(midnight)\\b|\\b(midday)\\b|\\b((12\\h)?noon)\\b|\\b([0-1][0-9]|2[0-4])[0-5][0-9][ ]?(((hr(s)?)?[ ]?(("+TIME_ZONES+")([ ]?[+-][ ]?((0?[0-9])|(1[0-2])))?)?)|hours|h)\\b";
+	
 	/** New instance.
 	 * 
 	 */
