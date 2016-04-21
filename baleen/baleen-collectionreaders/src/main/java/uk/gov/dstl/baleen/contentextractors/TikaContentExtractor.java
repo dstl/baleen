@@ -10,15 +10,17 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
 import org.apache.uima.jcas.JCas;
+import org.elasticsearch.common.base.Strings;
 import org.xml.sax.SAXException;
 
 import uk.gov.dstl.baleen.contentextractors.helpers.AbstractContentExtractor;
 
-/** 
- * Extracts metadata and text content from the supplied input, using Apache Tika.
+/** Extracts metadata and text content from the supplied input, using Apache Tika.
+ * 
+ *
  */
 public class TikaContentExtractor extends AbstractContentExtractor {
-
+	public static final String CORRUPT_FILE_TEXT = "FILE CONTENTS CORRUPT - UNABLE TO PROCESS";
 	@Override
 	public void doProcessStream(InputStream stream, String source, JCas jCas) throws IOException {
 		super.doProcessStream(stream, source, jCas);
@@ -38,6 +40,9 @@ public class TikaContentExtractor extends AbstractContentExtractor {
 			}
 		} catch (SAXException | TikaException e) {
 			getMonitor().warn("Couldn't parse metadata from '{}'", source, e);
+			if (Strings.isNullOrEmpty(jCas.getDocumentText())) {
+				jCas.setDocumentText(CORRUPT_FILE_TEXT);
+			}
 		}
 	}
 }
