@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
+import org.apache.uima.cas.Feature;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
@@ -228,6 +229,10 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		p.setEnd(5);
 		p.setValue("James");
 		p.addToIndexes();
+		// Obtain the number of features in the object. These should all
+		// be stored in the database so the count retrieved from the
+		// database should match.
+		int expectedPersonSize =  p.getType().getFeatures().size();
 
 		Location l = new Location(jCas);
 		l.setBegin(14);
@@ -235,6 +240,10 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		l.setValue("London");
 		l.setGeoJson("{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
 		l.addToIndexes();
+		// Obtain the number of features in the object. These should all
+		// be stored in the database so the count retrieved from the
+		// database should match.
+		int expectedLocationSize =  l.getType().getFeatures().size();
 
 		DateType d = new DateType(jCas);
 		d.setBegin(24);
@@ -242,6 +251,10 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		d.setConfidence(1.0);
 		d.setValue("19th February 2015");
 		d.addToIndexes();
+		// Obtain the number of features in the object. These should all
+		// be stored in the database so the count retrieved from the
+		// database should match.
+		int expectedDateSize =  d.getType().getFeatures().size();
 
 		CommsIdentifier ci = new CommsIdentifier(jCas);
 		ci.setBegin(66);
@@ -249,6 +262,10 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		ci.setSubType("email");
 		ci.setValue("james@example.com");
 		ci.addToIndexes();
+		// Obtain the number of features in the object. These should all
+		// be stored in the database so the count retrieved from the
+		// database should match.
+		int expectedEmailSize =  ci.getType().getFeatures().size();
 
 		ae.process(jCas);
 
@@ -259,7 +276,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals(4, entities.size());
 
 		Map<String, Object> person = (Map<String, Object>)entities.get(0);
-		assertEquals(9, person.size());
+		assertEquals(expectedPersonSize, person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
 		assertEquals(0.0, person.get(CONFIDENCE));
@@ -267,7 +284,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals("James", person.get(VALUE));
 
 		Map<String, Object> location =(Map<String, Object>) entities.get(1);
-		assertEquals(9, location.size());
+		assertEquals(expectedLocationSize, location.size());
 		assertEquals(14, location.get(BEGIN));
 		assertEquals(20, location.get(END));
 		assertEquals(0.0, location.get(CONFIDENCE));
@@ -279,7 +296,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertArrayEquals(new Double[] { -0.1, 51.5 }, ((BasicDBList)((DBObject)((DBObject)location.get(GEO_JSON)).get("geometry")).get("coordinates")).toArray());
 
 		Map<String, Object> date = (Map<String, Object>)entities.get(2);
-		assertEquals(8, date.size());
+		assertEquals(expectedDateSize, date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
@@ -287,7 +304,7 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		assertEquals("19th February 2015", date.get(VALUE));
 
 		Map<String, Object> email = (Map<String, Object>) entities.get(3);
-		assertEquals(8, email.size());
+		assertEquals(expectedEmailSize, email.size());
 		assertEquals(66, email.get(BEGIN));
 		assertEquals(83, email.get(END));
 		assertEquals(0.0, email.get(CONFIDENCE));
