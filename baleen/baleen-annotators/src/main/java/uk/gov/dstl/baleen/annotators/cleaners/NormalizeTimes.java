@@ -23,9 +23,9 @@ import uk.gov.dstl.baleen.types.temporal.Time;
  * only preserved from the original value, never added or changed to be in a different zone and separated
  * from the time by a single space. Zones are only recognised if they are an acronym in the set of zone IDs
  * available from the TimeZone class.
- * @baleen.javadoc
  * 
-  */
+ * @baleen.javadoc
+ */
 public class NormalizeTimes extends AbstractNormalizeEntities{
 
 	/* Create a list of time zone acronyms to use in the regular expressions. This is the same list as is used
@@ -59,7 +59,7 @@ public class NormalizeTimes extends AbstractNormalizeEntities{
 		Matcher mSimple = pSimple.matcher(timeString);
 		
 		if (mKeyWords.find()) {
-			if (!(mKeyWords.group(1) == null) || !(mKeyWords.group(2) == null)) {
+			if (mKeyWords.group(3) == null) {
 				return "12:00";
 			} else {
 				return "00:00";
@@ -99,7 +99,7 @@ public class NormalizeTimes extends AbstractNormalizeEntities{
 						formatter.applyPattern(TO24HR);
 					}
 				} catch (ParseException exception) {
-					System.out.printf("h# Parse Exception occurred 1 %d %s\n",exception.getErrorOffset(),exception.getMessage());
+					getMonitor().warn("Parse exception occurred at {} for time {}", exception.getErrorOffset(), timeSb.toString(), exception);
 					return timeString;
 				}
 				
@@ -117,7 +117,7 @@ public class NormalizeTimes extends AbstractNormalizeEntities{
 						formatter.applyPattern(TO24HR);
 					}
 				} catch (ParseException exception) {
-					System.out.printf("h# Parse Exception occurred 2 %d %s",exception.getErrorOffset(),exception.getMessage());
+					getMonitor().warn("Parse exception occurred at {} for time {}", exception.getErrorOffset(), timeSb.toString(), exception);
 					return timeString;
 				}
 				
@@ -143,7 +143,7 @@ public class NormalizeTimes extends AbstractNormalizeEntities{
 				timeObj = formatter.parse(timeString);
 				formatter.applyPattern(TO24HR);
 			} catch (ParseException exception) {
-				System.out.printf("h# Parse Exception occurred 2 %d %s",exception.getErrorOffset(),exception.getMessage());
+				getMonitor().warn("Parse exception occurred at {} for time {}", exception.getErrorOffset(), timeString, exception);
 				return timeString;
 			}
 			

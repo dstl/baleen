@@ -18,6 +18,7 @@ public class LatLonDDRegexTest extends AbstractAnnotatorTest{
 	
 	private static final String TYPE_POINT_COORDINATES_0_125_51_507 = "{\"type\":\"Point\",\"coordinates\":[-0.125,51.507]}";
 	private static final String TYPE_POINT_COORDINATES_3_188_55_953 = "{\"type\":\"Point\",\"coordinates\":[-3.188,55.953]}";
+	private static final String TYPE_POINT_COORDINATES_56_3_2 = "{\"type\":\"Point\",\"coordinates\":[56.0,-3.2]}";
 	private static final String TYPE_POINT_COORDINATES_75_0152_09_190 = "{\"type\":\"Point\",\"coordinates\":[-75.0152,-9.19]}";
 	private static final String TYPE_POINT_COORDINATES_127_766_35_907 = "{\"type\":\"Point\",\"coordinates\":[127.7669,35.9078]}";
 
@@ -74,6 +75,19 @@ public class LatLonDDRegexTest extends AbstractAnnotatorTest{
 		
 		assertAnnotations(1, Coordinate.class,
 				new TestCoordinate(0, "51.507, -0.125", "dd", TYPE_POINT_COORDINATES_0_125_51_507)
+		);
+
+	}
+	
+	@Test
+	public void test0MinDPString() throws Exception{
+		
+		jCas.setDocumentText("London is located in the UK, at 51.507, -0.125. Edinburgh is also in the UK, at -3.2,56.");
+		processJCas("minDP", "0");
+		
+		assertAnnotations(2, Coordinate.class,
+				new TestCoordinate(0, "51.507, -0.125", "dd", TYPE_POINT_COORDINATES_0_125_51_507),
+				new TestCoordinate(1, "-3.2,56", "dd", TYPE_POINT_COORDINATES_56_3_2)
 		);
 
 	}

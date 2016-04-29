@@ -14,8 +14,8 @@ import com.google.common.base.Strings;
  * A class for containing the generic functionality shared by all normalizing
  * cleaners. Both methods are intended to be overridden with operations specific
  * to the entities handled by a particular child cleaner.
- * @baleen.javadoc
  * 
+ * @baleen.javadoc
  */
 public abstract class AbstractNormalizeEntities extends BaleenAnnotator {
 

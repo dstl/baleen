@@ -17,8 +17,8 @@ import uk.gov.dstl.baleen.types.temporal.DateType;
  * if avoids formatting dates where the actual reference is ambiguous and this includes all dates
  * with only a two digit year specifier, given that the century is indeterminable. An assumption
  * could be made but the user with the rest of the document contents is better placed to make it.
- * @baleen.javadoc
  * 
+ * @baleen.javadoc
  */
 public class NormalizeDates extends AbstractNormalizeEntities {
 	
@@ -135,9 +135,9 @@ public class NormalizeDates extends AbstractNormalizeEntities {
 	
 	/**
 	 * Method to get the value of the orderAmbiguityFlag.
+	 * 
 	 * @return orderAmbiguityFlag is a boolean that is true if the most recently parsed date
 	 * is ambiguous as to whether it is ordered Day/Month/Year or Month/Day/Year
-	 * @baleen.javadoc
 	 */
 	public boolean getOrderAmbiguityFlag() {
 		return orderAmbiguityFlag; 

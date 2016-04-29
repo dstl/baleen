@@ -25,15 +25,17 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * <p><b>Decimal degree (DD)</b></p>
  * <p>The document content is run through a regular expression matcher looking for latitude-longitude pairs in DD
  * (e.g. 51.068787 -1.794472 or 51.068787° -1.794472° or 51.068787°N 1.794472°W).
- * If the minimum number of decimal places required is 0, the following regular expression is used:</p>
- * <pre>(-?\\d{1,3}(\\.\\d*)?)(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d*)?)</pre>
- * <pre>(-?\\d{1,3}(\\.\\d*)?)°(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d*)?)°</pre>
- * <pre>\\b(\\d{1,3}(\\.\\d*)?)°( )?([NSEW])(,\\h*|\\h+)(\\d{1,3}(\\.\\d*)?)°( )?([NSEW])</pre>
- * <p>If the minimum number of decimal places required is greater than 0, the following regular expression is used
+ * If the minimum number of decimal places required is 0, the following regular expressions are used:</p>
+ * <pre>(-?\\d{1,3}(\\.\\d+)?)(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d+)?)</pre>
+ * <pre>(-?\\d{1,3}(\\.\\d+)?)°(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d+)?)°</pre>
+ * <pre>\\b(\\d{1,3}(\\.\\d+)?)°( )?([NSEW])(,\\h*|\\h+)(\\d{1,3}(\\.\\d+)?)°( )?([NSEW])</pre>
+ * 
+ * <p>If the minimum number of decimal places required is greater than 0, the following regular expressions are used
  * where x is the minimum number of decimal places:</p>
  * <pre>(-?\\d{1,3}(\\.\\d{x,}))(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d{x,}))</pre>
  * <pre>(-?\\d{1,3}(\\.\\d{x,}))°(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d{x,}))°</pre>
  * <pre>\\b(\\d{1,3}(\\.\\d{x,}))°( )?([NSEW])(,\\h*|\\h+)(\\d{1,3}(\\.\\d{x,}))°( )?([NSEW])</pre>
+ * 
  * <p>The latitude and longitude are extracted (optionally the user can specify it should be longitude and latitude instead)
  * and a GeoJSON object is built representing this location.</p>
  * <p>Coordinates that are preceded by a £, $ or € symbol are skipped as they are assumed to be monetary values rather than coordinates (e.g. £3,000).</p>
@@ -61,9 +63,9 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 public class LatLon extends BaleenAnnotator {
 
 	private final Pattern llDMSPattern = Pattern
-			.compile("\\b(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])[,/\\h]*(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d*)?)\"([NSEW])\\b");
+			.compile("\\b(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d+)?)\"([NSEW])[,/\\h]*(\\d{1,3})°(\\d{1,2})'(\\d{1,2}(\\.\\d+)?)\"([NSEW])\\b");
 	private final Pattern llDMSSpacePattern = Pattern
-			.compile("\\b(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])[,/\\h]*(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d*)?) ([NSEW])\\b");
+			.compile("\\b(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d+)?) ([NSEW])[,/\\h]*(\\d{1,3}) (\\d{1,2}) (\\d{1,2}(\\.\\d+)?) ([NSEW])\\b");
 	private final Pattern llDMSNumericPattern = Pattern
 			.compile("\\b(\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])[,/\\h]*(\\d{2,3})(\\d{2})(\\d{2})?( )?([NSEW])\\b");
 	private final Pattern llDMSPunctuationPattern = Pattern
@@ -119,6 +121,7 @@ public class LatLon extends BaleenAnnotator {
 	
 	/**
 	 * The minimum number of decimal places required when parsing Decimal Degrees.
+	 * If 0, then any number of decimal places is accepted.
 	 * 
 	 * @baleen.config 2
 	 */
@@ -166,11 +169,11 @@ public class LatLon extends BaleenAnnotator {
 		if (minDP == 0) {
 			// No word boundary characters as that excludes negative signs
 			llDDPattern = Pattern
-					.compile("(-?\\d{1,3}(\\.\\d*)?)(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d*)?)");
+					.compile("(-?\\d{1,3}(\\.\\d+)?)(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d+)?)");
 			llDDSymPattern = Pattern
-					.compile("(-?\\d{1,3}(\\.\\d*)?)°(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d*)?)°");
+					.compile("(-?\\d{1,3}(\\.\\d+)?)°(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d+)?)°");
 			llDDCardPattern = Pattern
-					.compile("\\b(\\d{1,3}(\\.\\d*)?)°( )?([NSEW])(,\\h*|\\h+)(\\d{1,3}(\\.\\d*)?)°( )?([NSEW])");
+					.compile("\\b(\\d{1,3}(\\.\\d+)?)°( )?([NSEW])(,\\h*|\\h+)(\\d{1,3}(\\.\\d+)?)°( )?([NSEW])");
 		} else {
 			llDDPattern = Pattern.compile("(-?\\d{1,3}(\\.\\d{" + minDP
 					+ ",}))(,\\h*|\\h+)(-?\\d{1,3}(\\.\\d{" + minDP + ",}))");

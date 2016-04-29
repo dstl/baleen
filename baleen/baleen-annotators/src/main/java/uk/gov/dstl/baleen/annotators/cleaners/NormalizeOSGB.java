@@ -8,8 +8,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
  * Formats the value of the OSGB entities to be consistent for export and entity
  * matching between documents. The format is two upper case letters followed by
  * an even digit number with no whitespace or other characters.
- * @baleen.javadoc
  * 
+ * @baleen.javadoc
  */
 public class NormalizeOSGB extends AbstractNormalizeEntities {
 	

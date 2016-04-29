@@ -14,7 +14,6 @@ import java.util.Map;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
-import org.apache.uima.cas.Feature;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
@@ -26,6 +25,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.collect.Lists;
+import com.mongodb.BasicDBList;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.util.JSON;
+
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
 import uk.gov.dstl.baleen.types.common.Person;
@@ -34,12 +39,6 @@ import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.temporal.DateType;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
-
-import com.google.common.collect.Lists;
-import com.mongodb.BasicDBList;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 
 public class LegacyMongoTest extends ConsumerTestBase {
 
