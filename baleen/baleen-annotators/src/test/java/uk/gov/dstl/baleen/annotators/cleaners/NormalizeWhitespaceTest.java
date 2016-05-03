@@ -31,6 +31,7 @@ public class NormalizeWhitespaceTest extends AnnotatorTestBase {
 		
 		assertEquals(1, JCasUtil.select(jCas, Person.class).size());
 		assertEquals(CORRECT_WHITESPACING, JCasUtil.selectByIndex(jCas, Person.class, 0).getValue());
+		assertEquals(true, JCasUtil.selectByIndex(jCas, Person.class, 0).getIsNormalised());
 	}
 	
 	@Test
@@ -45,6 +46,7 @@ public class NormalizeWhitespaceTest extends AnnotatorTestBase {
 		
 		assertEquals(1, JCasUtil.select(jCas, Person.class).size());
 		assertEquals(CORRECT_WHITESPACING, JCasUtil.selectByIndex(jCas, Person.class, 0).getValue());
+		assertEquals(true, JCasUtil.selectByIndex(jCas, Person.class, 0).getIsNormalised());
 	}
 	
 	@Test
@@ -58,6 +60,7 @@ public class NormalizeWhitespaceTest extends AnnotatorTestBase {
 		
 		assertEquals(1, JCasUtil.select(jCas, Person.class).size());
 		assertEquals(CORRECT_WHITESPACING, JCasUtil.selectByIndex(jCas, Person.class, 0).getValue());
+		assertEquals(true, JCasUtil.selectByIndex(jCas, Person.class, 0).getIsNormalised());
 	}
 	
 	@Test
@@ -72,6 +75,7 @@ public class NormalizeWhitespaceTest extends AnnotatorTestBase {
 		
 		assertEquals(1, JCasUtil.select(jCas, Person.class).size());
 		assertEquals(CORRECT_WHITESPACING, JCasUtil.selectByIndex(jCas, Person.class, 0).getValue());
+		assertEquals(true, JCasUtil.selectByIndex(jCas, Person.class, 0).getIsNormalised());
 	}
 	
 	@Test
@@ -87,5 +91,6 @@ public class NormalizeWhitespaceTest extends AnnotatorTestBase {
 		
 		assertEquals(1, JCasUtil.select(jCas, Person.class).size());
 		assertEquals(null, JCasUtil.selectByIndex(jCas, Person.class, 0).getValue());
+		assertEquals(false, JCasUtil.selectByIndex(jCas, Person.class, 0).getIsNormalised());
 	}
 }

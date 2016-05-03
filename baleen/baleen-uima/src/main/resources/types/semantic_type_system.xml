@@ -26,6 +26,11 @@ This XML file classified as UK OFFICIAL.</description>
           <rangeTypeName>uk.gov.dstl.baleen.types.semantic.ReferenceTarget</rangeTypeName>
         </featureDescription>
         <featureDescription>
+          <name>isNormalised</name>
+          <description>Marks the entity value as having been normalised from the original value</description>
+          <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
           <name>subType</name>
           <description>String identifying sub type of entity.</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>

@@ -141,6 +141,69 @@ public class LatLonDMSRegexTest extends AbstractAnnotatorTest{
 		jCas.setDocumentText("59° 39.947' N, 10° 36.708' E");
 		processJCas();
 		assertEquals(1, JCasUtil.select(jCas, Coordinate.class).size());
+		Coordinate t = JCasUtil.selectByIndex(jCas, Coordinate.class, 0);
+		assertEquals(false, t.getIsNormalised());
+	}
+	
+	@Test
+	public void testNormaliseDeg() throws Exception{
+	
+		jCas.setDocumentText("Warsaw is in Poland, at (52°14'04\"N 21°01'04\"E). Rio de Janeiro is in Brazil, at (22°54'04\"S 43°12'04\"W).");
+		processJCas("storeDecimalValue", true);
+
+		assertAnnotations(2,  Coordinate.class, 
+				new TestCoordinate(0, "52°14'04\"N 21°01'04\"E", DMS, TYPE_POINT_COORDINATES_21_017777777777777_52_23444444444444),
+				new TestCoordinate(1, "22°54'04\"S 43°12'04\"W", DMS, TYPE_POINT_COORDINATES_43_20111111111111_22_90111111111111)
+		);
+		Coordinate t = JCasUtil.selectByIndex(jCas, Coordinate.class, 0);
+		assertEquals("52.2344444 21.0177778", t.getValue());
+		assertEquals(true, t.getIsNormalised());
+		t = JCasUtil.selectByIndex(jCas, Coordinate.class, 1);
+		assertEquals("-22.9011111 -43.2011111", t.getValue());
+		assertEquals(true, t.getIsNormalised());
+
+		jCas.reset();
+		jCas.setDocumentText("Warsaw is in Poland, at (52°14'04\"N 21°01'04\"E). Rio de Janeiro is in Brazil, at (22°54'04\"S 43°12'04\"W).");
+		processJCas("storeDecimalValue", true, "storeCardinalPoint", true);
+		assertAnnotations(2,  Coordinate.class, 
+				new TestCoordinate(0, "52°14'04\"N 21°01'04\"E", DMS, TYPE_POINT_COORDINATES_21_017777777777777_52_23444444444444),
+				new TestCoordinate(1, "22°54'04\"S 43°12'04\"W", DMS, TYPE_POINT_COORDINATES_43_20111111111111_22_90111111111111)
+		);
+		t = JCasUtil.selectByIndex(jCas, Coordinate.class, 0);
+		assertEquals("52.2344444N 21.0177778E", t.getValue());
+		assertEquals(true, t.getIsNormalised());
+		t = JCasUtil.selectByIndex(jCas, Coordinate.class, 1);
+		assertEquals("22.9011111S 43.2011111W", t.getValue());
+		assertEquals(true, t.getIsNormalised());
+
+		jCas.reset();
+		jCas.setDocumentText("Warsaw is in Poland, at (52°14'04\"N 21°01'04\"E). Rio de Janeiro is in Brazil, at (22°54'04\"S 43°12'04\"W).");
+		processJCas("storeDecimalValue", true, "storeLongitudeFirst", true);
+
+		assertAnnotations(2,  Coordinate.class, 
+				new TestCoordinate(0, "52°14'04\"N 21°01'04\"E", DMS, TYPE_POINT_COORDINATES_21_017777777777777_52_23444444444444),
+				new TestCoordinate(1, "22°54'04\"S 43°12'04\"W", DMS, TYPE_POINT_COORDINATES_43_20111111111111_22_90111111111111)
+		);
+		t = JCasUtil.selectByIndex(jCas, Coordinate.class, 0);
+		assertEquals("21.0177778 52.2344444", t.getValue());
+		assertEquals(true, t.getIsNormalised());
+		t = JCasUtil.selectByIndex(jCas, Coordinate.class, 1);
+		assertEquals("-43.2011111 -22.9011111", t.getValue());
+		assertEquals(true, t.getIsNormalised());
+
+		jCas.reset();
+		jCas.setDocumentText("Warsaw is in Poland, at (52°14'04\"N 21°01'04\"E). Rio de Janeiro is in Brazil, at (22°54'04\"S 43°12'04\"W).");
+		processJCas("storeDecimalValue", true, "storeCardinalPoint", true, "storeLongitudeFirst", true);
+		assertAnnotations(2,  Coordinate.class, 
+				new TestCoordinate(0, "52°14'04\"N 21°01'04\"E", DMS, TYPE_POINT_COORDINATES_21_017777777777777_52_23444444444444),
+				new TestCoordinate(1, "22°54'04\"S 43°12'04\"W", DMS, TYPE_POINT_COORDINATES_43_20111111111111_22_90111111111111)
+		);
+		t = JCasUtil.selectByIndex(jCas, Coordinate.class, 0);
+		assertEquals("21.0177778E 52.2344444N", t.getValue());
+		assertEquals(true, t.getIsNormalised());
+		t = JCasUtil.selectByIndex(jCas, Coordinate.class, 1);
+		assertEquals("43.2011111W 22.9011111S", t.getValue());
+		assertEquals(true, t.getIsNormalised());
 	}
 	
 	@Test
