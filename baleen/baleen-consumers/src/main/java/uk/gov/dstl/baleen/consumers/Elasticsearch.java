@@ -186,6 +186,20 @@ public class Elasticsearch extends BaleenConsumer {
 	boolean contentHashAsId = true;
 
 	/**
+	 * Should only normalised entities be persisted in the elasticsearch database?
+	 * This is useful when another persistent store, such as mongodb, is used to
+	 * store the entities and elasticsearch only needs the entity content for
+	 * searching purposes. In which case, to reduce duplication of data and storage
+	 * overhead it is only necessary to store the unmodified full text and any modified,
+	 * i.e. normalised, entities.
+	 *
+	 * @baleen.config false
+	 */
+	public static final String ONLY_STORE_NORMALISED_ENTITIES = "onlyStoreNormalisedEntities";
+	@ConfigurationParameter(name = ONLY_STORE_NORMALISED_ENTITIES, defaultValue = "false")
+	boolean onlyStoreNormalisedEntities = false;
+	
+	/**
 	 * A list of keys to look in for dates that could used for sorting.
 	 * Keys are listed in order of preference, and are expected to be in one of the following formats:
 	 * <ul>
@@ -345,6 +359,10 @@ public class Elasticsearch extends BaleenConsumer {
 		Collection<Entity> entities = JCasUtil.select(jCas, Entity.class);
 
 		for(Entity ent : entities){
+			if (onlyStoreNormalisedEntities && !ent.getIsNormalised()) {
+				continue;
+			}
+
 			Map<String, Object> entity = entityConverter.convertEntity(ent);
 			if(legacy && ent instanceof Location){
 				Map<String, Object> geoFeature = new HashMap<>();

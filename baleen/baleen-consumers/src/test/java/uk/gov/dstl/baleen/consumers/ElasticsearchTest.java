@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import uk.gov.dstl.baleen.resources.SharedElasticsearchResource;
 import uk.gov.dstl.baleen.resources.SharedLocalElasticsearchResource;
+import uk.gov.dstl.baleen.types.temporal.DateType;
 
 public class ElasticsearchTest extends ElasticsearchConsumerTestBase{
 
@@ -185,6 +186,55 @@ public class ElasticsearchTest extends ElasticsearchConsumerTestBase{
 		assertEquals("TEST", result.getSource().get("classification"));
 	}
 
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testNormalisedEntities() throws Exception{
+		createEntitiesDocument();
+
+		// Create an additional date object that is marked as
+		// normalised and will end up as the only entity stored.
+		DateType d = new DateType(jCas);
+		d.setBegin(24);
+		d.setEnd(42);
+		d.setValue("2015-02-19");
+		d.setIsNormalised(true);
+		d.setConfidence(1.0);
+		d.addToIndexes();
+
+		// Set the configuration parameter to only store normalised
+		// entities in the database. This requires a call to reconfigure()
+		// to activate it.
+		ae.setConfigParameterValue("onlyStoreNormalisedEntities", true);
+		ae.reconfigure();
+
+		ae.process(jCas);
+
+		//Delay, to allow changes made by consumer to propagate
+		Thread.sleep(SLEEP_DELAY);
+
+		assertEquals(1, client.count(new CountRequest(BALEEN_INDEX)).actionGet().getCount());
+
+		// Validate that only one entity has been stored and it
+		// is the normalised date.
+		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().hits()[0];
+		List<Map<String, Object>> entities = (List<Map<String, Object>>) result.getSource().get("entities");
+		assertEquals(1, entities.size());
+
+		Map<String, Object> date = entities.get(0);
+		assertEquals(8, date.size());
+		assertEquals(24, date.get(BEGIN));
+		assertEquals(42, date.get(END));
+		assertEquals(1.0, date.get(CONFIDENCE));
+		assertEquals("DateType", date.get(TYPE));
+		assertEquals("2015-02-19", date.get(VALUE));
+		assertNotNull(date.get(EXTERNAL_ID));
+
+		// Reset the store only normalised flag back to the default false so
+		// that any tests following this one will have the default behaviour.
+		ae.setConfigParameterValue("onlyStoreNormalisedEntities", false);
+		ae.reconfigure();
+	}
 
 	@Test
 	public void testContentHash(){
