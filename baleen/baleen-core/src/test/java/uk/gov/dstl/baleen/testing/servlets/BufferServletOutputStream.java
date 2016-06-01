@@ -41,32 +41,16 @@ class BufferServletOutputStream extends ServletOutputStream {
 		buffer = ByteBuffer.allocate(bufferSize);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.servlet.ServletOutputStream#isReady()
-	 */
 	@Override
 	public boolean isReady() {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see javax.servlet.ServletOutputStream#setWriteListener(javax.servlet.
-	 * WriteListener)
-	 */
 	@Override
 	public void setWriteListener(WriteListener writeListener) {
 		// So nothing
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.OutputStream#write(int)
-	 */
 	@Override
 	public void write(int c) throws IOException {
 		byte b = (byte) c;

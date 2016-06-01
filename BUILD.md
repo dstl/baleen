@@ -11,4 +11,4 @@
 3. Right click on `baleen` project, select Run As... -> 3. Maven Build...
 4. Type `package` into the Goals box, and then click Run
 5. The Baleen JAR will be built and saved in the target directory under the top level project directory
-6. Run Baleen by running `java -jar baleen-2.0.0.jar` and then navigating to <http://localhost:6413>
+6. Run Baleen by running `java -jar baleen-2.2.0.jar` and then navigating to <http://localhost:6413>

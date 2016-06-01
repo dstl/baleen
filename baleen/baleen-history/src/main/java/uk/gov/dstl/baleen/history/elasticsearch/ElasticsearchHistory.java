@@ -7,8 +7,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
+import org.elasticsearch.action.get.GetAction;
 import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,7 +120,7 @@ public class ElasticsearchHistory extends AbstractCachingBaleenHistory<Elasticse
 		try {
 			byte[] source = mapper.writeValueAsBytes(new ESHistory(documentId, dh.getAllHistory()));
 
-			new IndexRequestBuilder(elasticsearch.getClient()).setIndex(documentId).setIndex(esIndex).setType(esType)
+			new IndexRequestBuilder(elasticsearch.getClient(), IndexAction.INSTANCE).setIndex(documentId).setIndex(esIndex).setType(esType)
 					.setId(documentId).setSource(source).get();
 
 		} catch (JsonProcessingException e) {
@@ -137,7 +139,7 @@ public class ElasticsearchHistory extends AbstractCachingBaleenHistory<Elasticse
 	@Override
 	protected ElasticsearchDocumentHistory loadExistingDocumentHistory(String documentId) throws BaleenException {
 		try {
-			GetResponse response = new GetRequestBuilder(elasticsearch.getClient()).setId(documentId).setIndex(esIndex)
+			GetResponse response = new GetRequestBuilder(elasticsearch.getClient(), GetAction.INSTANCE).setId(documentId).setIndex(esIndex)
 					.setType(esType).get();
 
 			if (!response.isExists() || response.isSourceEmpty()) {

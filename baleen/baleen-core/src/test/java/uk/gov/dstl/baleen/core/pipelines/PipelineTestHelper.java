@@ -8,18 +8,18 @@ import java.net.URL;
 import org.apache.commons.io.IOUtils;
 import org.apache.uima.collection.CollectionProcessingEngine;
 
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
-import uk.gov.dstl.baleen.cpe.CpeBuilderTest;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilderTest;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /**
  * Helpers for creating dummy data for pipelines
  *
- * 
+ *
  *
  */
 public class PipelineTestHelper {
-	
+
 	private PipelineTestHelper() {
 		// Do nothing
 	}
@@ -29,29 +29,28 @@ public class PipelineTestHelper {
 	 *
 	 * @return
 	 * @throws BaleenException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static CollectionProcessingEngine createCpe(String name) throws BaleenException {
 		return createCpe(name, getCpeYamlResource());
 	}
-	
+
 	public static CollectionProcessingEngine createCpe(String name, URL url) throws BaleenException {
 		File yamlFile = new File(url.getFile());
-		CpeBuilder builder = new CpeBuilder(name, yamlFile);
-		return builder.getCPE();
+		PipelineCpeBuilder builder = new PipelineCpeBuilder(name, yamlFile);
+		return builder.build();
 	}
 
 	public static URL getCpeYamlResource() {
-		return CpeBuilderTest.class.getResource("dummyConfig.yaml");
+		return PipelineCpeBuilderTest.class.getResource("dummyConfig.yaml");
 	}
-	
 
 	public static String getCpeYamlResourceAsString() throws IOException {
-		return IOUtils.toString(CpeBuilderTest.class.getResourceAsStream("resourceConfig.yaml"));
+		return IOUtils.toString(PipelineCpeBuilderTest.class.getResourceAsStream("resourceConfig.yaml"));
 	}
 
 	public static URL getCpeWithExternalResourceYamlResource() {
-		return CpeBuilderTest.class.getResource("resourceConfig.yaml");
+		return PipelineCpeBuilderTest.class.getResource("resourceConfig.yaml");
 	}
 
 	public static URL getPipelineManagerYamlResource() {

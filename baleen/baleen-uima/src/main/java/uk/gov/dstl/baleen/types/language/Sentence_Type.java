@@ -13,7 +13,7 @@ import org.apache.uima.cas.Type;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** Defines a sentence from the source document.
- * Updated by JCasGen Wed Jan 14 12:58:18 GMT 2015
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class Sentence_Type extends Base_Type {
   /** @generated 

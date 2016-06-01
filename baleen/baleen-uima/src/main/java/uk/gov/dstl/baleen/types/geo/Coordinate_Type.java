@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Location_Type;
 
 /** A well-formed coordinate value - MGRS or WGS84 DD or DMS cooridate system - explictly defined in source document.
- * Updated by JCasGen Fri Feb 05 14:51:56 GMT 2016
+ * Updated by JCasGen Tue Apr 12 12:06:36 BST 2016
  * @generated */
 public class Coordinate_Type extends Location_Type {
   /** @generated 

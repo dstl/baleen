@@ -14,7 +14,7 @@ import org.apache.uima.jcas.JCas;
 
 import uk.gov.dstl.baleen.types.common.Organisation;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
-import uk.gov.dstl.baleen.uima.ComparableSpan;
+import uk.gov.dstl.baleen.uima.ComparableTextSpan;
 
 
 /**
@@ -40,11 +40,11 @@ public class BritishArmyUnits extends BaleenAnnotator {
 	
 		// 1. Find all sections, platoons, companies, etc.
 
-		List<ComparableSpan> sectionSpans = ComparableSpan.buildSpans(documentText, section);
-		List<ComparableSpan> platoonSpans = ComparableSpan.buildSpans(documentText, platoon);
-		List<ComparableSpan> companySpans = ComparableSpan.buildSpans(documentText, company);
+		List<ComparableTextSpan> sectionSpans = ComparableTextSpan.buildSpans(documentText, section);
+		List<ComparableTextSpan> platoonSpans = ComparableTextSpan.buildSpans(documentText, platoon);
+		List<ComparableTextSpan> companySpans = ComparableTextSpan.buildSpans(documentText, company);
 		
-		Map<Integer, List<ComparableSpan>> hierarchySpans = new HashMap<>();
+		Map<Integer, List<ComparableTextSpan>> hierarchySpans = new HashMap<>();
 	
 		hierarchySpans.put(HIERARCHY_SECTION, sectionSpans);
 		hierarchySpans.put(HIERARCHY_PLATOON, platoonSpans);
@@ -58,7 +58,7 @@ public class BritishArmyUnits extends BaleenAnnotator {
 		}
 		
 		// 3. Add spans to JCas as organisations
-		for(ComparableSpan span : hierarchySpans.get(hierarchyLevels.last())){
+		for(ComparableTextSpan span : hierarchySpans.get(hierarchyLevels.last())){
 			Organisation org = new Organisation(aJCas);
 			
 			org.setConfidence(1.0);
@@ -71,16 +71,16 @@ public class BritishArmyUnits extends BaleenAnnotator {
 		}
 	}
 	
-	private void compareHierarchy(JCas aJCas, Map<Integer, List<ComparableSpan>> hierarchySpans, int level) {
+	private void compareHierarchy(JCas aJCas, Map<Integer, List<ComparableTextSpan>> hierarchySpans, int level) {
 		
-		List<ComparableSpan> newSpans = hierarchySpans.get(level + 1);
+		List<ComparableTextSpan> newSpans = hierarchySpans.get(level + 1);
 		if(newSpans == null)
 			newSpans = new ArrayList<>();
 		
-		for(ComparableSpan s1 : hierarchySpans.get(level)){
-			ComparableSpan s = s1;
-			for(ComparableSpan s2 : hierarchySpans.get(level + 1)){
-				ComparableSpan t = mergeSpansIfPossible(s1, s2, aJCas);
+		for(ComparableTextSpan s1 : hierarchySpans.get(level)){
+			ComparableTextSpan s = s1;
+			for(ComparableTextSpan s2 : hierarchySpans.get(level + 1)){
+				ComparableTextSpan t = mergeSpansIfPossible(s1, s2, aJCas);
 				if(t != null){
 					s = t;
 					newSpans.remove(s2);
@@ -94,11 +94,11 @@ public class BritishArmyUnits extends BaleenAnnotator {
 		hierarchySpans.put(level + 1, newSpans);
 	}
 	
-	private ComparableSpan mergeSpansIfPossible(ComparableSpan s1, ComparableSpan s2, JCas jCas){
+	private ComparableTextSpan mergeSpansIfPossible(ComparableTextSpan s1, ComparableTextSpan s2, JCas jCas){
 		if(s1.getStart() < s2.getEnd()) {
 			String text = jCas.getDocumentText().substring(s1.getStart(), s2.getEnd());
 			if(text.equals(s1.getValue() + " " + s2.getValue()) || text.equals(s1.getValue() + "," + s2.getValue()) || text.equals(s1.getValue() + ", " + s2.getValue())){
-				return new ComparableSpan(s1.getStart(), s2.getEnd(), text);
+				return new ComparableTextSpan(s1.getStart(), s2.getEnd(), text);
 			}
 		}
 		

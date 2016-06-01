@@ -270,7 +270,7 @@ public class FolderReaderTest {
 	}
 	
 	@Test
-	public void testExtensionFilter() throws Exception{
+	public void testFilenameFilter1() throws Exception{
 		File f1 = new File(inputDir, TEXT1_FILE);
 		f1.createNewFile();
 		File f2 = new File(inputDir, "test2.log");
@@ -278,7 +278,25 @@ public class FolderReaderTest {
 		File f3 = new File(inputDir, "test3.TXT");
 		f3.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ALLOWED_EXTENSIONS, new String[]{"txt"});
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ACCEPTED_PATTERNS, new String[]{".*\\.txt"});
+
+		assertNextSourceNotNull(bcr);
+		assertNextSourceNotNull(bcr);
+		assertFalse(bcr.doHasNext());
+
+		bcr.close();
+	}
+	
+	@Test
+	public void testFilenameFilter2() throws Exception{
+		File f1 = new File(inputDir, TEXT1_FILE);
+		f1.createNewFile();
+		File f2 = new File(inputDir, "test2.log");
+		f2.createNewFile();
+		File f3 = new File(inputDir, "test3.TXT");
+		f3.createNewFile();
+
+		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ACCEPTED_PATTERNS, new String[]{".*[2-3].*"});
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);

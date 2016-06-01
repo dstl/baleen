@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Temporal;
 
 
 /** A combination of a DateType and Time which are part of the same reference, specifying a time on a specific date.
- * Updated by JCasGen Wed Jan 21 11:37:43 GMT 2015
- * XML source: H:/git/core/baleen/baleen-uima/desc/temporal_type_system.xml
+ * Updated by JCasGen Tue Apr 12 12:07:25 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/temporal_type_system.xml
  * @generated */
 public class DateTime extends Temporal {
   /** @generated

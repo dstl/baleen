@@ -13,7 +13,7 @@ import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
 /**
@@ -34,7 +34,7 @@ public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
 	 * 
 	 * @baleen.resource uk.gov.dstl.baleen.core.history.BaleenHistory
 	 */
-	public static final String KEY_HISTORY = CpeBuilder.BALEEN_HISTORY;
+	public static final String KEY_HISTORY = PipelineCpeBuilder.BALEEN_HISTORY;
 	@ExternalResource(key = KEY_HISTORY, mandatory = false)
 	private BaleenHistory history;
 

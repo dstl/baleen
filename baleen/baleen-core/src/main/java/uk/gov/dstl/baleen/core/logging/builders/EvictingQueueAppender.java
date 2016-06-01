@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import uk.gov.dstl.baleen.core.logging.RecentLog;
+import com.google.common.collect.EvictingQueue;
+
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
-
-import com.google.common.collect.EvictingQueue;
+import uk.gov.dstl.baleen.core.logging.RecentLog;
 
 /**
  * Collects a limited number of log events in memory.
@@ -35,11 +35,6 @@ public class EvictingQueueAppender<E extends ILoggingEvent> extends AppenderBase
 		events = EvictingQueue.create(this.maxSize);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see ch.qos.logback.core.AppenderBase#append(java.lang.Object)
-	 */
 	@Override
 	public synchronized void append(E event) {
 		events.add(new RecentLog(event));

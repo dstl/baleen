@@ -1,0 +1,5 @@
+Type,Subtype,Source type,Target type,Lemma,Lemma POS,Alternatives....
+person,fighters,uk.gov.dstl.baleen.types.common.Organisation,uk.gov.dstl.baleen.types.semantic.Location,fighters,noun,belligerent,scrapper,fighter,hero,combatant,battler,paladin,champion,fighters
+location,vicinity,uk.gov.dstl.baleen.types.common.Person,uk.gov.dstl.baleen.types.geo.Coordinate,vicinity,noun,neighbourhood,locality,vicinity,neighborhood
+location,vicinity,uk.gov.dstl.baleen.types.common.Person,uk.gov.dstl.baleen.types.semantic.Location,vicinity,noun,neighbourhood,locality,vicinity,neighborhood
+Here's some junk text that should be ignored

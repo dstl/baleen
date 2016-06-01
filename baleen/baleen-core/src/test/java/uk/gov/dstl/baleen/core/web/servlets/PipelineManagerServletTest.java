@@ -62,14 +62,14 @@ public class PipelineManagerServletTest {
 	public void before() {
 		realPipeline = new BaleenPipeline(REAL, engine);
 
-		doReturn(true).when(pipelineManager).hasPipeline(REAL);
+		doReturn(true).when(pipelineManager).has(REAL);
 
-		doReturn(Optional.of(realPipeline)).when(pipelineManager).getPipeline(REAL);
-		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getPipelines();
+		doReturn(Optional.of(realPipeline)).when(pipelineManager).get(REAL);
+		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getAll();
 
-		doReturn(Optional.empty()).when(pipelineManager).getPipeline(MISSING);
+		doReturn(Optional.empty()).when(pipelineManager).get(MISSING);
 
-		doReturn(Optional.of(mockPipeline)).when(pipelineManager).getPipeline("mock");
+		doReturn(Optional.of(mockPipeline)).when(pipelineManager).get("mock");
 		doReturn("pipeline-name").when(mockPipeline).getName();
 		doReturn(true).when(mockPipeline).isRunning();
 
@@ -83,7 +83,7 @@ public class PipelineManagerServletTest {
 		caller.addParameter(NAME, REAL);
 		caller.doGet(new PipelineManagerServlet(pipelineManager));
 		assertEquals(200, caller.getResponseStatus().intValue());
-		verify(pipelineManager).getPipeline(REAL);
+		verify(pipelineManager).get(REAL);
 
 		// Poor check that the
 		assertTrue(caller.getResponseBody().contains(REAL));
@@ -143,7 +143,7 @@ public class PipelineManagerServletTest {
 		ServletCaller caller = new ServletCaller();
 		caller.doGet(new PipelineManagerServlet(pipelineManager));
 		assertEquals(200, caller.getResponseStatus().intValue());
-		verify(pipelineManager).getPipelines();
+		verify(pipelineManager).getAll();
 		assertTrue(caller.getResponseBody().contains(REAL));
 	}
 
@@ -156,7 +156,7 @@ public class PipelineManagerServletTest {
 		caller.addParameter("yaml", yaml);
 		caller.doPost(new PipelineManagerServlet(pipelineManager));
 		assertEquals(200, caller.getResponseStatus().intValue());
-		verify(pipelineManager).createPipeline("new", yaml);
+		verify(pipelineManager).create("new", yaml);
 	}
 
 	@Test
@@ -168,7 +168,7 @@ public class PipelineManagerServletTest {
 		caller.addParameter("yaml", yaml);
 		caller.doPost(new PipelineManagerServlet(pipelineManager));
 		assertEquals(400, caller.getSentError().intValue());
-		verify(pipelineManager, never()).createPipeline(REAL, yaml);
+		verify(pipelineManager, never()).create(REAL, yaml);
 	}
 
 	@Test
@@ -179,14 +179,14 @@ public class PipelineManagerServletTest {
 		missingNameCaller.addParameter("yaml", yaml);
 		missingNameCaller.doPost(new PipelineManagerServlet(pipelineManager));
 		assertEquals(400, missingNameCaller.getSentError().intValue());
-		verify(pipelineManager, never()).createPipeline(anyString(), anyString());
+		verify(pipelineManager, never()).create(anyString(), anyString());
 
 		ServletCaller missingYamlCaller = new ServletCaller();
 		missingYamlCaller.setRequestUri("/");
 		missingYamlCaller.addParameter(NAME, NAME);
 		missingYamlCaller.doPost(new PipelineManagerServlet(pipelineManager));
 		assertEquals(400, missingYamlCaller.getSentError().intValue());
-		verify(pipelineManager, never()).createPipeline(anyString(), anyString());
+		verify(pipelineManager, never()).create(anyString(), anyString());
 
 		ServletCaller emptyYamlCaller = new ServletCaller();
 		emptyYamlCaller.setRequestUri("/");
@@ -194,7 +194,7 @@ public class PipelineManagerServletTest {
 		emptyYamlCaller.addParameter("yaml", "");
 		emptyYamlCaller.doPost(new PipelineManagerServlet(pipelineManager));
 		assertEquals(400, missingYamlCaller.getSentError().intValue());
-		verify(pipelineManager, never()).createPipeline(anyString(), anyString());
+		verify(pipelineManager, never()).create(anyString(), anyString());
 
 		ServletCaller emptyNameCaller = new ServletCaller();
 		emptyNameCaller.setRequestUri("/");
@@ -202,12 +202,12 @@ public class PipelineManagerServletTest {
 		emptyNameCaller.addParameter("yaml", "");
 		emptyNameCaller.doPost(new PipelineManagerServlet(pipelineManager));
 		assertEquals(400, emptyNameCaller.getSentError().intValue());
-		verify(pipelineManager, never()).createPipeline(anyString(), anyString());
+		verify(pipelineManager, never()).create(anyString(), anyString());
 	}
 
 	@Test
 	public void testPostCreationFailure() throws Exception {
-		doThrow(BaleenException.class).when(pipelineManager).createPipeline(anyString(), anyString());
+		doThrow(BaleenException.class).when(pipelineManager).create(anyString(), anyString());
 
 		String yaml = "yaml";
 		ServletCaller caller = new ServletCaller();
@@ -221,7 +221,7 @@ public class PipelineManagerServletTest {
 
 	@Test
 	public void testPostCreationStartFailure() throws Exception {
-		doReturn(mockPipeline).when(pipelineManager).createPipeline(anyString(), anyString());
+		doReturn(mockPipeline).when(pipelineManager).create(anyString(), anyString());
 		doThrow(BaleenException.class).when(mockPipeline).start();
 
 		String yaml = "yaml";
@@ -267,8 +267,8 @@ public class PipelineManagerServletTest {
 		doReturn(true).when(engine).isProcessing();
 		
 		realPipeline = new BaleenPipeline(REAL, "**could be a YAML string**", engine);
-		doReturn(Optional.of(realPipeline)).when(pipelineManager).getPipeline(REAL);
-		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getPipelines();
+		doReturn(Optional.of(realPipeline)).when(pipelineManager).get(REAL);
+		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getAll();
 
 		ServletCaller caller = new ServletCaller();
 		caller.setRequestUri(RESTART);
@@ -287,8 +287,8 @@ public class PipelineManagerServletTest {
 		doReturn(true).when(engine).isProcessing();
 		
 		realPipeline = new BaleenPipeline(REAL, "**could be a YAML string**", engine);
-		doReturn(Optional.of(realPipeline)).when(pipelineManager).getPipeline(REAL);
-		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getPipelines();
+		doReturn(Optional.of(realPipeline)).when(pipelineManager).get(REAL);
+		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getAll();
 
 		ServletCaller caller = new ServletCaller();
 		caller.setRequestUri(RESTART);
@@ -307,8 +307,8 @@ public class PipelineManagerServletTest {
 		doReturn(true).when(engine).isProcessing();
 		
 		realPipeline = new BaleenPipeline(REAL, "**could be a YAML string**", new File(PipelineManagerServletTest.class.getResource("blank.yaml").toURI()), engine);
-		doReturn(Optional.of(realPipeline)).when(pipelineManager).getPipeline(REAL);
-		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getPipelines();
+		doReturn(Optional.of(realPipeline)).when(pipelineManager).get(REAL);
+		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getAll();
 
 		ServletCaller caller = new ServletCaller();
 		caller.setRequestUri(RESTART);
@@ -327,8 +327,8 @@ public class PipelineManagerServletTest {
 		doReturn(true).when(engine).isProcessing();
 		
 		realPipeline = new BaleenPipeline(REAL, "**could be a YAML string**", new File("missing.yaml"), engine);
-		doReturn(Optional.of(realPipeline)).when(pipelineManager).getPipeline(REAL);
-		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getPipelines();
+		doReturn(Optional.of(realPipeline)).when(pipelineManager).get(REAL);
+		doReturn(Collections.singleton(realPipeline)).when(pipelineManager).getAll();
 
 		ServletCaller caller = new ServletCaller();
 		caller.setRequestUri(RESTART);

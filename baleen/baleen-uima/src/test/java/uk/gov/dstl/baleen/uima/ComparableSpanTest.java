@@ -15,12 +15,12 @@ public class ComparableSpanTest {
 
 	@Test
 	public void testHashCodeEqualsComparator() {
-		ComparableSpan a = new ComparableSpan(0, 1, "a");
-		ComparableSpan a2 = new ComparableSpan(0, 1, "a");
-		ComparableSpan b = new ComparableSpan(0, 1, "b");
-		ComparableSpan c = new ComparableSpan(0, 1);
-		ComparableSpan aNull = new ComparableSpan(0, 1, null);
-		ComparableSpan cNull = new ComparableSpan(0, 2, null);
+		ComparableTextSpan a = new ComparableTextSpan(0, 1, "a");
+		ComparableTextSpan a2 = new ComparableTextSpan(0, 1, "a");
+		ComparableTextSpan b = new ComparableTextSpan(0, 1, "b");
+		ComparableTextSpan c = new ComparableTextSpan(0, 1);
+		ComparableTextSpan aNull = new ComparableTextSpan(0, 1, null);
+		ComparableTextSpan cNull = new ComparableTextSpan(0, 2, null);
 
 
 		ComparatorTestUtils.comparedNotEqual(a, b);
@@ -40,16 +40,16 @@ public class ComparableSpanTest {
 
 	@Test
 	public void testComparision() {
-		ComparableSpan a = new ComparableSpan(0, 10, "a");
-		ComparableSpan a1 = new ComparableSpan(0, 1, "a");
-		ComparableSpan a2 = new ComparableSpan(9, 10, "a");
-		ComparableSpan a3 = new ComparableSpan(5, 15, "a");
-		ComparableSpan z = new ComparableSpan(0, 10, "z");
-		ComparableSpan b = new ComparableSpan(0, 10, "b");
-		ComparableSpan c = new ComparableSpan(0, 10, "c");
-		ComparableSpan n = new ComparableSpan(0, 10, null);
-		ComparableSpan nG = new ComparableSpan(5, 10, null);
-		ComparableSpan nL = new ComparableSpan(0, 6, null);
+		ComparableTextSpan a = new ComparableTextSpan(0, 10, "a");
+		ComparableTextSpan a1 = new ComparableTextSpan(0, 1, "a");
+		ComparableTextSpan a2 = new ComparableTextSpan(9, 10, "a");
+		ComparableTextSpan a3 = new ComparableTextSpan(5, 15, "a");
+		ComparableTextSpan z = new ComparableTextSpan(0, 10, "z");
+		ComparableTextSpan b = new ComparableTextSpan(0, 10, "b");
+		ComparableTextSpan c = new ComparableTextSpan(0, 10, "c");
+		ComparableTextSpan n = new ComparableTextSpan(0, 10, null);
+		ComparableTextSpan nG = new ComparableTextSpan(5, 10, null);
+		ComparableTextSpan nL = new ComparableTextSpan(0, 6, null);
 
 		ComparatorTestUtils.compareOrder(a, z);
 		ComparatorTestUtils.compareOrder(a1, a);
@@ -70,8 +70,8 @@ public class ComparableSpanTest {
 
 	@Test
 	public void testGet() {
-		ComparableSpan a = new ComparableSpan(0, 10, "a");
-		ComparableSpan b = new ComparableSpan(0, 10, null);
+		ComparableTextSpan a = new ComparableTextSpan(0, 10, "a");
+		ComparableTextSpan b = new ComparableTextSpan(0, 10, null);
 
 		assertEquals(0, a.getStart());
 		assertEquals(10, a.getEnd());
@@ -87,7 +87,7 @@ public class ComparableSpanTest {
 
 	@Test
 	public void testStatic() {
-		List<ComparableSpan> spans = ComparableSpan.buildSpans("The quick brown fox", Pattern.compile("\\w+"));
+		List<ComparableTextSpan> spans = ComparableTextSpan.buildSpans("The quick brown fox", Pattern.compile("\\w+"));
 
 		assertEquals(4,spans.size());
 		assertEquals("fox",spans.get(3).getValue());

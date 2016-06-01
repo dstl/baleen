@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
 /** A publication reference/serial/identifier within the source document.
- * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:15 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class DocumentReference extends Entity {
   /** @generated

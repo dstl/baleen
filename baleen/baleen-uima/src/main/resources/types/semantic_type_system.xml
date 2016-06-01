@@ -8,6 +8,7 @@ This XML file classified as UK OFFICIAL.</description>
   <vendor>Dstl</vendor>
   <imports>
     <import name="types/base_type_system"/>
+    <import name="types/language_type_system"/>
   </imports>
   <types>
     <typeDescription>
@@ -91,30 +92,40 @@ Additional relationship types that have been added: {"QUANTITY", "ALIAS"}</descr
     </typeDescription>
     <typeDescription>
       <name>uk.gov.dstl.baleen.types.semantic.Event</name>
-      <description>An temporal interaction of interest, covering political, organisational, miltiary, criminal or social interactions mentioned within the document.</description>
-      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+      <description>An event relates one or more entities with an associated action.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
       <features>
         <featureDescription>
-          <name>description</name>
-          <description>A description of the event</description>
+          <name>eventType</name>
+          <description>The event type which classifies the event.
+
+For example Currently based on the ACE2002 top-level relationships: {"AT" , "NEAR" , "PART" , "ROLE" , "SOCIAL"}
+Additional relationship types that have been added: {"QUANTITY", "ALIAS"}</description>
+          <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>value</name>
+          <description>A textual representation of the event, typically this may be one or more verbs from the sentence.</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
         <featureDescription>
-          <name>location</name>
-          <description>The location of the event</description>
-          <rangeTypeName>uk.gov.dstl.baleen.types.semantic.Location</rangeTypeName>
+          <name>entities</name>
+          <description>The entities which are involved / related / associated with the event.</description>
+          <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+          <elementType>uk.gov.dstl.baleen.types.semantic.Entity</elementType>
         </featureDescription>
         <featureDescription>
-          <name>occurrence</name>
-          <description>The time-based information relating to the event.</description>
-          <rangeTypeName>uk.gov.dstl.baleen.types.semantic.Temporal</rangeTypeName>
+          <name>arguments</name>
+          <description>Additional text information, such as subject/object, in addition to the entities.</description>
+          <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>tokens</name>
+          <description>WordTokens which relate to the event type (eg verbs in the sentence)</description>
+          <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+          <elementType>uk.gov.dstl.baleen.types.language.WordToken</elementType>
         </featureDescription>
       </features>
-    </typeDescription>
-  <typeDescription>
-      <name>uk.gov.dstl.baleen.types.semantic.ReferenceTarget</name>
-      <description>A target type for the referent property, such that entities pointing to the same target are assumed to be coreferences. The target can therefore be thought of as a super-entity, though it has no properties or value of it's own. The span of this entity is taken to be the scope in which this reference target is valid.</description>
-      <supertypeName>uima.tcas.Annotation</supertypeName>
-    </typeDescription>
-  </types>
+    </typeDescription>  
+  </types>    
 </typeSystemDescription>

@@ -1,0 +1,4 @@
+job:
+  schedule: Other
+  tasks:
+  - uk.gov.dstl.baleen.testing.DummyTask

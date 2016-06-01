@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -64,7 +65,7 @@ public class SharedStopwordResource extends BaleenResource {
 		Set<String> sw = new HashSet<>();
 		try(
 			InputStream is = getClass().getResourceAsStream("stoplists/"+name);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 		){
 			
 			reader.lines().filter(s -> !s.startsWith("#")).forEach(s -> sw.add(s.trim().toLowerCase()));
@@ -108,7 +109,7 @@ public class SharedStopwordResource extends BaleenResource {
 		
 		try(
 			InputStream is = new FileInputStream(list);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 		){
 			reader.lines().filter(s -> !s.startsWith("#") && s.trim().length() > 0).forEach(s -> sw.add(s.trim().toLowerCase()));
 		}

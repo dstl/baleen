@@ -11,8 +11,8 @@ import org.apache.uima.jcas.cas.TOP_Type;
 
 
 /** General type to record temporal (time based) information mentioned within the document.  This is a general purpose type that is extended in "time" types.
- * Updated by JCasGen Fri Feb 05 14:54:31 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class Temporal extends Entity {
   /** @generated

@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Temporal_Type;
 
 /** An entity representing a time span
- * Updated by JCasGen Wed Jan 21 11:37:43 GMT 2015
+ * Updated by JCasGen Tue Apr 12 12:07:25 BST 2016
  * @generated */
 public class TimeSpan_Type extends Temporal_Type {
   /** @generated 

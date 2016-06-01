@@ -13,7 +13,7 @@ import org.apache.uima.cas.Type;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** A specific frequency value in the electro-magnetic spectrum (Hertz - Hz, MHz, GHz etc.).
- * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
+ * Updated by JCasGen Wed Apr 13 13:23:15 BST 2016
  * @generated */
 public class Frequency_Type extends Entity_Type {
   /** @generated 

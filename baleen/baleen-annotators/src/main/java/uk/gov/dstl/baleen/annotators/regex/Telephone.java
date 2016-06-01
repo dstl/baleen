@@ -14,6 +14,8 @@ import uk.gov.dstl.baleen.types.common.CommsIdentifier;
  * <p>Telephone numbers are extracted using the following regular expression.
  * To minimise false positives, the number must be preceded by some variation of Telephone Number or 'Selector'.</p>
  * <pre>\\b(tel|tele|telephone|phone|selector|comm)( (number|num|no))?[:. ]+([-+\\(\\) 0-9]+[0-9])\\b</pre>
+ * 
+ * 
  */
 public class Telephone extends AbstractRegexAnnotator<CommsIdentifier> {
 	private static final String TELEPHONE_REGEX = "\\b(tel|tele|telephone|phone|selector|comm)( (number|num|no))?[:. ]+([-+\\(\\) 0-9]+[0-9])\\b";

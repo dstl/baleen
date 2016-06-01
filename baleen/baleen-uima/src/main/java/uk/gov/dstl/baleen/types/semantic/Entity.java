@@ -13,8 +13,8 @@ import uk.gov.dstl.baleen.types.Base;
 
 
 /** Type to represent named entities - values that are assigned a semantic type.
- * Updated by JCasGen Wed Apr 06 16:49:30 BST 2016
- * XML source: /home/baleen/provide-normalize-cleaners/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class Entity extends Base implements Recordable {
   @SuppressWarnings ("hiding")
@@ -93,28 +93,6 @@ public class Entity extends Base implements Recordable {
     if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_value == null)
       jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
     jcasType.ll_cas.ll_setStringValue(addr, ((Entity_Type)jcasType).casFeatCode_value, v);}    
-   
-    
-  //*--------------*
-  //* Feature: referent
-
-  /** getter for referent - gets Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text.
-   * @generated
-   * @return value of the feature 
-   */
-  public ReferenceTarget getReferent() {
-    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_referent == null)
-      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
-    return (ReferenceTarget)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Entity_Type)jcasType).casFeatCode_referent)));}
-    
-  /** setter for referent - sets Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text. 
-   * @generated
-   * @param v value to set into the feature 
-   */
-  public void setReferent(ReferenceTarget v) {
-    if (Entity_Type.featOkTst && ((Entity_Type)jcasType).casFeat_referent == null)
-      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Entity_Type)jcasType).casFeatCode_referent, jcasType.ll_cas.ll_getFSRef(v));}    
    
     
   //*--------------*

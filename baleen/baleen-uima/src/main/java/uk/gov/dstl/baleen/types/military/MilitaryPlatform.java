@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
 /** A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.
- * Updated by JCasGen Fri Feb 05 14:52:23 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/military_type_system.xml
+ * Updated by JCasGen Tue Apr 12 12:07:05 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/military_type_system.xml
  * @generated */
 public class MilitaryPlatform extends Entity {
   /** @generated

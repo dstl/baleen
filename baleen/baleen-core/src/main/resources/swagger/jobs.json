@@ -1,0 +1,173 @@
+{
+	"apiVersion": "1",
+	"basePath": "/api/1",
+	"apis": [
+		{
+			"path":"/jobs",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"getJob",
+					"type":"Job",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name of the job to get details on. If no names are present then all jobs are returned",
+							"dataType":"string",
+							"required":false,
+							"allowMultiple":true
+						}
+					
+					
+					],
+					"summary":"Get one, more or all jobs by name",
+					"notes":"Get details on the jobs within this Baleen instance. If using authentication, the user will need the 'jobs.list' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/jobs",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"createJob",
+					"type":"Job",
+					"parameters":[
+						{
+							"paramType":"form",
+							"name":"name",
+							"description":"The name of the job to create. Note that jobs must be uniquely named.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":false
+						},
+						{
+							"paramType":"form",
+							"name":"yaml",
+							"description":"The YAML configuration as a string which is the configuration for this.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":false
+						},
+						{
+							"paramType":"form",
+							"name":"start",
+							"description":"If true, the job will be started when created. Otherwise (by default) the job is created but not configured.",
+							"dataType":"boolean",
+							"required":false,
+							"allowMultiple":false
+						}
+					],
+					"summary":"Create a job from YAML",
+					"notes":"Create a job with a designated name and with a YAML configuration, and optionally start the job immediately. If using authentication, the user will need the 'jobs.create' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/jobs",
+			"operations":[
+				{
+					"httpMethod":"DELETE",
+					"nickname":"deleteJob",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name of the job to delete.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					],
+					"summary":"Delete a job by name",
+					"notes":"Stops and then deletes a job (or jobs) with the designated name(s). If using authentication, the user will need the 'jobs.delete' role to access this resource."
+				}
+			]
+		},
+		{
+			"path":"/jobs/start",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"startJob",
+					"type":"Job",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name(s) of the job(s).",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					
+					
+					],
+					"summary":"Start one or more jobs by name.",
+					"notes":"Signals a jobs to start, and returns information on the job. At time of return the job may not yet be running (since it may need to be initialised). If using authentication, the user will need the 'jobs.control' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/jobs/stop",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"stopJob",
+					"type":"Job",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name(s) of the job(s).",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					],
+					"summary":"Stop one or more jobs by name.",
+					"notes":"Stop a job. If using authentication, the user will need the 'jobs.control' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		},
+		{
+			"path":"/jobs/restart",
+			"operations":[
+				{
+					"httpMethod":"POST",
+					"nickname":"restartJob",
+					"type":"job",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name(s) of the job(s).",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":true
+						}
+					
+					
+					],
+					"summary":"Restart one or more jobs by name, reloading the configuration from disk where applicable",
+					"notes":"Signals a jobs to stop, reload the configuration from disk (where applicable), and restart. If using authentication, the user will need the 'jobs.control' role to access this resource.",
+					"produces":"application/json"
+				}
+			]
+		}
+	],
+	"models": {
+		"Job": {
+			"id":"Job",
+			"properties": {
+				"name": { "type":"string", "description":"The name of the job" },
+				"running": { "type":"string", "format":"boolean", "description":"Whether the job is actually running (at time of return)" }
+			}
+		}
+	}
+}

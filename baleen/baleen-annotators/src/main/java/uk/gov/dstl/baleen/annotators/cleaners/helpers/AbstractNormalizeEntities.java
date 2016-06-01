@@ -5,10 +5,10 @@ import org.apache.uima.cas.FSIterator;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 
+import com.google.common.base.Strings;
+
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
-
-import com.google.common.base.Strings;
 
 /**
  * A class for containing the generic functionality shared by all normalizing
@@ -19,6 +19,7 @@ import com.google.common.base.Strings;
  */
 public abstract class AbstractNormalizeEntities extends BaleenAnnotator {
 
+	@Override
 	public void doProcess(JCas jCas) throws AnalysisEngineProcessException {
 
 		FSIterator<Annotation> iter = jCas.getAnnotationIndex(Entity.type).iterator();

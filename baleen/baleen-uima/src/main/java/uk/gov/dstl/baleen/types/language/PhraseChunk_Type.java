@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** Annotation to store the result of shallow parsing, which provide noun phrase and verb phrase constituents, rather than just WordTokens.
- * Updated by JCasGen Wed Jan 14 12:58:18 GMT 2015
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class PhraseChunk_Type extends Base_Type {
   /** @generated 
@@ -104,7 +104,7 @@ public class PhraseChunk_Type extends Base_Type {
     if (lowLevelTypeChecks)
       return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_constituentWords), i, true);
     jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_constituentWords), i);
-	return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_constituentWords), i);
+  return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_constituentWords), i);
   }
    
   /** @generated

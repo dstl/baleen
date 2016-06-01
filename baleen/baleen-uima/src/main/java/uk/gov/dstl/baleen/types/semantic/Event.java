@@ -4,17 +4,22 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.types.semantic;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
+import org.apache.uima.jcas.cas.FSArray;
+import org.apache.uima.jcas.cas.StringArray;
 import org.apache.uima.jcas.cas.TOP_Type;
 
+import uk.gov.dstl.baleen.core.history.Recordable;
+import uk.gov.dstl.baleen.types.Base;
+import uk.gov.dstl.baleen.types.language.WordToken;
 
 
-/** An temporal interaction of interest, covering political, organisational, miltiary, criminal or social interactions mentioned within the document.
- * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+/** An event relates one or more entities with an associated action.
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
-public class Event extends Entity {
+public class Event extends Base implements Recordable {
   /** @generated
    * @ordered 
    */
@@ -77,69 +82,213 @@ public class Event extends Entity {
  
     
   //*--------------*
-  //* Feature: description
+  //* Feature: eventType
 
-  /** getter for description - gets A description of the event
+  /** getter for eventType - gets The event type which classifies the event.
+
+For example Currently based on the ACE2002 top-level relationships: {"AT" , "NEAR" , "PART" , "ROLE" , "SOCIAL"}
+Additional relationship types that have been added: {"QUANTITY", "ALIAS"}
    * @generated
    * @return value of the feature 
    */
-  public String getDescription() {
-    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_description == null)
-      jcasType.jcas.throwFeatMissing("description", "uk.gov.dstl.baleen.types.semantic.Event");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Event_Type)jcasType).casFeatCode_description);}
+  public StringArray getEventType() {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_eventType == null)
+      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
+    return (StringArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_eventType)));}
     
-  /** setter for description - sets A description of the event 
+  /** setter for eventType - sets The event type which classifies the event.
+
+For example Currently based on the ACE2002 top-level relationships: {"AT" , "NEAR" , "PART" , "ROLE" , "SOCIAL"}
+Additional relationship types that have been added: {"QUANTITY", "ALIAS"} 
    * @generated
    * @param v value to set into the feature 
    */
-  public void setDescription(String v) {
-    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_description == null)
-      jcasType.jcas.throwFeatMissing("description", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Event_Type)jcasType).casFeatCode_description, v);}    
+  public void setEventType(StringArray v) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_eventType == null)
+      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Event_Type)jcasType).casFeatCode_eventType, jcasType.ll_cas.ll_getFSRef(v));}    
+    
+  /** indexed getter for eventType - gets an indexed value - The event type which classifies the event.
+
+For example Currently based on the ACE2002 top-level relationships: {"AT" , "NEAR" , "PART" , "ROLE" , "SOCIAL"}
+Additional relationship types that have been added: {"QUANTITY", "ALIAS"}
+   * @generated
+   * @param i index in the array to get
+   * @return value of the element at index i 
+   */
+  public String getEventType(int i) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_eventType == null)
+      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_eventType), i);
+    return jcasType.ll_cas.ll_getStringArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_eventType), i);}
+
+  /** indexed setter for eventType - sets an indexed value - The event type which classifies the event.
+
+For example Currently based on the ACE2002 top-level relationships: {"AT" , "NEAR" , "PART" , "ROLE" , "SOCIAL"}
+Additional relationship types that have been added: {"QUANTITY", "ALIAS"}
+   * @generated
+   * @param i index in the array to set
+   * @param v value to set into the array 
+   */
+  public void setEventType(int i, String v) { 
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_eventType == null)
+      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_eventType), i);
+    jcasType.ll_cas.ll_setStringArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_eventType), i, v);}
    
     
   //*--------------*
-  //* Feature: location
+  //* Feature: value
 
-  /** getter for location - gets The location of the event
+  /** getter for value - gets A textual representation of the event, typically this may be one or more verbs from the sentence.
    * @generated
    * @return value of the feature 
    */
-  public Location getLocation() {
-    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_location == null)
-      jcasType.jcas.throwFeatMissing("location", "uk.gov.dstl.baleen.types.semantic.Event");
-    return (Location)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_location)));}
+  public String getValue() {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_value == null)
+      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Event");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Event_Type)jcasType).casFeatCode_value);}
     
-  /** setter for location - sets The location of the event 
+  /** setter for value - sets A textual representation of the event, typically this may be one or more verbs from the sentence. 
    * @generated
    * @param v value to set into the feature 
    */
-  public void setLocation(Location v) {
-    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_location == null)
-      jcasType.jcas.throwFeatMissing("location", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Event_Type)jcasType).casFeatCode_location, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setValue(String v) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_value == null)
+      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Event_Type)jcasType).casFeatCode_value, v);}    
    
     
   //*--------------*
-  //* Feature: occurrence
+  //* Feature: entities
 
-  /** getter for occurrence - gets The time-based information relating to the event.
+  /** getter for entities - gets The entities which are involved / related / associated with the event.
    * @generated
    * @return value of the feature 
    */
-  public Temporal getOccurrence() {
-    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_occurrence == null)
-      jcasType.jcas.throwFeatMissing("occurrence", "uk.gov.dstl.baleen.types.semantic.Event");
-    return (Temporal)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_occurrence)));}
+  public FSArray getEntities() {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_entities == null)
+      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
+    return (FSArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_entities)));}
     
-  /** setter for occurrence - sets The time-based information relating to the event. 
+  /** setter for entities - sets The entities which are involved / related / associated with the event. 
    * @generated
    * @param v value to set into the feature 
    */
-  public void setOccurrence(Temporal v) {
-    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_occurrence == null)
-      jcasType.jcas.throwFeatMissing("occurrence", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setRefValue(addr, ((Event_Type)jcasType).casFeatCode_occurrence, jcasType.ll_cas.ll_getFSRef(v));}    
+  public void setEntities(FSArray v) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_entities == null)
+      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Event_Type)jcasType).casFeatCode_entities, jcasType.ll_cas.ll_getFSRef(v));}    
+    
+  /** indexed getter for entities - gets an indexed value - The entities which are involved / related / associated with the event.
+   * @generated
+   * @param i index in the array to get
+   * @return value of the element at index i 
+   */
+  public Entity getEntities(int i) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_entities == null)
+      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_entities), i);
+    return (Entity)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_entities), i)));}
+
+  /** indexed setter for entities - sets an indexed value - The entities which are involved / related / associated with the event.
+   * @generated
+   * @param i index in the array to set
+   * @param v value to set into the array 
+   */
+  public void setEntities(int i, Entity v) { 
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_entities == null)
+      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_entities), i);
+    jcasType.ll_cas.ll_setRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_entities), i, jcasType.ll_cas.ll_getFSRef(v));}
+   
+    
+  //*--------------*
+  //* Feature: arguments
+
+  /** getter for arguments - gets Additional text information, such as subject/object, in addition to the entities.
+   * @generated
+   * @return value of the feature 
+   */
+  public StringArray getArguments() {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_arguments == null)
+      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
+    return (StringArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_arguments)));}
+    
+  /** setter for arguments - sets Additional text information, such as subject/object, in addition to the entities. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setArguments(StringArray v) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_arguments == null)
+      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Event_Type)jcasType).casFeatCode_arguments, jcasType.ll_cas.ll_getFSRef(v));}    
+    
+  /** indexed getter for arguments - gets an indexed value - Additional text information, such as subject/object, in addition to the entities.
+   * @generated
+   * @param i index in the array to get
+   * @return value of the element at index i 
+   */
+  public String getArguments(int i) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_arguments == null)
+      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_arguments), i);
+    return jcasType.ll_cas.ll_getStringArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_arguments), i);}
+
+  /** indexed setter for arguments - sets an indexed value - Additional text information, such as subject/object, in addition to the entities.
+   * @generated
+   * @param i index in the array to set
+   * @param v value to set into the array 
+   */
+  public void setArguments(int i, String v) { 
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_arguments == null)
+      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_arguments), i);
+    jcasType.ll_cas.ll_setStringArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_arguments), i, v);}
+   
+    
+  //*--------------*
+  //* Feature: tokens
+
+  /** getter for tokens - gets WordTokens which relate to the event type (eg verbs in the sentence)
+   * @generated
+   * @return value of the feature 
+   */
+  public FSArray getTokens() {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_tokens == null)
+      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
+    return (FSArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_tokens)));}
+    
+  /** setter for tokens - sets WordTokens which relate to the event type (eg verbs in the sentence) 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setTokens(FSArray v) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_tokens == null)
+      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.ll_cas.ll_setRefValue(addr, ((Event_Type)jcasType).casFeatCode_tokens, jcasType.ll_cas.ll_getFSRef(v));}    
+    
+  /** indexed getter for tokens - gets an indexed value - WordTokens which relate to the event type (eg verbs in the sentence)
+   * @generated
+   * @param i index in the array to get
+   * @return value of the element at index i 
+   */
+  public WordToken getTokens(int i) {
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_tokens == null)
+      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_tokens), i);
+    return (WordToken)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_tokens), i)));}
+
+  /** indexed setter for tokens - sets an indexed value - WordTokens which relate to the event type (eg verbs in the sentence)
+   * @generated
+   * @param i index in the array to set
+   * @param v value to set into the array 
+   */
+  public void setTokens(int i, WordToken v) { 
+    if (Event_Type.featOkTst && ((Event_Type)jcasType).casFeat_tokens == null)
+      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
+    jcasType.jcas.checkArrayBounds(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_tokens), i);
+    jcasType.ll_cas.ll_setRefArrayValue(jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type)jcasType).casFeatCode_tokens), i, jcasType.ll_cas.ll_getFSRef(v));}
   }
 
     

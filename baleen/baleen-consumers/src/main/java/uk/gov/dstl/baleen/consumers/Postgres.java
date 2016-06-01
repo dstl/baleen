@@ -25,7 +25,6 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.StringArray;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.elasticsearch.common.base.Strings;
 
 import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
@@ -40,6 +39,7 @@ import uk.gov.dstl.baleen.uima.BaleenConsumer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapLikeType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.google.common.base.Strings;
 
 /**
  * Consumer to persist Baleen outputs into Postgres.

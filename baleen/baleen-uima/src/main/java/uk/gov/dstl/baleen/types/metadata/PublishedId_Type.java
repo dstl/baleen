@@ -16,7 +16,7 @@ import org.apache.uima.jcas.JCasRegistry;
 import uk.gov.dstl.baleen.types.BaleenAnnotation_Type;
 
 /** The published ID of the document, e.g. the Document Reference
- * Updated by JCasGen Thu Feb 05 10:57:24 GMT 2015
+ * Updated by JCasGen Tue Apr 12 12:06:57 BST 2016
  * @generated */
 public class PublishedId_Type extends BaleenAnnotation_Type {
   /** @generated 

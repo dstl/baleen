@@ -22,8 +22,8 @@ import com.google.common.base.Strings;
 
 
 /** A base class for annotations used by Baleen. Includes things like an internal ID and a function to generate an external ID.
- * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:15 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class BaleenAnnotation extends Annotation {
 	/** @generated
@@ -110,7 +110,7 @@ public class BaleenAnnotation extends Annotation {
     if (BaleenAnnotation_Type.featOkTst && ((BaleenAnnotation_Type)jcasType).casFeat_internalId == null)
       jcasType.jcas.throwFeatMissing("internalId", "uk.gov.dstl.baleen.types.BaleenAnnotation");
     jcasType.ll_cas.ll_setLongValue(addr, ((BaleenAnnotation_Type)jcasType).casFeatCode_internalId, v);}    
-                	private static final Logger LOGGER = LoggerFactory.getLogger(BaleenAnnotation.class);
+                    	private static final Logger LOGGER = LoggerFactory.getLogger(BaleenAnnotation.class);
 
 	/**
 	 * Produces an ID that is based on the properties of the current annotation.

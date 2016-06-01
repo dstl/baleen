@@ -10,7 +10,8 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.elasticsearch.common.base.Strings;
+
+import com.google.common.base.Strings;
 
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.uima.BaleenConsumer;

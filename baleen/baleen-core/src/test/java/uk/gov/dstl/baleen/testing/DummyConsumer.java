@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.history.HistoryEvents;
 import uk.gov.dstl.baleen.core.history.Recordable;
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 
 /**
  * Dummy consumer, that logs the entity count per document
@@ -36,7 +36,7 @@ public class DummyConsumer extends JCasAnnotator_ImplBase {
 
 	}
 
-	@ExternalResource(key=CpeBuilder.BALEEN_HISTORY)
+	@ExternalResource(key=PipelineCpeBuilder.BALEEN_HISTORY)
 	private BaleenHistory history;
 
 	@Override
