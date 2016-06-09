@@ -9,41 +9,43 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.uima.UimaContext;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.cas.FSIterator;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
+//Mongo imports
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.MongoException;
+
 import uk.gov.dstl.baleen.consumers.utils.EntityRelationConverter;
 import uk.gov.dstl.baleen.consumers.utils.IEntityConverterFields;
-import uk.gov.dstl.baleen.consumers.utils.mongo.AbstractSingleDocumentMongoConsumer;
-import uk.gov.dstl.baleen.consumers.utils.mongo.LegacyMongoFields;
+import uk.gov.dstl.baleen.consumers.utils.MongoLegacySchemaFields;
 import uk.gov.dstl.baleen.core.utils.ConfigUtils;
+import uk.gov.dstl.baleen.core.utils.IdentityUtils;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Event;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.Relation;
-import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.uima.BaleenConsumer;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
-
-
-
-
-
-
-//Mongo imports
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-
 /**
- * <b>Output processed CAS object into MongoDB</b>
+ * <b>Output processed CAS object into MongoDB using the legacy (Baleen v1) schema</b>
  * <p>
  * All the relevant annotations (see expected inputs) are iterated over and
  * added to a BSON object, which is then pushed to Mongo. Where possible, values
@@ -56,7 +58,7 @@ import com.mongodb.DBObject;
  * exists, the information is appended to that document.
  * <p>
  *
- * The output document format of the ORIGINAL Baleen (Baleen version 1) was:
+ * The output document format of the original Baleen (Baleen version 1) was:
  *
  * <pre>
  * {
@@ -159,15 +161,20 @@ import com.mongodb.DBObject;
  * has become history under Baleen 2.
  * - Baleen 2 does not currently support media extraction (so there will be no media field).
  * - docType confidence will always be 1.0
+ * - The definition of an event has changed from Baleen 2.2 onwards, and so will not include
+ * the occurrence, location or description fields
  *
  * Some types aren't supported by the consumer and these are ignored (with a
  * warning).
  *
- * 
  * @baleen.javadoc
+ * 
+ * @deprecated
+ * This consumer attempts to provide compatibility with the schema used in Baleen 1. However, it is recommended that the new schema and support for the old schema will be removed in future versions of Baleen. 
  */
-public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 
+@Deprecated
+public class LegacyMongo extends BaleenConsumer {
 	private static final String FIELD_RELATIONSHIP_TARGET = "target";
 	private static final String FIELD_RELATIONSHIP_SOURCE = "source";
 	private static final String FIELD_CONFIDENCE = "confidence";
@@ -181,33 +188,13 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 	private static final Object FAKE_ANNOTATOR = LegacyMongo.class.getCanonicalName();
 
 	/**
-	 * Should we output the document content to Mongo?
-	 * 
-	 * @baleen.config true
-	 */
-	public static final String PARAM_OUTPUT_CONTENT = "outputContent";
-	@ConfigurationParameter(name = PARAM_OUTPUT_CONTENT, defaultValue = "true")
-	boolean outputContent = false;
-
-	/**
-	 * Maximum number of characters from content to store in Mongo. Set to 0
-	 * to store all content.
-	 * 
-	 * @baleen.config "0"
-	 */
-	public static final String PARAM_MAX_CONTENT_LENGTH = "maxContentLength";
-	@ConfigurationParameter(name = PARAM_MAX_CONTENT_LENGTH, defaultValue = "0")
-	String maxContentLengthString;
-	//Parse the maxContentLengthString config parameter into this variable to avoid issues with parameter types
-	int maxContentLength = 0;
-
-	/**
 	 * Holds the types of features that we're not interested in persisting (stuff from UIMA for example)
 	 * We're storing these so that we can loop through the features (and then ignore some of them)
 	 */
 	private Set<String> stopFeatures;
 	
 	//Fields
+	public static final String FIELD_UNIQUE_ID = "uniqueID";
 	public static final String FIELD_METADATA = "documentInfo";
 	public static final String FIELD_DOCUMENT_CLASSIFICATION = "classification";
 	public static final String FIELD_DOCUMENT_CAVEATS = "caveats";
@@ -219,12 +206,65 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 	public static final String FIELD_DOCUMENT_TIMESTAMP = "dateAccessed";
 	public static final String FIELD_PUBLISHEDIDS = "publishedId";
 	public static final String FIELD_SOURCE = "source";
+
+	/**
+	 * Connection to Mongo
+	 * 
+	 * @baleen.resource uk.gov.dstl.baleen.resources.SharedMongoResource
+	 */
+	public static final String KEY_MONGO = "mongo";
+	@ExternalResource(key = KEY_MONGO)
+	private SharedMongoResource mongoResource;
+
+	/**
+	 * The Mongo collection name
+	 * 
+	 * @baleen.config output
+	 */
+	public static final String PARAM_COLLECTION = "collection";
+	@ConfigurationParameter(name = PARAM_COLLECTION, defaultValue = "output")
+	private String collectionName;
+
+	private DBCollection collection;
+
+	/**
+	 * Should a hash of the content be used to generate the ID?
+	 * If false, then a hash of the Source URI is used instead.
+	 * 
+	 * @baleen.config true
+	 */
+	public static final String PARAM_CONTENT_HASH_AS_ID = "contentHashAsId";
+	@ConfigurationParameter(name = PARAM_CONTENT_HASH_AS_ID, defaultValue = "true")
+	private boolean contentHashAsId = true;
 	
-	private IEntityConverterFields fields = new LegacyMongoFields();
-	/** New instance.
-	 *
+	/**
+	 * Should we output the document content to Mongo?
+	 * 
+	 * @baleen.config true
+	 */
+	public static final String PARAM_OUTPUT_CONTENT = "outputContent";
+	@ConfigurationParameter(name = PARAM_OUTPUT_CONTENT, defaultValue = "true")
+	boolean outputContent = false;
+	
+	/**
+	 * Maximum number of characters from content to store in Mongo. Set to 0
+	 * to store all content.
+	 * 
+	 * @baleen.config "0"
+	 */
+	public static final String PARAM_MAX_CONTENT_LENGTH = "maxContentLength";
+	@ConfigurationParameter(name = PARAM_MAX_CONTENT_LENGTH, defaultValue = "0")
+	String maxContentLengthString;
+	//Parse the maxContentLengthString config parameter into this variable to avoid issues with parameter types
+	int maxContentLength = 0;
+	
+	private IEntityConverterFields fields = new MongoLegacySchemaFields();
+	
+	/**
+	 * New instance
 	 */
 	public LegacyMongo() {
+		//Do nothing, empty constructor
 	}
 
 	/**
@@ -232,21 +272,34 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 	 */
 	@Override
 	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-
-		super.doInitialize(aContext);
+		DB db = mongoResource.getDB();
+		collection = db.getCollection(collectionName);
 
 		// Create indexes
-		getCollection().createIndex(new BasicDBObject(FIELD_PUBLISHEDIDS, 1));
+		collection.createIndex(new BasicDBObject(FIELD_UNIQUE_ID, 1));
+		collection.createIndex(new BasicDBObject(FIELD_PUBLISHEDIDS, 1));
 
 		stopFeatures = new HashSet<String>();
 		stopFeatures.add("uima.cas.AnnotationBase:sofa");
 		stopFeatures.add("uk.gov.dstl.baleen.types.BaleenAnnotation:internalId");
 		maxContentLength = ConfigUtils.stringToInteger(maxContentLengthString, 0);
 	}
-
+	
 	@Override
-	protected DBObject convert(JCas aJCas)  {
+	protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
+		DBObject doc = convert(jCas);
 
+		String uniqueId = getUniqueId(jCas);
+
+		saveToMongo(uniqueId, doc);
+	}
+	
+	@Override
+	public void doDestroy() {
+		collection = null;
+	}
+
+	protected DBObject convert(JCas aJCas)  {
 		BasicDBObject doc = new BasicDBObject();
 
 		getMonitor().info("Beginning persistance of document to MongoDB");
@@ -327,18 +380,7 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 			eventObj.put(FIELD_END, e.getEnd());
 			eventObj.put(FIELD_ANNOTATOR, FAKE_ANNOTATOR);
 			eventObj.put(FIELD_CONFIDENCE, e.getConfidence());
-			eventObj.put("description", e.getDescription());
-
-			Location l = e.getLocation();
-			if (l != null) {
-				eventObj.put("location", l.getExternalId());
-			}
-
-			Temporal t = e.getOccurrence();
-			if (t != null) {
-				eventObj.put("occurence", t.getExternalId());
-			}
-
+			
 			eventObjs.add(eventObj);
 		}
 		doc.put("events", eventObjs);
@@ -446,5 +488,31 @@ public class LegacyMongo extends AbstractSingleDocumentMongoConsumer {
 
 		addProtectiveMarking(doc, documentAnnotation);
 	}
+	
+	protected String getUniqueId(JCas jCas) {
+		DocumentAnnotation da = getDocumentAnnotation(jCas);
+		
+		if (contentHashAsId) {
+			return da.getHash();
+		} else {
+			try {
+				return IdentityUtils.hashStrings(da.getSourceUri());
+			} catch (BaleenException e) {
+				getMonitor().warn("Generating a random id, unable to hash string", e);
+				return UUID.randomUUID().toString();
+			}
+		}
+	}
 
+	private void saveToMongo(String docUniqueId, DBObject doc) {
+		getMonitor().debug("Saving document to MongoDB");
+		try {
+			getMonitor().trace("Upserting document with unique ID " + docUniqueId);
+			collection.update(new BasicDBObject().append(FIELD_UNIQUE_ID, docUniqueId), doc, true, false);
+		} catch (MongoException me) {
+			getMonitor().error("Failed to write document to Mongo", me);
+		}
+
+		getMonitor().info("Document {} persisted by MongoConsumer", docUniqueId);
+	}
 }

@@ -76,6 +76,8 @@ public class LatLon extends BaleenAnnotator {
 	private final Pattern llDMTextPattern = Pattern
 			.compile("\\b((lat|latitude)\\h*)?(\\d{1,2})°\\h*(\\d{1,2})'\\.(\\d+)\\h*([NS])\\.?,?\\h*(lon|long|longitude)?\\h*(\\d{1,3})°\\h*(\\d{1,2})'\\.(\\d+)\\h*([EW])\\b", Pattern.CASE_INSENSITIVE);
 
+	private static final String COULD_NOT_PARSE = "Couldn't parse extracted coordinates - coordinate will be skipped";
+	
 	/**
 	 * Tell the annotator that coordinates are specified with the longitude first rather than the latitude.
 	 * 
@@ -239,7 +241,7 @@ public class LatLon extends BaleenAnnotator {
 					addCoordinate(aJCas, matcher, lon, lat, "dd");
 
 				} catch (NumberFormatException e) {
-					getMonitor().warn("Couldn't parse extracted coordinates - coordinate will be skipped", e);
+					getMonitor().warn(COULD_NOT_PARSE, e);
 				}
 			}
 		}
@@ -293,7 +295,7 @@ public class LatLon extends BaleenAnnotator {
 				addCoordinate(aJCas, matcher, lon, lat, "dd");
 
 			} catch (NumberFormatException e) {
-				getMonitor().warn("Couldn't parse extracted coordinates - coordinate will be skipped", e);
+				getMonitor().warn(COULD_NOT_PARSE, e);
 			}
 		}
 	}
@@ -315,7 +317,7 @@ public class LatLon extends BaleenAnnotator {
 					double[] lonLat = determineLonLatDMS(matcher);
 					addCoordinate(aJCas, matcher, lonLat[0], lonLat[1], "dms");
 				} catch (NumberFormatException e) {
-					getMonitor().warn("Couldn't parse extracted coordinates - coordinate will be skipped", e);
+					getMonitor().warn(COULD_NOT_PARSE, e);
 				}
 			}
 		}
@@ -524,8 +526,8 @@ public class LatLon extends BaleenAnnotator {
 			latString = df.format(normLat);
 			lonString = df.format(normLon);			
 		}
-		String firstCoord = (storeLongitudeFirst) ? lonString : latString;
-		String secondCoord = (storeLongitudeFirst) ? latString : lonString;
+		String firstCoord = storeLongitudeFirst ? lonString : latString;
+		String secondCoord = storeLongitudeFirst ? latString : lonString;
 		loc.setValue(firstCoord + " " + secondCoord);
 		loc.setIsNormalised(true);
 	}

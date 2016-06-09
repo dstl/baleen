@@ -154,7 +154,7 @@
 					
 					
 					],
-					"summary":"Restart one or more pipelines by name, reloading the configuration from disk where applicatble",
+					"summary":"Restart one or more pipelines by name, reloading the configuration from disk where applicable",
 					"notes":"Signals a pipelines to stop, reload the configuration from disk (where applicable), and restart. If using authentication, the user will need the 'pipelines.control' role to access this resource.",
 					"produces":"application/json"
 				}

@@ -24,9 +24,6 @@ import uk.gov.dstl.baleen.types.language.WordToken;
 
 public class LanguageOpenNLPTest extends AnnotatorTestBase {
 	
-	/* (non-Javadoc)
-	 * @see uk.gov.dstl.uima.tests.TestBase#setupFromDescriptor(java.lang.String)
-	 */
 	AnalysisEngine ae;
 	
 	@Override

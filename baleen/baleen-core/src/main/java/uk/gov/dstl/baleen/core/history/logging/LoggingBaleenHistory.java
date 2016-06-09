@@ -53,7 +53,7 @@ public class LoggingBaleenHistory extends AbstractBaleenHistory {
 	 *
 	 */
 	public LoggingBaleenHistory() {
-
+		//Empty constructor, do nothing
 	}
 
 	@Override

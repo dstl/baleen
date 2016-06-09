@@ -55,7 +55,7 @@ public class YamlConfiguration {
 	 *
 	 */
 	public YamlConfiguration() {
-
+		//Empty constructor, do nothing
 	}
 
 	/**

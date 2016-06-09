@@ -29,7 +29,7 @@ public class RecordableImpl implements Recordable {
 	 *
 	 */
 	public RecordableImpl() {
-
+		//Empty constructor, do nothing
 	}
 
 	/** New instance.

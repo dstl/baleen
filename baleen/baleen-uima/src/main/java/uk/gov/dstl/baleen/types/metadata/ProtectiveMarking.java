@@ -13,7 +13,7 @@ import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
 
 /** The protective marking of the text span defined by the begin and end properties.
- * Updated by JCasGen Thu Feb 05 10:57:24 GMT 2015
+ * Updated by JCasGen Tue Apr 12 12:06:57 BST 2016
  * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/metadata_type_system.xml
  * @generated */
 public class ProtectiveMarking extends BaleenAnnotation {
@@ -81,7 +81,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
   //*--------------*
   //* Feature: classification
 
-  /** getter for classification - gets The security classification of the document
+  /** getter for classification - gets The security classification of this protective marking
    * @generated
    * @return value of the feature 
    */
@@ -90,7 +90,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
       jcasType.jcas.throwFeatMissing("classification", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
     return jcasType.ll_cas.ll_getStringValue(addr, ((ProtectiveMarking_Type)jcasType).casFeatCode_classification);}
     
-  /** setter for classification - sets The security classification of the document 
+  /** setter for classification - sets The security classification of this protective marking 
    * @generated
    * @param v value to set into the feature 
    */
@@ -103,7 +103,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
   //*--------------*
   //* Feature: caveats
 
-  /** getter for caveats - gets An array of string values specifying handling caveats for the document.
+  /** getter for caveats - gets An array of string values specifying handling caveats for this protective marking
    * @generated
    * @return value of the feature 
    */
@@ -112,7 +112,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
       jcasType.jcas.throwFeatMissing("caveats", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
     return (StringArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((ProtectiveMarking_Type)jcasType).casFeatCode_caveats)));}
     
-  /** setter for caveats - sets An array of string values specifying handling caveats for the document. 
+  /** setter for caveats - sets An array of string values specifying handling caveats for this protective marking 
    * @generated
    * @param v value to set into the feature 
    */
@@ -147,7 +147,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
   //*--------------*
   //* Feature: releasability
 
-  /** getter for releasability - gets Array of country designators to which the document is releasable.
+  /** getter for releasability - gets Array of country designators to which this protective marking is releasable.
    * @generated
    * @return value of the feature 
    */
@@ -156,7 +156,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
       jcasType.jcas.throwFeatMissing("releasability", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
     return (StringArray)(jcasType.ll_cas.ll_getFSForRef(jcasType.ll_cas.ll_getRefValue(addr, ((ProtectiveMarking_Type)jcasType).casFeatCode_releasability)));}
     
-  /** setter for releasability - sets Array of country designators to which the document is releasable. 
+  /** setter for releasability - sets Array of country designators to which this protective marking is releasable. 
    * @generated
    * @param v value to set into the feature 
    */

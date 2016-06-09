@@ -41,13 +41,13 @@ public class LoggingMetricListener implements MetricRegistryListener {
 
 	@Override
 	public void onGaugeAdded(String n, Gauge<?> arg1) {
-		log(true, "guage", n);
+		log(true, "gauge", n);
 
 	}
 
 	@Override
 	public void onGaugeRemoved(String n) {
-		log(false, "guage", n);
+		log(false, "gauge", n);
 
 	}
 

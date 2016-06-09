@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.Base;
 
 
 /** Defines a sentence from the source document.
- * Updated by JCasGen Wed Jan 14 12:58:18 GMT 2015
- * XML source: H:/git/core/baleen/baleen-uima/src/main/resources/language_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class Sentence extends Base {
   /** @generated

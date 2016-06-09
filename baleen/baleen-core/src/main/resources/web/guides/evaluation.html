@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Baleen - Evaluation</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-control="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a href="../index.html" class="navbar-brand">Baleen</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../index.html">About</a></li>
+					<li class="active"><a href="index.html">Guides</a></li>
+					<li><a href="/javadoc">JavaDoc</a></li>
+					<li><a href="/plankton">Plankton</a></li>
+					<li><a href="/swagger">REST API</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Evaluation</h1>
+			<p>The purpose of Baleen is to process text to structure and
+				extract data from it. To have confidence in its ability to do this
+				an evaluation and verification systems is required.</p>
+			<p>This feature is in development, incomplete and subject to
+				change.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p>In the context of Baleen, evaluation is the process by which
+			the ideal output (the gold standard) is compared to the actual output
+			of a processing pipeline. To facilitate this Baleen has a basic
+			evaluation framework which can:</p>
+		<ul>
+			<li>Generate a gold standard (i.e. captures the output of Baleen
+				in a gold standard format).</li>
+			<li>Compare a previous gold standard with an annotated document.</li>
+		</ul>
+
+		<p>Both of these are performed by Baleen consumers, the
+			GoldConsumer and the EvaluationConsumer respectively.</p>
+
+		<p>Baleen supports the following formats to hold:</p>
+		<ul>
+			<li><strong>MUSE (see Gate)</strong>: A simple format which
+				captures type, offsets and value of an annotation. It doesn't
+				support complex information (e.g. subtype or other attributes)</li>
+			<li><strong>XMI (see UIMA)</strong>: Uses the UIMA format to
+				capture a complete and detailed view of annotations and types.</li>
+		</ul>
+
+		<h3>Generating a Gold standard</h3>
+
+		<p>If a gold corpus does not exist then one must be generated.
+			This can be tedious and manually intensive process. To help Baleen
+			can generate a corpus based on a pipeline configuration.</p>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">gold.yaml</div>
+			<div class="panel-body">
+				<pre>
+collectionreader:
+  class: FolderReader
+  folders:
+    - C:\path\to\docs
+
+annotators:
+  # Our pipeline (or annotator) to generate the corpus from
+  - class: regex.Email
+  
+consumers: 
+  - class: uk.gov.dstl.baleen.evaluation.consumers.EvaluationConsumer
+	# NOTE: YOu should change this to the working directory
+    basePath: C:\path\to\docs
+    goldPath: C:\path\to\gold
+	evaluationFile: output\evaluation.csv
+  - class: uk.gov.dstl.baleen.evaluation.consumers.GoldConsumer
+	# NOTE: YOu should change this to the working directory
+    basePath: C:\path\to\docs
+    goldPath: C:\path\to\gold
+
+</pre>
+			</div>
+		</div>
+
+		<p>The result will be a set of gold documents in the format
+			required. The user can then use this as the basis for this corpus,
+			reviewing each document in turn and editing to correct.</p>
+
+		<p>Note that some annotators (e.g. regular expression based or
+			gazetteer) produce very predictable and accurate output by their
+			nature and implementation - these are very suitable for generating a
+			gold standard. Other's such as statistical entity extraction vary
+			depending how well the corpus matches their training material. Using
+			statistical annotators in gold corpus generation may require more
+			effort to correct that manualling entering the entities.</p>
+
+		<h3>Evaluating with EvaluationConsumer</h3>
+
+		<p>For each document, the EvaluationConsumer reads a gold file
+			(the location and format being party of the consumers configuration).
+			The annotations in the gold document are cross referenced with the
+			annotations in the document output by the pipeline.</p>
+
+		<p>Configurations is shown in the example below.
+			EvaluationConsumer requires a Gold corpus (the root directory of
+			which is given by goldPath) and for a document
+			[basePath]/a/b/c.docx the gold standard for that document is held in
+			a file [goldPath]/a/b/c.docx.gold.[format]. Here format is one of the
+			supported formats (MUSE, XMI) and basePath is the other configuration
+			option.</p>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">gold.yaml</div>
+			<div class="panel-body">
+				<pre>
+collectionreader:
+  class: FolderReader
+  folders:
+    - C:\path\to\docs
+
+annotators:
+  # Our pipeline (or annotator) under evaluation 
+  - class: regex.Email
+  
+consumers: 
+  - class: uk.gov.dstl.baleen.evaluation.consumers.EvaluationConsumer
+    basePath: C:\path\to\docs
+    goldPath: C:\path\to\gold
+    goldFormat: MUSE # Or XMI
+    evaluationFormat: CSV # Or Json, or log for log to console
+	evaluationFile: evaluation.csv
+</pre>
+			</div>
+		</div>
+
+		<p>
+			After running this
+			<code>evaluation.csv</code>
+			will contain the results of evaluation, one row per document. The
+			columns of the CSV file are the entities and their specific measures
+			(e.g. f-measure, precision, recall). These are subject to change.
+		</p>
+
+
+		<h3>Other uses for evaluation</h3>
+		<p>Evaluation can also be used to:</p>
+		<ul>
+			<li>Comparing Baleen with other text processing engines</li>
+			<li>Check that Baleen is improving with each version (a
+				regression test)</li>
+			<li>Compare two annotators over a corpus</li>
+			<li>As a simple machine readable way of outputting the results
+				of baleen processing (in say Muse format). For example, use the
+				output for training for machine learning algorithms or to build
+				white/blacklists.</li>
+		</ul>
+
+		<h3>Limitations</h3>
+		<p>A MUSE is the first format, the evaluation framework has been
+			limited to the abilities of MUSE. As such it is not concerned with
+			the data within the entity, just that an entity has been found.</p>
+		<p>The evaluation does not look at the value of the annotation at
+			the moment (just its presence and location).</p>
+		<p>The output evaluation metrics are limited.</p>
+		<p>The evaluation framework primarly design for entity types, and focus has been given to these. Non entity types may not evaluated correctly.</p>
+
+		<h3>Developer note</h3>
+		<p>If generating and reviewing a gold corpus then errors in
+			annotators (e.g. regex annotators) should be added as unit tests to
+			improve Baleen's quality.</p>
+	</div>
+
+</body>
+
+
+</html>

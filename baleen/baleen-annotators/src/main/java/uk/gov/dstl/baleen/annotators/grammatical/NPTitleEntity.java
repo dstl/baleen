@@ -1,6 +1,9 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.annotators.grammatical;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -15,7 +18,7 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * 
  */
 public class NPTitleEntity extends BaleenAnnotator {
-	private static final String[] TITLES = {"mr", "mrs", "ms", "miss", "master", 	//Common titles
+	public static final List<String> TITLES = Arrays.asList("mr", "mrs", "ms", "miss", "master", 	//Common titles
 		"rev", "reverend", "fr", "father", "pope", "brother", "sister", "friar", "abbess", "abbott", "cardinal", "vicar",		//Religious titles (Christian)
 		"mullah", "imam", "ayatollah", "druid", "lama", "buddha", "rabbi", "rebbe",		//Religious titles (non-Christian)
 		"dr", "doctor", "prof", "professor",	//Educational titles
@@ -23,7 +26,7 @@ public class NPTitleEntity extends BaleenAnnotator {
 		"pvt", "private", "cpl", "corporal", "sgt", "sergeant", "capt", "captain", "maj", "major", "cmdr", "commander", "lt", "lieutenant", "lt col", "lieutenant colonel", "col", "colonel", "gen", "general", "adm", "admiral", "cdre", "commodore",	//Military titles
 		"hrh", "his royal highness", "his majesty", "her royal highness", "her majesty", "king", "queen", "prince", "princess", "emperor", "empress", "tsar", "tsarina", "tsaritsa", "shah",		//Royal titles
 		"sir", "dame", "lord", "lady", "baron", "baroness", "count", "countess", "duke", "duchess", "earl", "viscount", "marquis", "marquess", "grand duke", "grand duchess", "archduke", "archduchess"	//Nobility titles
-	};
+	);
 	
 	@Override
 	protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {

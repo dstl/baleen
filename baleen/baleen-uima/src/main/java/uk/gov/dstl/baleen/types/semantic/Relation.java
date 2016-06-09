@@ -4,18 +4,19 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.types.semantic;
 
-import org.apache.uima.jcas.JCas; 
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
+import uk.gov.dstl.baleen.core.history.Recordable;
 import uk.gov.dstl.baleen.types.Base;
 
 
 /** Records a relationship between named entities, explicitly mentioned within the source document.
- * Updated by JCasGen Fri Feb 05 14:54:31 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
-public class Relation extends Base {
+public class Relation extends Base implements Recordable {
   /** @generated
    * @ordered 
    */

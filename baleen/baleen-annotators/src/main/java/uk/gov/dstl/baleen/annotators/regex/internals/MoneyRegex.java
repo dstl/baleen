@@ -9,6 +9,7 @@ import com.google.common.base.Strings;
 
 import uk.gov.dstl.baleen.annotators.helpers.QuantityUtils;
 import uk.gov.dstl.baleen.annotators.regex.helpers.AbstractRegexAnnotator;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.types.common.Money;
 
 /**
@@ -71,51 +72,9 @@ public class MoneyRegex extends AbstractRegexAnnotator<Money> {
 		//First, work out the number and parse it to a Double
 		String numbers = matcher.group(3).replaceAll("\\s", "");
 		
-		Integer commaCount = StringUtils.countMatches(numbers, ',');
-		Integer periodCount = StringUtils.countMatches(numbers, '.');
-		
-		if(commaCount > 0 && periodCount > 0){
-			//Check we don't have alternating periods and commas
-			if(numbers.matches(".*,.*\\..*,.*") || numbers.matches(".*\\..*,.*\\..*")){
-				getMonitor().warn("Unable to parse monetary value '{}', as it contains alternating commas and periods", numbers);
-				return null;
-			}
-			
-			//We have commas and periods, so work out which is being used for what
-			if((commaCount == 1 && periodCount > 1) || (periodCount == 1 && commaCount == 1 && numbers.indexOf(',') > numbers.indexOf('.'))){
-				//Using comma as the decimal, and period as thousands separator
-				numbers = numbers.replaceAll("\\.", "");
-				numbers = numbers.replaceAll(",", ".");
-			}else if((periodCount == 1 && commaCount > 1) || (periodCount == 1 && commaCount == 1 && numbers.indexOf(',') < numbers.indexOf('.'))){
-				//Using period as the decimal, and commas as thousands separator
-				numbers = numbers.replaceAll(",", "");
-			}else{
-				//We have multiple commas and multiple decimals
-				getMonitor().warn("Unable to parse monetary value '{}', as it contains multiple commas and periods", numbers);
-				return null;
-			}
-		}else if(commaCount > 1){
-			//Using comma as a thousands separator
-			numbers = numbers.replaceAll(",", "");
-		}else if(commaCount == 1){
-			String[] parts = numbers.split(",");
-			if(parts[1].length() == 3){
-				//Probably using comma as a thousands separator
-				numbers = numbers.replaceAll(",", "");
-			}else{
-				//Probably using comma as a decimal
-				numbers = numbers.replaceAll(",", ".");
-			}
-		}else if(periodCount > 1){
-			//Using period as a thousands separator
-			numbers = numbers.replaceAll("\\.", "");
-		}else if(periodCount == 1){
-			String[] parts = numbers.split("\\.");
-			if(parts[1].length() == 3){
-				//Probably using period as a thousands separator
-				numbers = numbers.replaceAll("\\.", "");
-			}
-			//Else, probably using period as a decimal and so we don't need to do anything
+		numbers = correctCommasAndDecimals(numbers);
+		if(numbers == null){
+			return null;
 		}
 		
 		//Then apply any multipliers
@@ -131,6 +90,104 @@ public class MoneyRegex extends AbstractRegexAnnotator<Money> {
 		}
 		
 		return createMoney(jCas, currency, value);
+	}
+	
+	private boolean isCommaDecimal(Integer commaCount, Integer periodCount, String numbers){
+		if(commaCount == 1 && periodCount > 1){
+			//Only one comma and multiple periods, so comma must be decimal
+			return true;
+		}
+		
+		if(periodCount == 1 && commaCount == 1 && numbers.indexOf(',') > numbers.indexOf('.')){
+			//Only one comma and one period, but the comma is after the period so must be the decimal
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean isPeriodDecimal(Integer commaCount, Integer periodCount, String numbers){
+		if(periodCount == 1 && commaCount > 1){
+			//Only one period and multiple commas, so period must be decimal
+			return true;
+		}
+		
+		if(periodCount == 1 && commaCount == 1 && numbers.indexOf(',') < numbers.indexOf('.')){
+			//Only one period and one comma, but the period is after the comma so must be the decimal
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private String processCommasAndDecimals(String text, Integer commaCount, Integer periodCount) throws BaleenException{
+		String numbers = text;
+		
+		//Check we don't have alternating periods and commas
+		if(numbers.matches(".*,.*\\..*,.*") || numbers.matches(".*\\..*,.*\\..*")){
+			getMonitor().warn("Unable to parse monetary value '{}', as it contains alternating commas and periods", numbers);
+			throw new BaleenException("Value contains alternating commas and periods");
+		}
+		
+		//We have commas and periods, so work out which is being used for what
+		if(isCommaDecimal(commaCount, periodCount, numbers)){
+			//Using comma as the decimal, and period as thousands separator
+			numbers = numbers.replaceAll("\\.", "");
+			numbers = numbers.replaceAll(",", ".");
+		}else if(isPeriodDecimal(commaCount, periodCount, numbers)){
+			//Using period as the decimal, and commas as thousands separator
+			numbers = numbers.replaceAll(",", "");
+		}else{
+			//We have multiple commas and multiple decimals
+			getMonitor().warn("Unable to parse monetary value '{}', as it contains multiple commas and periods", numbers);
+			throw new BaleenException("Value contains multiple commas and periods");
+		}
+		
+		return numbers;
+	}
+	
+	/**
+	 * Take a number (as a string), and try to work out whether commas/periods are being used as decimals or thousand separators
+	 * Returns a corrected string, with no thousand separators and a period for the decimal.
+	 */
+	public String correctCommasAndDecimals(String number){
+		String correctedNumber = number;
+		
+		Integer commaCount = StringUtils.countMatches(correctedNumber, ',');
+		Integer periodCount = StringUtils.countMatches(correctedNumber, '.');
+		
+		if(commaCount > 0 && periodCount > 0){
+			try{
+				correctedNumber = processCommasAndDecimals(correctedNumber, commaCount, periodCount);
+			}catch(BaleenException be){
+				getMonitor().warn("Unable to parse monetary value '{}'", be);
+				return null;
+			}
+		}else if(commaCount > 1){
+			//Using comma as a thousands separator
+			correctedNumber = correctedNumber.replaceAll(",", "");
+		}else if(commaCount == 1){
+			String[] parts = correctedNumber.split(",");
+			if(parts[1].length() == 3){
+				//Probably using comma as a thousands separator
+				correctedNumber = correctedNumber.replaceAll(",", "");
+			}else{
+				//Probably using comma as a decimal
+				correctedNumber = correctedNumber.replaceAll(",", ".");
+			}
+		}else if(periodCount > 1){
+			//Using period as a thousands separator
+			correctedNumber = correctedNumber.replaceAll("\\.", "");
+		}else if(periodCount == 1){
+			String[] parts = correctedNumber.split("\\.");
+			if(parts[1].length() == 3){
+				//Probably using period as a thousands separator
+				correctedNumber = correctedNumber.replaceAll("\\.", "");
+			}
+			//Else, probably using period as a decimal and so we don't need to do anything
+		}
+		
+		return correctedNumber;
 	}
 	
 	private Double applyMultipliers(Matcher matcher, Double value){

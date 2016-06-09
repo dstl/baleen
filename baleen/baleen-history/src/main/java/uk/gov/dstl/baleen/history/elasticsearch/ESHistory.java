@@ -10,19 +10,16 @@ import uk.gov.dstl.baleen.core.history.HistoryEvent;
 
 /** This is a Java representation of the data structure of ES, used for
  * serialisation and deserialisation.
- * 
- *
  */
 public class ESHistory {
-
 	private String documentId;
 	private Collection<HistoryEvent> events;
 
-	/** New instance.
-	 *
+	/**
+	 * New instance.
 	 */
 	public ESHistory() {
-
+		//Empty constructor, do nothing
 	}
 
 	/** New instance with the specified content.

@@ -10,12 +10,12 @@ import org.apache.uima.jcas.cas.AnnotationBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.dstl.baleen.exceptions.BaleenException;
-import uk.gov.dstl.baleen.types.semantic.Entity;
-
 import com.googlecode.concurrenttrees.radix.node.concrete.DefaultByteArrayNodeFactory;
 import com.googlecode.concurrenttrees.suffix.ConcurrentSuffixTree;
 import com.googlecode.concurrenttrees.suffix.SuffixTree;
+
+import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /** A collection of utility to set bridge between Uima types and Java classes.
  * 
@@ -114,7 +114,7 @@ public class TypeUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Class<? extends Entity> getEntityClass(String typeName, JCas jCas) throws BaleenException{
-		Class<? extends AnnotationBase> at = (Class<? extends AnnotationBase>) getType(typeName, jCas);
+		Class<? extends AnnotationBase> at = getType(typeName, jCas);
 		
 		if(at == null){
 			throw new BaleenException("Couldn't find type '"+typeName+"'");

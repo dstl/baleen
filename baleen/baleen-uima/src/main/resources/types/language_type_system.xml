@@ -96,5 +96,70 @@ This XML file classified as UK OFFICIAL.</description>
         </featureDescription>
       </features>
     </typeDescription>
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.Dependency</name>
+      <description>Grammatical dependencies between wordtokens, as output from a Dependency Grammar Parser</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>governor</name>
+          <description>Governor of the dependency</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.language.WordToken</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>dependent</name>
+          <description>Dependent of the dependency</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.language.WordToken</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>dependencyType</name>
+          <description>The type of grammatical dependency (eg ROOT, VBMOD, etc)</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.Pattern</name>
+      <description>The text pattern between two annotations (usually entities) which has been processed to be more meaningful than simply the covered text between them</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>source</name>
+          <description>The source entity (first entity in the sentence)</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.Base</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>target</name>
+          <description>The target entity (last entity in the sentence)</description>
+          <rangeTypeName>uk.gov.dstl.baleen.types.Base</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>words</name>
+          <description>The collection of word tokens which form this pattern.</description>
+          <rangeTypeName>uima.cas.FSArray</rangeTypeName>
+        <elementType>uk.gov.dstl.baleen.types.language.WordToken</elementType>
+        </featureDescription>
+      </features>
+    </typeDescription>      
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.language.Interaction</name>
+      <description>A word which acts as a relation in a sentence (eg 'saw' in the 'John saw the car').</description>
+      <supertypeName>uk.gov.dstl.baleen.types.BaleenAnnotation</supertypeName>
+      <featureDescription>
+        <name>value</name>
+        <description>The value of the relationship, typically the spanning text within the sentence or the .</description>
+        <rangeTypeName>uima.cas.String</rangeTypeName>
+      </featureDescription>
+      <featureDescription>
+        <name>relationshipType</name>
+        <description>Denotes the semantic type of the relationship between entities.</description>
+        <rangeTypeName>uima.cas.String</rangeTypeName>
+      </featureDescription>        
+      <featureDescription>
+        <name>relationSubType</name>
+        <description>Used to record any sub-type information for the relation, for example the sub-relations defined within the ACE dataset.</description>
+        <rangeTypeName>uima.cas.String</rangeTypeName>
+      </featureDescription>      
+    </typeDescription>
   </types>
 </typeSystemDescription>

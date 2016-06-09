@@ -38,6 +38,28 @@
 					"produces":"text/plain"
 				}
 			]
+		},
+		{
+			"path":"/config/jobs",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"getJobConfig",
+					"parameters":[
+						{
+							"paramType":"query",
+							"name":"name",
+							"description":"The name of the job",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":false
+						}
+					],
+					"summary":"Get the job YAML configuration",
+					"notes":"Get YAML configuration of a jobs (if it is available) or returns an empty response if the configuration is not available. If using authentication, the user will need the 'config.jobs' role to access this resource.",
+					"produces":"text/plain"
+				}
+			]
 		}
 	]
 }

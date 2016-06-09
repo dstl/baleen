@@ -1,6 +1,7 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.resources;
 
+import java.net.InetSocketAddress;
 import java.util.Map;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -8,7 +9,6 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.node.Node;
@@ -67,8 +67,13 @@ public class SharedElasticsearchResource extends BaleenResource {
 		esPort = ConfigUtils.stringToInteger(esPortString, 9300);
 		
 		if(esPort < 9300) {
+			Settings settings = Settings.builder()
+					.put("path.home", System.getProperty("user.dir"))
+					.build();
+			
 			// Use the node client
 			node = NodeBuilder.nodeBuilder()
+				.settings(settings)
 				.client(true)
 				.data(false)
 				.clusterName(esCluster)
@@ -79,10 +84,10 @@ public class SharedElasticsearchResource extends BaleenResource {
 		} else {
 			// Use the transport client
 
-			Settings settings = ImmutableSettings.builder().put("cluster.name", esCluster).build();
+			Settings settings = Settings.builder().put("cluster.name", esCluster).build();
 
-			TransportClient tc = new TransportClient(settings);
-			tc.addTransportAddress(new InetSocketTransportAddress(esHost, esPort));
+			TransportClient tc = TransportClient.builder().settings(settings).build();
+			tc.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(esHost, esPort)));
 
 			client = tc;
 		}

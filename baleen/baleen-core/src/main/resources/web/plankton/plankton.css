@@ -1,0 +1,12 @@
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+
+#annotators  .panel-heading{
+	cursor: move;
+}
+
+#consumers  .panel-heading{
+	cursor: move;
+}

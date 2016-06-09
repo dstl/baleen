@@ -12,7 +12,7 @@ import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.cas.Type;
 
 /** General type to record temporal (time based) information mentioned within the document.  This is a general purpose type that is extended in "time" types.
- * Updated by JCasGen Fri Feb 05 14:54:31 GMT 2016
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class Temporal_Type extends Entity_Type {
   /** @generated 

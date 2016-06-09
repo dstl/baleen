@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewpoint" content="width=device-width, initial-scale=1">
+		
+		<title>Baleen - Plankton</title>
+		
+		<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<link href="dragula/dragula.min.css" rel="stylesheet">
+		<link href="plankton.css" rel="stylesheet">
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<a href="../index.html" class="navbar-brand">Baleen</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="../index.html">About</a></li>
+						<li><a href="../guides">Guides</a></li>
+						<li><a href="../javadoc">JavaDoc</a></li>
+						<li class="active"><a href="/plankton">Plankton</a></li>
+						<li><a href="../swagger">REST API</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="modal fade" id="yamlModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="modal-title">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 id="yamlTitle" class="modal-title">Generated YAML</h4>
+						</div>
+					</div>
+					<div class="modal-body" id="yaml"></div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="container">
+			<div class="jumbotron">
+				<h1>Plankton</h1>
+				<p>Plankton is a set of tools for managing Baleen pipelines. You can use Plankton to create new pipelines, stop and restart existing pipelines, and delete pipelines.</p>
+			</div>
+		</div>
+		
+		<div class="container">
+			<div id="alertCouldntConnect" class="alert alert-danger hidden">
+				<a href="#" class="close" onclick="$('#alertCouldntConnect').addClass('hidden'); return false;">&times;</a>
+				<strong>Error!</strong> Unable to connect to Baleen.
+			</div>
+			<div id="alertCouldntDelete" class="alert alert-danger hidden">
+				<a href="#" class="close" onclick="$('#alertCouldntDelete').addClass('hidden'); return false;">&times;</a>
+				<strong>Error!</strong> Unable to delete pipeline.
+			</div>
+			<div id="alertCouldntLoad" class="alert alert-danger hidden">
+				<a href="#" class="close" onclick="$('#alertCouldntLoad').addClass('hidden'); return false;">&times;</a>
+				<strong>Error!</strong> Unable to load available components.
+			</div>
+			<div id="alertCouldntLoadComponent" class="alert alert-danger hidden">
+				<a href="#" class="close" onclick="$('#alertCouldntLoadComponent').addClass('hidden'); return false;">&times;</a>
+				<strong>Error!</strong> Unable to load parameters for selected component.
+			</div>
+			<div id="alertCouldntCreate" class="alert alert-danger hidden">
+				<a href="#" class="close" onclick="$('#alertCouldntCreate').addClass('hidden'); return false;">&times;</a>
+				<strong>Error!</strong> Unable to create pipeline.
+			</div>
+			<div id="alertCouldntLoadYaml" class="alert alert-danger hidden">
+				<a href="#" class="close" onclick="$('#alertCouldntLoadYaml').addClass('hidden'); return false;">&times;</a>
+				<strong>Error!</strong> Unable to load YAML.
+			</div>
+			<div id="successPipeline" class="alert alert-success hidden">
+				<a href="#" class="close" onclick="$('#successPipeline').addClass('hidden'); return false;">&times;</a>
+				<strong>Success!</strong> Pipeline created.
+			</div>
+		</div>
+		
+		<div id="operations" class="container hidden">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Existing Pipelines <a href="#" onclick="getExistingPipelines(); return false;"><span class="glyphicon glyphicon-refresh"></span></a></h3>
+				</div>
+				<div class="panel-body">
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Pipeline Name</th>
+								<th>Running</th>
+								<th>Source</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="existingPipelines">
+						</tbody>
+					</table>
+				</div>
+			</div>
+		
+			<div id="createPanel" class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Create New Pipeline</h3>
+				</div>
+				<div id="createPanelLoading" class="panel-body">
+					<div class="progress">
+						<div class="progress-bar progress-bar-striped active" role="progressbar" style="width: 100%">
+							<span class="sr-only">Loading</span>
+						</div>
+					</div>
+				</div>
+				<div id="createPanelBody" class="panel-body hidden">
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" data-target="#collectionReaderPanel">
+							<h3 class="panel-title">Collection Reader: <strong id="collectionReaderName"></strong></h3>
+						</div>
+						<div class="panel-body collapse in" id="collectionReaderPanel">
+							<form>
+								<input type="hidden" id="collectionReaderResources" value="">
+								<div class="form-group">
+									<p>
+										<label for="collectionReader">Collection Reader</label>
+										<select id="collectionReader" class="form-control"></select>
+									</p>
+									<div id="collectionReaderParameters">
+									</div>
+									<div class="panel panel-default hidden" id="contentExtractorPanel">
+										<div class="panel-heading">
+											<h3 class="panel-title">Content Extractor: <strong id="contentExtractorName"></strong></h3>
+										</div>
+										<div class="panel-body">
+											<input type="hidden" id="contentExtractorResources" value="">
+											<p>
+												<label for="contentExtractor">Content Extractor</label>
+												<select id="contentExtractor" class="form-control"></select>
+												<input type="hidden" id="contentExtractor-default" value="">
+											</p>
+											<div id="contentExtractorParameters">
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" data-target="#annotatorsPanelBody">
+							<h3 class="panel-title">Annotators</h3>
+						</div>
+						<div id="annotatorsPanelBody" class="panel-body collapse in">
+							<div id="annotators">
+							</div>
+							<p><a href="#" onclick="addAnnotator(); return false;"><span class="glyphicon glyphicon-plus"></span> Add New Annotator</a> | <a href="#" onclick="addAllAnnotators(); return false;">Add All Annotators</a> | <a href="#" onclick="removeAllAnnotators(); return false;">Remove All Annotators</a></p>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" data-target="#consumersPanelBody">
+							<h3 class="panel-title">Consumers</h3>
+						</div>
+						<div id="consumersPanelBody" class="panel-body collapse in">
+							<div id="consumers">
+							</div>
+							<p><a href="#" onclick="addConsumer(); return false;"><span class="glyphicon glyphicon-plus"></span> Add New Consumer</a> | <a href="#" onclick="addAllConsumers(); return false;">Add All Consumers</a> | <a href="#" onclick="removeAllConsumers(); return false;">Remove All Consumers</a></p>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" data-target="#resourcesPanelBody">
+							<h3 class="panel-title">Resources</h3>
+						</div>
+						<div id="resourcesPanelBody" class="panel-body collapse in">
+							<div id="resources">
+								<p id="noResources">There are currently no annotators that require external resources</p>
+							</div>
+						</div>
+					</div>
+					
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" data-target="#pipelinePanelBody">
+							<h3 class="panel-title">Pipeline Properties</h3>
+						</div>
+						<div id="pipelinePanelBody" class="panel-body collapse in">
+							<form>
+								<p>
+									<label for="pipelineName">Pipeline Name <a href="#" onclick="$('#pipelineName').val(createPipelineName()); return false;"><span class="glyphicon glyphicon-refresh"></span></a></label>
+									<input type="text" id="pipelineName" class="form-control">
+								</p>
+								<p class="checkbox">
+									<label for="start"><input type="checkbox" id="start" checked> Start Pipeline When Created</label>
+								</p>
+							</form>
+						</div>
+					</div>
+					
+					<button id="createPipelineButton" class="btn btn-default" onclick="createPipeline();">Create Pipeline</button>
+					<button id="viewYamlButton" class="btn btn-default" onclick="viewYaml();">View YAML</button>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Template Panels for Annotators, Consumers and Resources -->
+		
+		<div id="annotatorDivTemplate" class="panel panel-default hidden">
+			<div class="panel-heading" data-toggle="collapse" data-target="#annotatorPanelBody">
+				<h3 class="panel-title">Annotator: <strong id="annotatorName"></strong><button type="button" class="close" aria-label="Close" onclick="removeAnnotator(this)"><span aria-hidden="true">&times;</span></button></h3>
+			</div>
+			<div id="annotatorPanelBody" class="panel-body collapse in">
+				<form class="annotatorForm">
+					<input type="hidden" id="annotatorId" value="">
+					<input type="hidden" id="annotatorResources" value="">
+					<div class="form-group">
+						<p>
+							<label for="annotator">Annotator</label>
+							<select id="annotator" class="form-control"></select>
+						</p>
+						<div id="annotatorParameters"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div id="consumerDivTemplate" class="panel panel-default hidden">
+			<div class="panel-heading" data-toggle="collapse" data-target="#consumerPanelBody">
+				<h3 class="panel-title">Consumer: <strong id="consumerName"></strong><button type="button" class="close" aria-label="Close" onclick="removeConsumer(this)"><span aria-hidden="true">&times;</span></button></h3>
+			</div>
+			<div id="consumerPanelBody" class="panel-body collapse in">
+				<form class="consumerForm">
+					<input type="hidden" id="consumerId" value="">
+					<input type="hidden" id="consumerResources" value="">
+					<div class="form-group">
+						<p>
+							<label for="consumer">Consumer</label>
+							<select id="consumer" class="form-control"></select>
+						</p>
+						<div id="consumerParameters"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<div id="resourceDivTemplate" class="panel panel-default hidden">
+			<div class="panel-heading" data-toggle="collapse" data-target="#resourcePanelBody">
+				<h3 class="panel-title">Resource: <strong id="resourceName"></strong></h3>
+			</div>
+			<div id="resourcePanelBody" class="panel-body collapse in">
+				<form class="resourceForm">
+					<div class="form-group">
+						<p>
+							<label>Resource:</label>
+							<span id="resource" class="form-control-static"></span>
+						</p>
+						<p>
+							<label>Key:</label>
+							<span id="resourceKey" class="form-control-static"></span>
+						</p>
+						<p>
+							<label>Usage:</label>
+							<span id="resourceUsage" class="form-control-static"></span>
+						</p>
+						<div id="resourceParameters"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+		
+		<!-- End Template Panels -->
+	
+		<script src="jquery-2.1.4.min.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script>
+		<script src="dragula/dragula.min.js"></script>
+		<script src="managePipelines.js"></script>
+		<script src="createPipelines.js"></script>
+		<script>
+			var baleenUrl = "../";
+			
+			function connect(){				
+				$.ajax({
+					url: baleenUrl + "api/1/status"
+				})
+				.done(function(data){
+					$("#alertCouldntConnect").addClass("hidden");
+					$("#operations").removeClass("hidden");
+					
+					getExistingPipelines();
+					loadCollectionReaders();
+					loadContentExtractors();
+					loadAnnotators();
+					loadConsumers();
+				})
+				.error(function(data){
+					$("#alertCouldntConnect").removeClass("hidden");
+					$("#operations").addClass("hidden");
+				});
+			}
+			
+			dragula([document.getElementById("annotators")], {
+				moves: function (el, container, handle) {
+					return (handle.className === "panel-heading" || handle.className === "panel-title");
+				}
+			});
+			dragula([document.getElementById("consumers")], {
+				moves: function (el, container, handle) {
+					return (handle.className === "panel-heading" || handle.className === "panel-title");
+				}
+			});
+			
+			connect();
+		</script>
+	</body>
+</html>

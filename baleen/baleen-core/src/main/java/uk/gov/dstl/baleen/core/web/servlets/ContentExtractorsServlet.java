@@ -24,7 +24,7 @@ public class ContentExtractorsServlet extends AbstractComponentApiServlet{
 		super(EXTRACTOR_CLASS,
 				"uk.gov.dstl.baleen.contentextractors",
 				Collections.emptyList(),
-				Arrays.asList(".*\\.internals", ".*\\.helpers"),
+				Arrays.asList(".*\\.internals", ".*\\.helpers", "uk.gov.dstl.baleen.uima(\\..*)?"),
 				ContentExtractorsServlet.class);
 	}
 	

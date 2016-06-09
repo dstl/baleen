@@ -1,0 +1,7 @@
+
+job:
+  schedule: 
+    class: Other
+    key: value 
+  tasks:
+  - class: uk.gov.dstl.baleen.testing.DummyTask

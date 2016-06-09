@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.TreeSet;
@@ -125,11 +126,9 @@ public class CommonKeywords extends AbstractKeywordsAnnotator {
 		Multimap<Double, String> countToStem = HashMultimap.create();
 		Set<Double> countValues = new TreeSet<>(Collections.reverseOrder());
 		
-		for(String key : stemCount.keySet()){
-			Double count = stemCount.get(key).doubleValue();
-			
-			countToStem.put(count, key);
-			countValues.add(count);
+		for(Entry<String, Double> e : stemCount.entrySet()){
+			countToStem.put(e.getValue(), e.getKey());	//(Count, Key)
+			countValues.add(e.getValue());
 		}
 		
 		List<String> stemmedKeywords = new ArrayList<>();

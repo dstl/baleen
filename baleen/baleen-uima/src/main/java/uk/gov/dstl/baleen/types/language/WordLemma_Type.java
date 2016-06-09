@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** Specifies a lemma form for a word token
- * Updated by JCasGen Wed Jan 14 12:58:18 GMT 2015
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class WordLemma_Type extends Base_Type {
   /** @generated 

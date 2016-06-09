@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -79,19 +81,23 @@ public class FolderReader extends BaleenCollectionReader {
 	public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
 	@ConfigurationParameter(name = PARAM_CONTENT_EXTRACTOR, defaultValue="TikaContentExtractor")
 	private String contentExtractor = "TikaContentExtractor";
-
+	
 	/**
-	 * A list of file extensions that are allowed by the folder reader.
-	 * If not specified, then all file extensions are accepted.
-	 * Extensions are assumed to be case insensitive.
+	 * A list of patterns that the filename must match.
+	 * This can be used for specifying allowed file extensions (e.g. .*\\.txt would accept all text files).
+	 * 
+	 * Files are accepted if they match any of the specified patterns.
+	 * If no patterns are specified, then all files will be accepted.
+	 * 
+	 * Patterns are treated as case insensitive.
 	 * 
 	 * @baleen.config
 	 */
-	public static final String PARAM_ALLOWED_EXTENSIONS = "allowedExtensions";
-	@ConfigurationParameter(name = PARAM_ALLOWED_EXTENSIONS, defaultValue = {})
-	private String[] allowedExtensions;
+	public static final String PARAM_ACCEPTED_PATTERNS = "acceptedFilenames";
+	@ConfigurationParameter(name = PARAM_ACCEPTED_PATTERNS, defaultValue = {})
+	private String[] acceptedFilenames;
 	
-	private List<String> allowedExtensionsSet = new ArrayList<>();
+	private List<Pattern> acceptedFilenamesSet = new ArrayList<>();
 	
 	private WatchService watcher;
 	private Map<WatchKey, Path> watchKeys = new HashMap<>();
@@ -106,8 +112,14 @@ public class FolderReader extends BaleenCollectionReader {
 			folders[0] = System.getProperty("user.dir");
 		}
 		
-		for(String extension : allowedExtensions){
-			allowedExtensionsSet.add(extension.toLowerCase());
+		for(String pattern : acceptedFilenames){
+			try{
+				Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+				
+				acceptedFilenamesSet.add(p);
+			}catch(PatternSyntaxException pse){
+				getMonitor().warn("Could not compile pattern '{}', it will not be included in the set of accepted filenames", pattern, pse);
+			}
 		}
 
 		try{
@@ -271,8 +283,16 @@ public class FolderReader extends BaleenCollectionReader {
 	}
 	
 	private void addFile(Path path){
-		if(allowedExtensionsSet.isEmpty() || allowedExtensionsSet.contains(FilenameUtils.getExtension(path.toString().toLowerCase()))){
+		if(acceptedFilenamesSet.isEmpty()){
 			queue.add(path);
+		}else{
+			for(Pattern p : acceptedFilenamesSet){
+				Matcher m = p.matcher(path.getFileName().toString());
+				if(m.matches()){
+					queue.add(path);
+					return;
+				}
+			}
 		}
 	}
 }

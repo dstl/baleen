@@ -157,6 +157,7 @@ public abstract class AbstractKeywordsAnnotator extends BaleenAnnotator {
 	 * expressions to include in the pattern.
 	 */
 	protected Pattern buildStopwordsPattern(String... additionalTerms){
+		//TODO: Replace this with StopwordUtils alternative
 		StringJoiner sj = new StringJoiner("|");
 		for(String s : stopwords){
 			sj.add(Pattern.quote(s));

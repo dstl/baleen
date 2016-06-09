@@ -12,7 +12,7 @@ import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
 
 /** The published ID of the document, e.g. the Document Reference
- * Updated by JCasGen Thu Feb 05 10:57:24 GMT 2015
+ * Updated by JCasGen Tue Apr 12 12:06:57 BST 2016
  * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/metadata_type_system.xml
  * @generated */
 public class PublishedId extends BaleenAnnotation {

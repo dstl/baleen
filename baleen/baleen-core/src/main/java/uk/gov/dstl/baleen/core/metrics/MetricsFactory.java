@@ -10,12 +10,6 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.gov.dstl.baleen.core.manager.BaleenComponent;
-import uk.gov.dstl.baleen.core.manager.BaleenManager;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
-import uk.gov.dstl.baleen.exceptions.BaleenException;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
-
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
@@ -27,6 +21,12 @@ import com.codahale.metrics.Timer;
 import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
+
+import uk.gov.dstl.baleen.core.manager.BaleenComponent;
+import uk.gov.dstl.baleen.core.manager.BaleenManager;
+import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
 /**
  * Factory provider for {@link Metrics}.

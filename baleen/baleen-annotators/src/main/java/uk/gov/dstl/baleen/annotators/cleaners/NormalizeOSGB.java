@@ -23,6 +23,6 @@ public class NormalizeOSGB extends AbstractNormalizeEntities {
 
 	@Override
 	protected boolean shouldNormalize(Entity e) {
-		return ((e instanceof Coordinate) && (e.getSubType().equals("osgb")));
+		return (e instanceof Coordinate) && ("osgb".equals(e.getSubType()));
 	}
 }

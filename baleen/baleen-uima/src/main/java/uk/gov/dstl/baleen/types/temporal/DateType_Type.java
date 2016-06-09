@@ -13,7 +13,7 @@ import org.apache.uima.cas.Type;
 import uk.gov.dstl.baleen.types.semantic.Temporal_Type;
 
 /** A specific date reference (day-specific) mentioned in the text.
- * Updated by JCasGen Wed Jan 21 11:37:43 GMT 2015
+ * Updated by JCasGen Tue Apr 12 12:07:25 BST 2016
  * @generated */
 public class DateType_Type extends Temporal_Type {
   /** @generated 

@@ -25,7 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BaleenAnnotatorTest {
@@ -48,7 +48,7 @@ public class BaleenAnnotatorTest {
 	public void setUp() throws UIMAException {
 		jCas = JCasFactory.createJCas();
 		annotation =  new Annotation(jCas);
-		context = UimaContextFactory.createUimaContext(CpeBuilder.PIPELINE_NAME, PIPELINE_NAME);
+		context = UimaContextFactory.createUimaContext(PipelineCpeBuilder.PIPELINE_NAME, PIPELINE_NAME);
 	}
 
 

@@ -3,19 +3,18 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.types.common;
 
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.jcas.JCasRegistry;
+import org.apache.uima.cas.FeatureStructure;
+import org.apache.uima.cas.Type;
 import org.apache.uima.cas.impl.CASImpl;
 import org.apache.uima.cas.impl.FSGenerator;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.impl.TypeImpl;
-import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.FeatureImpl;
-import org.apache.uima.cas.Feature;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.JCasRegistry;
+
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** A communication identifier - including equipent, user, accounts or subscription.  Includes (but not limited to) the following types: emailAddress, IPv4, IPv6, MSISDN, IMEI, IMSI values.
- * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
+ * Updated by JCasGen Wed Apr 13 13:23:15 BST 2016
  * @generated */
 public class CommsIdentifier_Type extends Entity_Type {
   /** @generated 

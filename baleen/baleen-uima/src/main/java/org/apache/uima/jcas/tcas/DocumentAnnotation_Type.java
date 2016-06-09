@@ -14,7 +14,7 @@ import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.Feature;
 
 /** Overriding the base DocumentAnntation to add additional features. The JCasGen code generated from this annotation replaces the default type in uima-document-annotation.jar (which should be removed from the classpath).
- * Updated by JCasGen Fri Feb 05 14:54:30 GMT 2016
+ * Updated by JCasGen Wed Apr 13 13:23:15 BST 2016
  * @generated */
 public class DocumentAnnotation_Type extends Annotation_Type {
   /** @generated 

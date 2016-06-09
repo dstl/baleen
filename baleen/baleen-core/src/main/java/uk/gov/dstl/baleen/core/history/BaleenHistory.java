@@ -3,7 +3,7 @@ package uk.gov.dstl.baleen.core.history;
 
 import org.apache.uima.resource.Resource;
 
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 
 
 /** History of changes made to documentation being processed by Baleen.
@@ -13,7 +13,7 @@ import uk.gov.dstl.baleen.cpe.CpeBuilder;
  * Normally developers will not access this directly, instead using the
  * addToHistory functions on UimaSupport through BaleenAnnotator, etc.
  *
- * Through {@link CpeBuilder} there will be a single instance of the BaleenHistory
+ * Through {@link PipelineCpeBuilder} there will be a single instance of the BaleenHistory
  * within a pipeline.
  *
  * 

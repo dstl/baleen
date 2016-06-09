@@ -1,0 +1,41 @@
+{
+	"apiVersion": "1",
+	"basePath": "/api/1",
+	"apis": [
+		{
+			"path":"/tasks",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"tasks",
+					"parameters":[],
+					"summary":"List tasks currently available to Baleen",
+					"notes":"Produces a YAML formatted list of all the tasks (classes extending BaleenTask) currently available on the class path. If using authentication, the user will need the 'tasks' role to access this resource.",
+					"produces":"text/x-yaml"
+				}
+			]
+		},
+		{
+			"path":"/tasks/{taskName}",
+			"operations":[
+				{
+					"httpMethod":"GET",
+					"nickname":"taskParameters",
+					"parameters":[
+						{
+							"paramType":"path",
+							"name":"taskName",
+							"description":"The name of the task to query, as it would appear in a pipeline configuration file.",
+							"dataType":"string",
+							"required":true,
+							"allowMultiple":false
+						}
+					],
+					"summary":"List the parameters and resources associated with a particular task",
+					"notes":"Returns a JSON list of the parameters and resources",
+					"produces":"application/json"
+				}
+			]
+		}
+	]
+}
