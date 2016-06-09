@@ -7,14 +7,15 @@ package uk.gov.dstl.baleen.types.semantic;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
-import org.apache.uima.jcas.tcas.Annotation;
+
+import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
 
 /** A target type for the referent property, such that entities pointing to the same target are assumed to be coreferences. The target can therefore be thought of as a super-entity, though it has no properties or value of it's own. The span of this entity is taken to be the scope in which this reference target is valid.
- * Updated by JCasGen Fri Feb 05 14:54:31 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
-public class ReferenceTarget extends Annotation {
+public class ReferenceTarget extends BaleenAnnotation {
   /** @generated
    * @ordered 
    */

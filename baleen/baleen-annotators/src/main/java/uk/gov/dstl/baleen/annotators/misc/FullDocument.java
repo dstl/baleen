@@ -51,7 +51,7 @@ public class FullDocument extends BaleenAnnotator {
 		}
 				
 		try {
-			Entity ret = (Entity) et.getConstructor(JCas.class).newInstance(jCas);
+			Entity ret = et.getConstructor(JCas.class).newInstance(jCas);
 			
 			ret.setBegin(0);
 			ret.setEnd(text.length());

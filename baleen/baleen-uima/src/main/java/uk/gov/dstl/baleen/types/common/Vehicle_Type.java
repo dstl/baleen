@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** Specific vehicle or vessel
- * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class Vehicle_Type extends Entity_Type {
   /** @generated 

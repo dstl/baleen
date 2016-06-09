@@ -19,6 +19,8 @@ import org.apache.uima.util.ProgressImpl;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.uima.testing.DummyBaleenCollectionReader;
+import uk.gov.dstl.baleen.uima.testing.FakeContentExtractor;
 
 public class BaleenCollectionReaderTest {
 	@Test

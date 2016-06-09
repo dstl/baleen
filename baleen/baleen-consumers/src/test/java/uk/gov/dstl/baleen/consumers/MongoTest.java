@@ -27,14 +27,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+
+import uk.gov.dstl.baleen.consumers.utils.DefaultFields;
 import uk.gov.dstl.baleen.consumers.utils.IEntityConverterFields;
-import uk.gov.dstl.baleen.consumers.utils.mongo.MongoFields;
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.history.DocumentHistory;
 import uk.gov.dstl.baleen.core.history.HistoryEvent;
 import uk.gov.dstl.baleen.core.history.HistoryEvents;
 import uk.gov.dstl.baleen.core.history.memory.InMemoryBaleenHistory;
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.types.common.Buzzword;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
@@ -46,11 +51,6 @@ import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.types.temporal.DateType;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
 public class MongoTest extends ConsumerTestBase {
 
@@ -88,22 +88,22 @@ public class MongoTest extends ConsumerTestBase {
 
 	private BaleenHistory history;
 	
-	private final IEntityConverterFields fields = new MongoFields();
+	private final IEntityConverterFields fields = new DefaultFields();
 
 	@Before
 	public void setUp() throws ResourceInitializationException, ResourceAccessException {
 		// Create a description of an external resource - a fongo instance, in the same way we would have created a shared mongo resource
 		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, "fongo.collection", "test", "fongo.data", "[]");
-		ExternalResourceDescription historyErd = ExternalResourceFactory.createExternalResourceDescription(CpeBuilder.BALEEN_HISTORY, InMemoryBaleenHistory.class);
+		ExternalResourceDescription historyErd = ExternalResourceFactory.createExternalResourceDescription(PipelineCpeBuilder.BALEEN_HISTORY, InMemoryBaleenHistory.class);
 
 		history = Mockito.mock(BaleenHistory.class);
 
 		// Create the analysis engine
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(Mongo.class, MONGO, erd, "collection", "test", CpeBuilder.BALEEN_HISTORY, historyErd, "outputHistory", Boolean.TRUE);
+		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(Mongo.class, MONGO, erd, "collection", "test", PipelineCpeBuilder.BALEEN_HISTORY, historyErd, "outputHistory", Boolean.TRUE);
 		ae = AnalysisEngineFactory.createEngine(aed);
 		ae.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 		SharedFongoResource sfr = (SharedFongoResource) ae.getUimaContext().getResourceObject(MONGO);
-		history = (BaleenHistory) ae.getUimaContext().getResourceObject(CpeBuilder.BALEEN_HISTORY);
+		history = (BaleenHistory) ae.getUimaContext().getResourceObject(PipelineCpeBuilder.BALEEN_HISTORY);
 
 		entities = sfr.getDB().getCollection("entities");
 		documents = sfr.getDB().getCollection("documents");
@@ -279,7 +279,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> a = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON));
 		Map<String, Object> person = ((List<Map<String, Object>>)a.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(10, person.size());
+		assertEquals(11, person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
 		assertEquals(0.0, person.get(CONFIDENCE));
@@ -446,7 +446,7 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> a = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON));
 		Map<String, Object> person = ((List<Map<String, Object>>)a.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(10, person.size());
+		assertEquals(11, person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
 		assertEquals(0.0, person.get(CONFIDENCE));

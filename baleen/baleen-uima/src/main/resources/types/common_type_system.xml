@@ -38,6 +38,16 @@ This XML file classified as UK OFFICIAL.</description>
           <description>A person's title, for example Mr or President</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
+      <featureDescription>
+          <name>gender</name>
+          <description>Should be one of the following:
+* MALE
+* FEMALE
+* UNKNOWN
+
+If empty or null, it is assumed to be UNKNOWN.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
       </features>
     </typeDescription>
     <typeDescription>

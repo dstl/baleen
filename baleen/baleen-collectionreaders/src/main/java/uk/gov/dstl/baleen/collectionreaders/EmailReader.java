@@ -280,11 +280,12 @@ public class EmailReader extends BaleenCollectionReader {
 			return true;
 		}
 		
-		try{
-			tryExpunge();
-		}catch(MessagingException me){
-			throw new IOException("Unable to expunge (delete) messages", me);
-		}
+        try{
+            tryExpunge();
+        }catch(MessagingException me){
+            throw new IOException("Unable to expunge (delete) messages", me);
+        }
+
 		
 		if(lastCheck + wait*1000 > System.currentTimeMillis()){
 			return false;

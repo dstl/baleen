@@ -1,0 +1,6 @@
+key: global
+
+job:
+  schedule: Other
+  tasks:
+  - uk.gov.dstl.baleen.testing.DummyTaskParams

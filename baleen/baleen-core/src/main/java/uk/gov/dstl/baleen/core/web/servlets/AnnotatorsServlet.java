@@ -4,7 +4,7 @@ package uk.gov.dstl.baleen.core.web.servlets;
 import java.util.Arrays;
 
 import uk.gov.dstl.baleen.core.web.security.WebPermission;
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 
 /**
  * List all annotators (inheriting from BaleenAnnotator) on the class path
@@ -23,9 +23,9 @@ public class AnnotatorsServlet extends AbstractComponentApiServlet{
 	 */
 	public AnnotatorsServlet(){
 		super(ANNOTATOR_CLASS,
-				CpeBuilder.ANNOTATOR_DEFAULT_PACKAGE,
+				PipelineCpeBuilder.ANNOTATOR_DEFAULT_PACKAGE,
 				Arrays.asList(CONSUMER_CLASS),
-				Arrays.asList(".*\\.internals", ".*\\.helpers"),
+				Arrays.asList(".*\\.internals", ".*\\.helpers", "uk.gov.dstl.baleen.uima(\\..*)?"),
 				AnnotatorsServlet.class);
 	}
 	

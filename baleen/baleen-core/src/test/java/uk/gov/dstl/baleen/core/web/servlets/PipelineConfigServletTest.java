@@ -37,7 +37,7 @@ public class PipelineConfigServletTest {
 
 	@Test
 	public void testMissing() throws Exception {
-		doReturn(Optional.empty()).when(manager).getPipeline(anyString());
+		doReturn(Optional.empty()).when(manager).get(anyString());
 		ServletCaller caller = new ServletCaller();
 		caller.addParameter("name", "missing");
 		caller.doGet(new PipelineConfigServlet(manager));
@@ -47,7 +47,7 @@ public class PipelineConfigServletTest {
 	@Test
 	public void testEmpty() throws Exception {
 		BaleenPipeline pipeline = new BaleenPipeline("name", null, null);
-		doReturn(Optional.of(pipeline)).when(manager).getPipeline(anyString());
+		doReturn(Optional.of(pipeline)).when(manager).get(anyString());
 
 		ServletCaller caller = new ServletCaller();
 		caller.addParameter("name", "name");
@@ -58,7 +58,7 @@ public class PipelineConfigServletTest {
 	@Test
 	public void testWithConfig() throws Exception {
 		BaleenPipeline pipeline = new BaleenPipeline("name", "Config", null);
-		doReturn(Optional.of(pipeline)).when(manager).getPipeline(anyString());
+		doReturn(Optional.of(pipeline)).when(manager).get(anyString());
 
 		ServletCaller caller = new ServletCaller();
 		caller.addParameter("name", "name");

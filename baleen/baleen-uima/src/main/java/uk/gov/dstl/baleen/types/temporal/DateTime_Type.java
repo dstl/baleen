@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.semantic.Temporal_Type;
 
 /** A combination of a DateType and Time which are part of the same reference, specifying a time on a specific date.
- * Updated by JCasGen Wed Jan 21 11:37:43 GMT 2015
+ * Updated by JCasGen Tue Apr 12 12:07:25 BST 2016
  * @generated */
 public class DateTime_Type extends Temporal_Type {
   /** @generated 

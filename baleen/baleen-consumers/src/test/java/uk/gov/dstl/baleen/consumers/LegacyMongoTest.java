@@ -12,10 +12,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
+import org.apache.uima.fit.factory.JCasFactory;
+import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceAccessException;
@@ -40,8 +43,8 @@ import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.temporal.DateType;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
-public class LegacyMongoTest extends ConsumerTestBase {
-
+@Deprecated
+public class LegacyMongoTest {
 	private static final String GEO_JSON = "geoJson";
 	private static final String TYPE = "type";
 	private static final String END = "end";
@@ -62,9 +65,13 @@ public class LegacyMongoTest extends ConsumerTestBase {
 	private static final List<DBObject> GAZ_DATA = Lists.newArrayList();
 	private DBCollection outputColl;
 	private AnalysisEngine ae;
+	
+	protected JCas jCas;
 
 	@Before
-	public void setUp() throws ResourceInitializationException, ResourceAccessException {
+	public void setUp() throws ResourceInitializationException, ResourceAccessException, UIMAException {
+		jCas = JCasFactory.createJCas();
+
 		// Create a description of an external resource - a fongo instance, in the same way we would have created a shared mongo resource
 		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, "fongo.collection", "test", "fongo.data", JSON.serialize(GAZ_DATA));
 
@@ -354,6 +361,14 @@ public class LegacyMongoTest extends ConsumerTestBase {
 		if(myAe != null) {
 			myAe.destroy();
 		}
+	}
+	
+	/** Get the document annotation from a jCas.
+	 * @param jCas
+	 * @return documentation annotation
+	 */
+	protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
+		return (DocumentAnnotation) jCas.getDocumentAnnotationFs();
 	}
 
 }

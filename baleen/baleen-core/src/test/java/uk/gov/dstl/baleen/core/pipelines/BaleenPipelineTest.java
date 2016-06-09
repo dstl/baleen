@@ -3,16 +3,23 @@ package uk.gov.dstl.baleen.core.pipelines;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
+import java.io.File;
+import java.util.Arrays;
+
 import org.apache.uima.collection.CollectionProcessingEngine;
+import org.apache.uima.collection.EntityProcessStatus;
+import org.apache.uima.collection.impl.EntityProcessStatusImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.exceptions.BaleenException;
@@ -22,7 +29,7 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
  *
  * Specifically doesn't test the underlying uima engine.
  *
- * 
+ *
  *
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -30,6 +37,25 @@ public class BaleenPipelineTest {
 
 	@Mock
 	CollectionProcessingEngine engine;
+
+	@Test
+	public void testConstructors() {
+		BaleenPipeline a = new BaleenPipeline("test", engine);
+		BaleenPipeline b = new BaleenPipeline("test", "yaml", new File("test.yaml"), engine);
+		BaleenPipeline c = new BaleenPipeline("test", "yaml", engine);
+
+		assertEquals("test", a.getName());
+		assertEquals("test", b.getName());
+		assertEquals("test", c.getName());
+
+		assertNull(a.getSource());
+		assertNull(c.getSource());
+		assertEquals("test.yaml", b.getSource().getName());
+
+		assertFalse(a.getYaml().isPresent());
+		assertEquals("yaml", b.getYaml().get());
+		assertEquals("yaml", c.getYaml().get());
+	}
 
 	@Test
 	public void testWithCpe() throws BaleenException {
@@ -150,5 +176,26 @@ public class BaleenPipelineTest {
 		doReturn(true).when(engine).isProcessing();
 		pipeline.stop();
 		verify(engine).stop();
+	}
+
+	@Test
+	public void testCompletion() {
+		BaleenPipeline pipeline = new BaleenPipeline("test", engine);
+
+		// Run through ok
+		EntityProcessStatus status = new EntityProcessStatusImpl(null);
+		pipeline.entityProcessComplete(null, status);
+
+		// Run through failed
+		EntityProcessStatus failedStatus = Mockito.mock(EntityProcessStatus.class);
+		Mockito.when(failedStatus.isException()).thenReturn(true);
+		pipeline.entityProcessComplete(null, failedStatus);
+
+		// Run through failed with exceptions
+		EntityProcessStatus exceptionStatus = Mockito.mock(EntityProcessStatus.class);
+		Mockito.when(exceptionStatus.isException()).thenReturn(true);
+		Mockito.when(exceptionStatus.getExceptions()).thenReturn(Arrays.asList(new Exception("test")));
+		pipeline.entityProcessComplete(null, exceptionStatus);
+
 	}
 }

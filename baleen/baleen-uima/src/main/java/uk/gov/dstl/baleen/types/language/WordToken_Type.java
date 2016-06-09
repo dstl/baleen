@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** The output from some text tokenization process.
- * Updated by JCasGen Wed Jan 14 12:58:18 GMT 2015
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class WordToken_Type extends Base_Type {
   /** @generated 
@@ -128,7 +128,7 @@ public class WordToken_Type extends Base_Type {
     if (lowLevelTypeChecks)
       return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_lemmas), i, true);
     jcas.checkArrayBounds(ll_cas.ll_getRefValue(addr, casFeatCode_lemmas), i);
-	return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_lemmas), i);
+  return ll_cas.ll_getRefArrayValue(ll_cas.ll_getRefValue(addr, casFeatCode_lemmas), i);
   }
    
   /** @generated

@@ -3,7 +3,7 @@ package uk.gov.dstl.baleen.uima.utils;
 
 import org.apache.uima.UimaContext;
 
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 
 /**
  * Helper functions for UIMA.
@@ -19,13 +19,13 @@ public class UimaUtils {
 
 	/**
 	 * Get the name of the pipeline which owns this context. This sets in
-	 * {@link CpeBuilder}.
+	 * {@link PipelineCpeBuilder}.
 	 *
 	 * @param context
 	 * @return the pipeline name or "unknown"
 	 */
 	public static String getPipelineName(UimaContext context) {
-		Object pipelineNameValue = context.getConfigParameterValue(CpeBuilder.PIPELINE_NAME);
+		Object pipelineNameValue = context.getConfigParameterValue(PipelineCpeBuilder.PIPELINE_NAME);
 		String pipelineName;
 		if (pipelineNameValue == null || !(pipelineNameValue instanceof String)) {
 			pipelineName = "unknown";
@@ -42,7 +42,7 @@ public class UimaUtils {
 	 * @return true if we should, false otherwise
 	 */
 	public static boolean isMergeDistinctEntities(UimaContext context) {
-		Object value = context.getConfigParameterValue(CpeBuilder.MERGE_DISTINCT_ENTITIES);
+		Object value = context.getConfigParameterValue(PipelineCpeBuilder.MERGE_DISTINCT_ENTITIES);
 		if (value == null || !(value instanceof Boolean)) {
 			return false;
 		} else {

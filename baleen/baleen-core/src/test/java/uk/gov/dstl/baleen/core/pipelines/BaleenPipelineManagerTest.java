@@ -45,7 +45,7 @@ public class BaleenPipelineManagerTest {
 
 		doReturn(false).when(engine).isProcessing();
 		doReturn(false).when(engine).isPaused();
-		manager.createPipeline("test", engine);
+		manager.create("test", engine);
 
 		manager.start();
 
@@ -56,10 +56,10 @@ public class BaleenPipelineManagerTest {
 	@Test
 	public void testDuplicateNames() throws Exception {
 
-		manager.createPipeline("test", engine);
+		manager.create("test", engine);
 
 		try {
-			manager.createPipeline("test", engine);
+			manager.create("test", engine);
 			fail("Duplicate name");
 		} catch (BaleenException e) {
 			// Success
@@ -75,7 +75,7 @@ public class BaleenPipelineManagerTest {
 	public void testStopWillStopPipelines() throws BaleenException {
 		doReturn(true).when(engine).isProcessing();
 		doReturn(false).when(engine).isPaused();
-		manager.createPipeline("test", engine);
+		manager.create("test", engine);
 
 		manager.stop();
 
@@ -85,7 +85,7 @@ public class BaleenPipelineManagerTest {
 	@Test
 	public void testConfigureEmpty() throws BaleenException {
 		manager.configure(new YamlConfiguration());
-		assertTrue(manager.getPipelineCount() == 0);
+		assertTrue(manager.getCount() == 0);
 	}
 
 	@Test
@@ -97,8 +97,8 @@ public class BaleenPipelineManagerTest {
 		yaml.read(yamlString);
 		manager.configure(yaml);
 
-		assertTrue(manager.getPipelineNames().contains("test_pipeline"));
-		assertFalse(manager.getPipeline("test_pipeline").get().isRunning());
+		assertTrue(manager.getNames().contains("test_pipeline"));
+		assertFalse(manager.get("test_pipeline").get().isRunning());
 	}
 
 	@Test
@@ -106,8 +106,8 @@ public class BaleenPipelineManagerTest {
 		doReturn(false).when(engine).isProcessing();
 		doReturn(false).when(engine).isPaused();
 
-		manager.createPipeline("test", engine);
-		manager.startAllPipelines();
+		manager.create("test", engine);
+		manager.startAll();
 
 		verify(engine).process();
 	}
@@ -117,8 +117,8 @@ public class BaleenPipelineManagerTest {
 		doReturn(true).when(engine).isProcessing();
 		doReturn(false).when(engine).isPaused();
 
-		manager.createPipeline("test", engine);
-		manager.stopAllPipelines();
+		manager.create("test", engine);
+		manager.stopAll();
 
 		verify(engine).stop();
 
@@ -126,15 +126,15 @@ public class BaleenPipelineManagerTest {
 
 	@Test
 	public void testGetPipeline() throws BaleenException {
-		manager.createPipeline("test", engine);
+		manager.create("test", engine);
 
-		assertTrue(manager.getPipeline("test").isPresent());
-		assertFalse(manager.getPipeline("missing").isPresent());
+		assertTrue(manager.get("test").isPresent());
+		assertFalse(manager.get("missing").isPresent());
 	}
 
 	@Test
 	public void testCreatePipelineFromCollectionProcessingEngine() throws Exception {
-		BaleenPipeline pipeline = manager.createPipeline("test", engine);
+		BaleenPipeline pipeline = manager.create("test", engine);
 		assertEquals("test", pipeline.getName());
 		// Should still be stopped
 		verify(engine, never()).process();
@@ -143,19 +143,19 @@ public class BaleenPipelineManagerTest {
 	@Test
 	public void testCreatePipelineFromInputStream() throws Exception {
 		URL url = PipelineTestHelper.getCpeYamlResource();
-		manager.createPipeline("test", url.openStream());
+		manager.create("test", url.openStream());
 	}
 
 	@Test
 	public void testCreatePipelineFromString() throws Exception {
 		URL url = PipelineTestHelper.getCpeYamlResource();
-		manager.createPipeline("test", IOUtils.toString(url));
+		manager.create("test", IOUtils.toString(url));
 	}
 
 	@Test
 	public void testCreatePipelineFromFile() throws Exception {
 		URL url = PipelineTestHelper.getCpeYamlResource();
-		manager.createPipeline("test", new File(url.toURI()));
+		manager.create("test", new File(url.toURI()));
 
 	}
 
@@ -163,10 +163,10 @@ public class BaleenPipelineManagerTest {
 	public void testRemoveString() throws Exception {
 		doReturn(true).when(engine).isProcessing();
 		doReturn(false).when(engine).isPaused();
-		manager.createPipeline("test", engine);
+		manager.create("test", engine);
 
 		assertTrue(manager.remove("test"));
-		assertFalse(manager.getPipeline("test").isPresent());
+		assertFalse(manager.get("test").isPresent());
 		verify(engine).stop();
 	}
 
@@ -174,10 +174,10 @@ public class BaleenPipelineManagerTest {
 	public void testRemoveBaleenPipeline() throws Exception {
 		doReturn(true).when(engine).isProcessing();
 		doReturn(false).when(engine).isPaused();
-		BaleenPipeline pipeline = manager.createPipeline("test", engine);
+		BaleenPipeline pipeline = manager.create("test", engine);
 
 		assertTrue(manager.remove(pipeline));
-		assertFalse(manager.getPipeline("test").isPresent());
+		assertFalse(manager.get("test").isPresent());
 		verify(engine).stop();
 	}
 

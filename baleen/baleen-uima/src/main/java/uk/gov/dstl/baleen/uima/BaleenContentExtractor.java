@@ -14,7 +14,7 @@ import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
@@ -39,7 +39,7 @@ public abstract class BaleenContentExtractor implements IContentExtractor {
 	 * 
 	 * @baleen.resource uk.gov.dstl.baleen.core.history.BaleenHistory
 	 */
-	public static final String KEY_HISTORY = CpeBuilder.BALEEN_HISTORY;
+	public static final String KEY_HISTORY = PipelineCpeBuilder.BALEEN_HISTORY;
 	@ExternalResource(key = KEY_HISTORY, mandatory = false)
 	BaleenHistory history;
 

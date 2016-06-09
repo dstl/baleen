@@ -5,12 +5,12 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+
 import uk.gov.dstl.baleen.core.history.AbstractBaleenHistory;
 import uk.gov.dstl.baleen.core.history.DocumentHistory;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 
 /** A history implementation which is backed by Mongo.
  * 
@@ -53,7 +53,7 @@ public class MongoHistory extends AbstractBaleenHistory {
 	 * 
 	 */
 	public MongoHistory() {
-	
+		//Empty contructor, do nothing
 	}
 	
 	/** New instance, used for testing without DI.

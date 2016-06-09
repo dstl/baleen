@@ -17,10 +17,18 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+
 import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
+import uk.gov.dstl.baleen.consumers.utils.DefaultFields;
 import uk.gov.dstl.baleen.consumers.utils.EntityRelationConverter;
 import uk.gov.dstl.baleen.consumers.utils.IEntityConverterFields;
-import uk.gov.dstl.baleen.consumers.utils.mongo.MongoFields;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
@@ -30,18 +38,10 @@ import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.uima.BaleenConsumer;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-
 /**
  * Output processed CAS object into MongoDB.
  * 
- * <p>This consumer will output to Mongo using the new Baleen schema, which consists of 3 collections with the formats described below.
+ * <p>This consumer will output to Mongo using a schema which consists of 3 collections with the formats described below.
  * For each CAS processed, any existing reference to a document with the same external ID is deleted.</p>
  * <p><b>documents</b></p>
  * <pre>
@@ -201,8 +201,7 @@ public class Mongo extends BaleenConsumer {
 	public static final String FIELD_METADATA = "metadata";
 	public static final String FIELD_CONTENT = "content";
 	
-	//Entity fields are defined in MongoFields()
-	private final IEntityConverterFields fields = new MongoFields();
+	private final IEntityConverterFields fields = new DefaultFields();
 
 	/**
 	 * Get the mongo db, collection and create some indexes

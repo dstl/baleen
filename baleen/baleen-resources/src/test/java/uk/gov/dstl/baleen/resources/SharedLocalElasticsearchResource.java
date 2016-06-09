@@ -10,7 +10,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
@@ -27,8 +26,8 @@ public class SharedLocalElasticsearchResource extends SharedElasticsearchResourc
 			throw new ResourceInitializationException(ioe);
 		}
 		
-		Settings settings = ImmutableSettings.builder()
-				.put("path.data", tmpDir.toString())
+		Settings settings = Settings.builder()
+				.put("path.home", tmpDir.toString())
 				.build();
 		node = NodeBuilder.nodeBuilder()
 				.settings(settings)

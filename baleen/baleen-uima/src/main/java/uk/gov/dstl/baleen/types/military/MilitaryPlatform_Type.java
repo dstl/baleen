@@ -3,19 +3,18 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.types.military;
 
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.jcas.JCasRegistry;
+import org.apache.uima.cas.FeatureStructure;
+import org.apache.uima.cas.Type;
 import org.apache.uima.cas.impl.CASImpl;
 import org.apache.uima.cas.impl.FSGenerator;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.impl.TypeImpl;
-import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.FeatureImpl;
-import org.apache.uima.cas.Feature;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.JCasRegistry;
+
 import uk.gov.dstl.baleen.types.semantic.Entity_Type;
 
 /** A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.
- * Updated by JCasGen Fri Feb 05 14:52:23 GMT 2016
+ * Updated by JCasGen Tue Apr 12 12:07:05 BST 2016
  * @generated */
 public class MilitaryPlatform_Type extends Entity_Type {
   /** @generated 

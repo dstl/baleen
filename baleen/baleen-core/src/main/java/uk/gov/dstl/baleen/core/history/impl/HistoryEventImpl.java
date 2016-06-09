@@ -23,7 +23,7 @@ public class HistoryEventImpl implements HistoryEvent {
 	 *
 	 */
 	public HistoryEventImpl() {
-
+		//Empty constructor, do nothing
 	}
 
 	@Override

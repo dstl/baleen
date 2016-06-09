@@ -1,0 +1,12 @@
+mongo:
+  db: baleen
+  host: localhost
+  
+# Output every minute (for fun, normally would run say hourly)
+job:
+  schedule: 
+    class: FixedRate
+    period: 60
+  tasks:
+  - MongoStats
+      

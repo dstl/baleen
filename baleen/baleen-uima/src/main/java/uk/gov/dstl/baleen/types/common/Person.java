@@ -12,8 +12,8 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
 /** A Person named entitiy, as defined by an explict name reference within the source document.
- * Updated by JCasGen Fri Feb 05 14:49:26 GMT 2016
- * XML source: C:/co/git/CCD-DE/RMR/baleen/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
  * @generated */
 public class Person extends Entity {
   /** @generated
@@ -95,6 +95,38 @@ public class Person extends Entity {
     if (Person_Type.featOkTst && ((Person_Type)jcasType).casFeat_title == null)
       jcasType.jcas.throwFeatMissing("title", "uk.gov.dstl.baleen.types.common.Person");
     jcasType.ll_cas.ll_setStringValue(addr, ((Person_Type)jcasType).casFeatCode_title, v);}    
+   
+    
+  //*--------------*
+  //* Feature: gender
+
+  /** getter for gender - gets Should be one of the following:
+* MALE
+* FEMALE
+* UNKNOWN
+
+If empty or null, it is assumed to be UNKNOWN.
+   * @generated
+   * @return value of the feature 
+   */
+  public String getGender() {
+    if (Person_Type.featOkTst && ((Person_Type)jcasType).casFeat_gender == null)
+      jcasType.jcas.throwFeatMissing("gender", "uk.gov.dstl.baleen.types.common.Person");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Person_Type)jcasType).casFeatCode_gender);}
+    
+  /** setter for gender - sets Should be one of the following:
+* MALE
+* FEMALE
+* UNKNOWN
+
+If empty or null, it is assumed to be UNKNOWN. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setGender(String v) {
+    if (Person_Type.featOkTst && ((Person_Type)jcasType).casFeat_gender == null)
+      jcasType.jcas.throwFeatMissing("gender", "uk.gov.dstl.baleen.types.common.Person");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Person_Type)jcasType).casFeatCode_gender, v);}    
   }
 
     

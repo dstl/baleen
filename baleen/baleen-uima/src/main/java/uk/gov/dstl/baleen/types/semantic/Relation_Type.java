@@ -15,7 +15,7 @@ import org.apache.uima.cas.Feature;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** Records a relationship between named entities, explicitly mentioned within the source document.
- * Updated by JCasGen Fri Feb 05 14:54:31 GMT 2016
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class Relation_Type extends Base_Type {
   /** @generated 

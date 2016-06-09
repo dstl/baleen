@@ -34,6 +34,10 @@ import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.codahale.metrics.servlet.InstrumentedFilter;
+import com.google.common.base.Strings;
+import com.google.common.primitives.Ints;
+
 import uk.gov.dstl.baleen.core.manager.AbstractBaleenComponent;
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
@@ -49,26 +53,24 @@ import uk.gov.dstl.baleen.core.web.servlets.BaleenManagerServlet;
 import uk.gov.dstl.baleen.core.web.servlets.CollectionReadersServlet;
 import uk.gov.dstl.baleen.core.web.servlets.ConsumersServlet;
 import uk.gov.dstl.baleen.core.web.servlets.ContentExtractorsServlet;
+import uk.gov.dstl.baleen.core.web.servlets.JobConfigServlet;
+import uk.gov.dstl.baleen.core.web.servlets.JobManagerServlet;
 import uk.gov.dstl.baleen.core.web.servlets.LoggingServlet;
 import uk.gov.dstl.baleen.core.web.servlets.MetricsServlet;
 import uk.gov.dstl.baleen.core.web.servlets.PipelineConfigServlet;
 import uk.gov.dstl.baleen.core.web.servlets.PipelineManagerServlet;
+import uk.gov.dstl.baleen.core.web.servlets.SchedulesServlet;
 import uk.gov.dstl.baleen.core.web.servlets.StatusServlet;
+import uk.gov.dstl.baleen.core.web.servlets.TasksServlet;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
-
-import com.codahale.metrics.servlet.InstrumentedFilter;
-import com.google.common.base.Strings;
-import com.google.common.primitives.Ints;
 
 /**
  * Baleen Web API, hosted on its own port using an embedded server.
  *
- * Note that start() must be called in order to run the server. Start will not
- * block.
+ * Note that start() must be called in order to run the server. Start will not block.
  *
- * The server can be configured through the Baleen YAML configuration file, for
- * example:
+ * The server can be configured through the Baleen YAML configuration file, for example:
  *
  * <pre>
  * web:
@@ -100,31 +102,28 @@ import com.google.common.primitives.Ints;
  *
  * The supported configuration properties are as follows:
  * <ul>
- * <li><b>host</b> - The IP address to bind the server to; defaults to 0.0.0.0,
- * i.e. all IP addresses.</li>
+ * <li><b>host</b> - The IP address to bind the server to; defaults to 0.0.0.0, i.e. all IP
+ * addresses.</li>
  * <li><b>port</b> - The port to configure the server on; defaults to 6413.</li>
- * <li><b>root</b> - The root directory to serve static web content from;
- * defaults to null, i.e. no static web content.</li>
- * <li><b>wars</b> - A list of WAR files to deploy as part of the server.
- * The WAR will be deployed to the path specified by context or, if not provided,
- * at the same name as the WAR file.</li>
- * <li><b>auth</b> - The authentication configuration. This compromises a name
- * (which will be the realm name for basic authentication, defaulting to
- * baleen), a type (basic or none, see {@link AuthType}, defaults to none), and
- * then a list of users. The users are defined as username and password together
- * with a list of roles. The roles correspond to roles within
- * {@link BaleenWebApi}. See each servlet {@link StatusServlet},
- * {@link MetricsServlet}, etc for details of the roles they require.</li>
+ * <li><b>root</b> - The root directory to serve static web content from; defaults to null, i.e. no
+ * static web content.</li>
+ * <li><b>wars</b> - A list of WAR files to deploy as part of the server. The WAR will be deployed
+ * to the path specified by context or, if not provided, at the same name as the WAR file.</li>
+ * <li><b>auth</b> - The authentication configuration. This compromises a name (which will be the
+ * realm name for basic authentication, defaulting to baleen), a type (basic or none, see
+ * {@link AuthType}, defaults to none), and then a list of users. The users are defined as username
+ * and password together with a list of roles. The roles correspond to roles within
+ * {@link BaleenWebApi}. See each servlet {@link StatusServlet}, {@link MetricsServlet}, etc for
+ * details of the roles they require.</li>
  * </ul>
  *
  *
- * To support running multiple Baleens from the same configuration at the same
- * time, port can be overridden on the command line using the
- * -Dbaleen.web.port=1234. This takes precedence over any configuration file.
- * this is useful for running multiple Baleens such as in Jenkins or a
- * development and testing version alongside production (but otherwise using the
- * same configuration).
- * 
+ * To support running multiple Baleens from the same configuration at the same time, port can be
+ * overridden on the command line using the -Dbaleen.web.port=1234. This takes precedence over any
+ * configuration file. this is useful for running multiple Baleens such as in Jenkins or a
+ * development and testing version alongside production (but otherwise using the same
+ * configuration).
+ *
  */
 public class BaleenWebApi extends AbstractBaleenComponent {
 	private static final Logger LOGGER = LoggerFactory
@@ -147,7 +146,7 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 	private final List<ConstraintMapping> constraintMappings = new LinkedList<ConstraintMapping>();
 	private final Map<String, Constraint> constraints = new HashMap<String, Constraint>();
 
-	private BaleenManager baleenManager;
+	private final BaleenManager baleenManager;
 
 	/**
 	 * New instance.
@@ -165,14 +164,14 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		String webRoot = (String) configuration.get(CONFIG_WEB_ROOT).orElse(
 				null);
 
-		String authName = configuration.get(CONFIG_BASE+"auth.name", "baleen");
-		String authType = configuration.get(CONFIG_BASE+"auth.type", "none");
+		String authName = configuration.get(CONFIG_BASE + "auth.name", "baleen");
+		String authType = configuration.get(CONFIG_BASE + "auth.type", "none");
 
 		WebAuthConfig authConfig = new WebAuthConfig(AuthType.valueOf(authType
 				.toUpperCase()), authName);
 
 		List<Map<String, Object>> users = configuration
-				.getAsListOfMaps(CONFIG_BASE+"auth.users");
+				.getAsListOfMaps(CONFIG_BASE + "auth.users");
 
 		for (Map<String, Object> user : users) {
 			String username = (String) user.get("username");
@@ -190,28 +189,28 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 						"Configuration of authentication failed");
 			}
 		}
-		
+
 		List<Object> wars = configuration.getAsList(CONFIG_BASE + "wars");
 
 		configure(host, port, webRoot, authConfig, wars);
 	}
 
 	/**
-	 * Configure the server to run on the host and port.
-	 * If the server is already running, it will be stopped and reconfigured.
+	 * Configure the server to run on the host and port. If the server is already running, it will
+	 * be stopped and reconfigured.
 	 *
 	 * @param host
 	 *            IP to bind to (0.0.0.0 for all, or specific IP)
 	 * @param suppliedPort
-	 *            The port to run the server on, noting this can be overridden on the command line using environment/JVM variables.
+	 *            The port to run the server on, noting this can be overridden on the command line
+	 *            using environment/JVM variables.
 	 * @param webResourceRoot
 	 *            The directory to serve static web content from
 	 * @param authConfig
-	 *            The authentication configuration (may be null for no
-	 *            authentication)
+	 *            The authentication configuration (may be null for no authentication)
 	 * @param wars
-	 * 			  A list of objects, either configuration objects with a file and a context specified,
-	 * 			  or just a file name
+	 *            A list of objects, either configuration objects with a file and a context
+	 *            specified, or just a file name
 	 * @throws BaleenException
 	 */
 	public void configure(String host, int suppliedPort, String webResourceRoot,
@@ -241,22 +240,30 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		addServlet(
 				new PipelineManagerServlet(baleenManager.getPipelineManager()),
 				"/pipelines/*");
+		addServlet(
+				new JobManagerServlet(baleenManager.getJobManager()),
+				"/jobs/*");
 		addServlet(new BaleenManagerServlet(baleenManager), "/manager/*");
 		addServlet(new LoggingServlet(baleenManager.getLogging()), "/logs/*");
 		addServlet(
 				new PipelineConfigServlet(baleenManager.getPipelineManager()),
 				"/config/pipelines");
+		addServlet(
+				new JobConfigServlet(baleenManager.getJobManager()),
+				"/config/jobs");
 		addServlet(new BaleenManagerConfigServlet(baleenManager),
 				"/config/manager");
 		addServlet(new AnnotatorsServlet(), "/annotators/*");
 		addServlet(new CollectionReadersServlet(), "/collectionreaders/*");
 		addServlet(new ConsumersServlet(), "/consumers/*");
 		addServlet(new ContentExtractorsServlet(), "/contentextractors/*");
+		addServlet(new TasksServlet(), "/tasks/*");
+		addServlet(new SchedulesServlet(), "/schedules/*");
 
 		installJavadocs(handlers);
 
 		installWebRoot(handlers, webResourceRoot);
-		
+
 		installWars(handlers, wars);
 
 		installSwagger(handlers);
@@ -275,18 +282,21 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		LOGGER.info("Web API has been configured");
 	}
 
-	/** Get the port which Baleen will run on, taking into account any overrides on the command line / environment.
-	 * 
-	 * @param suppliedPort the port which Baleen should be running on (if not overridden).
+	/**
+	 * Get the port which Baleen will run on, taking into account any overrides on the command line
+	 * / environment.
+	 *
+	 * @param suppliedPort
+	 *            the port which Baleen should be running on (if not overridden).
 	 * @return the port on which Baleen will run according the overall environment
 	 */
 	public static int getPort(int suppliedPort) {
 		Integer propertyPort = getPortFromString(System.getProperty(ENV_BALEEN_WEB_PORT));
 		Integer envPort = getPortFromString(System.getenv(ENV_BALEEN_WEB_PORT));
 
-		if(propertyPort != null) {
+		if (propertyPort != null) {
 			return propertyPort;
-		} else if(envPort != null) {
+		} else if (envPort != null) {
 			return envPort;
 		} else {
 			// We don't validate the supplied port any further
@@ -295,13 +305,13 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 	}
 
 	/**
-	 * Take a string and convert it to a port number.
-	 * If the string is not parseable, or is outside the accepted port range, then return null.
+	 * Take a string and convert it to a port number. If the string is not parseable, or is outside
+	 * the accepted port range, then return null.
 	 */
 	public static Integer getPortFromString(String port) {
-		if(port != null) {
+		if (port != null) {
 			Integer p = Ints.tryParse(port);
-			if(p != null && p > 0 && p < 65536) {
+			if (p != null && p > 0 && p < 65536) {
 				return p;
 			}
 		}
@@ -343,62 +353,63 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		}
 	}
 
-	private void installWars(HandlerList handlers, List<Object> wars){
+	private void installWars(HandlerList handlers, List<Object> wars) {
 		// NOTE: There is no security (via webauth) applied to this at present
-		if(wars == null || wars.isEmpty()){
+		if (wars == null || wars.isEmpty()) {
 			return;
 		}
-		
-		for(Object war : wars){
+
+		for (Object war : wars) {
 			String file = null;
 			String context = null;
-			
-			if(war instanceof String){
+
+			if (war instanceof String) {
 				LOGGER.debug("Adding shorthand described WAR");
-				
+
 				file = (String) war;
 				context = (String) war;
-				if(context.toLowerCase().endsWith(".war")){
+				if (context.toLowerCase().endsWith(".war")) {
 					context = context.substring(0, context.length() - 4);
 				}
-				
+
 				installWar(handlers, file, context);
-			}else if(war instanceof Map){
+			} else if (war instanceof Map) {
 				LOGGER.debug("Adding fully described WAR");
-				
-				try{
+
+				try {
 					@SuppressWarnings("unchecked")
 					Map<String, Object> warDesc = (Map<String, Object>) war;
 					file = (String) warDesc.get("file");
 					context = (String) warDesc.get("context");
-				}catch(ClassCastException cce){
+				} catch (ClassCastException cce) {
 					LOGGER.warn("Malformed WAR configuration; skipping", cce);
 					file = null;
 				}
-				
+
 				installWar(handlers, file, context);
-			}else{
+			} else {
 				LOGGER.warn("Unexpected WAR configuration found; skipping");
 			}
 		}
 	}
-	
-	private void installWar(HandlerList handlers, String file, String context){
-		if(Strings.isNullOrEmpty(file) || Strings.isNullOrEmpty(context)){
+
+	private void installWar(HandlerList handlers, String file, String context) {
+		if (Strings.isNullOrEmpty(file) || Strings.isNullOrEmpty(context)) {
 			LOGGER.warn("Incomplete WAR configuration; skipping");
 			return;
 		}
-		
+
 		LOGGER.info("Adding {} to server at context /{}", file, context);
 		WebAppContext webapp = new WebAppContext(file, "/" + context);
 		handlers.addHandler(webapp);
 	}
-	
+
 	private void installJavadocs(HandlerList handlers) {
 		// Does JavaDoc exist?
 		File javadocJar = null;
 		try {
-			File currentJar = Paths.get(BaleenWebApi.class.getProtectionDomain().getCodeSource().getLocation().toURI()).toFile();
+			File currentJar = Paths.get(BaleenWebApi.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+					.toFile();
 			String name = currentJar.getName();
 			if (name.endsWith(".jar")) {
 				name = name.substring(0, name.length() - 4) + "-javadoc.jar";
@@ -547,8 +558,7 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 	}
 
 	/**
-	 * Launches a vanilla Baleen instance for the purpose of using the web
-	 * server.
+	 * Launches a vanilla Baleen instance for the purpose of using the web server.
 	 *
 	 * @param args
 	 *            ignored - command line arguments.

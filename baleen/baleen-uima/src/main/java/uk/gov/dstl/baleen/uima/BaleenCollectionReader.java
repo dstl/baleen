@@ -15,7 +15,7 @@ import org.apache.uima.util.Progress;
 
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
-import uk.gov.dstl.baleen.cpe.CpeBuilder;
+import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
@@ -44,7 +44,7 @@ public abstract class BaleenCollectionReader extends JCasCollectionReader_ImplBa
 	 * 
 	 * @baleen.resource uk.gov.dstl.baleen.core.history.BaleenHistory
 	 */
-	public static final String KEY_HISTORY = CpeBuilder.BALEEN_HISTORY;
+	public static final String KEY_HISTORY = PipelineCpeBuilder.BALEEN_HISTORY;
 	@ExternalResource(key = KEY_HISTORY, mandatory = false)
 	BaleenHistory history;
 

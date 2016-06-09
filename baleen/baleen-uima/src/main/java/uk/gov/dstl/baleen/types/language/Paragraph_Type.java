@@ -13,7 +13,7 @@ import org.apache.uima.cas.Type;
 import uk.gov.dstl.baleen.types.Base_Type;
 
 /** Defines a paragraph from the source document.
- * Updated by JCasGen Wed Jan 14 12:58:18 GMT 2015
+ * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
  * @generated */
 public class Paragraph_Type extends Base_Type {
   /** @generated 
