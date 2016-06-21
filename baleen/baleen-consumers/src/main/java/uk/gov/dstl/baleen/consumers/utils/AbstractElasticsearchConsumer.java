@@ -102,6 +102,20 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
 	@ConfigurationParameter(name = PARAM_CONTENT_HASH_AS_ID, defaultValue = "true")
 	boolean contentHashAsId = true;
 	
+	/**
+	 * Should only normalised entities be persisted in the elasticsearch database?
+	 * This is useful when another persistent store, such as mongodb, is used to
+	 * store the entities and elasticsearch only needs the entity content for
+	 * searching purposes. In which case, to reduce duplication of data and storage
+	 * overhead it is only necessary to store the unmodified full text and any modified,
+	 * i.e. normalised, entities.
+	 *
+	 * @baleen.config false
+	 */
+	public static final String ONLY_STORE_NORMALISED_ENTITIES = "onlyStoreNormalisedEntities";
+	@ConfigurationParameter(name = ONLY_STORE_NORMALISED_ENTITIES, defaultValue = "false")
+	boolean onlyStoreNormalisedEntities = false;
+	
 	private Set<String> stopFeatures;
 	
 	private String[] parsePatterns = {"ddHHmm'Z' MMM yy", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss'Z'", "yyyy-MM-dd'T'HH:mm:ss", "dd MMM yyyy HHmm'Z'", "dd MMM yy"};
@@ -235,6 +249,9 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
 		Collection<Entity> entities = JCasUtil.select(jCas, Entity.class);
 
 		for(Entity ent : entities){
+			if (onlyStoreNormalisedEntities && !ent.getIsNormalised()) {
+				continue;
+			}
 			entitiesList.add(entityConverter.convertEntity(ent));
 		}
 		json.put("entities", entitiesList);
