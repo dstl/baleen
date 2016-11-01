@@ -49,35 +49,36 @@
 		<mockito.version>1.10.19</mockito.version>
 		<logback.version>1.1.7</logback.version>
 		<slf4j.version>1.7.21</slf4j.version>
-		<guava.version>19.0</guava.version>
+		<guava.version>20.0</guava.version>
 
 		<snakeyaml.version>1.17</snakeyaml.version>
-		<jetty.version>9.3.8.v20160314</jetty.version>
+		<jetty.version>	9.3.13.v20161014</jetty.version>
 		<metrics.version>3.0.2</metrics.version>
-		<jackson.version>2.7.3</jackson.version>
+		<jackson.version>2.8.4</jackson.version>
 		<httpclient.version>4.5.2</httpclient.version>
-		<metrics-elasticsearch.version>2.0</metrics-elasticsearch.version>
+		<metrics-elasticsearch.version>2.2.0</metrics-elasticsearch.version>
 		<opencsv.version>2.4</opencsv.version>
-		<concurrenttrees.version>2.5.0</concurrenttrees.version>
+		<concurrenttrees.version>2.6.0</concurrenttrees.version>
 		<reflections.version>0.9.10</reflections.version>
 		
 		<!--  Required by non-core (annotators etc) -->
-		<mongodb.version>2.14.1</mongodb.version>
+		<mongodb.version>2.14.3</mongodb.version>
 		<opennlp.version>1.6.0</opennlp.version>
-		<commonslang3.version>3.4</commonslang3.version>
+		<commonslang3.version>3.5</commonslang3.version>
 		<jsonic.version>1.3.10</jsonic.version>
-		<languagedetector.version>0.5</languagedetector.version>
+		<languagedetector.version>0.6</languagedetector.version>
 		<tika.version>1.13</tika.version>
-		<elasticsearch.version>2.3.3</elasticsearch.version>
-		<jsoup.version>1.9.1</jsoup.version>
-		<postgres.version>9.4-1205-jdbc42</postgres.version>
+		<elasticsearch.version>2.4.1</elasticsearch.version>
+		<jsoup.version>1.10.1</jsoup.version>
+		<postgres.version>9.4.1211</postgres.version>
 		<ahocorasick.version>0.3.0</ahocorasick.version>
-		<maltparser.version>1.8.1</maltparser.version>
+		<maltparser.version>1.9.0</maltparser.version>
+		<commons-csv.version>1.4</commons-csv.version>
 
 		<javassist.version>3.20.0-GA</javassist.version>
 
 		<!--  Testing -->
-		<fongo.version>1.6.3</fongo.version>
+		<fongo.version>1.6.8</fongo.version>
 	</properties>
 
 	<dependencies>

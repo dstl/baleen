@@ -14,7 +14,7 @@ import com.google.common.primitives.Doubles;
  * 
  */
 public class NationalGrid {
-	private static final Splitter WHITESPACE_SPLITTER = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults();
+	private static final Splitter WHITESPACE_SPLITTER = Splitter.on(CharMatcher.whitespace()).omitEmptyStrings().trimResults();
 	private static final double SIZE_M = 100000;
 	
 	private static final class GridSquare {

@@ -24,7 +24,7 @@ public class NationalGridTest {
 	private static final double E = 116234;
 	private static final double N = 534223;	
 	
-	private static final Splitter WHITESPACE_SPLITTER = Splitter.on(CharMatcher.WHITESPACE).omitEmptyStrings().trimResults();
+	private static final Splitter WHITESPACE_SPLITTER = Splitter.on(CharMatcher.whitespace()).omitEmptyStrings().trimResults();
 
 	@Test
 	public void testFrom() {
