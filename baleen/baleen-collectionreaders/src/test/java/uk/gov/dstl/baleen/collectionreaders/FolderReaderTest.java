@@ -305,6 +305,71 @@ public class FolderReaderTest {
 		bcr.close();
 	}
 	
+    @Test
+    public void testCreateDirectoryNotProcessed() throws Exception {
+        BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class,
+                FolderReader.PARAM_FOLDERS, new String[] { inputDir.getPath() });
+
+        assertFalse(bcr.doHasNext());
+
+        File folder = new File(inputDir, DIR);
+        folder.mkdir();
+        Thread.sleep(TIMEOUT);
+
+        assertFalse(bcr.doHasNext());
+
+        folder.delete();
+    }
+
+    @Test
+    public void testCreateDirectoryIsWatched() throws Exception {
+        BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class,
+                FolderReader.PARAM_FOLDERS, new String[] { inputDir.getPath() });
+
+        assertFalse(bcr.doHasNext());
+
+        File folder = new File(inputDir, DIR);
+        folder.mkdir();
+        Thread.sleep(TIMEOUT);
+
+        assertFalse(bcr.doHasNext());
+
+        File f11 = new File(folder, TEXT1_FILE);
+        f11.createNewFile();
+
+        Thread.sleep(TIMEOUT);
+
+        assertNextSourceNotNull(bcr);
+
+        f11.delete();
+        folder.delete();
+    }
+
+    @Test
+    public void testCreateDirectoryIsNotWatchedIfNotRecursive() throws Exception {
+        BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class,
+                FolderReader.PARAM_RECURSIVE, false,
+                FolderReader.PARAM_FOLDERS, new String[] { inputDir.getPath() });
+
+        assertFalse(bcr.doHasNext());
+
+        File folder = new File(inputDir, DIR);
+        folder.mkdir();
+        Thread.sleep(TIMEOUT);
+
+        assertFalse(bcr.doHasNext());
+
+        File f11 = new File(folder, TEXT1_FILE);
+        f11.createNewFile();
+
+        Thread.sleep(TIMEOUT);
+
+        assertFalse(bcr.doHasNext());
+
+        f11.delete();
+        folder.delete();
+    }
+
 	private void assertNextSourceNotNull(BaleenCollectionReader bcr) throws Exception{
 		assertTrue(bcr.doHasNext());
 		bcr.getNext(jCas.getCas());

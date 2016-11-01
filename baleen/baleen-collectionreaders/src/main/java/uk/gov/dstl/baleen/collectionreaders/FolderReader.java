@@ -272,7 +272,14 @@ public class FolderReader extends BaleenCollectionReader {
 				Path dir = watchKeys.get(key);
 				if(dir != null){
 					Path resolved = dir.resolve(pathEvent.context());
-					addFile(resolved);
+					if (resolved.toFile().isDirectory()) {
+                        if (recursive) {
+                            addFilesFromDir(resolved.toFile());
+                            registerDirectory(resolved);
+                        }
+                    } else {
+                        addFile(resolved);
+                    }
 				}else{
 					getMonitor().warn("WatchKey not found - file '{}' will not be added to the queue", pathEvent.context());
 				}
