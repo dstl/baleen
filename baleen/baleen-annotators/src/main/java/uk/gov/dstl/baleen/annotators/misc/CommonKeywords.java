@@ -37,6 +37,8 @@ import uk.gov.dstl.baleen.annotators.misc.helpers.NoOpStemmer;
  * 4) Count the occurrences of each stemmed n-gram, weighting the count based on n-gram length
  * 5) Select the most commonly occurring n-grams
  * 6) Convert back to the original words
+ * 
+ * @baleen.javadoc
  */
 public class CommonKeywords extends AbstractKeywordsAnnotator {
 	/**

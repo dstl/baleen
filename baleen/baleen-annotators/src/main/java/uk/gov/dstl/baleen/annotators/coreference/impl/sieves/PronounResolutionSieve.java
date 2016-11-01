@@ -113,7 +113,7 @@ public class PronounResolutionSieve extends AbstractCoreferenceSieve {
 		// Paper: Only consider within three
 		// Not in paper: And the pronoun must be after the mention
 		final int sentenceDistance = pronoun.getSentenceIndex() - other.getSentenceIndex();
-		if (sentenceDistance < 0 && sentenceDistance > MAX_SENTENCE_DISTANCE) {
+		if (sentenceDistance < 0 || sentenceDistance > MAX_SENTENCE_DISTANCE) {
 			return;
 		}
 

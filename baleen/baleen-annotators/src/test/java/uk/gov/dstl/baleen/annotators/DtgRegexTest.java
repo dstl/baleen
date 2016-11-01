@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import uk.gov.dstl.baleen.annotators.regex.Dtg;
 import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
-import uk.gov.dstl.baleen.types.temporal.DateTime;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 
 /**
  * 
@@ -31,15 +31,57 @@ public class DtgRegexTest extends AbstractAnnotatorTest {
 		jCas.setDocumentText("This test was written at 251137Z FEB 13");
 		processJCas();
 		
-		assertEquals(1, JCasUtil.select(jCas, DateTime.class).size());
+		assertEquals(1, JCasUtil.select(jCas, Temporal.class).size());
 		
-		DateTime dt = JCasUtil.selectByIndex(jCas, DateTime.class, 0);
+		Temporal dt = JCasUtil.selectByIndex(jCas, Temporal.class, 0);
 		assertNotNull(dt);
 		assertEquals("251137Z FEB 13", dt.getCoveredText());
 		assertEquals("251137Z FEB 13", dt.getValue());
+		assertEquals("EXACT", dt.getPrecision());
+		assertEquals("SINGLE", dt.getScope());
+		assertEquals("DATETIME", dt.getTemporalType());
 		
 		LocalDateTime date = LocalDateTime.of(2013, Month.FEBRUARY, 25, 11, 37);
-		assertEquals(date.toInstant(ZoneOffset.UTC).toEpochMilli(), dt.getParsedValue());
+		assertEquals(date.toInstant(ZoneOffset.UTC).getEpochSecond(), dt.getTimestampStart());
+		assertEquals(date.plusMinutes(1).toInstant(ZoneOffset.UTC).getEpochSecond(), dt.getTimestampStop());
+	}
+	
+	@Test
+	public void test2() throws Exception{
+
+		jCas.setDocumentText("Report Title: An example report\nDTG: 04 1558D Sep 10");
+		processJCas();
+
+		Temporal dt = JCasUtil.selectByIndex(jCas, Temporal.class, 0);
+		assertNotNull(dt);
+		assertEquals("04 1558D Sep 10", dt.getCoveredText());
+		assertEquals("04 1558D Sep 10", dt.getValue());
+		assertEquals("EXACT", dt.getPrecision());
+		assertEquals("SINGLE", dt.getScope());
+		assertEquals("DATETIME", dt.getTemporalType());
+
+		LocalDateTime date = LocalDateTime.of(2010, Month.SEPTEMBER, 4, 11, 58);
+		assertEquals(date.toInstant(ZoneOffset.UTC).getEpochSecond(), dt.getTimestampStart());
+		assertEquals(date.plusMinutes(1).toInstant(ZoneOffset.UTC).getEpochSecond(), dt.getTimestampStop());
+	}
+	
+	@Test
+	public void test3() throws Exception{
+
+		jCas.setDocumentText("Report Title: An example report\nDTG: 04 1558D*SEP 10");
+		processJCas();
+
+		Temporal dt = JCasUtil.selectByIndex(jCas, Temporal.class, 0);
+		assertNotNull(dt);
+		assertEquals("04 1558D*SEP 10", dt.getCoveredText());
+		assertEquals("04 1558D*SEP 10", dt.getValue());
+		assertEquals("EXACT", dt.getPrecision());
+		assertEquals("SINGLE", dt.getScope());
+		assertEquals("DATETIME", dt.getTemporalType());
+
+		LocalDateTime date = LocalDateTime.of(2010, Month.SEPTEMBER, 4, 11, 28);
+		assertEquals(date.toInstant(ZoneOffset.UTC).getEpochSecond(), dt.getTimestampStart());
+		assertEquals(date.plusMinutes(1).toInstant(ZoneOffset.UTC).getEpochSecond(), dt.getTimestampStop());
 	}
 	
 	@Test
@@ -47,12 +89,12 @@ public class DtgRegexTest extends AbstractAnnotatorTest {
 		jCas.setDocumentText("This test was written at 301137Z FEB 13");
 		processJCas();
 		
-		assertEquals(0, JCasUtil.select(jCas, DateTime.class).size());
+		assertEquals(0, JCasUtil.select(jCas, Temporal.class).size());
 		
 		jCas.reset();
 		jCas.setDocumentText("This test was written at 901137Z FEB 13");
 		processJCas();
 		
-		assertEquals(0, JCasUtil.select(jCas, DateTime.class).size());
+		assertEquals(0, JCasUtil.select(jCas, Temporal.class).size());
 	}
 }

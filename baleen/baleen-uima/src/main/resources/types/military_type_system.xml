@@ -16,5 +16,10 @@ This XML file classified as UK OFFICIAL.</description>
       <description>A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.</description>
       <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
     </typeDescription>
-    </types>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.military.Weapon</name>
+      <description>A weapon; for example a rifle, knife, or shotgun</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    </typeDescription>
+  </types>
 </typeSystemDescription>

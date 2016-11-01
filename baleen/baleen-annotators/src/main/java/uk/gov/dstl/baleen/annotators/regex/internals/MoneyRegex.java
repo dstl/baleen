@@ -69,6 +69,11 @@ public class MoneyRegex extends AbstractRegexAnnotator<Money> {
 			return null;
 		}
 		
+		//Edge case to remove times being detected
+		if(matcher.group().toLowerCase().matches("([0-1]?[0-9]|2[0-4])\\.[0-5][0-9]\\s*pm")){
+			return null;
+		}
+		
 		//First, work out the number and parse it to a Double
 		String numbers = matcher.group(3).replaceAll("\\s", "");
 		

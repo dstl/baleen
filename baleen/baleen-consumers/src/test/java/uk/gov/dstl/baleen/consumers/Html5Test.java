@@ -32,7 +32,7 @@ import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.common.Quantity;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.semantic.Entity;
-import uk.gov.dstl.baleen.types.temporal.DateType;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
 /**
@@ -175,13 +175,13 @@ public class Html5Test {
 		Person p2 = new Person(jCas, 113, 118);
 		p2.addToIndexes();
 
-		DateType d1 = new DateType(jCas, 70, 79);
+		Temporal d1 = new Temporal(jCas, 70, 79);
 		d1.addToIndexes();
 
-		DateType d2 = new DateType(jCas, 138, 145);
+		Temporal d2 = new Temporal(jCas, 138, 145);
 		d2.addToIndexes();
 
-		DateType d3 = new DateType(jCas, 138, 150);
+		Temporal d3 = new Temporal(jCas, 138, 150);
 		d3.addToIndexes();
 
 		Quantity q1 = new Quantity(jCas, 153, 156);
@@ -254,17 +254,17 @@ public class Html5Test {
 		assertEquals("James", person2.text());
 		assertNotNull(person2.attr("id"));
 
-		Elements datetypes = doc.select(".DateType");
-		assertEquals(3, datetypes.size());
-		Element datetype1 = datetypes.get(0);
-		assertEquals("30th June", datetype1.text());
-		assertNotNull(datetype1.attr("id"));
-		Element datetype2 = datetypes.get(2);
-		assertEquals("30 June", datetype2.text());
-		assertNotNull(datetype2.attr("id"));
-		Element datetype3 = datetypes.get(1);
-		assertEquals("30 June 2015", datetype3.text());
-		assertNotNull(datetype3.attr("id"));
+		Elements temporals = doc.select(".Temporal");
+		assertEquals(3, temporals.size());
+		Element temporal1 = temporals.get(0);
+		assertEquals("30th June", temporal1.text());
+		assertNotNull(temporal1.attr("id"));
+		Element temporal2 = temporals.get(2);
+		assertEquals("30 June", temporal2.text());
+		assertNotNull(temporal2.attr("id"));
+		Element temporal3 = temporals.get(1);
+		assertEquals("30 June 2015", temporal3.text());
+		assertNotNull(temporal3.attr("id"));
 
 		Elements quantities = doc.select(".Quantity");
 		assertEquals(2, quantities.size());

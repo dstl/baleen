@@ -11,7 +11,7 @@ import uk.gov.dstl.baleen.types.common.Money;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.language.PhraseChunk;
 import uk.gov.dstl.baleen.types.semantic.Relation;
-import uk.gov.dstl.baleen.types.temporal.DateType;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 
 public class NPVNPTest extends AbstractAnnotatorTest{
 
@@ -29,7 +29,7 @@ public class NPVNPTest extends AbstractAnnotatorTest{
 		Money money = new Money(jCas, 59, 71);				//$1.8 billion
 		money.addToIndexes();
 		
-		DateType date = new DateType(jCas, 75, 84);			//September
+		Temporal date = new Temporal(jCas, 75, 84);			//September
 		date.addToIndexes();
 		
 		processJCas();
@@ -66,7 +66,7 @@ public class NPVNPTest extends AbstractAnnotatorTest{
 		Money money = new Money(jCas, 59, 71);				//$1.8 billion
 		money.addToIndexes();
 		
-		DateType date = new DateType(jCas, 75, 84);			//September
+		Temporal date = new Temporal(jCas, 75, 84);			//September
 		date.addToIndexes();
 		
 		processJCas();
@@ -115,7 +115,7 @@ public class NPVNPTest extends AbstractAnnotatorTest{
 		Money money = new Money(jCas, 54, 71);				//only $1.8 billion
 		money.addToIndexes();
 		
-		DateType date = new DateType(jCas, 75, 84);			//September
+		Temporal date = new Temporal(jCas, 75, 84);			//September
 		date.addToIndexes();
 		
 		processJCas();

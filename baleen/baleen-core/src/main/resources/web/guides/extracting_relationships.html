@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Baleen - Extracting Relationships</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-control="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a href="../index.html" class="navbar-brand">Baleen</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../index.html">About</a></li>
+					<li class="active"><a href="index.html">Guides</a></li>
+					<li><a href="/javadoc">JavaDoc</a></li>
+					<li><a href="/plankton">Plankton</a></li>
+					<li><a href="/swagger">REST API</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Extracting Relationships</h1>
+			<p>As of Baleen v2.2, support for some relationship extraction has been added with a new set of annotators.
+			This guide will take you through configuring and using some of these annotators.
+			There are other annotators that use different approaches to do Relationship Extraction available,
+			which are not covered by this guide.</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p>This guide covers the use of the following relationship annotators:</p>
+		<ul>
+			<li><code>relations.SimpleInteraction</code></li>
+			<li><code>relations.UbmreConstituent</code></li>
+			<li><code>relations.UbmreDependency</code></li>
+		</ul>
+		<p>For full details of these annotators, you should refer to the Javadoc. This guide is intended to get you started,
+		but will not cover the intricacies of each annotator.</p>
+		
+		<h2>Training</h2>
+		<p>The annotators covered by this guide require some training prior to use.
+		This should be performed on a representative training set of you data, that can be expected to include examples of all the relationships you would like to extract.
+		
+		<h3>Stage 1: Extraction of Patterns</h3>
+		<p>The first stage is to identify "patterns" within your training set, where a pattern is the text pattern between two annotations (in this case entities) which has been processed to be more meaningful than simply the covered text between them.</p>
+		<p>To do this, we need to first perform entity extraction on your data (ideally using the same annotators as you intend to use on the actual data). We then run a special pattern annotator and consumer to save these patterns to a Mongo database.</p>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">1_Pattern_Extraction.yml</div>
+			<div class="panel-body">
+<pre>
+collectionreader:
+  # Read in your training data here
+ 
+annotators:
+  # Perform your usual entity extraction here 
+  ...
+  
+  # Pattern Extraction
+  - patterns.PatternExtractor
+ 
+consumers:
+  # Save patterns to Mongo
+  - MongoPatternSaver
+</pre>
+			</div>
+		</div>
+			
+		<h3>Stage 2: Identification of Interactions</h3>
+		<p>Now that we have patterns extracted from our training set, we need to convert them to "interactions". An Interaction is a word that acts as a relationship in a sentence, for instance "saw" in the sentence "John saw the car.".</p>
+		<p>This is done using a Baleen job, which reads in our Patterns from Mongo and converts them into a CSV file. This CSV should be manually checked after it has been created to remove any unwanted or spurious interactions.</p>
+			
+		<div class="panel panel-default">
+			<div class="panel-heading">2_Interaction_Identification.yml</div>
+			<div class="panel-body">
+<pre>
+job:
+  tasks:
+  - class: interactions.IdentifyInteractions
+    filename: output/interactions.csv
+</pre>
+			</div>
+		</div>
+			
+		<h3>Stage 3: Enhancement of Interactions</h3>
+		<p>Following the identification (and manual checking) of interactions, we can optionally run a job to enhance these interactions. This includes complementing the extracted interactions with synonyms.
+		Again, the output CSV file should be manually checked following this stage to remove any unwanted or spurious enhancements.</p>
+			
+		<div class="panel panel-default">
+			<div class="panel-heading">3_Interaction_Enhancement.yml</div>
+			<div class="panel-body">
+<pre>
+job:
+  tasks:
+  - class: interactions.EnhanceInteractions
+    input: output/interactions.csv
+    output: output/interactions-enhanced.csv
+</pre>
+			</div>
+		</div>
+			
+		<h3>Stage 4: Upload Interactions to Mongo</h3>
+		<p>Finally for the training, we need to upload our CSV of enhanced interactions back to Mongo. This is done through a Baleen job.</p>
+			
+		<div class="panel panel-default">
+			<div class="panel-heading">4_Upload_Interactions.yml</div>
+			<div class="panel-body">
+<pre>
+job:
+  tasks:
+  - class: interactions.UploadInteractionsToMongo
+    input: output/interactions-enhanced.csv
+</pre>
+			</div>
+		</div>
+		
+		<h2>Extraction</h2>
+		<p>Once we have completed the training stages, we are able to perform relationship extraction on our full data set.
+		Potentially, the same trained data could be used for a variety of different data sets, but it is recommended that training is performed for each different data set to achieve optimum performance.</p>
+		
+		<h3>Stage 5: Perform Relationship Extraction</h3>
+		<p>Relationship extraction is done with a few specific annotators, which would usually come at the end of the pipeline (after entity cleaners and coreference has been performed).</p>
+		The purpose of these annotators is to:
+		<ol>
+			<li>Extract interactions in the document</li>
+			<li>Clean up extracted interactions</li>
+			<li>Perform relationship extraction based on the extracted interactions</li>
+		</ol>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">5_Process_Documents.yml</div>
+			<div class="panel-body">
+<pre>
+collectionreader:
+  # Read in your training data here
+ 
+annotators:
+  # Perform your usual entity extraction, cleaning and coreference here 
+  ...
+  
+  # Interaction Extraction
+  - class: gazetteer.MongoStemming
+    collection: interactions
+    type: Interaction
+    
+  # Clean Interactions
+  - interactions.RemoveInteractionInEntities
+  - interactions.AssignTypeToInteraction
+  
+  # Extract Relationships
+  - relations.UbmreDependency		# UbmreDependency is used here, but you could also use SimpleInteraction of UbmreConstituent
+
+consumers:
+  # Persist to your data store
+</pre>
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+
+
+</html>

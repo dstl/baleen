@@ -1,26 +1,25 @@
 
 
-/* First created by JCasGen Wed Jan 21 11:36:30 GMT 2015 */
-//Dstl (c) Crown Copyright 2015
-package uk.gov.dstl.baleen.types.temporal;
+/* First created by JCasGen Fri Sep 30 12:06:32 BST 2016 */
+package uk.gov.dstl.baleen.types.military;
 
 import org.apache.uima.jcas.JCas; 
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.TOP_Type;
 
-import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.types.semantic.Entity;
 
 
-/** A specific date reference (day-specific) mentioned in the text.
- * Updated by JCasGen Tue Apr 12 12:07:25 BST 2016
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/temporal_type_system.xml
+/** A weapon; for example a rifle, knife, or shotgun
+ * Updated by JCasGen Fri Sep 30 12:08:00 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/military_type_system.xml
  * @generated */
-public class DateType extends Temporal {
+public class Weapon extends Entity {
   /** @generated
    * @ordered 
    */
   @SuppressWarnings ("hiding")
-  public final static int typeIndexID = JCasRegistry.register(DateType.class);
+  public final static int typeIndexID = JCasRegistry.register(Weapon.class);
   /** @generated
    * @ordered 
    */
@@ -34,14 +33,14 @@ public class DateType extends Temporal {
  
   /** Never called.  Disable default constructor
    * @generated */
-  protected DateType() {/* intentionally empty block */}
+  protected Weapon() {/* intentionally empty block */}
     
   /** Internal - constructor used by generator 
    * @generated
    * @param addr low level Feature Structure reference
    * @param type the type of this Feature Structure 
    */
-  public DateType(int addr, TOP_Type type) {
+  public Weapon(int addr, TOP_Type type) {
     super(addr, type);
     readObject();
   }
@@ -49,7 +48,7 @@ public class DateType extends Temporal {
   /** @generated
    * @param jcas JCas to which this Feature Structure belongs 
    */
-  public DateType(JCas jcas) {
+  public Weapon(JCas jcas) {
     super(jcas);
     readObject();   
   } 
@@ -59,7 +58,7 @@ public class DateType extends Temporal {
    * @param begin offset to the begin spot in the SofA
    * @param end offset to the end spot in the SofA 
   */  
-  public DateType(JCas jcas, int begin, int end) {
+  public Weapon(JCas jcas, int begin, int end) {
     super(jcas);
     setBegin(begin);
     setEnd(end);

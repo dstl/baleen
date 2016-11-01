@@ -92,14 +92,14 @@ public abstract class AbstractCpeManager<T extends AbstractCpeController> extend
 			String file = (String) p.get("file");
 
 			if (Strings.isNullOrEmpty(file)) {
-				LOGGER.warn("File name omited for  {} - will be skipped", name);
+				LOGGER.warn("File name omited for {} - will be skipped", name);
 				metrics.getCounter("errors").inc();
 			} else {
 				try {
 					LOGGER.info("Attempting to create {}", name);
 					create(name, new File(file));
 				} catch (Exception e) {
-					LOGGER.warn("Unable to create called {} from file {} ", name, file, e);
+					LOGGER.warn("Unable to create {} from file {} ", name, file, e);
 				}
 			}
 		}

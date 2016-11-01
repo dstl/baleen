@@ -72,6 +72,7 @@ public class MoneyRegexTest extends AbstractAnnotatorTest {
 		assertNotFoundMoney("£47,000,000.000.000");
 		assertNotFoundMoney("47");
 		assertNotFoundMoney("47.00");
+		assertNotFoundMoney("8.51 pm");
 	}
 	
 	private String assertFoundMoney(String text, Double amount, String currency) throws Exception{

@@ -40,7 +40,7 @@ import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Location;
-import uk.gov.dstl.baleen.types.temporal.DateType;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
 @Deprecated
@@ -251,7 +251,7 @@ public class LegacyMongoTest {
 		// database should match.
 		int expectedLocationSize =  l.getType().getFeatures().size();
 
-		DateType d = new DateType(jCas);
+		Temporal d = new Temporal(jCas);
 		d.setBegin(24);
 		d.setEnd(42);
 		d.setConfidence(1.0);
@@ -306,7 +306,7 @@ public class LegacyMongoTest {
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
-		assertEquals("DateType", date.get(TYPE));
+		assertEquals("Temporal", date.get(TYPE));
 		assertEquals("19th February 2015", date.get(VALUE));
 
 		Map<String, Object> email = (Map<String, Object>) entities.get(3);

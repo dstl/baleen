@@ -13,7 +13,7 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Relation;
-import uk.gov.dstl.baleen.types.temporal.Time;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 
 public class TypeUtilsTest {
 	@Test
@@ -25,11 +25,11 @@ public class TypeUtilsTest {
 	}
 	
 	@Test
-	public void testTime() throws UIMAException{
+	public void testTemporal() throws UIMAException{
 		JCas jCas = JCasFactory.createJCas();
-		Class<?> c = TypeUtils.getType("Time", jCas);
+		Class<?> c = TypeUtils.getType("Temporal", jCas);
 		
-		assertEquals(Time.class, c);
+		assertEquals(Temporal.class, c);
 	}
 	
 	@Test
@@ -57,11 +57,11 @@ public class TypeUtilsTest {
 	}
 	
 	@Test
-	public void testTimeEntity() throws UIMAException, BaleenException{
+	public void testTemporalEntity() throws UIMAException, BaleenException{
 		JCas jCas = JCasFactory.createJCas();
-		Class<? extends Entity> c = TypeUtils.getEntityClass("Time", jCas);
+		Class<? extends Entity> c = TypeUtils.getEntityClass("Temporal", jCas);
 		
-		assertEquals(Time.class, c);
+		assertEquals(Temporal.class, c);
 	}
 	
 	@Test

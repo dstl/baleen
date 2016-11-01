@@ -49,7 +49,7 @@ import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.types.semantic.Relation;
-import uk.gov.dstl.baleen.types.temporal.DateType;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
 public class MongoTest extends ConsumerTestBase {
@@ -245,7 +245,7 @@ public class MongoTest extends ConsumerTestBase {
 		l.setGeoJson("{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
 		l.addToIndexes();
 
-		DateType dt = new DateType(jCas);
+		Temporal dt = new Temporal(jCas);
 		dt.setBegin(24);
 		dt.setEnd(42);
 		dt.setConfidence(1.0);
@@ -300,11 +300,11 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> c = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, DATE));
 		Map<String, Object> date = ((List<Map<String, Object>>)c.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(9, date.size());
+		assertEquals(14, date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
-		assertEquals("DateType", date.get(TYPE));
+		assertEquals("Temporal", date.get(TYPE));
 		assertEquals(DATE, date.get(VALUE));
 
 		Map<String, Object> d = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, EMAIL));
@@ -421,7 +421,7 @@ public class MongoTest extends ConsumerTestBase {
 		l.setGeoJson("{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
 		l.addToIndexes();
 
-		DateType dt = new DateType(jCas);
+		Temporal dt = new Temporal(jCas);
 		dt.setBegin(24);
 		dt.setEnd(42);
 		dt.setConfidence(1.0);
@@ -467,11 +467,11 @@ public class MongoTest extends ConsumerTestBase {
 
 		Map<String, Object> c = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, DATE));
 		Map<String, Object> date = ((List<Map<String, Object>>)c.get(Mongo.FIELD_ENTITIES)).get(0);
-		assertEquals(9, date.size());
+		assertEquals(14, date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
 		assertEquals(1.0, date.get(CONFIDENCE));
-		assertEquals("DateType", date.get(TYPE));
+		assertEquals("Temporal", date.get(TYPE));
 		assertEquals(DATE, date.get(VALUE));
 		
 		Map<String, Object> relation = (Map<String, Object>)relations.findOne();

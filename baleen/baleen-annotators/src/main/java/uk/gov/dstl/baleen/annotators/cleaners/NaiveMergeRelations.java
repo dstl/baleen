@@ -107,7 +107,6 @@ public class NaiveMergeRelations extends BaleenAnnotator {
 			return false;
 		}
 
-		// TODO: is the value test enough?
 		return a.getType().equals(b.getType()) && isSame(a.getValue(), b.getValue());
 	}
 

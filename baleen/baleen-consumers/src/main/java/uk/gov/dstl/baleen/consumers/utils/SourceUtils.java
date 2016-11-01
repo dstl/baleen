@@ -5,10 +5,8 @@ import java.io.File;
 
 import org.apache.commons.lang.StringUtils;
 
-/** Helper for dealing with sourceUrl. 
- * 
- * 
- *
+/** 
+ * Helper for dealing with sourceUrl. 
  */
 public class SourceUtils {
 	private SourceUtils() {

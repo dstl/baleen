@@ -3,6 +3,8 @@ package uk.gov.dstl.baleen.annotators.helpers;
 
 import java.time.DayOfWeek;
 import java.time.Month;
+import java.time.Year;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,11 +12,10 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
+
 /**
  * Utility functions for converting DateTimes.
- * 
- * 
- *
  */
 public class DateTimeUtils {
 
@@ -140,5 +141,61 @@ public class DateTimeUtils {
 		if (aMonth == null)
 			LOGGER.warn("Couldn't parse month {}", month);
 		return aMonth;
+	}
+	
+	/**
+	 * Convert a string to a year.
+	 * 
+	 * @param s
+	 * 			a string representing the year. If 2 digits, then assumed to be in the range 1970-2069.
+	 * @return	the year, or null ig the year is not parseable.
+	 */
+	public static Year asYear(String s){
+		String year = s.replaceAll("[^\\d]", "");
+		
+		Year y;
+		if(year.length() == 2){
+			Integer iYear;
+			try{
+				iYear = Integer.parseInt(year);
+			}catch(NumberFormatException e){
+				LOGGER.warn("Couldn't parse year {}", s);
+				return null;
+			}
+			if(iYear < 70){
+				y = Year.of(2000 + iYear);
+			}else{
+				y = Year.of(1900 + iYear);
+			}
+		}else{
+			try{
+				y = Year.parse(year);
+			}catch(DateTimeParseException dtpe){
+				LOGGER.warn("Couldn't parse year {}", s);
+				return null;
+			}
+		}
+		
+		return y;
+	}
+	
+	/**
+	 * Does the date have the correct suffix (i.e. if the date is 23, the suffix should be rd)
+	 */
+	public static boolean suffixCorrect(Integer date, String suffix){
+		if(Strings.isNullOrEmpty(suffix))
+			return true;
+		
+		if(date % 100 == 11 || date % 100 == 12 || date % 100 == 13){
+			return "th".equalsIgnoreCase(suffix);
+		}else if(date % 10 == 1){
+			return "st".equalsIgnoreCase(suffix);
+		}else if(date % 10 == 2){
+			return "nd".equalsIgnoreCase(suffix);
+		}if(date % 10 == 3){
+			return "rd".equalsIgnoreCase(suffix);
+		}else{
+			return "th".equalsIgnoreCase(suffix);
+		}
 	}
 }

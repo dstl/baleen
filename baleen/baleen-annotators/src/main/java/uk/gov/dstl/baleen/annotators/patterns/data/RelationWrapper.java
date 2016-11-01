@@ -45,9 +45,9 @@ public class RelationWrapper {
 				return false;
 			} else if (relation.getEnd() != or.getEnd()) {
 				return false;
-			} else if (relation.getRelationshipType() != or.getRelationshipType()) {
+			} else if (!stringEquals(relation.getRelationshipType(), or.getRelationshipType())) {
 				return false;
-			} else if (relation.getRelationSubType() != or.getRelationSubType()) {
+			} else if (!stringEquals(relation.getRelationSubType(), or.getRelationSubType())) {
 				return false;
 			} else if (relation.getSource() != or.getSource()) {
 				return false;
@@ -56,6 +56,18 @@ public class RelationWrapper {
 			}
 
 			return true;
+		}
+	}
+	
+	private boolean stringEquals(String a, String b){
+		if(a == null && b == null){
+			return true;
+		}else if (a == null && b != null){
+			return false;
+		}else if (a != null && b == null){
+			return false;
+		}else{
+			return a.equals(b);
 		}
 	}
 

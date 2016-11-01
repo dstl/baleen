@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Baleen - Using Baleen Jobs</title>
+
+<link rel="stylesheet" type="text/css"
+	href="../bootstrap/css/bootstrap.min.css" />
+<style type="text/css">
+body {
+	padding-top: 70px;
+	padding-bottom: 20px;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-control="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a href="../index.html" class="navbar-brand">Baleen</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li><a href="../index.html">About</a></li>
+					<li class="active"><a href="index.html">Guides</a></li>
+					<li><a href="/javadoc">JavaDoc</a></li>
+					<li><a href="/plankton">Plankton</a></li>
+					<li><a href="/swagger">REST API</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Using Baleen Jobs</h1>
+			<p>Baleen Jobs allow you to run a specific task within Baleen, either as a one off task, or on a given schedule.
+			Tasks could include clean up operations, reporting statistics, or performing tasks across the whole corpus at once (for example, cross document co-referencing).</p>
+		</div>
+	</div>
+
+	<div class="container">
+		<p>Since Baleen 2.2, a Baleen Jobs framework has been available to allow users to run tasks outside of a standard Baleen pipeline.
+		There are a number of example use cases for this, such as running a task over the whole corpus, gathering statistics, or performing clean up operations (such as deleting temporary files).
+		Tasks can be run as a one off occurrence, or can be configured to run on a schedule (such as every 12 hours).</p>
+
+		<p>Jobs (which are one or more tasks) can be configured through YAML configuration files or through the REST API. This guide will deal with configuring them through YAML Configuration files.</p>		
+
+		<h3>Configuring a Job</h3>
+		<p>Jobs can be configured through YAML configuration in a similar manner to Baleen Pipelines. They should contain a <code>job</code> object, which has a list of tasks and optionally a schedule (the default schedule is <code>Once</code>).
+		As with pipelines, global configuration can also be provided.</p>
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">Example_Job.yml</div>
+			<div class="panel-body">
+<pre>
+mongo:
+  db: example
+
+job:
+  schedule:
+    class: FixedDelay
+    period: 300
+  tasks:
+    - MongoStats
+</pre>
+			</div>
+		</div>
+
+		<p>The following schedules are available:</p>
+		<ul>
+			<li>FixedDelay - Run the job x seconds after the previous job completes, where x is specified by the <code>period</code> parameter</li>
+			<li>FixedRate - Run the job x seconds after the previous job starts (assuming it has completed), where x is specified by the <code>period</code> parameter</li>
+			<li>Once - Run the job a single time (default)</li>
+			<li>Repeat - Run the job x number of times with a delay of y seconds after the previous job completes, where x and y are specified by the <code>count</code> and <code>period</code> parameters respecitvely
+		</ul>
+
+		<h3>Adding a Job to Baleen</h3>
+		<p>Jobs can be added to the Baleen configuration in the same way pipelines can be, although they use a <code>jobs</code> object rather than a <code>pipelines</code> one.
+		
+		<div class="panel panel-default">
+			<div class="panel-heading">config.yml</div>
+			<div class="panel-body">
+<pre>
+jobs:
+  - file: Example_Job.yml
+    name: Example Job
+</pre>
+			</div>
+		</div>
+		
+	</div>
+		
+
+
+</body>
+
+
+</html>

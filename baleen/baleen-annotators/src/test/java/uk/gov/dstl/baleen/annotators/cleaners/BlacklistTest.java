@@ -15,7 +15,7 @@ import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.Relation;
-import uk.gov.dstl.baleen.types.temporal.DateType;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 
 /**
  * 
@@ -98,7 +98,7 @@ public class BlacklistTest extends AnnotatorTestBase {
 		p.setEnd(5);
 		p.addToIndexes();
 		
-		DateType d = new DateType(jCas);
+		Temporal d = new Temporal(jCas);
 		d.setValue(NOVEMBER);
 		d.setBegin(18);
 		d.setEnd(26);
@@ -111,13 +111,13 @@ public class BlacklistTest extends AnnotatorTestBase {
 		l.addToIndexes();
 
 		assertEquals(1, JCasUtil.select(jCas, Person.class).size());
-		assertEquals(1, JCasUtil.select(jCas, DateType.class).size());
+		assertEquals(1, JCasUtil.select(jCas, Temporal.class).size());
 		assertEquals(1, JCasUtil.select(jCas, Location.class).size());
 	}
 	
 	private void assertCorrect(int people, int datetypes, int locations){
 		assertEquals(people, JCasUtil.select(jCas, Person.class).size());
-		assertEquals(datetypes, JCasUtil.select(jCas, DateType.class).size());
+		assertEquals(datetypes, JCasUtil.select(jCas, Temporal.class).size());
 		assertEquals(locations, JCasUtil.select(jCas, Location.class).size());
 	}
 }

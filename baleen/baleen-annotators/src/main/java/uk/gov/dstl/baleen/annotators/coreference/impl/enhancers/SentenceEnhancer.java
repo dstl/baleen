@@ -98,7 +98,7 @@ public class SentenceEnhancer {
 	private void setSentence(Mention m, Collection<Sentence> sentenceCollection, Map<Sentence, Integer> sentenceIndex){
 		Sentence s = null;
 		
-		if (!sentenceCollection.isEmpty()) {
+		if (sentenceCollection != null && !sentenceCollection.isEmpty()) {
 			s = sentenceCollection.iterator().next();
 		}
 		

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.uima.fit.internal.ExtendedExternalResourceDescription_impl;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -294,16 +295,22 @@ public final class CpeBuilderUtils {
 
 	/**
 	 * Convert to an array of strings (ie toString all the content of params).
+	 * 
+	 * Objects that are instances of ExtendedExternalResourceDescription_impl are not converted to Strings, as these represent resources we must pass to UIMA
 	 *
 	 * @param params
 	 *            the params
 	 * @return the object[] (non-null, same size as params and containing all the same nulls)
 	 */
 	public static Object[] convertToStringArray(Object[] params) {
-		Object[] stringParams = new String[params.length];
+		Object[] stringParams = new Object[params.length];
 		for (int i = 0; i < params.length; i++) {
 			if (params[i] != null) {
-				stringParams[i] = params[i].toString();
+				if(params[i] instanceof ExtendedExternalResourceDescription_impl){
+					stringParams[i] = params[i];
+				}else{
+					stringParams[i] = params[i].toString();
+				}
 			}
 		}
 		return stringParams;

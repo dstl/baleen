@@ -10,7 +10,7 @@ import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
-import uk.gov.dstl.baleen.types.temporal.DateType;
+import uk.gov.dstl.baleen.types.semantic.Temporal;
 
 public class Annotations {
 	private static final String WEIGHT = "weight";
@@ -88,8 +88,8 @@ public class Annotations {
 		return p;		
 	}
 
-	public static DateType createDateType(JCas jCas, int begin, int end, String value) {
-		DateType d2 = new DateType(jCas);
+	public static Temporal createTemporal(JCas jCas, int begin, int end, String value) {
+		Temporal d2 = new Temporal(jCas);
 		d2.setValue(value);
 		d2.setBegin(begin);
 		d2.setEnd(end);

@@ -26,16 +26,14 @@ import uk.gov.dstl.baleen.core.history.DocumentHistory;
 import uk.gov.dstl.baleen.core.history.HistoryEvent;
 import uk.gov.dstl.baleen.core.history.HistoryEvents;
 import uk.gov.dstl.baleen.types.Base;
-import uk.gov.dstl.baleen.types.semantic.Event;
 import uk.gov.dstl.baleen.types.semantic.Entity;
+import uk.gov.dstl.baleen.types.semantic.Event;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.uima.UimaMonitor;
 import uk.gov.dstl.baleen.uima.utils.FeatureUtils;
 
 /**
  * Converts from an Entity or Relation into a Map representation, adding history if required.
- *
- *
  */
 public class EntityRelationConverter {
 

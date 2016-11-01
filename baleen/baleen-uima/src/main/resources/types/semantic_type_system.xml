@@ -75,8 +75,43 @@ Additional relationship types that have been added: {"QUANTITY", "ALIAS"}</descr
     </typeDescription>
   <typeDescription>
       <name>uk.gov.dstl.baleen.types.semantic.Temporal</name>
-      <description>General type to record temporal (time based) information mentioned within the document.  This is a general purpose type that is extended in "time" types.</description>
+      <description>Type to record all temporal references in the text and, where possible, information about them (e.g. timestamp). This includes all times, dates, datetimes, periods, etc.</description>
       <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+    <features>
+        <featureDescription>
+          <name>timestampStart</name>
+          <description>Timestamp of the point when the temporal reference starts (inclusive), in seconds.</description>
+          <rangeTypeName>uima.cas.Long</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>timestampStop</name>
+          <description>Timestamp of the point when the temporal reference ends (exclusive), in seconds.</description>
+          <rangeTypeName>uima.cas.Long</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>scope</name>
+          <description>Does this temporal entity describe a single temporal instance (e.g. 12 Oct 2016) or a temporal range (12-16 Oct 2016). If unknown, then leave as null (or empty).
+
+Expected values: SINGLE, RANGE, null</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>temporalType</name>
+          <description>Does this temporal entity describe a date, a time or a datetime. If unknown, then leave as null (or empty).
+
+Expected values: DATE, TIME, DATETIME, null</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>precision</name>
+          <description>What level of precision does this temporal entity have. Do we know exactly when it refers to (i.e. we would expect to know timestampStart and timestampEnd); or is it relative to something else (i.e. we would expect to know timestampStart and timestampEnd only if we know when it is relative to); or is it unqualified (i.e. we would not expect to know timestampStart and timestampStop)?
+
+If unknown, then leave as null (or empty).
+
+Expected values: EXACT, RELATIVE, UNQUALIFIED, null</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
     </typeDescription>
     <typeDescription>
       <name>uk.gov.dstl.baleen.types.semantic.Location</name>

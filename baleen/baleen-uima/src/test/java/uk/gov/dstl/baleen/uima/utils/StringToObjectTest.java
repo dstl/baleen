@@ -45,11 +45,6 @@ public class StringToObjectTest {
 
 		assertTrue(StringToObject.convertStringToObject(sdf.format(testDate)) instanceof Date);
 		assertEquals(testDate, StringToObject.convertStringToObject(sdf.format(testDate)));
-
-		Properties enableDate = new Properties();
-		enableDate.put("allowDates", true);
-		assertTrue(StringToObject.convertStringToObject(sdf.format(testDate), enableDate) instanceof Date);
-		assertEquals(testDate, StringToObject.convertStringToObject(sdf.format(testDate), enableDate));
 	}
 
 	@Test
@@ -96,29 +91,8 @@ public class StringToObjectTest {
 		assertTrue(StringToObject.convertStringToObject("01234", precedingZero) instanceof Integer);
 		assertTrue(StringToObject.convertStringToObject("0.1234") instanceof Double);
 		assertTrue(StringToObject.convertStringToObject("0.1234", precedingZero) instanceof Double);
-
-		Properties stringPrecedingZero = new Properties();
-		stringPrecedingZero.put("precedingZeroIsntNumber", "false");
-		assertTrue(StringToObject.convertStringToObject("0.1234", stringPrecedingZero) instanceof Double);
 	}
 
-	@Test
-	public void testNumberPrecedingPlus(){
-		Properties precedingPlus = new Properties();
-		precedingPlus.put("precedingPlusIsntNumber", true);
-
-		assertFalse(StringToObject.convertStringToObject("+1234") instanceof Integer);
-		assertTrue(StringToObject.convertStringToObject("+1234", precedingPlus) instanceof String);
-		assertTrue(StringToObject.convertStringToObject("1234", precedingPlus) instanceof Integer);
-
-		Properties falsePrecedingPlus = new Properties();
-		falsePrecedingPlus.put("precedingPlusIsntNumber", false);
-		assertFalse(StringToObject.convertStringToObject("+1234", falsePrecedingPlus) instanceof String);
-
-		Properties stringPrecedingPlus = new Properties();
-		stringPrecedingPlus.put("precedingPlusIsntNumber", "true");
-		assertTrue(StringToObject.convertStringToObject("+1234", stringPrecedingPlus) instanceof String);
-	}
 	@Test
 	public void testBoolean(){
 		assertTrue(StringToObject.convertStringToObject("true") instanceof Boolean);

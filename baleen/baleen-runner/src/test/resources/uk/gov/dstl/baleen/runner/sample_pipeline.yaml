@@ -4,8 +4,8 @@ collectionreader:
     - src/test/resources
 
 annotators:
-  - class: EmailRegex
-  - class: UrlRegex
+  - class: regex.Email
+  - class: regex.Url
 
 consumers:
-  - class: EntityCountConsumer
+  - class: EntityCount

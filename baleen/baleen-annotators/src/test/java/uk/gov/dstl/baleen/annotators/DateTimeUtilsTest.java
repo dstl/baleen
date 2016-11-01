@@ -1,7 +1,9 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.annotators;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.time.DayOfWeek;
 import java.time.Month;
@@ -53,4 +55,30 @@ public class DateTimeUtilsTest {
 		assertMonth(null,"ma","j","movember","0","13");
 	}
 
+	@Test
+	public void testSuffixCorrect(){
+		assertTrue(DateTimeUtils.suffixCorrect(3, ""));
+		assertTrue(DateTimeUtils.suffixCorrect(3, null));
+		
+		assertTrue(DateTimeUtils.suffixCorrect(1, "st"));
+		assertTrue(DateTimeUtils.suffixCorrect(21, "st"));
+		assertTrue(DateTimeUtils.suffixCorrect(2, "nd"));
+		assertTrue(DateTimeUtils.suffixCorrect(22, "nd"));
+		assertTrue(DateTimeUtils.suffixCorrect(3, "rd"));
+		assertTrue(DateTimeUtils.suffixCorrect(23, "rd"));
+		assertTrue(DateTimeUtils.suffixCorrect(1642341, "st"));
+		assertTrue(DateTimeUtils.suffixCorrect(11, "th"));
+		assertTrue(DateTimeUtils.suffixCorrect(2011, "th"));
+
+		assertFalse(DateTimeUtils.suffixCorrect(1, "th"));
+		assertFalse(DateTimeUtils.suffixCorrect(2, "rd"));
+		assertFalse(DateTimeUtils.suffixCorrect(3, "st"));
+		assertFalse(DateTimeUtils.suffixCorrect(4, "nd"));
+		assertFalse(DateTimeUtils.suffixCorrect(11, "st"));
+		assertFalse(DateTimeUtils.suffixCorrect(12, "nd"));
+		assertFalse(DateTimeUtils.suffixCorrect(13, "rd"));
+		assertFalse(DateTimeUtils.suffixCorrect(2011, "st"));
+		assertFalse(DateTimeUtils.suffixCorrect(2012, "nd"));
+		assertFalse(DateTimeUtils.suffixCorrect(2013, "rd"));
+	}
 }

@@ -23,7 +23,7 @@ public class NPTitleEntity extends BaleenAnnotator {
 		"mullah", "imam", "ayatollah", "druid", "lama", "buddha", "rabbi", "rebbe",		//Religious titles (non-Christian)
 		"dr", "doctor", "prof", "professor",	//Educational titles
 		"pres", "president", "governor", "senator", "ambassador", "mayor", "envoy", "prime minister", "councillor", "representative", "speaker", "mp", "emir", "chief", "sultan", "wali", "sheikh", "shaykh", 	//Political titles
-		"pvt", "private", "cpl", "corporal", "sgt", "sergeant", "capt", "captain", "maj", "major", "cmdr", "commander", "lt", "lieutenant", "lt col", "lieutenant colonel", "col", "colonel", "gen", "general", "adm", "admiral", "cdre", "commodore",	//Military titles
+		"pvt", "cpl", "corporal", "sgt", "sergeant", "capt", "captain", "maj", "cmdr", "commander", "lt", "lieutenant", "lt col", "lieutenant colonel", "col", "colonel", "gen", "adm", "admiral", "cdre", "commodore",	//Military titles
 		"hrh", "his royal highness", "his majesty", "her royal highness", "her majesty", "king", "queen", "prince", "princess", "emperor", "empress", "tsar", "tsarina", "tsaritsa", "shah",		//Royal titles
 		"sir", "dame", "lord", "lady", "baron", "baroness", "count", "countess", "duke", "duchess", "earl", "viscount", "marquis", "marquess", "grand duke", "grand duchess", "archduke", "archduchess"	//Nobility titles
 	);

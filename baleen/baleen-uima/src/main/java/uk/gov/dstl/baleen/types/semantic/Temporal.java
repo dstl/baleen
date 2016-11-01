@@ -10,9 +10,9 @@ import org.apache.uima.jcas.cas.TOP_Type;
 
 
 
-/** General type to record temporal (time based) information mentioned within the document.  This is a general purpose type that is extended in "time" types.
- * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
- * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+/** Type to record all temporal references in the text and, where possible, information about them (e.g. timestamp). This includes all times, dates, datetimes, periods, etc.
+ * Updated by JCasGen Thu Oct 06 15:46:19 BST 2016
+ * XML source: H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
  * @generated */
 public class Temporal extends Entity {
   /** @generated
@@ -74,6 +74,130 @@ public class Temporal extends Entity {
    */
   private void readObject() {/*default - does nothing empty block */}
      
-}
+  //*--------------*
+  //* Feature: timestampStart
+
+  /** getter for timestampStart - gets Timestamp of the point when the temporal reference starts (inclusive), in seconds.
+   * @generated
+   * @return value of the feature 
+   */
+  public long getTimestampStart() {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_timestampStart == null)
+      jcasType.jcas.throwFeatMissing("timestampStart", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    return jcasType.ll_cas.ll_getLongValue(addr, ((Temporal_Type)jcasType).casFeatCode_timestampStart);}
+    
+  /** setter for timestampStart - sets Timestamp of the point when the temporal reference starts (inclusive), in seconds. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setTimestampStart(long v) {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_timestampStart == null)
+      jcasType.jcas.throwFeatMissing("timestampStart", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    jcasType.ll_cas.ll_setLongValue(addr, ((Temporal_Type)jcasType).casFeatCode_timestampStart, v);}    
+   
+    
+  //*--------------*
+  //* Feature: timestampStop
+
+  /** getter for timestampStop - gets Timestamp of the point when the temporal reference ends (exclusive), in seconds.
+   * @generated
+   * @return value of the feature 
+   */
+  public long getTimestampStop() {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_timestampStop == null)
+      jcasType.jcas.throwFeatMissing("timestampStop", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    return jcasType.ll_cas.ll_getLongValue(addr, ((Temporal_Type)jcasType).casFeatCode_timestampStop);}
+    
+  /** setter for timestampStop - sets Timestamp of the point when the temporal reference ends (exclusive), in seconds. 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setTimestampStop(long v) {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_timestampStop == null)
+      jcasType.jcas.throwFeatMissing("timestampStop", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    jcasType.ll_cas.ll_setLongValue(addr, ((Temporal_Type)jcasType).casFeatCode_timestampStop, v);}    
+   
+    
+  //*--------------*
+  //* Feature: scope
+
+  /** getter for scope - gets Does this temporal entity describe a single temporal instance (e.g. 12 Oct 2016) or a temporal range (12-16 Oct 2016). If unknown, then leave as null (or empty).
+
+Expected values: SINGLE, RANGE, null
+   * @generated
+   * @return value of the feature 
+   */
+  public String getScope() {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_scope == null)
+      jcasType.jcas.throwFeatMissing("scope", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Temporal_Type)jcasType).casFeatCode_scope);}
+    
+  /** setter for scope - sets Does this temporal entity describe a single temporal instance (e.g. 12 Oct 2016) or a temporal range (12-16 Oct 2016). If unknown, then leave as null (or empty).
+
+Expected values: SINGLE, RANGE, null 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setScope(String v) {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_scope == null)
+      jcasType.jcas.throwFeatMissing("scope", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Temporal_Type)jcasType).casFeatCode_scope, v);}    
+   
+    
+  //*--------------*
+  //* Feature: temporalType
+
+  /** getter for temporalType - gets Does this temporal entity describe a date, a time or a datetime. If unknown, then leave as null (or empty).
+
+Expected values: DATE, TIME, DATETIME, null
+   * @generated
+   * @return value of the feature 
+   */
+  public String getTemporalType() {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_temporalType == null)
+      jcasType.jcas.throwFeatMissing("temporalType", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Temporal_Type)jcasType).casFeatCode_temporalType);}
+    
+  /** setter for temporalType - sets Does this temporal entity describe a date, a time or a datetime. If unknown, then leave as null (or empty).
+
+Expected values: DATE, TIME, DATETIME, null 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setTemporalType(String v) {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_temporalType == null)
+      jcasType.jcas.throwFeatMissing("temporalType", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Temporal_Type)jcasType).casFeatCode_temporalType, v);}    
+   
+    
+  //*--------------*
+  //* Feature: precision
+
+  /** getter for precision - gets What level of precision does this temporal entity have. Do we know exactly when it refers to (i.e. we would expect to know timestampStart and timestampEnd); or is it relative to something else (i.e. we would expect to know timestampStart and timestampEnd only if we know when it is relative to); or is it unqualified (i.e. we would not expect to know timestampStart and timestampStop)?
+
+If unknown, then leave as null (or empty).
+
+Expected values: EXACT, RELATIVE, UNQUALIFIED, null
+   * @generated
+   * @return value of the feature 
+   */
+  public String getPrecision() {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_precision == null)
+      jcasType.jcas.throwFeatMissing("precision", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    return jcasType.ll_cas.ll_getStringValue(addr, ((Temporal_Type)jcasType).casFeatCode_precision);}
+    
+  /** setter for precision - sets What level of precision does this temporal entity have. Do we know exactly when it refers to (i.e. we would expect to know timestampStart and timestampEnd); or is it relative to something else (i.e. we would expect to know timestampStart and timestampEnd only if we know when it is relative to); or is it unqualified (i.e. we would not expect to know timestampStart and timestampStop)?
+
+If unknown, then leave as null (or empty).
+
+Expected values: EXACT, RELATIVE, UNQUALIFIED, null 
+   * @generated
+   * @param v value to set into the feature 
+   */
+  public void setPrecision(String v) {
+    if (Temporal_Type.featOkTst && ((Temporal_Type)jcasType).casFeat_precision == null)
+      jcasType.jcas.throwFeatMissing("precision", "uk.gov.dstl.baleen.types.semantic.Temporal");
+    jcasType.ll_cas.ll_setStringValue(addr, ((Temporal_Type)jcasType).casFeatCode_precision, v);}    
+  }
 
     
