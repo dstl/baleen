@@ -192,7 +192,7 @@ public class DateTimeUtils {
 			return "st".equalsIgnoreCase(suffix);
 		}else if(date % 10 == 2){
 			return "nd".equalsIgnoreCase(suffix);
-		}if(date % 10 == 3){
+		}else if(date % 10 == 3){
 			return "rd".equalsIgnoreCase(suffix);
 		}else{
 			return "th".equalsIgnoreCase(suffix);

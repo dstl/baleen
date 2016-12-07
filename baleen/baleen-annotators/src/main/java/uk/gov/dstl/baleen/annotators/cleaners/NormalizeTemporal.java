@@ -52,7 +52,7 @@ public class NormalizeTemporal extends AbstractNormalizeEntities{
 			getMonitor().error("Unable to parse correctFormat pattern", iae);
 			throw new ResourceInitializationException(iae);
 		}
-	};
+	}
 
 	@Override
 	protected String normalize(Entity e) {

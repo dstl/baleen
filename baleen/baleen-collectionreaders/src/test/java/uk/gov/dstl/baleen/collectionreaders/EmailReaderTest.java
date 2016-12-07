@@ -99,10 +99,6 @@ public class EmailReaderTest {
 		
 		assertTrue(jCas.getDocumentText().startsWith(body1));
 		
-		for(Metadata md : JCasUtil.select(jCas, Metadata.class)){
-			System.err.println(md.getKey() + ": " + md.getValue());
-		}
-		
 		jCas.reset();
 		
 		assertTrue(bcr.doHasNext());

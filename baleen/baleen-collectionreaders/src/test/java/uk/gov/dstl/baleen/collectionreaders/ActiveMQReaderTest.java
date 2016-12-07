@@ -71,7 +71,6 @@ public class ActiveMQReaderTest {
 	private void createContent(final SharedActiveMQResource samr) throws JMSException {
 		// get producer and send to the queue we're monitoring
 		// make dest using samr's session
-		System.out.println("sending");
 		final Destination dest = samr.getSession().createQueue(ENDPOINT);
 		// make message using samr's session
 		final Message msg1 = samr.getSession().createTextMessage("Hello, World");
@@ -79,8 +78,6 @@ public class ActiveMQReaderTest {
 
 		final Message msg2 = samr.getSession().createTextMessage("Hello, Test");
 		samr.getProducer().send(dest, msg2);
-
-		System.out.println("sent");
 	}
 
 }

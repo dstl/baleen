@@ -19,9 +19,7 @@ import uk.gov.dstl.baleen.uima.BaleenConsumer;
 /**
  * Move the source file of a document to the destination directory, or delete it if destination directory is not set.
  * 
- * <p>Assumes that the Source URI is a file, and will throw an error if we're unable to read it.
- * Future expansion could include moving files to a directory based on the Source URI, rather than just using the file name (e.g. using SourceUtils.urlToFile())</p>
- * 
+ * Assumes that the Source URI is a file, and will throw an error if we're unable to read it.
  * 
  * @baleen.javadoc
  */
@@ -35,6 +33,16 @@ public class MoveSourceFile extends BaleenConsumer {
 	public static final String PARAM_DESTINATION = "destination";
 	@ConfigurationParameter(name = PARAM_DESTINATION, defaultValue = "")
 	String destination;
+	
+	/**
+	 * If true, then documents will be split into subfolders based on type.
+	 * Documents with no type will be placed in the root folder.
+	 * 
+	 * @baleen.config false
+	 */
+	public static final String PARAM_SPLIT = "splitByType";
+	@ConfigurationParameter(name = PARAM_SPLIT, defaultValue = "false")
+	Boolean splitByType;
 	
 	@Override
 	protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
@@ -53,6 +61,14 @@ public class MoveSourceFile extends BaleenConsumer {
 				addToJCasIndex(md);
 			}else{
 				File dest = new File(destination);
+				
+				if(splitByType){
+					String type = da.getDocType();
+					if(!Strings.isNullOrEmpty(type)){
+						dest = new File(dest, type);
+					}
+				}
+				
 				File finalDest = moveFile(f, dest);
 				
 				Metadata md = new Metadata(jCas);
@@ -70,8 +86,8 @@ public class MoveSourceFile extends BaleenConsumer {
 	}
 	
 	private File moveFile(File source, File destination) throws IOException{
-		if(!destination.exists() || !destination.isDirectory()){
-			throw new IOException("Destination folder '"+destination.getName()+"' does not exist");
+		if((!destination.exists() || !destination.isDirectory()) && !destination.mkdirs()){
+			throw new IOException("Destination folder '"+destination.getName()+"' does not exist and could not be created");	
 		}
 		
 		if(!source.exists() || source.isDirectory()){

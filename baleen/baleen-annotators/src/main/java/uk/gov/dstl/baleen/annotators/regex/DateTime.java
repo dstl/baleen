@@ -1,6 +1,7 @@
 //Dstl (c) Crown Copyright 2016
 package uk.gov.dstl.baleen.annotators.regex;
 
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -106,6 +107,13 @@ public class DateTime extends BaleenAnnotator {
 		Matcher m = dayMonthTime.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
+			ZoneId zone;
+			if(m.group(20) == null){
+				zone = ZoneId.of("Z");
+			}else{
+				zone = TimeZone.getTimeZone(m.group(20)).toZoneId();
+			}
+			
 			if(m.group(19) != null){
 				ZonedDateTime zdt = ZonedDateTime.of(
 						DateTimeUtils.asYear(m.group(16)).getValue(),
@@ -114,7 +122,7 @@ public class DateTime extends BaleenAnnotator {
 						Integer.parseInt(m.group(17)),
 						Integer.parseInt(m.group(18)),
 						Integer.parseInt(m.group(19)),
-						0, TimeZone.getTimeZone(m.group(20)).toZoneId());
+						0, zone);
 				
 				createDateTime(jCas, m.start(), m.end(), zdt);
 			}else{
@@ -124,7 +132,7 @@ public class DateTime extends BaleenAnnotator {
 						Integer.parseInt(m.group(1)),
 						Integer.parseInt(m.group(17)),
 						Integer.parseInt(m.group(18)),
-						0, 0, TimeZone.getTimeZone(m.group(20)).toZoneId());
+						0, 0, zone);
 				
 				ZonedDateTime zdtEnd = zdtStart.plusMinutes(1);
 				
@@ -138,6 +146,13 @@ public class DateTime extends BaleenAnnotator {
 		Matcher m = monthDayTime.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
+			ZoneId zone;
+			if(m.group(20) == null){
+				zone = ZoneId.of("Z");
+			}else{
+				zone = TimeZone.getTimeZone(m.group(20)).toZoneId();
+			}
+			
 			if(m.group(19) != null){
 				ZonedDateTime zdt = ZonedDateTime.of(
 						DateTimeUtils.asYear(m.group(16)).getValue(),
@@ -146,7 +161,7 @@ public class DateTime extends BaleenAnnotator {
 						Integer.parseInt(m.group(17)),
 						Integer.parseInt(m.group(18)),
 						Integer.parseInt(m.group(19)),
-						0, TimeZone.getTimeZone(m.group(20)).toZoneId());
+						0, zone);
 				
 				createDateTime(jCas, m.start(), m.end(), zdt);
 			}else{
@@ -156,7 +171,7 @@ public class DateTime extends BaleenAnnotator {
 						Integer.parseInt(m.group(14)),
 						Integer.parseInt(m.group(17)),
 						Integer.parseInt(m.group(18)),
-						0, 0, TimeZone.getTimeZone(m.group(20)).toZoneId());
+						0, 0, zone);
 				
 				ZonedDateTime zdtEnd = zdtStart.plusMinutes(1);
 				

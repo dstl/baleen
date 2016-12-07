@@ -20,11 +20,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.net.MediaType;
 
+import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
 /**
@@ -99,8 +99,7 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
 		if (componentClazz == null) {
 			components = Optional.empty();
 		} else {
-			Reflections reflections = new Reflections();
-			List<String> componentsList = classesToFilteredList(reflections.getSubTypesOf(componentClazz),
+			List<String> componentsList = classesToFilteredList(ReflectionUtils.getInstance().getSubTypesOf(componentClazz),
 					componentPackage, excludeClazz, excludePackage);
 
 			StringBuilder componentBuilder = new StringBuilder();

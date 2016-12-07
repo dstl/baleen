@@ -40,39 +40,46 @@ public class AddGenderToPerson extends BaleenAnnotator {
 	@Override
 	protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
 		for (Person p : JCasUtil.select(jCas, Person.class)) {
-			Integer mCount = 0;
-			Integer fCount = 0;
-			
 			if(Strings.isNullOrEmpty(p.getGender()) || "UNKNOWN".equalsIgnoreCase(p.getGender())){
-				List<String> nameParts = new ArrayList<>();
-				
+				String name = "";
 				if(!Strings.isNullOrEmpty(p.getValue())){
-					nameParts.addAll(Arrays.asList(p.getValue().split("\\s+")));
+					name = p.getValue();
 				}else{
-					nameParts.addAll(Arrays.asList(p.getCoveredText().split("\\s+")));
+					name = p.getCoveredText();
 				}
 				
-				for(String namePart : nameParts){
-					switch(genderResource.lookupGender(namePart)){
-					case M:
-						mCount++;
-						break;
-					case F:
-						fCount++;
-						break;
-					default:
-						//Do nothing, if it's neutral or unknown we can ignore it for now
-					}
-				}
-				
-				if(mCount > 0 && fCount == 0){
-					p.setGender("MALE");
-				}else if(fCount > 0 && mCount == 0){
-					p.setGender("FEMALE");
-				}else{
-					p.setGender("UNKNOWN");
-				}
+				p.setGender(determineGender(name));
 			}
 		}
+	}
+	
+	private String determineGender(String name){
+		Integer mCount = 0;
+		Integer fCount = 0;
+		
+		List<String> nameParts = new ArrayList<>();
+		
+		nameParts.addAll(Arrays.asList(name.split("\\s+")));
+		
+		for(String namePart : nameParts){
+			switch(genderResource.lookupGender(namePart)){
+			case M:
+				mCount++;
+				break;
+			case F:
+				fCount++;
+				break;
+			default:
+				//Do nothing, if it's neutral or unknown we can ignore it for now
+			}
+		}
+		
+		if(mCount > 0 && fCount == 0){
+			return "MALE";
+		}else if(fCount > 0 && mCount == 0){
+			return "FEMALE";
+		}
+		
+		return "UNKNOWN";
 	}
 }

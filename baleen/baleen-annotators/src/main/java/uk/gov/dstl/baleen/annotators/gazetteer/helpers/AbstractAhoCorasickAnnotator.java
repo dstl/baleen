@@ -25,6 +25,8 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.StringArray;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import com.google.common.base.Strings;
+
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.resources.gazetteer.IGazetteer;
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
@@ -75,6 +77,15 @@ public abstract class AbstractAhoCorasickAnnotator extends BaleenAnnotator {
 	public static final String PARAM_TYPE = "type";
 	@ConfigurationParameter(name = PARAM_TYPE, defaultValue = "Entity")
 	protected String type;
+	
+	/**
+	 * The subtype to use for extracted entities
+	 *
+	 * @baleen.config
+	 */
+	public static final String PARAM_SUBTYPE = "subtype";
+	@ConfigurationParameter(name = PARAM_SUBTYPE, defaultValue = "")
+	protected String subtype;
 
 	protected IGazetteer gazetteer;
 	protected Class<?> entityType;
@@ -253,6 +264,9 @@ public abstract class AbstractAhoCorasickAnnotator extends BaleenAnnotator {
 		if (ent instanceof Entity) {
 			((Entity) ent).setValue(value);
 			((Entity) ent).setConfidence(1.0);
+			
+			if(!Strings.isNullOrEmpty(subtype))
+				((Entity) ent).setSubType(subtype);
 		}
 
 		Map<String, Object> additionalData = gazetteer.getAdditionalData(gazetteerKey);

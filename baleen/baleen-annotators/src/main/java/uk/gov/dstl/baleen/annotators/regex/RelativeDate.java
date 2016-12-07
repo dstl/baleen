@@ -314,7 +314,7 @@ public class RelativeDate extends BaleenAnnotator {
 		if(relativeTo != null && dayOffset != null){
 			if(dayOffset > 0){
 				t.setTimestampStart(relativeTo.atStartOfDay(ZoneOffset.UTC).toEpochSecond());
-				t.setTimestampStop(relativeTo.plusDays(dayOffset + 1).atStartOfDay(ZoneOffset.UTC).toEpochSecond());
+				t.setTimestampStop(relativeTo.plusDays(dayOffset + 1L).atStartOfDay(ZoneOffset.UTC).toEpochSecond());
 			}else{
 				t.setTimestampStart(relativeTo.plusDays(dayOffset).atStartOfDay(ZoneOffset.UTC).toEpochSecond());
 				t.setTimestampStop(relativeTo.plusDays(1).atStartOfDay(ZoneOffset.UTC).toEpochSecond());

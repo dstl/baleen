@@ -59,6 +59,13 @@ public class Date extends BaleenAnnotator{
 	private static final String MONTHS = "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(t(ember)?)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)";
 	private static final String DATE_SUFFIXES = "(st|nd|rd|th)";
 	
+	private static final String EXACT = "EXACT";
+	private static final String RANGE = "RANGE";
+	private static final String SINGLE = "SINGLE";
+	private static final String DATE_TYPE = "DATE";
+	
+	private static final String INVALID_DATE_FOUND = "Invalid date found";
+	
 	private List<Temporal> extracted;
 	
 	@Override
@@ -110,9 +117,9 @@ public class Date extends BaleenAnnotator{
 		dtg.setEnd(charEnd);
 		dtg.setConfidence(1.0);
 		
-		dtg.setPrecision("EXACT");
-		dtg.setScope("RANGE");
-		dtg.setTemporalType("DATE");
+		dtg.setPrecision(EXACT);
+		dtg.setScope(RANGE);
+		dtg.setTemporalType(DATE_TYPE);
 		
 		LocalDate start = y1.atDay(1);
 		LocalDate end = y2.plusYears(1).atDay(1);
@@ -166,9 +173,9 @@ public class Date extends BaleenAnnotator{
 		dtg.setEnd(charEnd);
 		dtg.setConfidence(1.0);
 		
-		dtg.setPrecision("EXACT");
-		dtg.setScope("RANGE");
-		dtg.setTemporalType("DATE");
+		dtg.setPrecision(EXACT);
+		dtg.setScope(RANGE);
+		dtg.setTemporalType(DATE_TYPE);
 		
 		LocalDate start = ym1.atDay(1);
 		LocalDate end = ym2.plusMonths(1).atDay(1);
@@ -198,7 +205,7 @@ public class Date extends BaleenAnnotator{
 				ld1 = ym.atDay(Integer.parseInt(m.group(1)));
 				ld2 = ym.atDay(Integer.parseInt(m.group(4)));
 			}catch(DateTimeException dte){
-				getMonitor().warn("Invalid date found", dte);
+				getMonitor().warn(INVALID_DATE_FOUND, dte);
 				continue;
 			}
 			
@@ -241,7 +248,7 @@ public class Date extends BaleenAnnotator{
 				ld1 = ym1.atDay(Integer.parseInt(m.group(1)));
 				ld2 = ym2.atDay(Integer.parseInt(m.group(17)));
 			}catch(DateTimeException dte){
-				getMonitor().warn("Invalid date found", dte);
+				getMonitor().warn(INVALID_DATE_FOUND, dte);
 				continue;
 			}
 			
@@ -271,7 +278,7 @@ public class Date extends BaleenAnnotator{
 				ld1 = ym1.atDay(Integer.parseInt(m.group(1)));
 				ld2 = ym2.atDay(Integer.parseInt(m.group(18)));
 			}catch(DateTimeException dte){
-				getMonitor().warn("Invalid date found", dte);
+				getMonitor().warn(INVALID_DATE_FOUND, dte);
 				continue;
 			}
 			
@@ -286,9 +293,9 @@ public class Date extends BaleenAnnotator{
 		dtg.setEnd(charEnd);
 		dtg.setConfidence(1.0);
 		
-		dtg.setPrecision("EXACT");
-		dtg.setScope("RANGE");
-		dtg.setTemporalType("DATE");
+		dtg.setPrecision(EXACT);
+		dtg.setScope(RANGE);
+		dtg.setTemporalType(DATE_TYPE);
 		
 		dtg.setTimestampStart(ld1.atStartOfDay(ZoneOffset.UTC).toEpochSecond());
 		dtg.setTimestampStop(ld2.plusDays(1).atStartOfDay(ZoneOffset.UTC).toEpochSecond());
@@ -309,7 +316,7 @@ public class Date extends BaleenAnnotator{
 			try{
 				ld = ym.atDay(Integer.parseInt(m.group(1)));
 			}catch(DateTimeException dte){
-				getMonitor().warn("Invalid date found", dte);
+				getMonitor().warn(INVALID_DATE_FOUND, dte);
 				continue;
 			}
 			
@@ -327,7 +334,7 @@ public class Date extends BaleenAnnotator{
 			try{
 				ld = ym.atDay(Integer.parseInt(m.group(14)));
 			}catch(DateTimeException dte){
-				getMonitor().warn("Invalid date found", dte);
+				getMonitor().warn(INVALID_DATE_FOUND, dte);
 				continue;
 			}
 			
@@ -345,7 +352,7 @@ public class Date extends BaleenAnnotator{
 			try{
 				ld = ym.atDay(Integer.parseInt(m.group(3)));
 			}catch(DateTimeException dte){
-				getMonitor().warn("Invalid date found", dte);
+				getMonitor().warn(INVALID_DATE_FOUND, dte);
 				continue;
 			}
 			
@@ -402,7 +409,7 @@ public class Date extends BaleenAnnotator{
 			try{
 				ld = ym.atDay(day);
 			}catch(DateTimeException dte){
-				getMonitor().warn("Invalid date found", dte);
+				getMonitor().warn(INVALID_DATE_FOUND, dte);
 				continue;
 			}
 			
@@ -424,9 +431,9 @@ public class Date extends BaleenAnnotator{
 		date.setEnd(charEnd);
 		date.setConfidence(1.0);
 		
-		date.setPrecision("EXACT");
-		date.setScope("SINGLE");
-		date.setTemporalType("DATE");
+		date.setPrecision(EXACT);
+		date.setScope(SINGLE);
+		date.setTemporalType(DATE_TYPE);
 		
 		date.setTimestampStart(ld.atStartOfDay(ZoneOffset.UTC).toEpochSecond());
 		date.setTimestampStop(ld.plusDays(1).atStartOfDay(ZoneOffset.UTC).toEpochSecond());
@@ -495,9 +502,9 @@ public class Date extends BaleenAnnotator{
 		date.setEnd(charEnd);
 		date.setConfidence(1.0);
 		
-		date.setPrecision("EXACT");
-		date.setScope("SINGLE");
-		date.setTemporalType("DATE");
+		date.setPrecision(EXACT);
+		date.setScope(SINGLE);
+		date.setTemporalType(DATE_TYPE);
 		
 		LocalDate start = ym.atDay(1);
 		LocalDate end = ym.atEndOfMonth();
@@ -534,9 +541,9 @@ public class Date extends BaleenAnnotator{
 		date.setEnd(charEnd);
 		date.setConfidence(1.0);
 		
-		date.setPrecision("EXACT");
-		date.setScope("SINGLE");
-		date.setTemporalType("DATE");
+		date.setPrecision(EXACT);
+		date.setScope(SINGLE);
+		date.setTemporalType(DATE_TYPE);
 
 		LocalDate start = y.atDay(1);
 		LocalDate end;
@@ -564,10 +571,6 @@ public class Date extends BaleenAnnotator{
 			return false;
 		
 		String nextChar = jCas.getDocumentText().substring(matchEnd, matchEnd + 1);
-		if(nextChar.equals("-") || nextChar.equals("/") || nextChar.equals("\\")){
-			return true;
-		}else{
-			return false;
-		}
+		return "-".equals(nextChar) || "/".equals(nextChar) || "\\".equals(nextChar);
 	}
 }

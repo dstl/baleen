@@ -94,7 +94,6 @@ public class AbstractComponentApiServletTest {
 		List<Map<String, Object>> ret = AbstractComponentApiServlet.getParameters(DummyAnnotator3.class);
 		assertNotNull(ret);
 		assertEquals(3, ret.size());
-		System.out.println(ret);
 	}
 
 	@Test
@@ -102,7 +101,6 @@ public class AbstractComponentApiServletTest {
 		List<Map<String, Object>> ret = AbstractComponentApiServlet.getParameters(DummyResourceAnnotator.class);
 		assertNotNull(ret);
 		assertEquals(1, ret.size());
-		System.out.println(ret);
 	}
 
 	@Test

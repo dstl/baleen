@@ -3,6 +3,7 @@ package uk.gov.dstl.baleen.annotators.cleaners;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -239,5 +240,32 @@ public class CorefBracketsTest extends AnnotatorTestBase {
 		
 		assertEquals(rt, l.getReferent());
 		assertEquals(rt, c.getReferent());
+	}
+	
+	@Test
+	public void testNoExistingReferentsMerge() throws Exception{
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CorefBrackets.class, CorefBrackets.PARAM_MERGE_REFERENTS, true);
+		jCas.setDocumentText("James (Jimmy) visited Thomas and Ben");
+		
+		Person p1 = new Person(jCas, 0, 5);
+		p1.addToIndexes();
+		
+		Person p2 = new Person(jCas, 7, 12);
+		p2.addToIndexes();
+		
+		Person p3 = new Person(jCas, 22, 28);
+		p3.addToIndexes();
+		
+		Person p4 = new Person(jCas, 33, 36);
+		p4.addToIndexes();
+		
+		ae.process(jCas);
+		
+		assertNotNull(p1.getReferent());
+		assertEquals(p1.getReferent(), p2.getReferent());
+		assertNotEquals(p1.getReferent(), p3.getReferent());
+		assertNotEquals(p1.getReferent(), p4.getReferent());
+		assertNull(p3.getReferent());
+		assertNull(p4.getReferent());
 	}
 }

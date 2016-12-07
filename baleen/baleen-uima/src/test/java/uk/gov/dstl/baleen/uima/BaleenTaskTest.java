@@ -80,11 +80,6 @@ public class BaleenTaskTest extends AbstractBaleenTaskTest {
 		Thread.sleep(1000);
 		assertEquals(1, CounterTask.getExecutedCount());
 
-		// Nothing printed here!
-		// CounterTask.getLastSettings().keys().forEach(System.out::println);
-		// JCasUtil.select(getJCas(), BaleenAnnotation.class).stream().forEach(a ->
-		// System.out.println(a.getType()));
-
 		assertEquals("value", CounterTask.getLastSettingsForKey().get());
 	}
 

@@ -70,27 +70,27 @@ public class CleanTemporal extends BaleenAnnotator {
 		List<Entity> toRemove = new ArrayList<>();
 		
 		for(Temporal t : tempora){
-			if(removeZeroTimestamp && (t.getTimestampStart() == 0L || t.getTimestampStop() == 0L)){
-				toRemove.add(t);
-				continue;
-			}
-			
-			if(isMoney(t.getValue()) || isMoney(t.getCoveredText())){
-				toRemove.add(t);
-				continue;
-			}
-			
-			if(t.getTimestampStart() != 0L && t.getTimestampStart() < start.toEpochSecond(ZoneOffset.UTC)){
-				toRemove.add(t);
-				continue;
-			}
-			if(t.getTimestampStop() != 0L && t.getTimestampStop() > end.toEpochSecond(ZoneOffset.UTC)){
+			if(zeroTimestamp(t) || (isMoney(t.getValue()) || isMoney(t.getCoveredText())) || isOutsideRange(t)){
 				toRemove.add(t);
 				continue;
 			}
 		}
 		
 		removeFromJCasIndex(toRemove);
+	}
+	
+	private boolean zeroTimestamp(Temporal t){
+		return removeZeroTimestamp && (t.getTimestampStart() == 0L || t.getTimestampStop() == 0L);
+	}
+	
+	private boolean isOutsideRange(Temporal t){
+		if(t.getTimestampStart() != 0L && t.getTimestampStart() < start.toEpochSecond(ZoneOffset.UTC))
+			return true;
+		
+		if(t.getTimestampStop() != 0L && t.getTimestampStop() > end.toEpochSecond(ZoneOffset.UTC))
+			return true;
+		
+		return false;
 	}
 	
 	private boolean isMoney(String text){

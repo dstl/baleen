@@ -36,6 +36,9 @@
 			"path":"/../tasks.{format}"
 		},
 		{
+			"path":"/../types.{format}"
+		},
+		{
 			"path":"/../schedules.{format}"
 		},
 		{

@@ -73,11 +73,6 @@ public class NPVNPTest extends AbstractAnnotatorTest{
 		
 		assertEquals(4, JCasUtil.select(jCas, Relation.class).size());
 		
-		System.out.println(JCasUtil.selectByIndex(jCas, Relation.class, 0).getCoveredText());
-		System.out.println(JCasUtil.selectByIndex(jCas, Relation.class, 1).getCoveredText());
-		System.out.println(JCasUtil.selectByIndex(jCas, Relation.class, 2).getCoveredText());
-		System.out.println(JCasUtil.selectByIndex(jCas, Relation.class, 3).getCoveredText());
-		
 		Relation r1 = JCasUtil.selectByIndex(jCas, Relation.class, 0);
 		assertEquals("reckons", r1.getValue());
 		assertEquals(person, r1.getSource());

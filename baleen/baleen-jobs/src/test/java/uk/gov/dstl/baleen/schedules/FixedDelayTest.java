@@ -8,8 +8,6 @@ import org.apache.uima.collection.CollectionException;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.schedules.FixedDelay;
-
 public class FixedDelayTest extends AbstractSchedulerTest<FixedDelay> {
 
 	public FixedDelayTest() {
@@ -29,7 +27,6 @@ public class FixedDelayTest extends AbstractSchedulerTest<FixedDelay> {
 
 		long end = System.currentTimeMillis();
 
-		System.out.println(end - start);
 		long diff = end - start;
 		assertTrue(String.format("Diff was %d", diff), diff >= 1900 && diff <= 2100);
 	}

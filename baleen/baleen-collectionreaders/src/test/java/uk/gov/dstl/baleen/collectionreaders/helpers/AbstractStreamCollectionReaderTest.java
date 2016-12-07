@@ -13,7 +13,6 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.collectionreaders.helpers.AbstractStreamCollectionReader;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 public class AbstractStreamCollectionReaderTest {
@@ -65,7 +64,7 @@ public class AbstractStreamCollectionReaderTest {
 
 		@Override
 		protected void apply(Integer next, JCas jCas) {
-			System.out.println(next);
+			// Do nothing
 		}
 
 		@Override

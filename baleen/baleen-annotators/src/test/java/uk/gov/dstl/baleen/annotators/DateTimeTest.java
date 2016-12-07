@@ -128,6 +128,18 @@ public class DateTimeTest extends AbstractAnnotatorTest{
 		assertEquals("22 April 2014 152947Z", ts3.getCoveredText());
 		assertEquals(1398180587L, ts3.getTimestampStart());
 		assertEquals(1398180588L, ts3.getTimestampStop());
+		
+		jCas.reset();
+		
+		jCas.setDocumentText("It happened at 22 April 2014 15:29:47");
+		processJCas();
+		
+		assertEquals(1, JCasUtil.select(jCas, Temporal.class).size());
+		
+		Temporal ts4 = JCasUtil.selectByIndex(jCas, Temporal.class, 0);
+		assertEquals("22 April 2014 15:29:47", ts4.getCoveredText());
+		assertEquals(1398180587L, ts4.getTimestampStart());
+		assertEquals(1398180588L, ts4.getTimestampStop());
 	}
 	
 	@Test

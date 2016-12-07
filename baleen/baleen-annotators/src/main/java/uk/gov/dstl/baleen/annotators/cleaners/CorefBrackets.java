@@ -124,7 +124,7 @@ public class CorefBrackets extends BaleenAnnotator {
 		}else{
 			if(mergeReferents){
 				ReferenceTarget rt = createReferenceTarget(jCas);
-				setReferents(rt, JCasUtil.select(jCas, Entity.class), rts);
+				setReferents(rt, entities, rts);
 				removeFromJCasIndex(rts);
 			}else{
 				getMonitor().warn("Multiple existing referents found, only those entities without existing referents will be modified");

@@ -110,9 +110,6 @@ public class UbmreDependencyRelationshipTest extends AbstractMultiAnnotatorTest 
 		// jon-visit-london, jon-visit-monday
 		// chris-visit-london, chris-visit-monday.
 
-		relations.forEach(r -> System.out.printf("%s %s %s\n", r.getSource().getCoveredText(),
-				r.getTarget().getCoveredText(), r.getRelationshipType()));
-
 		assertEquals(4, relations.size());
 
 		assertTrue(relations.stream()

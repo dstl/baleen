@@ -210,7 +210,6 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
 		assertEquals("keywords", md.getKey());
 		
 		List<String> keywords = Arrays.asList(md.getValue().split(";"));
-		System.err.println(keywords);
 		assertEquals(11, keywords.size());
 		assertTrue(keywords.contains("minimal generating sets"));
 		assertTrue(keywords.contains("linear diophantine equations"));

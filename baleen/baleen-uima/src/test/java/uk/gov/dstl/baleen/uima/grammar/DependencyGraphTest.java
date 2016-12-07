@@ -16,7 +16,6 @@ import org.junit.Test;
 import uk.gov.dstl.baleen.types.language.Dependency;
 import uk.gov.dstl.baleen.types.language.Sentence;
 import uk.gov.dstl.baleen.types.language.WordToken;
-import uk.gov.dstl.baleen.uima.grammar.DependencyGraph;
 
 public class DependencyGraphTest {
 
@@ -210,9 +209,6 @@ public class DependencyGraphTest {
 		traverseCount = 0;
 
 		graph.traverse(10, Collections.singletonList(dA), (d, f, t, h) -> {
-			// System.out.println(f.getCoveredText() + "-" + t.getCoveredText());
-			// System.out.println("\t" + h.stream().map(w ->
-			// w.getCoveredText()).collect(Collectors.joining(",")));
 			// TODO: Ideally test the content so that the history is correct, but its hard to
 			// predict
 

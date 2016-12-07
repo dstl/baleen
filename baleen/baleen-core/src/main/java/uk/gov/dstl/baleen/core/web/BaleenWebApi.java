@@ -62,6 +62,7 @@ import uk.gov.dstl.baleen.core.web.servlets.PipelineManagerServlet;
 import uk.gov.dstl.baleen.core.web.servlets.SchedulesServlet;
 import uk.gov.dstl.baleen.core.web.servlets.StatusServlet;
 import uk.gov.dstl.baleen.core.web.servlets.TasksServlet;
+import uk.gov.dstl.baleen.core.web.servlets.TypesServlet;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
@@ -257,6 +258,7 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		addServlet(new CollectionReadersServlet(), "/collectionreaders/*");
 		addServlet(new ConsumersServlet(), "/consumers/*");
 		addServlet(new ContentExtractorsServlet(), "/contentextractors/*");
+		addServlet(new TypesServlet(), "/types/*");
 		addServlet(new TasksServlet(), "/tasks/*");
 		addServlet(new SchedulesServlet(), "/schedules/*");
 
