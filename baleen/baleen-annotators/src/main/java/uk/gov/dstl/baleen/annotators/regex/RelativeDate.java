@@ -84,6 +84,10 @@ public class RelativeDate extends BaleenAnnotator {
 	private static final String DAYS = "(Mon|Monday|Tue|Tues|Tuesday|Wed|Wednesday|Thu|Thurs|Thursday|Fri|Friday|Sat|Saturday|Sun|Sunday)";
 	private static final String MONTHS = "(January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|July|Jul|August|Aug|September|Sept|Sep|October|Oct|November|Nov|December|Dec)";
 	
+	private static final String RELATIVE = "RELATIVE";
+	private static final String SINGLE = "SINGLE";
+	private static final String DATE = "DATE";
+	
 	LocalDate relativeTo = null;
 	
 	@Override
@@ -167,11 +171,11 @@ public class RelativeDate extends BaleenAnnotator {
 		Matcher m = p.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
-			if(m.group(1).equalsIgnoreCase("week")){
+			if("week".equalsIgnoreCase(m.group(1))){
 				createRelativeWeek(jCas, m.start(), m.end(), 0);
-			}else if(m.group(1).equalsIgnoreCase("month")){
+			}else if("month".equalsIgnoreCase(m.group(1))){
 				createRelativeMonth(jCas, m.start(), m.end(), 0);
-			}else if(m.group(1).equalsIgnoreCase("year")){
+			}else if("year".equalsIgnoreCase(m.group(1))){
 				createRelativeYear(jCas, m.start(), m.end(), 0);
 			}
 		}
@@ -185,7 +189,7 @@ public class RelativeDate extends BaleenAnnotator {
 			Integer offset = null;
 			
 			if(relativeTo != null){
-				if(m.group(1).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(1))){
 					for(int i = 1; i <= 7; i++){
 						if(relativeTo.plusDays(i).getDayOfWeek() == DateTimeUtils.asDay(m.group(2))){
 							offset = i;
@@ -212,19 +216,19 @@ public class RelativeDate extends BaleenAnnotator {
 		
 		while(m.find()){
 			if(m.group(3) != null){
-				if(m.group(4).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(4))){
 					createRelativeWeekDay(jCas, m.start(), m.end(), 1, DateTimeUtils.asDay(m.group(3)));
 				}else{
 					createRelativeWeekDay(jCas, m.start(), m.end(), -1, DateTimeUtils.asDay(m.group(3)));
 				}
 			}else if(m.group(2) != null){
-				if(m.group(4).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(4))){
 					createRelativeWeekPeriod(jCas, m.start(), m.end(), 1);
 				}else{
 					createRelativeWeekPeriod(jCas, m.start(), m.end(), -1);
 				}
 			}else{
-				if(m.group(4).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(4))){
 					createRelativeWeek(jCas, m.start(), m.end(), 1);
 				}else{
 					createRelativeWeek(jCas, m.start(), m.end(), -1);
@@ -239,13 +243,13 @@ public class RelativeDate extends BaleenAnnotator {
 		
 		while(m.find()){
 			if(m.group(2) != null){
-				if(m.group(3).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(3))){
 					createRelativeMonthPeriod(jCas, m.start(), m.end(), 1);
 				}else{
 					createRelativeMonthPeriod(jCas, m.start(), m.end(), -1);
 				}
 			}else{
-				if(m.group(3).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(3))){
 					createRelativeMonth(jCas, m.start(), m.end(), 1);
 				}else{
 					createRelativeMonth(jCas, m.start(), m.end(), -1);
@@ -260,19 +264,19 @@ public class RelativeDate extends BaleenAnnotator {
 		
 		while(m.find()){
 			if(m.group(3) != null){
-				if(m.group(4).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(4))){
 					createRelativeYearMonth(jCas, m.start(), m.end(), 1, DateTimeUtils.asMonth(m.group(3)));
 				}else{
 					createRelativeYearMonth(jCas, m.start(), m.end(), -1, DateTimeUtils.asMonth(m.group(3)));
 				}
 			}else if(m.group(2) != null){
-				if(m.group(4).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(4))){
 					createRelativeYearPeriod(jCas, m.start(), m.end(), 1);
 				}else{
 					createRelativeYearPeriod(jCas, m.start(), m.end(), -1);
 				}
 			}else{
-				if(m.group(4).equalsIgnoreCase("next")){
+				if("next".equalsIgnoreCase(m.group(4))){
 					createRelativeYear(jCas, m.start(), m.end(), 1);
 				}else{
 					createRelativeYear(jCas, m.start(), m.end(), -1);
@@ -287,17 +291,17 @@ public class RelativeDate extends BaleenAnnotator {
 		
 		while(m.find()){
 			Integer offset = Integer.parseInt(m.group(3));
-			if(m.group(2).equalsIgnoreCase("last")){
+			if("last".equalsIgnoreCase(m.group(2))){
 				offset = -offset;
 			}
 			
-			if(m.group(4).equalsIgnoreCase("day")){
+			if("day".equalsIgnoreCase(m.group(4))){
 				createRelativeDayPeriod(jCas, m.start(), m.end(), offset);
-			}else if(m.group(4).equalsIgnoreCase("week")){
+			}else if("week".equalsIgnoreCase(m.group(4))){
 				createRelativeWeekPeriod(jCas, m.start(), m.end(), offset);
-			}else if(m.group(4).equalsIgnoreCase("month")){
+			}else if("month".equalsIgnoreCase(m.group(4))){
 				createRelativeMonthPeriod(jCas, m.start(), m.end(), offset);
-			}else if(m.group(4).equalsIgnoreCase("year")){
+			}else if("year".equalsIgnoreCase(m.group(4))){
 				createRelativeYearPeriod(jCas, m.start(), m.end(), offset);
 			}
 		}
@@ -307,9 +311,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && dayOffset != null){
 			if(dayOffset > 0){
@@ -328,9 +332,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && dayOffset != null){
 			LocalDate d = relativeTo.plusDays(dayOffset);
@@ -346,9 +350,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && weekOffset != null){
 			if(weekOffset > 0){
@@ -367,9 +371,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && weekOffset != null){
 			LocalDate startOfWeek = relativeTo.plusWeeks(weekOffset);
@@ -391,9 +395,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && weekOffset != null){
 			LocalDate dayOfWeek = relativeTo.plusWeeks(weekOffset);
@@ -417,9 +421,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && monthOffset != null){
 			if(monthOffset > 0){
@@ -438,9 +442,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && monthOffset != null){
 			YearMonth ym = YearMonth.from(relativeTo).plusMonths(monthOffset);
@@ -456,9 +460,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && yearOffset != null){
 			if(yearOffset > 0){
@@ -477,9 +481,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && yearOffset != null){
 			Year y = Year.from(relativeTo).plusYears(yearOffset);
@@ -495,9 +499,9 @@ public class RelativeDate extends BaleenAnnotator {
 		Temporal t = new Temporal(jCas, charBegin, charEnd);
 		
 		t.setConfidence(1.0);
-		t.setPrecision("RELATIVE");
-		t.setScope("SINGLE");
-		t.setTemporalType("DATE");
+		t.setPrecision(RELATIVE);
+		t.setScope(SINGLE);
+		t.setTemporalType(DATE);
 
 		if(relativeTo != null && yearOffset != null){
 			Year y = Year.from(relativeTo).plusYears(yearOffset);

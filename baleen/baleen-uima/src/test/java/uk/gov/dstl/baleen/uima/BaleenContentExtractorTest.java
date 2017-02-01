@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UimaContext;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
@@ -30,6 +29,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BaleenContentExtractorTest {
@@ -54,7 +54,7 @@ public class BaleenContentExtractorTest {
 
 	@Before
 	public void setUp() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		annotation =  new Annotation(jCas);
 		context = UimaContextFactory.createUimaContext(PipelineCpeBuilder.PIPELINE_NAME, PIPELINE_NAME);
 	}

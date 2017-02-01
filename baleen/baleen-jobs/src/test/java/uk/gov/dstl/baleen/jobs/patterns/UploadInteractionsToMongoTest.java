@@ -12,11 +12,12 @@ import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceAccessException;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.io.Files;
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.jobs.interactions.UploadInteractionsToMongo;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
@@ -44,9 +45,9 @@ public class UploadInteractionsToMongoTest extends AbstractBaleenTaskTest {
 		execute(ae);
 
 		final SharedFongoResource sfr = (SharedFongoResource) ae.getUimaContext().getResourceObject("mongo");
-		final DBCollection relationTypes = sfr.getDB().getCollection("relationTypes");
+		final MongoCollection<Document> relationTypes = sfr.getDB().getCollection("relationTypes");
 		assertTrue(relationTypes.count() > 0);
-		final DBCollection interactions = sfr.getDB().getCollection("interactions");
+		final MongoCollection<Document> interactions = sfr.getDB().getCollection("interactions");
 		assertTrue(interactions.count() > 0);
 
 	}

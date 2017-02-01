@@ -5,9 +5,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.uima.UIMAException;
 import org.apache.uima.cas.Feature;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.StringArray;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
@@ -16,7 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
-import uk.gov.dstl.baleen.uima.utils.FeatureUtils;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class FeatureUtilsTest {
 	private static final String DOCUMENT_RELEASABILITY = "documentReleasability";
@@ -24,7 +26,7 @@ public class FeatureUtilsTest {
 	
 	@BeforeClass
 	public static void setUp() throws UIMAException{
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 	
 	@Before
@@ -150,5 +152,35 @@ public class FeatureUtilsTest {
 		assertEquals(new Integer(2), (Integer)o[1]);
 		assertTrue(o[2] instanceof Double);
 		assertEquals(new Double(0.45), (Double)o[2]);
+	}
+	
+	@Test
+	public void testStringArrayToList(){
+		DocumentAnnotation da = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
+		StringArray rel = new StringArray(jCas, 3);
+		rel.set(0, "ENG");
+		rel.set(1, "WAL");
+		rel.set(2, "SCO");
+		da.setDocumentReleasability(rel);
+		
+		Feature f = da.getType().getFeatureByBaseName(DOCUMENT_RELEASABILITY);
+		
+		List<Object> o = FeatureUtils.featureToList(f, da);
+		assertEquals(3, o.size());
+		assertTrue(o.get(0) instanceof String);
+		assertEquals("ENG", (String)o.get(0));
+		assertTrue(o.get(1) instanceof String);
+		assertEquals("WAL", (String)o.get(1));
+		assertTrue(o.get(2) instanceof String);
+		assertEquals("SCO", (String)o.get(2));
+	}
+	
+	@Test
+	public void testEmptyToList(){
+		DocumentAnnotation da = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
+		Feature f = da.getType().getFeatureByBaseName(DOCUMENT_RELEASABILITY);
+		
+		List<Object> o = FeatureUtils.featureToList(f, da);
+		assertEquals(Collections.emptyList(), o);
 	}
 }

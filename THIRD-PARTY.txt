@@ -1,5 +1,4 @@
-
-Lists of 227 third-party dependencies.
+Lists of 229 third-party dependencies.
      (Public Domain) AOP alliance (aopalliance:aopalliance:1.0 - http://aopalliance.sourceforge.net)
      (Apache 2) opencsv (au.com.bytecode:opencsv:2.4 - https://github.com/EmergentOrder/opencsv)
      (GNU LESSER GENERAL PUBLIC LICENSE) c3p0:JDBC DataSources/Resource Pools (c3p0:c3p0:0.9.1.1 - http://c3p0.sourceforge.net)
@@ -24,7 +23,7 @@ Lists of 227 third-party dependencies.
      (The Apache Software License, Version 2.0) Jackson dataformat: Smile (com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.8.1 - http://github.com/FasterXML/jackson-dataformats-binary)
      (The Apache Software License, Version 2.0) Jackson-dataformat-YAML (com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.8.1 - https://github.com/FasterXML/jackson)
      (The Apache Software License, Version 2.0) Jackson-module-Afterburner (com.fasterxml.jackson.module:jackson-module-afterburner:2.6.5 - http://wiki.fasterxml.com/JacksonHome)
-     (The Apache Software License, Version 2.0) fongo (com.github.fakemongo:fongo:1.6.8 - https://github.com/fakemongo/fongo)
+     (The Apache Software License, Version 2.0) fongo (com.github.fakemongo:fongo:2.0.10 - https://github.com/fakemongo/fongo)
      (UnRar License) Java UnRar (com.github.junrar:junrar:0.7 - https://github.com/junrar/junrar)
      (BSD License) curvesapi (com.github.virtuald:curvesapi:1.03 - https://github.com/virtuald/curvesapi)
      (GNU Lesser Public License) FindBugs-Annotations (com.google.code.findbugs:annotations:2.0.1 - http://findbugs.sourceforge.net/)
@@ -199,7 +198,10 @@ Lists of 227 third-party dependencies.
      (The MIT License) jsoup (org.jsoup:jsoup:1.7.2 - http://jsoup.org/)
      (BSD 3-Clause License) MaltParser (org.maltparser:maltparser:1.9.0 - http://maltparser.org/)
      (The MIT License) Mockito (org.mockito:mockito-all:1.10.19 - http://www.mockito.org)
-     (The Apache Software License, Version 2.0) MongoDB Java Driver (org.mongodb:mongo-java-driver:2.14.3 - http://www.mongodb.org)
+     (The Apache Software License, Version 2.0) BSON (org.mongodb:bson:3.4.0 - http://bsonspec.org)
+     (The Apache Software License, Version 2.0) MongoDB Driver (org.mongodb:mongodb-driver:3.4.0 - http://www.mongodb.org)
+     (The Apache Software License, Version 2.0) MongoDB Java Driver Core (org.mongodb:mongodb-driver-core:3.4.0 - http://www.mongodb.org)
+     (Mozilla Public License, Version 2.0) Mozilla Rhino (org.mozilla:rhino:1.7.7.1 - https://developer.mozilla.org/en/Rhino)
      (OGC copyright) GeoAPI (org.opengis:geoapi:3.0.0 - http://www.geoapi.org/geoapi/)
      (BSD) ASM Core (org.ow2.asm:asm:5.0.4 - http://asm.objectweb.org/asm/)
      (The PostgreSQL License) PostgreSQL JDBC Driver - JDBC 4.2 (org.postgresql:postgresql:9.4.1211 - https://github.com/pgjdbc/pgjdbc)
@@ -217,7 +219,6 @@ Lists of 227 third-party dependencies.
      (Apache License Version 2.0) SnakeYAML (org.yaml:snakeyaml:1.15 - http://www.snakeyaml.org)
      (Apache License, Version 2.0) SnakeYAML (org.yaml:snakeyaml:1.17 - http://www.snakeyaml.org)
      (Unknown license) regexp (regexp:regexp:1.3 - no url defined)
-     (Mozilla Public License) Rhino (rhino:js:1.7R2 - http://www.mozilla.org/rhino/)
      (BSD 3-Clause License) LIBSVM (tw.edu.ntu.csie:libsvm:3.1 - http://www.csie.ntu.edu.tw/~cjlin/libsvm/)
      (Apache License 2.0) Baleen Annotators (uk.gov.dstl.baleen:baleen-annotators:2.3.0-SNAPSHOT - http://github.com/dstl/baleen/baleen-annotators)
      (Apache License 2.0) Baleen Collection Readers (uk.gov.dstl.baleen:baleen-collectionreaders:2.3.0-SNAPSHOT - http://github.com/dstl/baleen/baleen-collectionreaders)

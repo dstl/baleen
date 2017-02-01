@@ -27,6 +27,7 @@ import uk.gov.dstl.baleen.types.language.Sentence;
 import uk.gov.dstl.baleen.types.language.WordToken;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
 /**
@@ -69,7 +70,7 @@ public class OpenNLP extends BaleenAnnotator {
 	@Override
 	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
 		try{
-			et = TypeUtils.getEntityClass(type, JCasFactory.createJCas());
+			et = TypeUtils.getEntityClass(type, JCasFactory.createJCas(TypeSystemSingleton.getTypeSystemDescriptionInstance()));
 		}catch(UIMAException | BaleenException e){
 			throw new ResourceInitializationException(e);
 		}

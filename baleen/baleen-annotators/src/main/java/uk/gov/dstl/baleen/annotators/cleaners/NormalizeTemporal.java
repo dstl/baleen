@@ -68,15 +68,27 @@ public class NormalizeTemporal extends AbstractNormalizeEntities{
 			return false;
 		
 		Temporal t = (Temporal) e;
-		if(!"SINGLE".equalsIgnoreCase(t.getScope()))
-			return false;
 		
-		if(t.getTimestampStart() == 0L || t.getTimestampStop() == 0L)
-			return false;
+		return "SINGLE".equalsIgnoreCase(t.getScope()) && isTimestampSet(t) && matchesType(t);
+	}
+	
+	/**
+	 * Return false if we suspect the timestamp hasn't been set on a Temporal object
+	 * (i.e. both the start and end are equal to 0), or true otherwise. 
+	 */
+	private boolean isTimestampSet(Temporal t){
+		return t.getTimestampStart() != 0L && t.getTimestampStop() != 0L;
+	}
+	
+	/**
+	 * Return true if the list of types to act on has been set and it matches the type
+	 * set on the Temporal object t, or if the list of types hasn't been set.
+	 * Return false otherwise.
+	 */
+	private boolean matchesType(Temporal t){
+		if(Strings.isNullOrEmpty(type))
+			return true;
 		
-		if(!Strings.isNullOrEmpty(type) && !type.equalsIgnoreCase(t.getTemporalType()))
-			return false;
-		
-		return true;
+		return type.equalsIgnoreCase(t.getTemporalType());
 	}
 }

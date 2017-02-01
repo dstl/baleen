@@ -1,45 +1,43 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.consumers.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.FileUtils;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.io.Files;
+
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 public class AbstractBaleenFileConsumerTest {
 	private static final String BASE_PATH = "basePath";
 	private static final String FILENAME = "test.txt";
 	private static final String TEXT = "Hello World";
-	static JCas jCas;
-
-	@BeforeClass
-	public static void beforeClass() throws UIMAException{
-		jCas = JCasFactory.createJCas();
-	}
+	private JCas jCas;
 	
 	@Before
 	public void beforeTest() throws UIMAException{
-		jCas.reset();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 	
 	@Test
 	public void test() throws Exception{
 		File baseDir = Files.createTempDir();
 		
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class, BASE_PATH, baseDir.getPath());
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), BASE_PATH, baseDir.getPath());
 		
 		jCas.setDocumentText(TEXT);
 		DocumentAnnotation da = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
@@ -55,7 +53,7 @@ public class AbstractBaleenFileConsumerTest {
 	public void testNoSource() throws Exception{
 		File baseDir = Files.createTempDir();
 		
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class, BASE_PATH, baseDir.getPath(), "extension", "txt");
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), BASE_PATH, baseDir.getPath(), "extension", "txt");
 		
 		jCas.setDocumentText(TEXT);
 		
@@ -70,7 +68,7 @@ public class AbstractBaleenFileConsumerTest {
 		File baseDir = File.createTempFile("baleen", ".foo");
 		
 		try{
-			AnalysisEngineFactory.createEngine(TestFileConsumer.class, BASE_PATH, baseDir.getPath());
+			AnalysisEngineFactory.createEngine(TestFileConsumer.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), BASE_PATH, baseDir.getPath());
 			fail("Didn't throw expected exception");
 		}catch(ResourceInitializationException rie){
 			//Expected exception
@@ -81,7 +79,7 @@ public class AbstractBaleenFileConsumerTest {
 	public void testMissingBasePath() throws Exception{
 		File baseDir = new File(Files.createTempDir(),"subdir");
 
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class, BASE_PATH, baseDir.getPath());
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), BASE_PATH, baseDir.getPath());
 		
 		jCas.setDocumentText(TEXT);
 		DocumentAnnotation da = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
@@ -95,7 +93,7 @@ public class AbstractBaleenFileConsumerTest {
 
 	@Test
 	public void testNullBasePath() throws Exception{
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class);
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(TestFileConsumer.class, TypeSystemSingleton.getTypeSystemDescriptionInstance());
 		
 		DocumentAnnotation da = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
 		da.setSourceUri(FILENAME);

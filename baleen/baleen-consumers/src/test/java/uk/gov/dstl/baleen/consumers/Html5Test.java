@@ -13,7 +13,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.jsoup.Jsoup;
@@ -33,6 +32,8 @@ import uk.gov.dstl.baleen.types.common.Quantity;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
 /**
@@ -45,7 +46,7 @@ public class Html5Test {
 	@Before
 	public void beforeTest() throws UIMAException {
 		outputFolder = Files.createTempDir();
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 
 	@After
@@ -55,7 +56,7 @@ public class Html5Test {
 
 	@Test
 	public void testCreateFile() throws UIMAException {
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, Html5.PARAM_OUTPUT_FOLDER,
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), Html5.PARAM_OUTPUT_FOLDER,
 				outputFolder.getPath());
 
 		jCas.setDocumentText("Hello World!");
@@ -70,7 +71,7 @@ public class Html5Test {
 
 	@Test
 	public void testCreateExistingFile() throws UIMAException, IOException {
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, Html5.PARAM_OUTPUT_FOLDER,
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), Html5.PARAM_OUTPUT_FOLDER,
 				outputFolder.getPath());
 
 		jCas.setDocumentText("Hello World!");
@@ -88,7 +89,7 @@ public class Html5Test {
 
 	@Test
 	public void testCreateExternalIdFile() throws UIMAException {
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, Html5.PARAM_OUTPUT_FOLDER,
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), Html5.PARAM_OUTPUT_FOLDER,
 				outputFolder.getPath(), Html5.PARAM_USE_EXTERNAL_ID, true, Html5.PARAM_CONTENT_HASH_AS_ID, false);
 
 		jCas.setDocumentText("Hello World!");
@@ -104,7 +105,7 @@ public class Html5Test {
 	@Test
 	public void testCreateOutputDir() throws UIMAException {
 		File newFolder = new File(outputFolder, "test");
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, Html5.PARAM_OUTPUT_FOLDER,
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), Html5.PARAM_OUTPUT_FOLDER,
 				newFolder.getPath());
 
 		jCas.setDocumentText("Hello World!");
@@ -119,7 +120,7 @@ public class Html5Test {
 
 	@Test
 	public void testCSS() throws UIMAException, IOException {
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, Html5.PARAM_OUTPUT_FOLDER,
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), Html5.PARAM_OUTPUT_FOLDER,
 				outputFolder.getPath(), Html5.PARAM_CSS, "test.css");
 
 		jCas.setDocumentText("This is a test document.");
@@ -142,7 +143,7 @@ public class Html5Test {
 
 	@Test
 	public void testDocument() throws UIMAException, IOException {
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, Html5.PARAM_OUTPUT_FOLDER,
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(Html5.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), Html5.PARAM_OUTPUT_FOLDER,
 				outputFolder.getPath());
 
 		jCas.setDocumentText(

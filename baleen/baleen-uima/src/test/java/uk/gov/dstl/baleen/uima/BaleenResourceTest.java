@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Map;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -20,6 +19,8 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.collect.Maps;
+
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BaleenResourceTest {
@@ -33,7 +34,7 @@ public class BaleenResourceTest {
 
 	@Before
 	public void setUp() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		annotation =  new Annotation(jCas);
 		specifier = new CustomResourceSpecifier_impl();
 	}

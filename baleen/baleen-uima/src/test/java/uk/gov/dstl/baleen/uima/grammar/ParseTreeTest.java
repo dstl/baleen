@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.language.PhraseChunk;
 import uk.gov.dstl.baleen.types.language.WordToken;
-import uk.gov.dstl.baleen.uima.grammar.ParseTree;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class ParseTreeTest {
 
@@ -25,7 +24,7 @@ public class ParseTreeTest {
 
 	@Before
 	public void before() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		final String text = "1 2 3 4";
 		jCas.setDocumentText(text);
 

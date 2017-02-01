@@ -17,9 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.uima.UIMAException;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
-import org.apache.uima.jcas.JCas;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,34 +27,30 @@ import com.icegreen.greenmail.junit.GreenMailRule;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetupTest;
 
+import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-public class EmailReaderTest {
+public class EmailReaderTest extends AbstractReaderTest{
 	@Rule
 	public final GreenMailRule greenMail = new GreenMailRule(ServerSetupTest.SMTP_POP3_IMAP);
 	
-	JCas jCas;
-	
 	private static final String FIRST_LINE = "This is the first line";
+	
+	public EmailReaderTest(){
+		super(EmailReader.class);
+	}
 	
 	//TODO: Improve test coverage (e.g. duplicate attachments)
 	
 	@Before
-	public void beforeTest() throws UIMAException{
+	public void before() throws UIMAException{
 		greenMail.setUser("to@localhost.com", "to@localhost.com", "password");
-		
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
 	}
-	
-	
+
 	@Test
 	public void testPopNoMessages() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -83,7 +77,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -127,7 +121,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -168,7 +162,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -221,7 +215,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -279,7 +273,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -318,7 +312,7 @@ public class EmailReaderTest {
 		GreenMailUtil.sendTextEmailTest("to@localhost.com", "from@localhost.com", subject, body);
 		GreenMailUtil.sendTextEmailTest("to@localhost.com", "from@localhost.com", subject2, body2);
 		
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 15,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -348,7 +342,7 @@ public class EmailReaderTest {
 	
 	@Test
 	public void testPopWait() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -385,7 +379,7 @@ public class EmailReaderTest {
 		ccMessage.addRecipients(RecipientType.CC, "cc@localhost.com");
 		GreenMailUtil.sendMimeMessage(ccMessage);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -448,7 +442,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "pop3",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getPop3().getBindTo(),
@@ -491,7 +485,7 @@ public class EmailReaderTest {
 	
 	@Test
 	public void testImapNoMessages() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "imap",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getImap().getBindTo(),
@@ -518,7 +512,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "imap",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getImap().getBindTo(),
@@ -562,7 +556,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "imap",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getImap().getBindTo(),
@@ -603,7 +597,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "imap",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getImap().getBindTo(),
@@ -656,7 +650,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "imap",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getImap().getBindTo(),
@@ -714,7 +708,7 @@ public class EmailReaderTest {
 		
 		GreenMailUtil.sendAttachmentEmail("to@localhost.com", "from@localhost.com", subject2, body2, IOUtils.toByteArray(getClass().getResourceAsStream("lineReader.txt")), "text/plain", "lineReader.txt", "Test File", ServerSetupTest.SMTP);
 				
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(EmailReader.class,
+		BaleenCollectionReader bcr = getCollectionReader(
 				EmailReader.PARAM_PROTOCOL, "imap",
 				EmailReader.PARAM_WAIT, 5,
 				EmailReader.PARAM_SERVER, greenMail.getImap().getBindTo(),

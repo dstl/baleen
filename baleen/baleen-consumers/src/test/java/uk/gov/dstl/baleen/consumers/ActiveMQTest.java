@@ -18,11 +18,8 @@ import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.apache.uima.fit.factory.JCasFactory;
-import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ExternalResourceDescription;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,6 +29,7 @@ import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 public class ActiveMQTest extends ConsumerTestBase {
 
@@ -42,7 +40,6 @@ public class ActiveMQTest extends ConsumerTestBase {
 	private static final String PROTOCOL_VALUE = "vm";
 	private static final String BROKERARGS_VALUE = "broker.persistent=false";
 
-	private static JCas jCas;
 	private static AnalysisEngine ae;
 	private static SharedActiveMQResource resource;
 
@@ -61,7 +58,7 @@ public class ActiveMQTest extends ConsumerTestBase {
 
 		//Create descriptors
 		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(ACTIVEMQ, SharedActiveMQResource.class, configArr);
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(ActiveMQ.class, ACTIVEMQ, erd, ActiveMQ.PARAM_ENDPOINT, ENDPOINT);
+		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(ActiveMQ.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), ACTIVEMQ, erd, ActiveMQ.PARAM_ENDPOINT, ENDPOINT);
 
 		//Create annotator
 		ae = AnalysisEngineFactory.createEngine(aed);
@@ -71,16 +68,6 @@ public class ActiveMQTest extends ConsumerTestBase {
 		//Subscribe to what will be the output topic
 		Session session = resource.getSession();
 		topicConsumer = session.createConsumer(session.createTopic(ENDPOINT));
-	}
-
-	@Override
-	@Before
-	public void beforeTest() throws UIMAException {
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
 	}
 
 	@Test

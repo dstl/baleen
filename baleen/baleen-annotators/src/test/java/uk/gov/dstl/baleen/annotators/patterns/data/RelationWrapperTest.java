@@ -5,19 +5,18 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.annotators.patterns.data.RelationWrapper;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Relation;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class RelationWrapperTest {
 
 	@Test
 	public void testGetRelation() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 		final Relation r = new Relation(jCas);
 		final RelationWrapper wrapper = new RelationWrapper(r);
 		assertEquals(r, wrapper.getRelation());
@@ -25,7 +24,7 @@ public class RelationWrapperTest {
 
 	@Test
 	public void testGetEquals() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 
 		final Entity a = new Entity(jCas);
 		final Entity b = new Entity(jCas);

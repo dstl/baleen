@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -21,6 +20,7 @@ import org.junit.Test;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.testing.DummyBaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.testing.FakeContentExtractor;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class BaleenCollectionReaderTest {
 	@Test
@@ -42,7 +42,7 @@ public class BaleenCollectionReaderTest {
 		}).start();
 
 		while(cr.hasNext()){
-			JCas jCas = JCasFactory.createJCas();
+			JCas jCas = JCasSingleton.getJCasInstance();
 			cr.getNext(jCas.getCas());
 		}
 

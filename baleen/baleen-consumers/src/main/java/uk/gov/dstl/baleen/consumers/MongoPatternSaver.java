@@ -1,5 +1,8 @@
 package uk.gov.dstl.baleen.consumers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -7,11 +10,9 @@ import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.types.Base;
@@ -64,7 +65,7 @@ public class MongoPatternSaver extends BaleenConsumer {
 	@ConfigurationParameter(name = KEY_CLEAR, defaultValue = "true")
 	private Boolean clear;
 
-	private DBCollection dbCollection;
+	private MongoCollection<Document> dbCollection;
 
 	@Override
 	public void doInitialize(final UimaContext aContext) throws ResourceInitializationException {
@@ -74,27 +75,31 @@ public class MongoPatternSaver extends BaleenConsumer {
 
 		// Delete the whole database
 		if (clear) {
-			dbCollection.remove(new BasicDBObject());
+			dbCollection.deleteMany(new Document());
 		}
 
 	}
 
 	@Override
 	protected void doProcess(final JCas jCas) throws AnalysisEngineProcessException {
-
+		List<Document> patterns = new ArrayList<>();
+		
 		for (final Pattern pattern : JCasUtil.select(jCas, Pattern.class)) {
 			final Base source = pattern.getSource();
 			final Base target = pattern.getTarget();
 
 			if (source instanceof Entity && target instanceof Entity) {
-				final DBObject object = new BasicDBObject()
+				final Document object = new Document()
 						.append("source", saveEntity((Entity) source))
 						.append("target", saveEntity((Entity) target))
 						.append("words", saveWords(pattern));
 
-				dbCollection.save(object);
+				patterns.add(object);
 			}
 		}
+		
+		if(!patterns.isEmpty())
+			dbCollection.insertMany(patterns);
 	}
 
 	/**
@@ -104,11 +109,11 @@ public class MongoPatternSaver extends BaleenConsumer {
 	 *            the pattern
 	 * @return the DB object
 	 */
-	private DBObject saveWords(final Pattern pattern) {
-		final BasicDBList list = new BasicDBList();
+	private List<Object> saveWords(final Pattern pattern) {
+		final List<Object> list = new ArrayList<>();
 		for (int i = 0; i < pattern.getWords().size(); i++) {
 			final WordToken w = pattern.getWords(i);
-			final BasicDBObject o = new BasicDBObject()
+			final Document o = new Document()
 					.append("text", w.getCoveredText())
 					.append("pos", w.getPartOfSpeech());
 
@@ -128,8 +133,8 @@ public class MongoPatternSaver extends BaleenConsumer {
 	 *            the entity
 	 * @return the DB object
 	 */
-	private DBObject saveEntity(final Entity entity) {
-		return new BasicDBObject()
+	private Document saveEntity(final Entity entity) {
+		return new Document()
 				.append("text", entity.getCoveredText())
 				.append("type", entity.getTypeName());
 	}

@@ -5,18 +5,18 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.semantic.Entity;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class ComparableEntitySpanTest {
 
 	@Test
 	public void test() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		jCas.setDocumentText("Hello world");
 		final Entity e = new Entity(jCas, 0, 5);
 
@@ -55,7 +55,7 @@ public class ComparableEntitySpanTest {
 	
 	@Test
 	public void testCompare() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 		final Entity e = new Entity(jCas);
 		final Entity e2 = new Entity(jCas);
 

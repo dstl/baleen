@@ -10,18 +10,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.CollectionReaderFactory;
-import org.apache.uima.fit.factory.JCasFactory;
-import org.apache.uima.jcas.JCas;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-public class ReutersReaderTest {
+public class ReutersReaderTest extends AbstractReaderTest {
+
+	public ReutersReaderTest() {
+		super(ReutersReader.class);
+	}
 
 	private final static String SGML = "<!DOCTYPE lewis SYSTEM \"lewis.dtd\">\n" +
 			"<REUTERS TOPICS=\"YES\" LEWISSPLIT=\"TRAIN\" CGISPLIT=\"TRAINING-SET\" OLDID=\"5544\" NEWID=\"1\">\n" +
@@ -60,7 +60,6 @@ public class ReutersReaderTest {
 			"</REUTERS>\n";
 
 	private static Path tmpDir;
-	JCas jCas;
 
 	@BeforeClass
 	public static void beforeClass() throws IOException {
@@ -74,22 +73,10 @@ public class ReutersReaderTest {
 		tmpDir.toFile().delete();
 	}
 
-	@Before
-	public void beforeTest() throws UIMAException {
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
-	}
-
-	@After
-	public void after() {
-	}
-
 	@Test
 	public void test() throws IOException, UIMAException {
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(ReutersReader.class, ReutersReader.KEY_PATH, tmpDir.toAbsolutePath().toString());
+		BaleenCollectionReader bcr = getCollectionReader(ReutersReader.KEY_PATH, tmpDir.toAbsolutePath().toString());
+		bcr.initialize();
 
 		assertTrue(bcr.doHasNext());
 

@@ -13,18 +13,16 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 import org.bson.types.ObjectId;
+
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.Cursor;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
 /**
  * This collection reader will process an entire Mongo collection, and then watch for new documents.
@@ -91,7 +89,7 @@ public class MongoReader extends BaleenCollectionReader {
 	@ConfigurationParameter(name = PARAM_DELETE_SOURCE, defaultValue = "false")
 	private boolean deleteSource = false;
 	
-	private DBCollection coll;
+	private MongoCollection<Document> coll;
 	
 	List<ObjectId> queue = new LinkedList<>();
 	ObjectId lastId = null;
@@ -115,8 +113,8 @@ public class MongoReader extends BaleenCollectionReader {
 	protected void doGetNext(JCas jCas) throws IOException, CollectionException {
 		ObjectId id = queue.remove(0);
 		
-		DBObject docIdField = new BasicDBObject(idField, id);
-		DBObject document = coll.findOne(docIdField);
+		Document docIdField = new Document(idField, id);
+		Document document = coll.find(docIdField).first();
 		
 		if(document == null){
 			getMonitor().error("No document returned from Mongo");
@@ -139,7 +137,7 @@ public class MongoReader extends BaleenCollectionReader {
 		}
 		
 		if(deleteSource){
-			coll.findAndRemove(docIdField);
+			coll.deleteOne(docIdField);
 		}
 	}
 
@@ -178,22 +176,19 @@ public class MongoReader extends BaleenCollectionReader {
 	}
 	
 	private void getNewIds(){
-		DBObject query;
+		Document query;
 		if(lastId != null){
-			query = new BasicDBObject(idField, new BasicDBObject("$gt", lastId));
+			query = new Document(idField, new Document("$gt", lastId));
 		}else{
-			query = new BasicDBObject();
+			query = new Document();
 		}
 		
-		DBObject docIdField = new BasicDBObject(idField, 1);
-		Cursor cur = coll.find(query, docIdField).sort(docIdField);
-		while(cur.hasNext()){
-			DBObject doc = cur.next();
+		Document docIdField = new Document(idField, 1);
+		for(Document doc : coll.find(query).projection(docIdField).sort(docIdField)){
 			ObjectId id = (ObjectId) doc.get(idField);
 			
 			queue.add(id);
 			lastId = id;
 		}
-		cur.close();
 	}
 }

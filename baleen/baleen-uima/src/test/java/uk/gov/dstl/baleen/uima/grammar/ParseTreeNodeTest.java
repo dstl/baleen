@@ -8,14 +8,13 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.language.PhraseChunk;
 import uk.gov.dstl.baleen.types.language.WordToken;
-import uk.gov.dstl.baleen.uima.grammar.ParseTreeNode;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class ParseTreeNodeTest {
 
@@ -30,7 +29,7 @@ public class ParseTreeNodeTest {
 
 	@Before
 	public void before() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 		final String text = "1 2 3 4";
 		jCas.setDocumentText(text);
 

@@ -9,6 +9,7 @@ import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 /** A base type for single annotator testing, with helper functions.
  *
@@ -34,7 +35,7 @@ public class AbstractAnnotatorTest extends AnnotatorTestBase {
 	 * @throws ResourceInitializationException
 	 */
 	protected AnalysisEngine getAnalysisEngine() throws ResourceInitializationException {
-		return AnalysisEngineFactory.createEngine(annotatorClass);
+		return AnalysisEngineFactory.createEngine(annotatorClass, TypeSystemSingleton.getTypeSystemDescriptionInstance());
 	}
 
 	/** Get an analysis engine for the
@@ -43,7 +44,7 @@ public class AbstractAnnotatorTest extends AnnotatorTestBase {
 	 * @throws ResourceInitializationException
 	 */
 	protected AnalysisEngine getAnalysisEngine(Object... args) throws ResourceInitializationException {
-		return AnalysisEngineFactory.createEngine(annotatorClass, args);
+		return AnalysisEngineFactory.createEngine(annotatorClass, TypeSystemSingleton.getTypeSystemDescriptionInstance(), args);
 	}
 
 

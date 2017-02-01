@@ -5,38 +5,38 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.uima.collection.CollectionReaderDescription;
-import org.apache.uima.fit.factory.CollectionReaderFactory;
+import java.util.Arrays;
+
 import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
-import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ExternalResourceDescription;
+import org.bson.Document;
 import org.junit.Test;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-
-public class MongoReaderTest {
+public class MongoReaderTest extends AbstractReaderTest{
 	
 	private static final String MONGO = "mongo";
 	private static final String TEXT = "Hello Metadata";
 	private static final String CONTENT = "content";
 	private static final String COLLECTION = "documents";
 	
+	private final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class);
+	
+	public MongoReaderTest(){
+		super(MongoReader.class);
+	}
+	
 	@Test
 	public void test() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class);
-		CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(MongoReader.class, MONGO, erd, "collection", COLLECTION, "idField", "_id", "contentField", CONTENT, "contentExtractor", "UimaContentExtractor");
-		
-		JCas jCas = JCasFactory.createJCas();
-		
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
+		BaleenCollectionReader bcr = getCollectionReader(MONGO, erd, "collection", COLLECTION, "idField", "_id", "contentField", CONTENT, "contentExtractor", "UimaContentExtractor");
 		bcr.initialize();
 		
 		SharedFongoResource sfr = (SharedFongoResource) bcr.getUimaContext().getResourceObject(MONGO);
@@ -74,11 +74,13 @@ public class MongoReaderTest {
 	}
 	
 	private void createContent(SharedFongoResource sfr){
-		DB db = sfr.getDB();
+		MongoDatabase db = sfr.getDB();
 		
-		DBCollection coll = db.getCollection(COLLECTION);
-		coll.insert(new BasicDBObject(CONTENT, "Hello World"));
-		coll.insert(new BasicDBObject(CONTENT, "Hello Test"));
-		coll.insert(new BasicDBObject(CONTENT, TEXT).append("key1", "foo").append("key2", "bar").append("key3", new String[]{"howdy", "hey"}));
+		MongoCollection<Document> coll = db.getCollection(COLLECTION);
+		coll.insertMany(Arrays.asList(
+				new Document(CONTENT, "Hello World"),
+				new Document(CONTENT, "Hello Test"),
+				new Document(CONTENT, TEXT).append("key1", "foo").append("key2", "bar").append("key3", Arrays.asList("howdy", "hey"))
+		));
 	}
 }

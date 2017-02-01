@@ -11,13 +11,10 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 
 import com.google.common.base.Strings;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.jobs.interactions.data.InteractionWord;
 import uk.gov.dstl.baleen.jobs.interactions.data.PatternReference;
@@ -184,32 +181,30 @@ public class IdentifyInteractions extends BaleenTask {
 		// TODO: Ideally this would do something in a more streaming manner, as there are likely to
 		// be lots of examples. Loading all patterns into memory might be prohibitive.
 
-		final DBCollection collection = mongo.getDB().getCollection(patternCollection);
+		final MongoCollection<Document> collection = mongo.getDB().getCollection(patternCollection);
 
 		final List<PatternReference> patterns = new ArrayList<>((int) collection.count());
 
-		final DBCursor cursor = collection.find();
-		while (cursor.hasNext()) {
-			final DBObject o = cursor.next();
-
-			final BasicDBList list = (BasicDBList) o.get("words");
+		for(Document doc : collection.find()){
+			@SuppressWarnings("unchecked")
+			List<Document> list = doc.get("words", List.class);
+			
 			final List<Word> tokens = list.stream().map(l -> {
-				final BasicDBObject dbo = (BasicDBObject) l;
-				final String pos = dbo.getString("pos");
-				String lemma = dbo.getString("lemma");
+				final String pos = l.getString("pos");
+				String lemma = l.getString("lemma");
 
 				// Fall back to actual text if no lemma
 				if (lemma == null) {
-					lemma = dbo.getString("text");
+					lemma = l.getString("text");
 				}
 
 				return new Word(lemma.trim().toLowerCase(), WordNetUtils.toPos(pos));
 			}).filter(w -> w.getPos() != null)
 					.collect(Collectors.toList());
 
-			final PatternReference pattern = new PatternReference(o.get("_id").toString(), tokens);
-			pattern.setSourceType(((BasicDBObject) o.get("source")).getString("type"));
-			pattern.setTargetType(((BasicDBObject) o.get("target")).getString("type"));
+			final PatternReference pattern = new PatternReference(doc.get("_id").toString(), tokens);
+			pattern.setSourceType(((Document) doc.get("source")).getString("type"));
+			pattern.setTargetType(((Document) doc.get("target")).getString("type"));
 			patterns.add(pattern);
 		}
 

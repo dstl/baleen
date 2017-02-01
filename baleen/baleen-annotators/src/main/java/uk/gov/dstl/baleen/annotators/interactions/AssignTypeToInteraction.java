@@ -2,6 +2,7 @@ package uk.gov.dstl.baleen.annotators.interactions;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -13,11 +14,11 @@ import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.mongodb.BasicDBList;
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
 import opennlp.tools.stemmer.snowball.SnowballStemmer.ALGORITHM;
@@ -162,13 +163,13 @@ public class AssignTypeToInteraction extends BaleenAnnotator {
 		}
 		stemmer = new SnowballStemmer(algo);
 
-		final DBCollection dbCollection = mongo.getDB().getCollection(collection);
+		final MongoCollection<Document> dbCollection = mongo.getDB().getCollection(collection);
 
-		dbCollection.find().forEach(o -> {
+		for(Document o : dbCollection.find()){
 			String type = (String) o.get(typeField);
 			String subType = (String) o.get(subTypeField);
 			String pos = (String) o.get(posField);
-			BasicDBList values = (BasicDBList) o.get(valuesField);
+			List<?> values = (List<?>) o.get(valuesField);
 
 			InteractionTypeDefinition definition = new InteractionTypeDefinition(type, subType, pos);
 
@@ -178,7 +179,7 @@ public class AssignTypeToInteraction extends BaleenAnnotator {
 						String key = toKey(definition.getPos(), (String) s);
 						definitions.put(key, definition);
 					});
-		});
+		}
 	}
 
 	private String toKey(String pos, String word) {

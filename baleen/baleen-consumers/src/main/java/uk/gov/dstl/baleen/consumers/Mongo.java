@@ -1,12 +1,12 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.consumers;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -16,14 +16,12 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
 import uk.gov.dstl.baleen.consumers.utils.DefaultFields;
@@ -172,11 +170,11 @@ public class Mongo extends BaleenConsumer {
 	@ConfigurationParameter(name = PARAM_OUTPUT_CONTENT, defaultValue = "true")
 	private boolean outputContent = false;
 
-	private DBCollection entitiesCollection;
+	private MongoCollection<Document> entitiesCollection;
 
-	private DBCollection relationsCollection;
+	private MongoCollection<Document> relationsCollection;
 
-	private DBCollection documentsCollection;
+	private MongoCollection<Document> documentsCollection;
 
 	/**
 	 * Holds the types of features that we're not interested in persisting  (stuff from UIMA for example)
@@ -208,16 +206,16 @@ public class Mongo extends BaleenConsumer {
 	 */
 	@Override
 	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-		DB db = mongoResource.getDB();
+		MongoDatabase db = mongoResource.getDB();
 		entitiesCollection = db.getCollection(entitiesCollectionName);
 		relationsCollection = db.getCollection(relationsCollectionName);
 		documentsCollection = db.getCollection(documentsCollectionName);
 
-		documentsCollection.createIndex(new BasicDBObject(fields.getExternalId(), 1));
-		entitiesCollection.createIndex(new BasicDBObject(fields.getExternalId(), 1));
-		relationsCollection.createIndex(new BasicDBObject(fields.getExternalId(), 1));
-		relationsCollection.createIndex(new BasicDBObject(FIELD_DOCUMENT_ID, 1));
-		entitiesCollection.createIndex(new BasicDBObject(FIELD_DOCUMENT_ID, 1));
+		documentsCollection.createIndex(new Document(fields.getExternalId(), 1));
+		entitiesCollection.createIndex(new Document(fields.getExternalId(), 1));
+		relationsCollection.createIndex(new Document(fields.getExternalId(), 1));
+		relationsCollection.createIndex(new Document(FIELD_DOCUMENT_ID, 1));
+		entitiesCollection.createIndex(new Document(FIELD_DOCUMENT_ID, 1));
 
 		stopFeatures = new HashSet<>();
 		stopFeatures.add("uima.cas.AnnotationBase:sofa");
@@ -249,39 +247,34 @@ public class Mongo extends BaleenConsumer {
 	}
 
 	private void deleteAllContent(String documentId) {
-		entitiesCollection.remove(new BasicDBObject(FIELD_DOCUMENT_ID, documentId));
-		relationsCollection.remove(new BasicDBObject(FIELD_DOCUMENT_ID, documentId));
-		documentsCollection.remove(new BasicDBObject(fields.getExternalId(), documentId));
+		entitiesCollection.deleteMany(new Document(FIELD_DOCUMENT_ID, documentId));
+		relationsCollection.deleteMany(new Document(FIELD_DOCUMENT_ID, documentId));
+		documentsCollection.deleteMany(new Document(fields.getExternalId(), documentId));
 	}
 
 	private void saveDocument(String documentId, JCas jCas) {
-		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start();
-
+		Document doc = new Document();
 		// document level
-
-		builder.push(FIELD_DOCUMENT);
-
 		DocumentAnnotation da = getDocumentAnnotation(jCas);
 
-		builder.append(FIELD_DOCUMENT_TYPE, da.getDocType());
-		builder.append(FIELD_DOCUMENT_SOURCE, da.getSourceUri());
-		builder.append(FIELD_DOCUMENT_LANGUAGE, da.getLanguage());
-		builder.append(FIELD_DOCUMENT_TIMESTAMP, new Date(da.getTimestamp()));
+		doc.append(FIELD_DOCUMENT, new Document()
+				.append(FIELD_DOCUMENT_TYPE, da.getDocType())
+				.append(FIELD_DOCUMENT_SOURCE, da.getSourceUri())
+				.append(FIELD_DOCUMENT_LANGUAGE, da.getLanguage())
+				.append(FIELD_DOCUMENT_TIMESTAMP, new Date(da.getTimestamp()))
 
-		builder.append(FIELD_DOCUMENT_CLASSIFICATION, da.getDocumentClassification());
-		builder.append(FIELD_DOCUMENT_CAVEATS, UimaTypesUtils.toArray(da.getDocumentCaveats()));
-		builder.append(FIELD_DOCUMENT_RELEASABILITY, UimaTypesUtils.toArray(da.getDocumentReleasability()));
-
-		builder.pop();
+				.append(FIELD_DOCUMENT_CLASSIFICATION, da.getDocumentClassification())
+				.append(FIELD_DOCUMENT_CAVEATS, UimaTypesUtils.toList(da.getDocumentCaveats()))
+				.append(FIELD_DOCUMENT_RELEASABILITY, UimaTypesUtils.toList(da.getDocumentReleasability()))	
+		);
 
 		// Published Ids
-
-		BasicDBList list = new BasicDBList();
+		List<Document> publishedIds = new ArrayList<>();
 		for(PublishedId pid : JCasUtil.select(jCas, PublishedId.class)) {
-			list.add(new BasicDBObject(FIELD_PUBLISHEDIDS_TYPE, pid.getPublishedIdType())
+			publishedIds.add(new Document(FIELD_PUBLISHEDIDS_TYPE, pid.getPublishedIdType())
 					.append(FIELD_PUBLISHEDIDS_ID, pid.getValue()));
 		}
-		builder.append(FIELD_PUBLISHEDIDS, list);
+		doc.append(FIELD_PUBLISHEDIDS, publishedIds);
 
 		// Meta data
 
@@ -293,19 +286,17 @@ public class Mongo extends BaleenConsumer {
 			}
 			meta.put(key, metadata.getValue());
 		}
-		builder.append(FIELD_METADATA, meta.asMap());
+		doc.append(FIELD_METADATA, meta.asMap());
 
 		// Add content is requried
 
 		if(outputContent) {
-			builder.append(FIELD_CONTENT, jCas.getDocumentText());
+			doc.append(FIELD_CONTENT, jCas.getDocumentText());
 		}
 
 		// Save
-
-		builder.add(fields.getExternalId(), documentId);
-
-		documentsCollection.save(builder.get());
+		doc.append(fields.getExternalId(), documentId);
+		documentsCollection.insertOne(doc);
 	}
 
 	private void saveEntities(String documentId, JCas jCas) {
@@ -323,33 +314,31 @@ public class Mongo extends BaleenConsumer {
 				targetted.put(new ReferenceTarget(jCas), entity);
 			}
 		}
-
-		for(Entry<ReferenceTarget, Collection<Entity>> entry : targetted.asMap().entrySet()) {
-
-			BasicDBList list = new BasicDBList();
-
-			for(Entity e : entry.getValue()) {
-				list.add(converter.convertEntity(e));
-			}
-
-			BasicDBObject dbo = new BasicDBObject();
-			dbo.append(FIELD_DOCUMENT_ID, documentId);
-			dbo.append(FIELD_ENTITIES, list);
-
-			entitiesCollection.save(dbo);
-		}
-
+		
+		List<Document> ents = targetted.asMap().entrySet().stream().map(e -> {
+			Document doc = new Document();
+			doc.append(FIELD_DOCUMENT_ID, documentId);
+			doc.append(FIELD_ENTITIES,
+					e.getValue().stream().map(ent -> 
+						converter.convertEntity(ent)).collect(Collectors.toList())
+					);
+			
+			return doc;
+		}).collect(Collectors.toList());
+		
+		if(!ents.isEmpty())
+			entitiesCollection.insertMany(ents);
+		
 	}
 	
 	private void saveRelations(String documentId, JCas jCas) {
 		EntityRelationConverter converter = new EntityRelationConverter(getMonitor(), outputHistory, getSupport().getDocumentHistory(jCas), stopFeatures, fields);
 		
-		for(Relation r : JCasUtil.select(jCas, Relation.class)){
-			Map<String, Object> relationFeatures = converter.convertRelation(r);
-			BasicDBObjectBuilder builder = BasicDBObjectBuilder.start(relationFeatures);
-			
-			builder.add(FIELD_DOCUMENT_ID, documentId);
-			relationsCollection.save(builder.get());
-		}
+		List<Document> rels = JCasUtil.select(jCas, Relation.class).stream()
+				.map(r -> new Document(converter.convertRelation(r)).append(FIELD_DOCUMENT_ID, documentId))
+				.collect(Collectors.toList());
+		
+		if(!rels.isEmpty())
+			relationsCollection.insertMany(rels);
 	}
 }

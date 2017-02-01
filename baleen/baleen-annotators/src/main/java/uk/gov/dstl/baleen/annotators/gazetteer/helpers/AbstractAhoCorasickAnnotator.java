@@ -33,6 +33,7 @@ import uk.gov.dstl.baleen.types.BaleenAnnotation;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
 /**
@@ -121,7 +122,7 @@ public abstract class AbstractAhoCorasickAnnotator extends BaleenAnnotator {
 		buildTrie();
 
 		try {
-			entityType = TypeUtils.getType(type, JCasFactory.createJCas());
+			entityType = TypeUtils.getType(type, JCasFactory.createJCas(TypeSystemSingleton.getTypeSystemDescriptionInstance()));
 			if (entityType == null) {
 				getMonitor().warn("Type {} not found, Entity will be used instead", type);
 				entityType = Entity.class;

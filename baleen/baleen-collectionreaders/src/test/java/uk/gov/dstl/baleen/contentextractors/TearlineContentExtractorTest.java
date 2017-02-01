@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.uima.UimaContext;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -20,13 +19,14 @@ import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenContentExtractor;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class TearlineContentExtractorTest {
 	
 	@Test
 	public void testTearline() throws Exception{
 		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
 		contentExtractor.initialize(context, Collections.emptyMap());
@@ -50,7 +50,7 @@ public class TearlineContentExtractorTest {
 	@Test
 	public void testNoTearline() throws Exception{
 		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
 		contentExtractor.initialize(context, Collections.emptyMap());
@@ -71,7 +71,7 @@ public class TearlineContentExtractorTest {
 	@Test
 	public void testBoilerplate() throws Exception{
 		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		Map<String, Object> params = new HashMap<>();
 		params.put("boilerplate", new String[]{"[aeiou]"});
@@ -95,7 +95,7 @@ public class TearlineContentExtractorTest {
 	@Test
 	public void testMetadata() throws Exception{
 		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
 		contentExtractor.initialize(context, Collections.emptyMap());
@@ -114,7 +114,7 @@ public class TearlineContentExtractorTest {
 	@Test
 	public void testCustomTearline() throws Exception{
 		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		Map<String, Object> params = new HashMap<>();
 		params.put("tearline", "Customer Form:");

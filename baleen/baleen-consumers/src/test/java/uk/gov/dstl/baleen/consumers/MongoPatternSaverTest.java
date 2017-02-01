@@ -1,6 +1,7 @@
 package uk.gov.dstl.baleen.consumers;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
@@ -12,14 +13,13 @@ import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceAccessException;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.impl.CustomResourceSpecifier_impl;
+import org.bson.Document;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
@@ -97,14 +97,14 @@ public class MongoPatternSaverTest extends AnnotatorTestBase {
 
 		ae.process(jCas);
 
-		final DBCollection collection = sfr.getDB().getCollection("test");
+		final MongoCollection<Document> collection = sfr.getDB().getCollection("test");
 		Assert.assertEquals(1, collection.count());
 
-		final DBObject object = collection.find().next();
+		final Document object = collection.find().first();
 
-		final DBObject source = (DBObject) object.get("source");
-		final DBObject target = (DBObject) object.get("target");
-		final BasicDBList words = (BasicDBList) object.get("words");
+		final Document source = (Document) object.get("source");
+		final Document target = (Document) object.get("target");
+		final List<?> words = (List<?>) object.get("words");
 
 		Assert.assertEquals("cow", source.get("text"));
 		Assert.assertEquals("uk.gov.dstl.baleen.types.common.Person", source.get("type"));
@@ -113,7 +113,7 @@ public class MongoPatternSaverTest extends AnnotatorTestBase {
 		Assert.assertEquals("uk.gov.dstl.baleen.types.semantic.Location", target.get("type"));
 
 		Assert.assertEquals(1, words.size());
-		final DBObject word = (DBObject) words.get(0);
+		final Document word = (Document) words.get(0);
 		Assert.assertEquals("jumps", word.get("text"));
 		Assert.assertEquals("VB", word.get("pos"));
 		Assert.assertEquals("jump", word.get("lemma"));
@@ -152,14 +152,14 @@ public class MongoPatternSaverTest extends AnnotatorTestBase {
 
 		ae.process(jCas);
 
-		final DBCollection collection = sfr.getDB().getCollection("test");
+		final MongoCollection<Document> collection = sfr.getDB().getCollection("test");
 		Assert.assertEquals(1, collection.count());
 
-		final DBObject object = collection.find().next();
+		final Document object = collection.find().first();
 
-		final DBObject source = (DBObject) object.get("source");
-		final DBObject target = (DBObject) object.get("target");
-		final BasicDBList words = (BasicDBList) object.get("words");
+		final Document source = (Document) object.get("source");
+		final Document target = (Document) object.get("target");
+		final List<?> words = (List<?>) object.get("words");
 
 		Assert.assertEquals("cow", source.get("text"));
 		Assert.assertEquals("uk.gov.dstl.baleen.types.common.Person", source.get("type"));
@@ -168,7 +168,7 @@ public class MongoPatternSaverTest extends AnnotatorTestBase {
 		Assert.assertEquals("uk.gov.dstl.baleen.types.semantic.Location", target.get("type"));
 
 		Assert.assertEquals(1, words.size());
-		final DBObject word = (DBObject) words.get(0);
+		final Document word = (Document) words.get(0);
 		Assert.assertEquals("jumps", word.get("text"));
 		Assert.assertEquals("VB", word.get("pos"));
 		Assert.assertNull(word.get("lemma"));

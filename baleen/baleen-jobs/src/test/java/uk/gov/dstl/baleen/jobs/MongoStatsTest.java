@@ -13,11 +13,10 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
@@ -25,10 +24,10 @@ import uk.gov.dstl.baleen.uima.AbstractBaleenTaskTest;
 
 public class MongoStatsTest extends AbstractBaleenTaskTest {
 
-	private static final List<DBObject> DATA = Lists.newArrayList(
-			new BasicDBObject("fake", "doc1"),
-			new BasicDBObject("fake", "doc2"),
-			new BasicDBObject("fake", "doc3"));
+	private static final List<Document> DATA = Lists.newArrayList(
+			new Document("fake", "doc1"),
+			new Document("fake", "doc2"),
+			new Document("fake", "doc3"));
 
 	@Test
 	public void testNewFile() throws ResourceInitializationException, AnalysisEngineProcessException, IOException {
@@ -43,6 +42,7 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
 
 			AnalysisEngine task = create(MongoStats.class, "mongo", erd, "file", tempFile.getAbsolutePath());
 			execute(task);
+			task.destroy();
 
 			List<String> lines = Files.readAllLines(tempFile.toPath());
 			assertEquals(2, lines.size());
@@ -69,7 +69,8 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
 
 			AnalysisEngine task = create(MongoStats.class, "mongo", erd, "file", tempFile.getAbsolutePath());
 			execute(task);
-
+			task.destroy();
+			
 			List<String> lines = Files.readAllLines(tempFile.toPath());
 			assertEquals(2, lines.size());
 			assertEquals("timestamp,documents,entities,relations", lines.get(0));
@@ -100,7 +101,8 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
 
 			AnalysisEngine task = create(MongoStats.class, "mongo", erd, "file", tempFile.getAbsolutePath());
 			execute(task);
-
+			task.destroy();
+			
 			List<String> lines = Files.readAllLines(tempFile.toPath());
 			assertEquals(2, lines.size());
 			assertEquals("hello", lines.get(0));

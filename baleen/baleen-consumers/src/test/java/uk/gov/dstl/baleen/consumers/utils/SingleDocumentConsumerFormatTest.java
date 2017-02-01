@@ -9,16 +9,16 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.metadata.Metadata;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class SingleDocumentConsumerFormatTest {
 	@Test
 	public void testCreateMetadata() throws UIMAException{
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		Metadata m1 = new Metadata(jCas);
 		m1.setKey("en.hello");

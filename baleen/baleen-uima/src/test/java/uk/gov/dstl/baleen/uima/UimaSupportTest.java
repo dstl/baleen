@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.impl.CustomResourceSpecifier_impl;
@@ -31,6 +30,7 @@ import uk.gov.dstl.baleen.types.metadata.ProtectiveMarking;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.types.semantic.Relation;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UimaSupportTest {
@@ -51,7 +51,7 @@ public class UimaSupportTest {
 
 	@Before
 	public void setUp() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		jCas.setDocumentText("Dave saw is some of London");
 
 		location = new Location(jCas);

@@ -5,13 +5,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Before;
+
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 /**
  *
@@ -21,7 +22,7 @@ public class AnnotatorTestBase {
 
 	@Before
 	public void beforeTest() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 
 	/**

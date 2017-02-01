@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
@@ -13,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.language.WordToken;
-import uk.gov.dstl.baleen.uima.utils.AnnotationUtils;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class AnnotationUtilsTest {
 
@@ -21,7 +20,7 @@ public class AnnotationUtilsTest {
 
 	@Before
 	public void setUp() throws Exception {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		jCas.setDocumentText("0123456789abcdefghij");
 
 		addAnnotation(0, 3);

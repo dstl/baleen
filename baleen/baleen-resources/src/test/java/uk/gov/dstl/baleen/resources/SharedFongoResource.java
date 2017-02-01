@@ -1,22 +1,31 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.resources;
 
-import java.util.List;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
+import org.bson.BsonArray;
+import org.bson.BsonValue;
+import org.bson.Document;
+import org.bson.codecs.BsonArrayCodec;
+import org.bson.codecs.BsonValueCodecProvider;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.DocumentCodecProvider;
+import org.bson.codecs.ValueCodecProvider;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.json.JsonReader;
 
 import com.github.fakemongo.Fongo;
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.mongodb.util.JSON;
+import com.mongodb.client.MongoDatabase;
 
 /**
  * Fake Mongo (fongo) for unit testing.
@@ -25,10 +34,10 @@ import com.mongodb.util.JSON;
  * data as fongo.data for example:
  *
  * <pre>
- * private static final List<DBObject> DATA = Lists.newArrayList(
- * 		new BasicDBObject("fake", "doc1"),
- * 		new BasicDBObject("fake", "doc2"),
- * 		new BasicDBObject("fake", "doc3"));
+ * private static final List<Document> DATA = Lists.newArrayList(
+ * 		new Document("fake", "doc1"),
+ * 		new Document("fake", "doc2"),
+ * 		new Document("fake", "doc3"));
  *
  * ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription("mongo",
  * 		SharedFongoResource.class, SharedFongoResource.PARAM_FONGO_COLLECTION, "documents",
@@ -50,25 +59,27 @@ public class SharedFongoResource extends SharedMongoResource {
 	@ConfigurationParameter(name = PARAM_FONGO_DATA, defaultValue = "{}")
 	private String fongoData;
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected boolean doInitialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
 			throws ResourceInitializationException {
 		// Work whether it's a list of DB Objects or a single
-		if ("{}".equals(fongoData) || Strings.isNullOrEmpty(fongoData)) {
+		if ("{}".equals(fongoData) || "[]".equals(fongoData) || Strings.isNullOrEmpty(fongoData)) {
 			return true;
 		}
 
-		Object obj = JSON.parse(fongoData);
-
-		if (obj instanceof List<?>) {
-			List<DBObject> data = (List<DBObject>) JSON.parse(fongoData);
-			fongo.getDB(BALEEN).getCollection(fongoCollection).insert(data);
-
-		} else if (obj instanceof DBObject) {
-			DBObject data = (DBObject) JSON.parse(fongoData);
-			fongo.getDB(BALEEN).getCollection(fongoCollection).insert(data);
-
+		if (fongoData.trim().startsWith("[")) {
+			CodecRegistry codecRegistry = CodecRegistries.fromProviders(Arrays.asList(new ValueCodecProvider(), new BsonValueCodecProvider(), new DocumentCodecProvider()));
+			JsonReader reader = new JsonReader(fongoData);
+			BsonArrayCodec arrayReader = new BsonArrayCodec(codecRegistry);
+			
+			BsonArray docArray = arrayReader.decode(reader, DecoderContext.builder().build());
+			
+			for(BsonValue doc : docArray.getValues()){
+				fongo.getDatabase(BALEEN).getCollection(fongoCollection).insertOne(Document.parse(doc.asDocument().toJson()));
+			}		
+		} else if (fongoData.trim().startsWith("{")) {
+			Document data = Document.parse(fongoData);
+			fongo.getDatabase(BALEEN).getCollection(fongoCollection).insertOne(data);
 		} else {
 			getMonitor().error("Unsupported type");
 			throw new ResourceInitializationException();
@@ -89,7 +100,7 @@ public class SharedFongoResource extends SharedMongoResource {
 	}
 
 	@Override
-	public DB getDB() {
-		return fongo.getDB(BALEEN);
+	public MongoDatabase getDB() {
+		return fongo.getDatabase(BALEEN);
 	}
 }

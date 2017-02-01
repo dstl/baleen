@@ -12,10 +12,11 @@ import java.time.format.DateTimeFormatter;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.uima.BaleenTask;
@@ -99,9 +100,9 @@ public class MongoStats extends BaleenTask {
 	@Override
 	protected void execute(JobSettings settings) throws AnalysisEngineProcessException {
 
-		DBCollection entityCollection = mongoResource.getDB().getCollection(entitiesCollectionName);
-		DBCollection documentCollection = mongoResource.getDB().getCollection(documentsCollectionName);
-		DBCollection relationCollection = mongoResource.getDB().getCollection(relationsCollectionName);
+		MongoCollection<Document> entityCollection = mongoResource.getDB().getCollection(entitiesCollectionName);
+		MongoCollection<Document> documentCollection = mongoResource.getDB().getCollection(documentsCollectionName);
+		MongoCollection<Document> relationCollection = mongoResource.getDB().getCollection(relationsCollectionName);
 
 		File file = new File(filename);
 		boolean newFile = !file.exists() || file.length() == 0;

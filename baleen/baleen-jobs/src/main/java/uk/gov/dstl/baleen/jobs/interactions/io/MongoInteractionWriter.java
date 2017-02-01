@@ -5,10 +5,11 @@ package uk.gov.dstl.baleen.jobs.interactions.io;
 
 import java.util.Collection;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import org.bson.Document;
+
 import com.mongodb.Mongo;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 import uk.gov.dstl.baleen.jobs.interactions.UploadInteractionsToMongo;
 import uk.gov.dstl.baleen.jobs.interactions.data.InteractionDefinition;
@@ -35,10 +36,10 @@ import uk.gov.dstl.baleen.jobs.interactions.data.InteractionDefinition;
 public class MongoInteractionWriter implements InteractionWriter {
 
 	/** The relation types. */
-	private final DBCollection relationTypes;
+	private final MongoCollection<Document> relationTypes;
 
 	/** The interactions. */
-	private final DBCollection interactions;
+	private final MongoCollection<Document> interactions;
 
 	/**
 	 * Instantiates a new instance.
@@ -50,7 +51,7 @@ public class MongoInteractionWriter implements InteractionWriter {
 	 * @param interactionCollection
 	 *            the interaction collection name
 	 */
-	public MongoInteractionWriter(DB db, String relationTypesCollection, String interactionCollection) {
+	public MongoInteractionWriter(MongoDatabase db, String relationTypesCollection, String interactionCollection) {
 		interactions = db.getCollection(interactionCollection);
 		relationTypes = db.getCollection(relationTypesCollection);
 	}
@@ -60,31 +61,31 @@ public class MongoInteractionWriter implements InteractionWriter {
 			Collection<String> alternatives) {
 
 		// Write to the interactions collection
-		// ADd in relationshiptype and subtype (which can be manually changed later)
-		final BasicDBObject interactionObject = new BasicDBObject();
-		interactionObject.put("relationshipType", interaction.getType());
-		interactionObject.put("relationSubType", interaction.getSubType());
-		interactionObject.put("value", alternatives);
-		interactions.save(interactionObject);
+		// Add in relationshiptype and subtype (which can be manually changed later)
+		final Document interactionObject = new Document()
+			.append("relationshipType", interaction.getType())
+			.append("relationSubType", interaction.getSubType())
+			.append("value", alternatives);
+		
+		interactions.insertOne(interactionObject);
 
 		// Write out to the relationship constraints
-		final BasicDBObject relationTypeObject = new BasicDBObject()
-				.append("source", interaction.getSource())
-				.append("target", interaction.getTarget())
-				.append("type", interaction.getType())
-				.append("subType", interaction.getSubType())
-				.append("pos", interaction.getWord().getPos().getLabel())
-				.append("value", alternatives);
+		final Document relationTypeObject = new Document()
+			.append("source", interaction.getSource())
+			.append("target", interaction.getTarget())
+			.append("type", interaction.getType())
+			.append("subType", interaction.getSubType())
+			.append("pos", interaction.getWord().getPos().getLabel())
+			.append("value", alternatives);
 
-		relationTypes.save(relationTypeObject);
+		relationTypes.insertOne(relationTypeObject);
 	}
 
 	/**
 	 * Clear all collections.
 	 */
 	public void clear() {
-		interactions.remove(new BasicDBObject());
-		relationTypes.remove(new BasicDBObject());
+		interactions.deleteMany(new Document());
+		relationTypes.deleteMany(new Document());
 	}
-
 }

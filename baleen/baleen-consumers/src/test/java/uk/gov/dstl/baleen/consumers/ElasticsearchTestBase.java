@@ -31,6 +31,7 @@ import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
 public abstract class ElasticsearchTestBase {
@@ -61,7 +62,7 @@ public abstract class ElasticsearchTestBase {
 	
 	@Before
 	public void beforeTest() throws Exception{
-		jCas.reset();
+		jCas = JCasSingleton.getJCasInstance();
 
 		try{
 			client.admin().indices().delete(new DeleteIndexRequest("baleen_index")).actionGet();

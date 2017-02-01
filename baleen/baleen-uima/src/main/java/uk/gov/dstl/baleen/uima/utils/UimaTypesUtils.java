@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.uima.utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.uima.cas.FeatureStructure;
@@ -71,6 +72,21 @@ public final class UimaTypesUtils {
 			return new ArrayList<T>();
 		} else {
 			return (List<T>) Arrays.asList(array.toArray());
+		}
+	}
+	
+	/**
+	 * Create a new List from a StringArray
+	 *
+	 * @param array
+	 *            the string array
+	 * @return the list (non-null)
+	 */
+	public static List<String> toList(StringArray array) {
+		if (array == null) {
+			return Collections.emptyList();
+		} else {
+			return Arrays.asList(array.toArray());
 		}
 	}
 

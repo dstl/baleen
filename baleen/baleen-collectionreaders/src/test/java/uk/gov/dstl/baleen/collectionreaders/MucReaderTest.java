@@ -11,20 +11,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.CollectionReaderFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-public class MucReaderTest {
+public class MucReaderTest extends AbstractReaderTest{
+
+	public MucReaderTest() {
+		super(MucReader.class);
+	}
 
 	private static final String MUC = "DEV-MUC3-0001 (NOSC)\n\n" +
 			"SAN SALVADOR, 3 JAN 90 -- [REPORT] [ARMED FORCES PRESS COMMITTEE,\n" +
@@ -37,9 +39,7 @@ public class MucReaderTest {
 			"THEIR RESIDENCES, PRESUMABLY TO INCORPORATE THEM AGAINST THEIR WILL INTO\n" +
 			"CLANDESTINE GROUPS.";
 
-	private static Path tmpDir;
-	JCas jCas;
-	
+	private static Path tmpDir;	
 
 	@BeforeClass
 	public static void beforeClass() throws IOException {
@@ -53,21 +53,12 @@ public class MucReaderTest {
 		tmpDir.toFile().delete();
 	}
 	
-	@Before
-	public void beforeTest() throws UIMAException {
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
-	}
-	
 	@Test
 	public void testNoFiles() throws UIMAException, IOException {
 		Path emptyTmpDir = Files.createTempDirectory("muctest");
 		
 		try{
-			BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(MucReader.class, MucReader.KEY_PATH, emptyTmpDir.toAbsolutePath().toString());
+			BaleenCollectionReader bcr = getCollectionReader(MucReader.KEY_PATH, emptyTmpDir.toAbsolutePath().toString());
 			bcr.initialize();
 			
 			fail("Expected exception not thrown");
@@ -85,7 +76,7 @@ public class MucReaderTest {
 		Files.write(keyTmpDir.resolve("key-test"), MUC.getBytes(StandardCharsets.UTF_8));
 		
 		try{
-			BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(MucReader.class, MucReader.KEY_PATH, keyTmpDir.toAbsolutePath().toString());
+			BaleenCollectionReader bcr = getCollectionReader(MucReader.KEY_PATH, keyTmpDir.toAbsolutePath().toString());
 			bcr.initialize();
 			
 			fail("Expected exception not thrown");
@@ -99,8 +90,9 @@ public class MucReaderTest {
 	
 	@Test
 	public void test() throws UIMAException, IOException {
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(MucReader.class, MucReader.KEY_PATH, tmpDir.toAbsolutePath().toString());
-
+		BaleenCollectionReader bcr = getCollectionReader(MucReader.KEY_PATH, tmpDir.toAbsolutePath().toString());
+		bcr.initialize();
+		
 		assertTrue(bcr.doHasNext());
 
 		bcr.getNext(jCas.getCas());

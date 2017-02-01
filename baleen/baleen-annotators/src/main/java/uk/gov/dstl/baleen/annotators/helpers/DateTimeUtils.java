@@ -153,13 +153,16 @@ public class DateTimeUtils {
 	public static Year asYear(String s){
 		String year = s.replaceAll("[^\\d]", "");
 		
+		if(year.isEmpty())
+			return null;
+		
 		Year y;
 		if(year.length() == 2){
 			Integer iYear;
 			try{
 				iYear = Integer.parseInt(year);
-			}catch(NumberFormatException e){
-				LOGGER.warn("Couldn't parse year {}", s);
+			}catch(NumberFormatException nfe){
+				LOGGER.warn("Couldn't parse year {}", s, nfe);
 				return null;
 			}
 			if(iYear < 70){
@@ -171,7 +174,7 @@ public class DateTimeUtils {
 			try{
 				y = Year.parse(year);
 			}catch(DateTimeParseException dtpe){
-				LOGGER.warn("Couldn't parse year {}", s);
+				LOGGER.warn("Couldn't parse year {}", s, dtpe);
 				return null;
 			}
 		}
@@ -186,16 +189,16 @@ public class DateTimeUtils {
 		if(Strings.isNullOrEmpty(suffix))
 			return true;
 		
-		if(date % 100 == 11 || date % 100 == 12 || date % 100 == 13){
-			return "th".equalsIgnoreCase(suffix);
-		}else if(date % 10 == 1){
+		String correctSuffix = "th";
+		
+		if(date % 10 == 1 && date % 100 != 11){
 			return "st".equalsIgnoreCase(suffix);
-		}else if(date % 10 == 2){
+		}else if(date % 10 == 2 && date % 100 != 12){
 			return "nd".equalsIgnoreCase(suffix);
-		}else if(date % 10 == 3){
+		}else if(date % 10 == 3 && date % 100 != 13){
 			return "rd".equalsIgnoreCase(suffix);
-		}else{
-			return "th".equalsIgnoreCase(suffix);
 		}
+		
+		return correctSuffix.equalsIgnoreCase(suffix);
 	}
 }

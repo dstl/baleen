@@ -7,23 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.Lists;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.UpdateOptions;
 
 import uk.gov.dstl.baleen.core.history.HistoryEvent;
 import uk.gov.dstl.baleen.core.history.Recordable;
 import uk.gov.dstl.baleen.core.history.RecordableHistoryEvent;
 import uk.gov.dstl.baleen.core.history.impl.RecordableImpl;
 import uk.gov.dstl.baleen.history.helpers.AbstractDocumentHistory;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
-import com.google.common.collect.Lists;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
 /**
  * Stores history in a Mongo collection.
@@ -73,7 +71,7 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
 
 	private static final String EVENT_PARAMETERS = "params";
 
-	private final DBCollection collection;
+	private final MongoCollection<Document> collection;
 
 	/**
 	 * New instance, should only be called via MongoHistory.
@@ -82,7 +80,7 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
 	 * @param collection
 	 * @param documentId
 	 */
-	public MongoDocumentHistory(MongoHistory history, DBCollection collection,
+	public MongoDocumentHistory(MongoHistory history, MongoCollection<Document> collection,
 			String documentId) {
 		super(history, documentId);
 		this.collection = collection;
@@ -90,60 +88,53 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
 
 	@Override
 	public void add(HistoryEvent event) {
-		BasicDBObjectBuilder builder = BasicDBObjectBuilder
-				.start()
-				.push("$push")
-				.add("entities." + event.getRecordable().getInternalId(),
-						convert(event)).pop();
-
-		collection.update(new BasicDBObject(DOC_ID, getDocumentId()),
-				builder.get(), true, false);
+		Document insert = new Document("$push",
+				new Document("entities."+event.getRecordable().getInternalId(), convert(event))
+		);
+		
+		collection.updateOne(new Document(DOC_ID, getDocumentId()), insert, new UpdateOptions().upsert(true));
 	}
 
 	@Override
 	public Collection<HistoryEvent> getAllHistory() {
-		return convert(collection.findOne(new BasicDBObject(DOC_ID,
-				getDocumentId())));
+		return convert(collection.find(new Document(DOC_ID, getDocumentId())).first());
 	}
 
 	@Override
 	public Collection<HistoryEvent> getHistory(long recordableId) {
 		// Get the document, but only for specific entity
-		return convert(collection.findOne(new BasicDBObject(DOC_ID,
-				getDocumentId()), new BasicDBObject(ENTITIES + "."
-				+ recordableId, 1)));
+		return convert(collection.find(new Document(DOC_ID,
+				getDocumentId())).projection(new Document(ENTITIES + "."
+				+ recordableId, 1)).first());
 
 	}
 
-	private DBObject convert(HistoryEvent event) {
-		BasicDBObjectBuilder builder = BasicDBObjectBuilder.start()
-				.push(RECORDABLE)
-					.add(RECORDABLE_TEXT, event.getRecordable().getCoveredText())
-					.add(RECORDABLE_END, event.getRecordable().getEnd())
-					.add(RECORDABLE_BEGIN, event.getRecordable().getBegin())
-					.add(RECORDABLE_TYPE, event.getRecordable().getTypeName())
-				.pop()
-				.add(EVENT_ACTION, event.getAction())
-				.add(EVENT_TYPE, event.getEventType())
-				.add(EVENT_REFERRER, event.getReferrer())
-				.add(EVENT_TIMESTAMP, event.getTimestamp())
-				.add(EVENT_PARAMETERS, event.getParameters());
-
-		return builder.get();
+	private Document convert(HistoryEvent event) {
+		return new Document(RECORDABLE, new Document()
+				.append(RECORDABLE_TEXT, event.getRecordable().getCoveredText())
+				.append(RECORDABLE_END, event.getRecordable().getEnd())
+				.append(RECORDABLE_BEGIN, event.getRecordable().getBegin())
+				.append(RECORDABLE_TYPE, event.getRecordable().getTypeName())
+			)
+			.append(EVENT_ACTION, event.getAction())
+			.append(EVENT_TYPE, event.getEventType())
+			.append(EVENT_REFERRER, event.getReferrer())
+			.append(EVENT_TIMESTAMP, event.getTimestamp())
+			.append(EVENT_PARAMETERS, event.getParameters());
 	}
 
-	private Collection<HistoryEvent> convert(DBObject dbo) {
-		if (dbo == null ||dbo.get(ENTITIES)== null|| !(dbo.get(ENTITIES) instanceof BasicDBObject)) {
+	private Collection<HistoryEvent> convert(Document doc) {
+		if (doc == null ||doc.get(ENTITIES)== null|| !(doc.get(ENTITIES) instanceof Document)) {
 			LOGGER.warn("Invalid history document");
 			return Collections.emptyList();
 		}
-		BasicDBObject entities = (BasicDBObject) dbo.get(ENTITIES);
+		Document entities = (Document) doc.get(ENTITIES);
 
 		List<HistoryEvent> history = Lists.newLinkedList();
 		for (String entityId : entities.keySet()) {
-			if (entities.get(entityId) != null && entities.get(entityId) instanceof BasicDBList) {
+			if (entities.get(entityId) != null && entities.get(entityId) instanceof List) {
 
-				BasicDBList list = (BasicDBList) entities.get(entityId);
+				List<?> list = (List<?>) entities.get(entityId);
 				convertForEntity(history, entityId, list);
 			}
 		}
@@ -151,10 +142,10 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
 	}
 
 	private void convertForEntity(List<HistoryEvent> history, String entityId,
-			BasicDBList list) {
+			List<?> list) {
 		for (Object o : list) {
-			if(o instanceof DBObject) {
-				HistoryEvent he = convert(entityId, (DBObject) o);
+			if(o instanceof Document) {
+				HistoryEvent he = convert(entityId, (Document) o);
 				if (he != null) {
 					history.add(he);
 				}
@@ -162,11 +153,11 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
 		}
 	}
 
-	private HistoryEvent convert(String entityId, DBObject o) {
+	private HistoryEvent convert(String entityId, Document o) {
 		try {
 			long id = Long.parseLong(entityId);
 			Recordable recordable = convertToRecordable(id,
-					(DBObject) o.get(RECORDABLE));
+					(Document) o.get(RECORDABLE));
 
 			String eventType = (String) o.get(EVENT_TYPE);
 			String referrer = (String) o.get(EVENT_REFERRER);
@@ -185,10 +176,10 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
 	}
 
 	private Map<String, String> convertToStringMap(Object object) {
-		if(object == null || !(object instanceof BasicDBObject)) {
+		if(object == null || !(object instanceof Document)) {
 			return ImmutableMap.of();
 		}
-		BasicDBObject dbo = (BasicDBObject)object;
+		Document dbo = (Document)object;
 
 		Builder<String, String> builder = ImmutableMap.builder();
 		for(Entry<String,Object> e : dbo.entrySet()) {
@@ -202,7 +193,7 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
 		return builder.build();
 	}
 
-	private Recordable convertToRecordable(long id, DBObject o) {
+	private Recordable convertToRecordable(long id, Document o) {
 		return new RecordableImpl(id, (String) o.get(RECORDABLE_TEXT),
 				(int) o.get(RECORDABLE_BEGIN), (int) o.get(RECORDABLE_END),
 				(String) o.get(RECORDABLE_TYPE));

@@ -9,7 +9,6 @@ import java.io.File;
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
@@ -20,6 +19,8 @@ import org.junit.Test;
 import com.google.common.io.Files;
 
 import uk.gov.dstl.baleen.types.metadata.Metadata;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 /**
  * 
@@ -33,7 +34,7 @@ public class MoveSourceFileTest {
 	@Before
 	public void beforeTest() throws UIMAException{
 		sourceFolder = Files.createTempDir();
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 	
 	
@@ -46,7 +47,7 @@ public class MoveSourceFileTest {
 	public void testMove() throws Exception{
 		File destinationFolder = Files.createTempDir();
 
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath());
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath());
 		
 		File f = new File(sourceFolder, BALEEN_TXT);
 		if(!f.exists())
@@ -77,7 +78,7 @@ public class MoveSourceFileTest {
 	public void testMoveNoType() throws Exception{
 		File destinationFolder = Files.createTempDir();
 
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath(), MoveSourceFile.PARAM_SPLIT, true);
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath(), MoveSourceFile.PARAM_SPLIT, true);
 		
 		File f = new File(sourceFolder, BALEEN_TXT);
 		if(!f.exists())
@@ -108,7 +109,7 @@ public class MoveSourceFileTest {
 	public void testMoveType() throws Exception{
 		File destinationFolder = Files.createTempDir();
 
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath(), MoveSourceFile.PARAM_SPLIT, true);
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath(), MoveSourceFile.PARAM_SPLIT, true);
 		
 		File f = new File(sourceFolder, BALEEN_TXT);
 		if(!f.exists())
@@ -145,7 +146,7 @@ public class MoveSourceFileTest {
 	public void testMoveDuplicate() throws Exception{
 		File destinationFolder = Files.createTempDir();
 		
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath());
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), MoveSourceFile.PARAM_DESTINATION, destinationFolder.getPath());
 		
 		File f = new File(sourceFolder, BALEEN_TXT);
 		if(!f.exists())
@@ -190,7 +191,7 @@ public class MoveSourceFileTest {
 	
 	@Test
 	public void testDelete() throws Exception{
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class);
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(MoveSourceFile.class, TypeSystemSingleton.getTypeSystemDescriptionInstance());
 		
 		File f = new File(sourceFolder, BALEEN_TXT);
 

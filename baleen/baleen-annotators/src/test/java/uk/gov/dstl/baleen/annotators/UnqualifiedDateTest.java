@@ -41,10 +41,10 @@ public class UnqualifiedDateTest extends AbstractAnnotatorTest{
 	
 	@Test
 	public void testDays() throws Exception{
-		jCas.setDocumentText("Monday, Tuesday 11th, Wednesday 12th October, Thursday 13th October 2016, Fri 14 Oct, Sat 15 Oct 16");
+		jCas.setDocumentText("Monday, Tuesday 11th, Wednesday 12th October, Thursday 13th October 2016, Fri 14 Oct, Sat 15 Oct 16, Thu 12th Oct");
 		processJCas();
 		
-		assertEquals(4, JCasUtil.select(jCas, Temporal.class).size());
+		assertEquals(5, JCasUtil.select(jCas, Temporal.class).size());
 		
 		Temporal ts1 = JCasUtil.selectByIndex(jCas, Temporal.class, 0);
 		assertEquals("Monday", ts1.getCoveredText());
@@ -57,6 +57,9 @@ public class UnqualifiedDateTest extends AbstractAnnotatorTest{
 		
 		Temporal ts4 = JCasUtil.selectByIndex(jCas, Temporal.class, 3);
 		assertEquals("Fri 14 Oct", ts4.getCoveredText());
+		
+		Temporal ts5 = JCasUtil.selectByIndex(jCas, Temporal.class, 4);
+		assertEquals("Thu 12th Oct", ts5.getCoveredText());
 	}
 	
 	@Test

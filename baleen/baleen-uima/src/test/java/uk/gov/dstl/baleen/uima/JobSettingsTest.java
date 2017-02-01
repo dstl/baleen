@@ -4,12 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.uima.JobSettings;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class JobSettingsTest {
 
@@ -18,7 +17,7 @@ public class JobSettingsTest {
 
 	@Before
 	public void before() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		settings = new JobSettings(jCas);
 
 	}

@@ -22,6 +22,7 @@ import org.apache.uima.resource.ResourceInitializationException;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
 /**
@@ -64,7 +65,7 @@ public class MergeAdjacent extends BaleenAnnotator {
 		
 		JCas jCas;
 		try {
-			jCas = JCasFactory.createJCas();
+			jCas = JCasFactory.createJCas(TypeSystemSingleton.getTypeSystemDescriptionInstance());
 		} catch (UIMAException e) {
 			throw new ResourceInitializationException(e);
 		}

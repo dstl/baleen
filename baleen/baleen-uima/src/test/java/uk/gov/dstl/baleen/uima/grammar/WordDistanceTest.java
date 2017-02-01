@@ -5,17 +5,17 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertSame;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.language.WordToken;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class WordDistanceTest {
 
 	@Test
 	public void testNoDistance() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 
 		final WordToken word = new WordToken(jCas);
 
@@ -29,7 +29,7 @@ public class WordDistanceTest {
 
 	@Test
 	public void testSomeDistance() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 
 		final WordToken w1 = new WordToken(jCas);
 		final WordToken w2 = new WordToken(jCas);
@@ -46,7 +46,7 @@ public class WordDistanceTest {
 	
 	@Test
 	public void testEquals() throws UIMAException{
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 
 		final WordToken w1 = new WordToken(jCas);
 		final WordToken w2 = new WordToken(jCas);

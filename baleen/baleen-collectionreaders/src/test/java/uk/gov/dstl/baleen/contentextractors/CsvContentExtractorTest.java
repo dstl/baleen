@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.uima.UimaContext;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -23,13 +22,14 @@ import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenContentExtractor;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class CsvContentExtractorTest {
 	
 	@Test
 	public void test() throws Exception{
 		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		BaleenContentExtractor contentExtractor = new CsvContentExtractor();
 		
@@ -77,7 +77,7 @@ public class CsvContentExtractorTest {
 	@Test
 	public void testNotEnoughCols() throws Exception{
 		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		
 		BaleenContentExtractor contentExtractor = new CsvContentExtractor();
 		

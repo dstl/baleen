@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.Collections;
 
 import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.junit.BeforeClass;
@@ -19,6 +18,7 @@ import uk.gov.dstl.baleen.types.common.Nationality;
 import uk.gov.dstl.baleen.types.common.Organisation;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.language.WordToken;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class GenderEnhancerTest {
 	static SharedGenderMultiplicityResource genderResource;
@@ -34,7 +34,7 @@ public class GenderEnhancerTest {
 
 		genderEnhancer = new GenderEnhancer(genderResource);
 		
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 	
 	@Test

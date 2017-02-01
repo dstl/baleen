@@ -10,12 +10,12 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.language.Interaction;
 import uk.gov.dstl.baleen.types.language.WordToken;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class RelationConstraintTest {
 
@@ -92,7 +92,7 @@ public class RelationConstraintTest {
 	
 	@Test
 	public void testMatches() throws UIMAException{
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		RelationConstraint rc = new RelationConstraint("type", "subType", "pos", "source", "target");
 		
 		Interaction i = new Interaction(jCas);

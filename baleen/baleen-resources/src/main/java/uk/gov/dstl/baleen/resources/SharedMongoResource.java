@@ -8,16 +8,16 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
 
-import uk.gov.dstl.baleen.core.utils.ConfigUtils;
-import uk.gov.dstl.baleen.exceptions.BaleenException;
-import uk.gov.dstl.baleen.uima.BaleenResource;
-
 import com.google.common.base.Optional;
 import com.google.common.base.Strings;
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoDatabase;
+
+import uk.gov.dstl.baleen.core.utils.ConfigUtils;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.uima.BaleenResource;
 
 /**
  * <b>Shared resource for accessing Mongo</b>
@@ -32,7 +32,7 @@ import com.mongodb.ServerAddress;
  */
 public class SharedMongoResource extends BaleenResource {
 	private MongoClient m;
-	private DB db;
+	private MongoDatabase db;
 
 	/**
 	 * The Mongo host to connect to
@@ -107,7 +107,7 @@ public class SharedMongoResource extends BaleenResource {
 			m = createMongoClient(sa, cred);
 
 			getMonitor().debug("Getting Mongo Database '{}'", db);
-			db = m.getDB(database);
+			db = m.getDatabase(database);
 		} catch (Exception e) {
 			throw new BaleenException("Unable to connect to Mongo", e);
 		}
@@ -153,7 +153,7 @@ public class SharedMongoResource extends BaleenResource {
 	 * @return the monogo db, or null if the source has been destroyed or an
 	 *         initialisation error occurred.
 	 */
-	public DB getDB() {
+	public MongoDatabase getDB() {
 		return db;
 	}
 	

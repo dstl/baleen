@@ -11,18 +11,17 @@ import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ExternalResourceDescription;
+import org.bson.Document;
 import org.junit.Test;
+
+import com.google.common.collect.Lists;
+import com.mongodb.util.JSON;
 
 import uk.gov.dstl.baleen.annotators.gazetteer.MongoRegex;
 import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
-
-import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.mongodb.util.JSON;
 
 public class MongoRegexGazetteerTest extends AnnotatorTestBase{
 	private static final String COLLECTION = "collection";
@@ -36,10 +35,10 @@ public class MongoRegexGazetteerTest extends AnnotatorTestBase{
 	private static final String TEXT = "Hello world, this is a test. Hello London, this is a test.";
 	private static final String VALUE = "value";
 	private static final String MONGO_COLL = "baleen_testing_MongoRadixTreeGazetteerTest";
-	private static final List<DBObject> GAZ_DATA = Lists.newArrayList(
-			new BasicDBObject(VALUE, new String[]{"world", "earth", "planet"}),
-			new BasicDBObject(VALUE, new String[]{"london", "londres"}).append("geoJson","Property_Test"),
-			new BasicDBObject(VALUE, new String[]{"madrid"}));
+	private static final List<Document> GAZ_DATA = Lists.newArrayList(
+			new Document(VALUE, new String[]{"world", "earth", "planet"}),
+			new Document(VALUE, new String[]{"london", "londres"}).append("geoJson","Property_Test"),
+			new Document(VALUE, new String[]{"madrid"}));
 
 	@Test
 	public void test() throws Exception{

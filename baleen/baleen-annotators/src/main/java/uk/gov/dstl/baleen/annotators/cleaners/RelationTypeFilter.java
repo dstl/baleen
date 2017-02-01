@@ -14,8 +14,9 @@ import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.annotators.patterns.data.RelationConstraint;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
@@ -142,10 +143,10 @@ public class RelationTypeFilter extends BaleenAnnotator {
 	public void doInitialize(final UimaContext aContext) throws ResourceInitializationException {
 		super.doInitialize(aContext);
 
-		final DBCollection dbCollection = mongo.getDB().getCollection(collection);
+		final MongoCollection<Document> dbCollection = mongo.getDB().getCollection(collection);
 
-		dbCollection.find().forEach(o -> {
-			final RelationConstraint constraint = new RelationConstraint((String) o.get(typeField),
+		for(Document o : dbCollection.find()){
+			RelationConstraint constraint = new RelationConstraint((String) o.get(typeField),
 					(String) o.get(subTypeField),
 					(String) o.get(posField),
 					(String) o.get(sourceField),
@@ -159,8 +160,7 @@ public class RelationTypeFilter extends BaleenAnnotator {
 				}
 				set.add(constraint);
 			}
-
-		});
+		}
 	}
 
 	@Override

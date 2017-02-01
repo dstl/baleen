@@ -57,6 +57,7 @@ public class Date extends BaleenAnnotator{
 	
 	private static final String DAYS = "(?:(?:Mon|Monday|Tue|Tues|Tuesday|Wed|Wednesday|Thu|Thurs|Thursday|Fri|Friday|Sat|Saturday|Sun|Sunday)\\s+)?";	//Non-capturing as we don't use this information
 	private static final String MONTHS = "(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(t(ember)?)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)";
+	private static final String DATES = "([0-2]?[0-9]|3[01])\\s*";
 	private static final String DATE_SUFFIXES = "(st|nd|rd|th)";
 	
 	private static final String EXACT = "EXACT";
@@ -188,7 +189,7 @@ public class Date extends BaleenAnnotator{
 	}
 	
 	private void identifyDayMonthYearRanges(JCas jCas){
-		Pattern sameMonth = Pattern.compile("\\b"+DAYS+"([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?\\s*(-|to|and|\\\\|/)\\s*"+DAYS+"([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\b", Pattern.CASE_INSENSITIVE);
+		Pattern sameMonth = Pattern.compile("\\b"+DAYS+DATES+DATE_SUFFIXES+"?\\s*(-|to|and|\\\\|/)\\s*"+DAYS+DATES+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\b", Pattern.CASE_INSENSITIVE);
 		Matcher m = sameMonth.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
@@ -227,7 +228,7 @@ public class Date extends BaleenAnnotator{
 			}			
 		}
 		
-		Pattern sameYear = Pattern.compile("\\b"+DAYS+"([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s*(-|to|and)\\s*"+DAYS+"([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\b", Pattern.CASE_INSENSITIVE);
+		Pattern sameYear = Pattern.compile("\\b"+DAYS+DATES+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s*(-|to|and)\\s*"+DAYS+DATES+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\b", Pattern.CASE_INSENSITIVE);
 		m = sameYear.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
@@ -255,7 +256,7 @@ public class Date extends BaleenAnnotator{
 			createDayMonthYearRange(jCas, m.start(), m.end(), ld1, ld2);
 		}
 		
-		Pattern fullDates = Pattern.compile("\\b"+DAYS+"([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\s*(-|to|and)\\s*"+DAYS+"([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\b", Pattern.CASE_INSENSITIVE);
+		Pattern fullDates = Pattern.compile("\\b"+DAYS+DATES+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\s*(-|to|and)\\s*"+DAYS+DATES+DATE_SUFFIXES+"?\\s+"+MONTHS+"\\s+(\\d{4}|'?\\d{2})\\b", Pattern.CASE_INSENSITIVE);
 		m = fullDates.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
@@ -305,58 +306,25 @@ public class Date extends BaleenAnnotator{
 	}
 	
 	private void identifyDates(JCas jCas){
-		Pattern fullDateDayMonth = Pattern.compile("\\b"+DAYS+"([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?\\s+"+MONTHS+",?\\s+(\\d{4}|'?\\d{2}\\b)", Pattern.CASE_INSENSITIVE);
+		Pattern fullDateDayMonth = Pattern.compile("\\b"+DAYS+DATES+DATE_SUFFIXES+"?\\s+"+MONTHS+",?\\s+(\\d{4}|'?\\d{2}\\b)", Pattern.CASE_INSENSITIVE);
 		Matcher m = fullDateDayMonth.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
-			Year y = DateTimeUtils.asYear(m.group(16));
-			YearMonth ym = y.atMonth(DateTimeUtils.asMonth(m.group(3)));		
-			
-			LocalDate ld;
-			try{
-				ld = ym.atDay(Integer.parseInt(m.group(1)));
-			}catch(DateTimeException dte){
-				getMonitor().warn(INVALID_DATE_FOUND, dte);
-				continue;
-			}
-			
-			createDate(jCas, m.start(), m.end(), ld);
+			createDateFromMatcher(jCas, m, 16, 3, 1);
 		}
 		
 		Pattern fullDateMonthDay = Pattern.compile("\\b"+MONTHS+"\\s+([0-2]?[0-9]|3[01])\\s*"+DATE_SUFFIXES+"?,?\\s+(\\d{4}|'?\\d{2}\\b)", Pattern.CASE_INSENSITIVE);
 		m = fullDateMonthDay.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
-			Year y = DateTimeUtils.asYear(m.group(16));
-			YearMonth ym = y.atMonth(DateTimeUtils.asMonth(m.group(1)));		
-			
-			LocalDate ld;
-			try{
-				ld = ym.atDay(Integer.parseInt(m.group(14)));
-			}catch(DateTimeException dte){
-				getMonitor().warn(INVALID_DATE_FOUND, dte);
-				continue;
-			}
-			
-			createDate(jCas, m.start(), m.end(), ld);
+			createDateFromMatcher(jCas, m, 16, 1, 14);
 		}
 		
 		Pattern shortDateYearFirst = Pattern.compile("\\b(\\d{4})[-\\\\/\\.](0?[1-9]|1[0-2])[-\\\\/\\.]([0-2]?[0-9]|3[01])\\b", Pattern.CASE_INSENSITIVE);
 		m = shortDateYearFirst.matcher(jCas.getDocumentText());
 		
 		while(m.find()){
-			Year y = DateTimeUtils.asYear(m.group(1));
-			YearMonth ym = y.atMonth(DateTimeUtils.asMonth(m.group(2)));		
-			
-			LocalDate ld;
-			try{
-				ld = ym.atDay(Integer.parseInt(m.group(3)));
-			}catch(DateTimeException dte){
-				getMonitor().warn(INVALID_DATE_FOUND, dte);
-				continue;
-			}
-			
-			createDate(jCas, m.start(), m.end(), ld);
+			createDateFromMatcher(jCas, m, 1, 2, 3);
 		}
 		
 		Pattern shortDate = Pattern.compile("\\b([0-2]?[0-9]|3[01])[-\\\\/\\.]([0-2]?[0-9]|3[01])[-\\\\/\\.](\\d{4}|\\d{2})\\b", Pattern.CASE_INSENSITIVE);
@@ -572,5 +540,20 @@ public class Date extends BaleenAnnotator{
 		
 		String nextChar = jCas.getDocumentText().substring(matchEnd, matchEnd + 1);
 		return "-".equals(nextChar) || "/".equals(nextChar) || "\\".equals(nextChar);
+	}
+	
+	private void createDateFromMatcher(JCas jCas, Matcher m, Integer yearGroup, Integer monthGroup, Integer dayGroup){
+		Year y = DateTimeUtils.asYear(m.group(yearGroup));
+		YearMonth ym = y.atMonth(DateTimeUtils.asMonth(m.group(monthGroup)));		
+		
+		LocalDate ld;
+		try{
+			ld = ym.atDay(Integer.parseInt(m.group(dayGroup)));
+		}catch(DateTimeException dte){
+			getMonitor().warn(INVALID_DATE_FOUND, dte);
+			return;
+		}
+		
+		createDate(jCas, m.start(), m.end(), ld);
 	}
 }

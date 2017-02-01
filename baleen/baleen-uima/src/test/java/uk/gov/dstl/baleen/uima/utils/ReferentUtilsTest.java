@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +23,7 @@ import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class ReferentUtilsTest {
 
@@ -39,7 +39,7 @@ public class ReferentUtilsTest {
 
 	@Before
 	public void before() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		jCas.setDocumentText("Chris when to London and he saw Big Ben there");
 
 		chrisRT = new ReferenceTarget(jCas);

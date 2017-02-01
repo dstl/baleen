@@ -7,7 +7,6 @@ import static org.junit.Assert.assertTrue;
 import java.util.Collections;
 import java.util.Set;
 
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,6 +15,7 @@ import org.junit.Test;
 import uk.gov.dstl.baleen.types.language.Dependency;
 import uk.gov.dstl.baleen.types.language.Sentence;
 import uk.gov.dstl.baleen.types.language.WordToken;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class DependencyGraphTest {
 
@@ -31,7 +31,7 @@ public class DependencyGraphTest {
 
 	@Before
 	public void setUp() throws Exception {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		jCas.setDocumentText("A sample of text.");
 
 		// Note this dependency grammar is not accurate!

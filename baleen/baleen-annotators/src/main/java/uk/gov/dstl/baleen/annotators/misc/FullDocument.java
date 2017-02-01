@@ -12,6 +12,7 @@ import org.apache.uima.resource.ResourceInitializationException;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
 /**
@@ -35,7 +36,7 @@ public class FullDocument extends BaleenAnnotator {
 	@Override
 	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
 		try{
-			et = TypeUtils.getEntityClass(type, JCasFactory.createJCas());
+			et = TypeUtils.getEntityClass(type, JCasFactory.createJCas(TypeSystemSingleton.getTypeSystemDescriptionInstance()));
 		}catch(UIMAException | BaleenException e){
 			throw new ResourceInitializationException(e);
 		}

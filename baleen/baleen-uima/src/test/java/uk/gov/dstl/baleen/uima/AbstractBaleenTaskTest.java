@@ -6,7 +6,6 @@ import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.After;
@@ -15,6 +14,7 @@ import org.junit.Before;
 import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 @SuppressWarnings("unchecked")
 public class AbstractBaleenTaskTest {
@@ -25,7 +25,7 @@ public class AbstractBaleenTaskTest {
 	@Before
 	public void beforeAbstractBaleenTaskTest() throws UIMAException {
 		jobManager = new BaleenJobManager();
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 
 	@After

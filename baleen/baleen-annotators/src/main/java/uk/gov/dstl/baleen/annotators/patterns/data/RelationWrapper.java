@@ -62,13 +62,11 @@ public class RelationWrapper {
 	private boolean stringEquals(String a, String b){
 		if(a == null && b == null){
 			return true;
-		}else if (a == null && b != null){
+		}else if ((a == null && b != null) || (a != null && b == null)){
 			return false;
-		}else if (a != null && b == null){
-			return false;
-		}else{
-			return a.equals(b);
 		}
+		
+		return a.equals(b);
 	}
 
 	@Override

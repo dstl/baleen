@@ -4,51 +4,27 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
 
-import org.apache.uima.UIMAException;
-import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
-import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.elasticsearch.client.Client;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
+import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
 import uk.gov.dstl.baleen.resources.SharedGenderMultiplicityResource;
 import uk.gov.dstl.baleen.types.common.Person;
 
-public class AddGenderToPersonTest extends AnnotatorTestBase {
-	protected static JCas jCas;
-	protected static Client client;
-	protected static AnalysisEngine ae;
+public class AddGenderToPersonTest extends AbstractAnnotatorTest {
+	private final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, SharedGenderMultiplicityResource.class);
 	
-	@BeforeClass
-	public static void setupClass() throws UIMAException{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, SharedGenderMultiplicityResource.class);
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(AddGenderToPerson.class, AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
-
-		ae = AnalysisEngineFactory.createEngine(aed);
+	public AddGenderToPersonTest(){
+		super(AddGenderToPerson.class);
 	}
 
-	@Before
-	public void beforeTest() throws UIMAException{
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
-	}
 	
 	@Test
 	public void testMale() throws AnalysisEngineProcessException, ResourceInitializationException {
-
 		jCas.setDocumentText("Professor Brian Cox");
 
 		Person p = new Person(jCas);
@@ -56,7 +32,7 @@ public class AddGenderToPersonTest extends AnnotatorTestBase {
 		p.setEnd(19);
 		p.addToIndexes();
 
-		ae.process(jCas);
+		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
 
 		Collection<Person> select = JCasUtil.select(jCas, Person.class);
 		assertEquals(1, select.size());
@@ -67,7 +43,6 @@ public class AddGenderToPersonTest extends AnnotatorTestBase {
 
 	@Test
 	public void testFemale() throws AnalysisEngineProcessException, ResourceInitializationException {
-
 		jCas.setDocumentText("Alice Samantha");
 
 		Person p = new Person(jCas);
@@ -75,7 +50,7 @@ public class AddGenderToPersonTest extends AnnotatorTestBase {
 		p.setEnd(14);
 		p.addToIndexes();
 
-		ae.process(jCas);
+		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
 
 		Collection<Person> select = JCasUtil.select(jCas, Person.class);
 		assertEquals(1, select.size());
@@ -86,7 +61,6 @@ public class AddGenderToPersonTest extends AnnotatorTestBase {
 	
 	@Test
 	public void testMixed() throws AnalysisEngineProcessException, ResourceInitializationException {
-
 		jCas.setDocumentText("Alice Brian Smith");
 
 		Person p = new Person(jCas);
@@ -94,7 +68,7 @@ public class AddGenderToPersonTest extends AnnotatorTestBase {
 		p.setEnd(17);
 		p.addToIndexes();
 
-		ae.process(jCas);
+		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
 
 		Collection<Person> select = JCasUtil.select(jCas, Person.class);
 		assertEquals(1, select.size());
@@ -105,7 +79,6 @@ public class AddGenderToPersonTest extends AnnotatorTestBase {
 	
 	@Test
 	public void testExisting() throws AnalysisEngineProcessException, ResourceInitializationException {
-
 		jCas.setDocumentText("Alice Cox");
 
 		Person p = new Person(jCas);
@@ -114,7 +87,7 @@ public class AddGenderToPersonTest extends AnnotatorTestBase {
 		p.setGender("MALE");
 		p.addToIndexes();
 
-		ae.process(jCas);	//If the entity is not ignored, it will be made female.
+		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);	//If the entity is not ignored, it will be made female.
 
 		Collection<Person> select = JCasUtil.select(jCas, Person.class);
 		assertEquals(1, select.size());

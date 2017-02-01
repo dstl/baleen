@@ -9,7 +9,6 @@ import java.nio.file.Files;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.util.FileUtils;
@@ -18,6 +17,8 @@ import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
 import uk.gov.dstl.baleen.types.common.Person;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 public class EntityCountTest {
 	private static final String OUTPUT_FILE = "outputFile";
@@ -26,14 +27,14 @@ public class EntityCountTest {
 
 	@Before
 	public void beforeTest() throws Exception{
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 	
 	@Test
 	public void testEntityCountOutput() throws Exception{
 		File output = Files.createTempFile("baleen-entitycount", ".tsv").toFile();
 		
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, OUTPUT_FILE, output.getPath());
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
 		
 		createDocument();
 		
@@ -50,7 +51,7 @@ public class EntityCountTest {
 		File outputFolder = Files.createTempDirectory("baleen").toFile();
 		File output = new File(outputFolder, "baleen-entitycount.tsv");
 		
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, OUTPUT_FILE, output.getPath());
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
 		
 		createDocument();
 		
@@ -80,7 +81,7 @@ public class EntityCountTest {
 		output.setReadOnly();
 		
 		try{
-			AnalysisEngineFactory.createEngine(EntityCount.class, OUTPUT_FILE, output.getPath());
+			AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
 			fail("Expected exception not thrown");
 		}catch(Exception ex){
 			// Do nothing
@@ -96,7 +97,7 @@ public class EntityCountTest {
 		createDocument();
 		
 		//Try writing to folder
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, OUTPUT_FILE, output.getPath());
+		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
 		consumer.process(jCas);
 		consumer.destroy();
 

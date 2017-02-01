@@ -3,29 +3,31 @@ package uk.gov.dstl.baleen.annotators;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.List;
 
-import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.analysis_engine.AnalysisEngineDescription;
-import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ExternalResourceDescription;
+import org.bson.Document;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 import uk.gov.dstl.baleen.annotators.gazetteer.MongoStemming;
-import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
+import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.types.common.Buzzword;
 import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 
-public class MongoStemmingGazetteerTest extends AnnotatorTestBase{
+public class MongoStemmingGazetteerTest extends AbstractAnnotatorTest{
+	
+	public MongoStemmingGazetteerTest() {
+		super(MongoStemming.class);
+	}
+
 	private static final String LOCATION = "Location";
 	private static final String BUZZWORD = "Buzzword";
 	private static final String TYPE = "type";
@@ -35,25 +37,21 @@ public class MongoStemmingGazetteerTest extends AnnotatorTestBase{
 	private static final String MONGO = "mongo";
 	private static final String VALUE = "value";
 	private static final String MONGO_COLL = "baleen_testing_MongoStemmingRadixTreeGazetteerTest";
-	private static final DBObject LONDON_GEOJSON = new BasicDBObject(TYPE, "Point").append("coordinates", new Double[]{-0.1275, 51.5072});
+	private static final Document LONDON_GEOJSON = new Document(TYPE, "Point").append("coordinates", Arrays.asList(-0.1275, 51.5072));
 	
-	private static final List<DBObject> GAZ_DATA = Lists.newArrayList(
-			new BasicDBObject(VALUE, new String[]{"conspiracy", "conspire", "scheme", "plot"}),
-			new BasicDBObject(VALUE, new String[]{"london", "londres"}).append("geoJson", LONDON_GEOJSON),
-			new BasicDBObject(VALUE, new String[]{"knight", "sir", "dame", "lady"}),
-			new BasicDBObject(VALUE, new String[]{"enter the room"}));
+	private static final List<Document> GAZ_DATA = Lists.newArrayList(
+			new Document(VALUE, new String[]{"conspiracy", "conspire", "scheme", "plot"}),
+			new Document(VALUE, new String[]{"london", "londres"}).append("geoJson", LONDON_GEOJSON),
+			new Document(VALUE, new String[]{"knight", "sir", "dame", "lady"}),
+			new Document(VALUE, new String[]{"enter the room"}));
 
+	private final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, FONGO_COLLECTION, MONGO_COLL, FONGO_DATA, JSON.serialize(GAZ_DATA));
+	
 	@Test
 	public void test() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, FONGO_COLLECTION, MONGO_COLL, FONGO_DATA, JSON.serialize(GAZ_DATA));
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(MongoStemming.class, MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
-		
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
-		
 		jCas.setDocumentText("Forty seven knights conspired against the crown.");
-		
-		ae.process(jCas);
-		
+		processJCas(MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
+
 		assertEquals(2, JCasUtil.select(jCas, Buzzword.class).size());
 		
 		Buzzword b1 = JCasUtil.selectByIndex(jCas, Buzzword.class, 0);
@@ -63,56 +61,32 @@ public class MongoStemmingGazetteerTest extends AnnotatorTestBase{
 		Buzzword b2 = JCasUtil.selectByIndex(jCas, Buzzword.class, 1);
 		assertEquals("conspired", b2.getValue());
 		assertEquals("conspired", b2.getCoveredText());
-		
-		ae.destroy();
 	}
 	
 	@Test
 	public void testMultipleWords() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, FONGO_COLLECTION, MONGO_COLL, FONGO_DATA, JSON.serialize(GAZ_DATA));
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(MongoStemming.class, MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
-		
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
-		
 		jCas.setDocumentText("Bill and Ben entered the room on a dark and windy night.");
-		
-		ae.process(jCas);
+		processJCas(MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
 		
 		assertEquals(1, JCasUtil.select(jCas, Buzzword.class).size());
 		
 		Buzzword b1 = JCasUtil.selectByIndex(jCas, Buzzword.class, 0);
 		assertEquals("entered the room", b1.getValue());
 		assertEquals("entered the room", b1.getCoveredText());
-		
-		ae.destroy();
 	}
 	
 	@Test
 	public void testMidword() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, FONGO_COLLECTION, MONGO_COLL, FONGO_DATA, JSON.serialize(GAZ_DATA));
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(MongoStemming.class, MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
-		
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
-		
 		jCas.setDocumentText("Desiring chocolate is not a sin");
-		
-		ae.process(jCas);
+		processJCas(MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
 		
 		assertEquals(0, JCasUtil.select(jCas, Buzzword.class).size());
-		
-		ae.destroy();
 	}
 	
 	@Test
 	public void testProperty() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, FONGO_COLLECTION, MONGO_COLL, FONGO_DATA, JSON.serialize(GAZ_DATA));
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(MongoStemming.class, MONGO, erd, COLLECTION, MONGO_COLL, TYPE, LOCATION);
-		
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
-		
 		jCas.setDocumentText("Guy Fawkes was caught in London");
-		
-		ae.process(jCas);
+		processJCas(MONGO, erd, COLLECTION, MONGO_COLL, TYPE, LOCATION);
 		
 		assertEquals(1, JCasUtil.select(jCas, Location.class).size());
 		Location lLon = JCasUtil.selectByIndex(jCas, Location.class, 0);
@@ -123,14 +97,8 @@ public class MongoStemmingGazetteerTest extends AnnotatorTestBase{
 	
 	@Test
 	public void testCoref() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class, FONGO_COLLECTION, MONGO_COLL, FONGO_DATA, JSON.serialize(GAZ_DATA));
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(MongoStemming.class, MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
-		
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
-		
 		jCas.setDocumentText("Lords, ladies, sirs, and madames...");
-		
-		ae.process(jCas);
+		processJCas(MONGO, erd, COLLECTION, MONGO_COLL, TYPE, BUZZWORD);
 		
 		assertEquals(2, JCasUtil.select(jCas, Buzzword.class).size());
 		assertEquals(1, JCasUtil.select(jCas, ReferenceTarget.class).size());
@@ -146,7 +114,5 @@ public class MongoStemmingGazetteerTest extends AnnotatorTestBase{
 		assertEquals("sirs", b2.getValue());
 		assertEquals("sirs", b2.getCoveredText());
 		assertEquals(rt, b2.getReferent());
-		
-		ae.destroy();
 	}
 }

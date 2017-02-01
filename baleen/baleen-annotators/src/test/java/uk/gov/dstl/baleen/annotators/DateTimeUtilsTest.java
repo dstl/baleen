@@ -3,10 +3,12 @@ package uk.gov.dstl.baleen.annotators;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.time.DayOfWeek;
 import java.time.Month;
+import java.time.Year;
 
 import org.junit.Test;
 
@@ -55,6 +57,15 @@ public class DateTimeUtilsTest {
 		assertMonth(null,"ma","j","movember","0","13");
 	}
 
+	@Test
+	public void testAsYear(){
+		assertEquals(Year.of(2006), DateTimeUtils.asYear("2006"));
+		assertEquals(Year.of(2006), DateTimeUtils.asYear("06"));
+		assertEquals(Year.of(1984), DateTimeUtils.asYear("'84"));
+		
+		assertNull(DateTimeUtils.asYear("last year"));
+	}
+	
 	@Test
 	public void testSuffixCorrect(){
 		assertTrue(DateTimeUtils.suffixCorrect(3, ""));

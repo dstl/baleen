@@ -8,7 +8,6 @@ import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.elasticsearch.common.settings.Settings;
@@ -17,6 +16,7 @@ import org.elasticsearch.node.NodeBuilder;
 import org.junit.BeforeClass;
 
 import uk.gov.dstl.baleen.resources.SharedElasticsearchRestResource;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 public class ElasticsearchRestTest extends ElasticsearchTestBase{
 	private static Path tmpDir;
@@ -44,11 +44,9 @@ public class ElasticsearchRestTest extends ElasticsearchTestBase{
 				.local(true)
 				.clusterName("test_cluster")
 				.node();
-		
-		jCas = JCasFactory.createJCas();
 
 		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(ELASTICSEARCH, SharedElasticsearchRestResource.class, "elasticsearchrest.url", "http://localhost:19200");
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(ElasticsearchRest.class, ELASTICSEARCH, erd);
+		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(ElasticsearchRest.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), ELASTICSEARCH, erd);
 		
 		ae = AnalysisEngineFactory.createEngine(aed);
 		

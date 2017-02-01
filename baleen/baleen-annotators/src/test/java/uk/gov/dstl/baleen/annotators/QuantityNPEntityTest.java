@@ -23,6 +23,7 @@ import uk.gov.dstl.baleen.types.common.Buzzword;
 import uk.gov.dstl.baleen.types.common.Quantity;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Relation;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 /**
  * Tests for {@link QuantityNPEntity}.
@@ -44,7 +45,7 @@ public class QuantityNPEntityTest extends AbstractAnnotatorTest {
 		ExternalResourceDescription posDesc = ExternalResourceFactory.createExternalResourceDescription("posTags", SharedOpenNLPModel.class);
 		ExternalResourceDescription chunksDesc = ExternalResourceFactory.createExternalResourceDescription("phraseChunks", SharedOpenNLPModel.class);
 
-		AnalysisEngineDescription desc = AnalysisEngineFactory.createEngineDescription(OpenNLP.class, "tokens", tokensDesc, "sentences", sentencesDesc, "posTags", posDesc, "phraseChunks", chunksDesc);
+		AnalysisEngineDescription desc = AnalysisEngineFactory.createEngineDescription(OpenNLP.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), "tokens", tokensDesc, "sentences", sentencesDesc, "posTags", posDesc, "phraseChunks", chunksDesc);
 		
 		AnalysisEngine languageAE = AnalysisEngineFactory.createEngine(desc);
 		languageAE.process(jCas);

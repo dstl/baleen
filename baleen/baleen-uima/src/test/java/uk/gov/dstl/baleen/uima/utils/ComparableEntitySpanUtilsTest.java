@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.junit.Before;
@@ -20,7 +19,7 @@ import org.junit.Test;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Location;
-import uk.gov.dstl.baleen.uima.utils.ComparableEntitySpanUtils;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class ComparableEntitySpanUtilsTest {
 
@@ -28,7 +27,7 @@ public class ComparableEntitySpanUtilsTest {
 
 	@Before
 	public void before() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 
 	@Test

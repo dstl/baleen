@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
@@ -22,15 +21,13 @@ import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceAccessException;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.impl.CustomResourceSpecifier_impl;
+import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.consumers.utils.DefaultFields;
 import uk.gov.dstl.baleen.consumers.utils.IEntityConverterFields;
@@ -82,9 +79,9 @@ public class MongoTest extends ConsumerTestBase {
 
 	private AnalysisEngine ae;
 
-	private DBCollection documents;
-	private DBCollection entities;
-	private DBCollection relations;
+	private MongoCollection<Document> documents;
+	private MongoCollection<Document> entities;
+	private MongoCollection<Document> relations;
 
 	private BaleenHistory history;
 	
@@ -159,19 +156,19 @@ public class MongoTest extends ConsumerTestBase {
 		ae.process(jCas);
 
 		assertEquals(1, documents.count());
-		DBObject result = documents.findOne();
+		Document result = documents.find().first();
 
 		assertEquals(TEXT, result.get(Mongo.FIELD_CONTENT));
-		assertEquals("en", ((DBObject)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_LANGUAGE));
+		assertEquals("en", ((Document)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_LANGUAGE));
 
-		assertEquals(new Date(timestamp), ((DBObject)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_TIMESTAMP));
-		assertEquals("test/no_entities", ((DBObject)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_SOURCE));
+		assertEquals(new Date(timestamp), ((Document)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_TIMESTAMP));
+		assertEquals("test/no_entities", ((Document)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_SOURCE));
 
-		assertEquals("test", ((DBObject)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_TYPE));
+		assertEquals("test", ((Document)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_TYPE));
 
-		assertEquals("OFFICIAL", ((DBObject)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_CLASSIFICATION));
-		assertArrayEquals(new String[] { "TEST_A", "TEST_B" }, ((Collection<String>)((DBObject)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_CAVEATS)).toArray());
-		assertArrayEquals(new String[] { "ENG", "SCO", "WAL" }, ((Collection<String>)((DBObject)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_RELEASABILITY)).toArray());
+		assertEquals("OFFICIAL", ((Document)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_CLASSIFICATION));
+		assertArrayEquals(new String[] { "TEST_A", "TEST_B" }, ((Collection<String>)((Document)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_CAVEATS)).toArray());
+		assertArrayEquals(new String[] { "ENG", "SCO", "WAL" }, ((Collection<String>)((Document)result.get(Mongo.FIELD_DOCUMENT)).get(Mongo.FIELD_DOCUMENT_RELEASABILITY)).toArray());
 
 		assertEquals(getDocumentAnnotation(jCas).getHash(), result.get(fields.getExternalId()));
 	}
@@ -211,11 +208,11 @@ public class MongoTest extends ConsumerTestBase {
 		ae.process(jCas);
 
 		assertEquals(1, documents.count());
-		DBObject result = documents.findOne();
+		Document result = documents.find().first();
 
-		assertEquals("id_1", ((DBObject)((BasicDBList)result.get(Mongo.FIELD_PUBLISHEDIDS)).get(0)).get(Mongo.FIELD_PUBLISHEDIDS_ID));
+		assertEquals("id_1", ((Document)((List<?>)result.get(Mongo.FIELD_PUBLISHEDIDS)).get(0)).get(Mongo.FIELD_PUBLISHEDIDS_ID));
 
-		DBObject meta = (DBObject) result.get(Mongo.FIELD_METADATA);
+		Document meta = (Document) result.get(Mongo.FIELD_METADATA);
 
 		assertMeta(meta, "sourceAndInformationGrading", "D3");
 		assertMeta(meta, "test_key", "test.value");
@@ -223,8 +220,8 @@ public class MongoTest extends ConsumerTestBase {
 		assertMeta(meta, "countryInfo", "ENG|WAL|SCO");
 	}
 
-	private void assertMeta(DBObject meta, String key, Object value) {
-		assertEquals(value, ((BasicDBList)meta.get(key)).get(0));
+	private void assertMeta(Document meta, String key, Object value) {
+		assertEquals(value, ((List<?>)meta.get(key)).get(0));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -276,9 +273,8 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals(1, documents.count());
 		assertEquals(5, entities.count());
 
-
-		Map<String, Object> a = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON));
-		Map<String, Object> person = ((List<Map<String, Object>>)a.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document a = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON)).first();
+		Document person = ((List<Document>)a.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(11, person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
@@ -286,8 +282,8 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals("Person", person.get(TYPE));
 		assertEquals(PERSON, person.get(VALUE));
 
-		Map<String, Object> b = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON));
-		Map<String, Object> location = ((List<Map<String, Object>>)b.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document b = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON)).first();
+		Document location = ((List<Document>)b.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(10, location.size());
 		assertEquals(14, location.get(BEGIN));
 		assertEquals(20, location.get(END));
@@ -295,11 +291,11 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals("Location", location.get(TYPE));
 		assertEquals(LONDON, location.get(VALUE));
 
-		assertEquals("Point", ((DBObject)location.get("geoJson")).get(TYPE));
-		assertArrayEquals(new Double[] { -0.1, 51.5 }, ((BasicDBList)((DBObject)location.get("geoJson")).get("coordinates")).toArray());
+		assertEquals("Point", ((Document)location.get("geoJson")).get(TYPE));
+		assertEquals(Arrays.asList(new Double(-0.1), new Double(51.5)), ((Document)location.get("geoJson")).get("coordinates"));
 
-		Map<String, Object> c = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, DATE));
-		Map<String, Object> date = ((List<Map<String, Object>>)c.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document c = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, DATE)).first();
+		Document date = ((List<Document>)c.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(14, date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
@@ -307,8 +303,8 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals("Temporal", date.get(TYPE));
 		assertEquals(DATE, date.get(VALUE));
 
-		Map<String, Object> d = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, EMAIL));
-		Map<String, Object> email = ((List<Map<String, Object>>)d.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document d = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, EMAIL)).first();
+		Document email = ((List<Document>)d.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(9, email.size());
 		assertEquals(66, email.get(BEGIN));
 		assertEquals(83, email.get(END));
@@ -317,8 +313,8 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals("email", email.get("subType"));
 		assertEquals(EMAIL, email.get(VALUE));
 		
-		Map<String, Object> e = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, WENT));
-		Map<String, Object> went = ((List<Map<String, Object>>)e.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document e = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, WENT)).first();
+		Document went = ((List<Document>)e.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(10, went.size());
 		assertEquals(6, went.get(BEGIN));
 		assertEquals(10, went.get(END));
@@ -356,7 +352,7 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals(1, documents.count());
 		assertEquals(1, entities.count());
 
-		Map<String, Object> a = (Map<String, Object>)entities.findOne();
+		Document a = (Document)entities.find().first();
 		assertEquals(2, ((List<Object>)a.get(Mongo.FIELD_ENTITIES)).size());
 
 
@@ -394,12 +390,12 @@ public class MongoTest extends ConsumerTestBase {
 
 		assertEquals(1, documents.count());
 		assertEquals(2, entities.count());
-		Map<String, Object> a = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES+"." + VALUE, "Bill"));
-		List<Map<String,Object>> pH = (List<Map<String, Object>>) ((List<Map<String,Object>>)a.get(Mongo.FIELD_ENTITIES)).get(0).get(fields.getHistory());
+		Document a = entities.find(new Document(Mongo.FIELD_ENTITIES+"." + VALUE, "Bill")).first();
+		List<Document> pH = (List<Document>) ((List<Document>)a.get(Mongo.FIELD_ENTITIES)).get(0).get(fields.getHistory());
 		assertEquals(pHistory.size() + qHistory.size(), pH.size());
 
-		Map<String, Object> b = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES+"." + VALUE, NAME_2));
-		List<Map<String,Object>> qH = (List<Map<String, Object>>) ((List<Map<String,Object>>)b.get(Mongo.FIELD_ENTITIES)).get(0).get(fields.getHistory());
+		Document b = entities.find(new Document(Mongo.FIELD_ENTITIES+"." + VALUE, NAME_2)).first();
+		List<Document> qH = (List<Document>) ((List<Document>)b.get(Mongo.FIELD_ENTITIES)).get(0).get(fields.getHistory());
 		assertEquals(qHistory.size(), qH.size());
 	}
 	
@@ -444,8 +440,8 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals(3, entities.count());
 		assertEquals(1, relations.count());
 
-		Map<String, Object> a = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON));
-		Map<String, Object> person = ((List<Map<String, Object>>)a.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document a = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON)).first();
+		Document person = ((List<Document>)a.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(11, person.size());
 		assertEquals(0, person.get(BEGIN));
 		assertEquals(5, person.get(END));
@@ -453,8 +449,8 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals("Person", person.get(TYPE));
 		assertEquals(PERSON, person.get(VALUE));
 
-		Map<String, Object> b = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON));
-		Map<String, Object> location = ((List<Map<String, Object>>)b.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document b = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON)).first();
+		Document location = ((List<Document>)b.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(10, location.size());
 		assertEquals(14, location.get(BEGIN));
 		assertEquals(20, location.get(END));
@@ -462,11 +458,11 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals("Location", location.get(TYPE));
 		assertEquals(LONDON, location.get(VALUE));
 
-		assertEquals("Point", ((DBObject)location.get("geoJson")).get(TYPE));
-		assertArrayEquals(new Double[] { -0.1, 51.5 }, ((BasicDBList)((DBObject)location.get("geoJson")).get("coordinates")).toArray());
+		assertEquals("Point", ((Document)location.get("geoJson")).get(TYPE));
+		assertEquals(Arrays.asList(new Double(-0.1), new Double(51.5)), ((Document)location.get("geoJson")).get("coordinates"));
 
-		Map<String, Object> c = (Map<String, Object>)entities.findOne(new BasicDBObject(Mongo.FIELD_ENTITIES + "." + VALUE, DATE));
-		Map<String, Object> date = ((List<Map<String, Object>>)c.get(Mongo.FIELD_ENTITIES)).get(0);
+		Document c = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, DATE)).first();
+		Document date = ((List<Document>)c.get(Mongo.FIELD_ENTITIES)).get(0);
 		assertEquals(14, date.size());
 		assertEquals(24, date.get(BEGIN));
 		assertEquals(42, date.get(END));
@@ -474,7 +470,7 @@ public class MongoTest extends ConsumerTestBase {
 		assertEquals("Temporal", date.get(TYPE));
 		assertEquals(DATE, date.get(VALUE));
 		
-		Map<String, Object> relation = (Map<String, Object>)relations.findOne();
+		Document relation = relations.find().first();
 		assertEquals(13, relation.size());
 		assertEquals(0, relation.get(BEGIN));
 		assertEquals(20, relation.get(END));

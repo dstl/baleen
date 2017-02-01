@@ -10,33 +10,30 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.analysis_engine.AnalysisEngineDescription;
-import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.annotators.misc.CommonKeywords;
-import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
+import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
 import uk.gov.dstl.baleen.types.common.Buzzword;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 
-public class CommonKeywordsTest extends AnnotatorTestBase{
+public class CommonKeywordsTest extends AbstractAnnotatorTest{
 	private static final String STOPWORDS = "stopwords";
+	private final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(STOPWORDS, SharedStopwordResource.class);
+	
+	public CommonKeywordsTest(){
+		super(CommonKeywords.class);
+	}
 	
 	@Test
 	public void testProcess() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(STOPWORDS, SharedStopwordResource.class);
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(CommonKeywords.class, STOPWORDS, erd);
-		
-		AnalysisEngine ae = AnalysisEngineFactory.createEngine(aed);
-		
 		jCas.setDocumentText(new String(Files.readAllBytes(Paths.get(getClass().getResource("turing.txt").toURI()))));
-		ae.process(jCas);
-		
+		processJCas(STOPWORDS, erd);
+				
 		assertEquals(1, JCasUtil.select(jCas, Metadata.class).size());
 		Metadata md = JCasUtil.selectByIndex(jCas, Metadata.class, 0);
 		assertEquals("keywords", md.getKey());
@@ -61,7 +58,5 @@ public class CommonKeywordsTest extends AnnotatorTestBase{
 		assertTrue(buzzwords.contains("machines"));
 		assertTrue(buzzwords.contains("computing"));
 		assertTrue(buzzwords.contains("questioning"));
-		
-		ae.destroy();
 	}
 }

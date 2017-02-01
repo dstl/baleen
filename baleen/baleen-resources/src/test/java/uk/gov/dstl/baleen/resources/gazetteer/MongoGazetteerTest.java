@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
 
 public class MongoGazetteerTest {
 	private static final String EN_HELLO2 = "hello";
@@ -35,14 +35,16 @@ public class MongoGazetteerTest {
 	@BeforeClass
 	public static void beforeClass() throws ResourceInitializationException{
 		sfr = new SharedFongoResource();
-		DB db = sfr.getDB();
+		MongoDatabase db = sfr.getDB();
 		
-		DBCollection coll = db.getCollection("gazetteer");
-		coll.insert(new BasicDBObject(VALUE, EN_HELLO2));
-		coll.insert(new BasicDBObject(VALUE, new String[]{"hi",EN_HELLO,"heya"}));
-		coll.insert(new BasicDBObject(VALUE, new String[]{"konnichiwa",JP_HELLO}).append(LANGUAGE, "jp"));
-		coll.insert(new BasicDBObject(VALUE, new String[]{DE_HELLO}).append(LANGUAGE, "de").append(TRANSLATION, "good day"));
-		coll.insert(new BasicDBObject(VALUE, new String[]{"hej"}).append(LANGUAGE, "se"));
+		MongoCollection<Document> coll = db.getCollection("gazetteer");
+		coll.insertMany(Arrays.asList(
+			new Document(VALUE, EN_HELLO2),
+			new Document(VALUE, Arrays.asList("hi",EN_HELLO,"heya")),
+			new Document(VALUE, Arrays.asList("konnichiwa",JP_HELLO)).append(LANGUAGE, "jp"),
+			new Document(VALUE, Arrays.asList(DE_HELLO)).append(LANGUAGE, "de").append(TRANSLATION, "good day"),
+			new Document(VALUE, Arrays.asList("hej")).append(LANGUAGE, "se")
+		));
 	}
 	
 	@Test

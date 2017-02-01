@@ -8,20 +8,17 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-import org.apache.uima.collection.CollectionReaderDescription;
-import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
-import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.resources.SharedActiveMQResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-public class ActiveMQReaderTest {
+public class ActiveMQReaderTest extends AbstractReaderTest {
 	private static final String ACTIVEMQ = "activemq";
 	private static final String ENDPOINT = "documents";
 
@@ -29,26 +26,19 @@ public class ActiveMQReaderTest {
 	private static String PROTOCOL_VALUE = "vm";
 	private static String BROKERARGS_VALUE = "broker.persistent=false";
 	private static String CONTENT_EXTRACTOR_VALUE = "UimaContentExtractor";
-
+	
+	final Object[] configArr = new String[] { SharedActiveMQResource.PARAM_PROTOCOL, PROTOCOL_VALUE, SharedActiveMQResource.PARAM_HOST, HOST_VALUE, SharedActiveMQResource.PARAM_BROKERARGS, BROKERARGS_VALUE };
+	final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(ACTIVEMQ, SharedActiveMQResource.class, configArr);
+	
+	public ActiveMQReaderTest(){
+		super(ActiveMQReader.class);
+	}
+	
 	@Test
 	public void test() throws Exception {
-
-		final Object[] configArr = new String[] { SharedActiveMQResource.PARAM_PROTOCOL, PROTOCOL_VALUE,
-				SharedActiveMQResource.PARAM_HOST, HOST_VALUE, SharedActiveMQResource.PARAM_BROKERARGS,
-				BROKERARGS_VALUE };
-
-		final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(ACTIVEMQ,
-				SharedActiveMQResource.class, configArr);
-
-		final CollectionReaderDescription crd = CollectionReaderFactory.createReaderDescription(ActiveMQReader.class,
-				ACTIVEMQ, erd, ActiveMQReader.PARAM_ENDPOINT, ENDPOINT, ActiveMQReader.PARAM_CONTENT_EXTRACTOR,
-				CONTENT_EXTRACTOR_VALUE);
-
-		final JCas jCas = JCasFactory.createJCas();
-
-		final BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(crd);
-
+		BaleenCollectionReader bcr = getCollectionReader(ACTIVEMQ, erd, ActiveMQReader.PARAM_ENDPOINT, ENDPOINT, ActiveMQReader.PARAM_CONTENT_EXTRACTOR, CONTENT_EXTRACTOR_VALUE);
 		final SharedActiveMQResource samr = (SharedActiveMQResource) bcr.getUimaContext().getResourceObject(ACTIVEMQ);
+		
 		createContent(samr);
 
 		assertTrue(bcr.doHasNext());

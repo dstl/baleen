@@ -14,7 +14,6 @@ import java.util.List;
 import org.apache.uima.UIMAException;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
@@ -26,6 +25,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.cpe.PipelineCpeBuilder;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BaleenAnnotatorTest {
@@ -46,7 +46,7 @@ public class BaleenAnnotatorTest {
 
 	@Before
 	public void setUp() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 		annotation =  new Annotation(jCas);
 		context = UimaContextFactory.createUimaContext(PipelineCpeBuilder.PIPELINE_NAME, PIPELINE_NAME);
 	}

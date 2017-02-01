@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,17 +16,14 @@ import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.language.Sentence;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Location;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
-public class MentionTest {
+public class MentionTest{
 	JCas jCas;
 	
 	@Before
 	public void beforeTest() throws Exception{
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
+		jCas = JCasSingleton.getJCasInstance();
 	}
 	
 	@Test

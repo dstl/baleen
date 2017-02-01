@@ -7,33 +7,25 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.apache.uima.fit.factory.CollectionReaderFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
-import org.junit.Before;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-public class LineReaderTest {
-	JCas jCas;
-
-	@Before
-	public void beforeTest() throws Exception{
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
+public class LineReaderTest extends AbstractReaderTest{
+	
+	public LineReaderTest(){
+		super(LineReader.class);
 	}
 	
 	@Test
 	public void test() throws Exception{
 		File f = new File(getClass().getResource("lineReader.txt").getPath());
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(LineReader.class, LineReader.PARAM_FILE, f.getPath(), LineReader.PARAM_CONTENT_EXTRACTOR, "UimaContentExtractor");
+		BaleenCollectionReader bcr = getCollectionReader(LineReader.PARAM_FILE, f.getPath(), LineReader.PARAM_CONTENT_EXTRACTOR, "UimaContentExtractor");
 		
 		assertTrue(bcr.doHasNext());
 		bcr.getNext(jCas.getCas());

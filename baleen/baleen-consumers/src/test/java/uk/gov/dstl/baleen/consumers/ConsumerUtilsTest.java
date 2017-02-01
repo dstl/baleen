@@ -4,12 +4,12 @@ package uk.gov.dstl.baleen.consumers;
 import static org.junit.Assert.assertEquals;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class ConsumerUtilsTest {
 	@Test
@@ -19,7 +19,7 @@ public class ConsumerUtilsTest {
 	
 	@Test
 	public void testExternalId() throws UIMAException{
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		jCas.setDocumentText("Hello World");
 		DocumentAnnotation da = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
 		

@@ -16,7 +16,7 @@ Baleen includes an in-built server, which hosts full documentation and guides on
 To get started, you will need to launch this server and read this documentation.
 To launch the server, run the following command.
 
-> java -jar baleen-2.2.0.jar
+> java -jar baleen-2.3.0.jar
 
 Once running, the server can be accessed at [http://localhost:6413](http://localhost:6413).
 
@@ -36,14 +36,14 @@ To run Baleen, you will need:
 The develop with Baleen, we suggest you use:
 
 * Oracle Java JDK 1.8
-* Eclipse Neon or greater (assumed to include Maven)
+* Eclipse Luna or greater (assumed to include Maven)
 * Maven
 
 Baleen requires Java 8 or later.
 
 # Licence
 
-Crown copyright 2015-2016
+Crown copyright 2015-2017
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this software except in compliance with the License.

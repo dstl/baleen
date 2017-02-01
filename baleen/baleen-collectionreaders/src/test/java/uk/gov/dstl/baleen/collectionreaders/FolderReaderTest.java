@@ -14,8 +14,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 
-import org.apache.uima.fit.factory.CollectionReaderFactory;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.junit.After;
@@ -23,17 +21,21 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-public class FolderReaderTest {
+public class FolderReaderTest extends AbstractReaderTest{
 	private static final String TEST3_FILE = "test3.txt";
 	private static final String TEST2_FILE = "test2.txt";
 	private static final String TEXT1_FILE = "test1.txt";
 	private static final String DIR = "baleen-test";
 	File inputDir;
-	JCas jCas;
 	
 	private static Long TIMEOUT = 1000L;
+	
+	public FolderReaderTest(){
+		super(FolderReader.class);
+	}
 	
 	@BeforeClass
 	public static void beforeClass(){
@@ -47,17 +49,12 @@ public class FolderReaderTest {
 	}
 
 	@Before
-	public void beforeTest() throws Exception{
+	public void before() throws Exception{
 		inputDir = Files.createTempDirectory(DIR).toFile();
-		if(jCas == null){
-			jCas = JCasFactory.createJCas();
-		}else{
-			jCas.reset();
-		}
 	}
 
 	@After
-	public void afterTest() throws IOException{
+	public void after() throws IOException{
 		String[] entries = inputDir.list();
 		if(entries != null){
 			for(String s : entries){
@@ -70,7 +67,7 @@ public class FolderReaderTest {
 
 	@Test
 	public void testCreateFileDefaultDirectory() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class);
+		BaleenCollectionReader bcr = getCollectionReader();
 
 		assertTrue(bcr.doHasNext());	//There will be files in the current directory, so we can just check that it's picked them up.
 		bcr.getNext(jCas.getCas());
@@ -81,7 +78,7 @@ public class FolderReaderTest {
 	
 	@Test
 	public void testCreateFile() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
 
 		assertFalse(bcr.doHasNext());
 
@@ -112,7 +109,7 @@ public class FolderReaderTest {
 		File f21 = new File(inputDir2, TEXT1_FILE);
 		f21.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath(), inputDir2.getPath()});
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath(), inputDir2.getPath()});
 
 		File f12 = new File(inputDir, TEST2_FILE);
 		f12.createNewFile();
@@ -140,7 +137,7 @@ public class FolderReaderTest {
 		File f1 = new File(subdir, TEXT1_FILE);
 		f1.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
 
 		assertNextSourceNotNull(bcr);
 
@@ -169,7 +166,7 @@ public class FolderReaderTest {
 		File f2 = new File(inputDir, TEST2_FILE);
 		f2.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_RECURSIVE, false);
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_RECURSIVE, false);
 
 		assertTrue(bcr.hasNext());
 		bcr.getNext(jCas.getCas());
@@ -195,7 +192,7 @@ public class FolderReaderTest {
 
 	@Test
 	public void testModifiedFile() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_REPROCESS_ON_MODIFY, true);
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_REPROCESS_ON_MODIFY, true);
 
 		assertFalse(bcr.doHasNext());
 
@@ -233,7 +230,7 @@ public class FolderReaderTest {
 
 	@Test
 	public void testDeleteFile() throws Exception{
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
 
 		assertFalse(bcr.doHasNext());
 
@@ -260,7 +257,7 @@ public class FolderReaderTest {
 		File f2 = new File(inputDir, TEST2_FILE);
 		f2.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()});
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);
@@ -278,7 +275,7 @@ public class FolderReaderTest {
 		File f3 = new File(inputDir, "test3.TXT");
 		f3.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ACCEPTED_PATTERNS, new String[]{".*\\.txt"});
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ACCEPTED_PATTERNS, new String[]{".*\\.txt"});
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);
@@ -296,7 +293,7 @@ public class FolderReaderTest {
 		File f3 = new File(inputDir, "test3.TXT");
 		f3.createNewFile();
 
-		BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class, FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ACCEPTED_PATTERNS, new String[]{".*[2-3].*"});
+		BaleenCollectionReader bcr = getCollectionReader(FolderReader.PARAM_FOLDERS, new String[]{inputDir.getPath()}, FolderReader.PARAM_ACCEPTED_PATTERNS, new String[]{".*[2-3].*"});
 
 		assertNextSourceNotNull(bcr);
 		assertNextSourceNotNull(bcr);
@@ -307,7 +304,7 @@ public class FolderReaderTest {
 	
     @Test
     public void testCreateDirectoryNotProcessed() throws Exception {
-        BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class,
+        BaleenCollectionReader bcr = getCollectionReader(
                 FolderReader.PARAM_FOLDERS, new String[] { inputDir.getPath() });
 
         assertFalse(bcr.doHasNext());
@@ -323,7 +320,7 @@ public class FolderReaderTest {
 
     @Test
     public void testCreateDirectoryIsWatched() throws Exception {
-        BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class,
+        BaleenCollectionReader bcr = getCollectionReader(
                 FolderReader.PARAM_FOLDERS, new String[] { inputDir.getPath() });
 
         assertFalse(bcr.doHasNext());
@@ -347,7 +344,7 @@ public class FolderReaderTest {
 
     @Test
     public void testCreateDirectoryIsNotWatchedIfNotRecursive() throws Exception {
-        BaleenCollectionReader bcr = (BaleenCollectionReader) CollectionReaderFactory.createReader(FolderReader.class,
+        BaleenCollectionReader bcr = getCollectionReader(
                 FolderReader.PARAM_RECURSIVE, false,
                 FolderReader.PARAM_FOLDERS, new String[] { inputDir.getPath() });
 

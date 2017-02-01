@@ -7,12 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.uima.resource.Resource;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
@@ -30,7 +28,7 @@ public class MongoGazetteer extends AbstractMultiMapGazetteer<ObjectId> {
 	public static final String DEFAULT_COLLECTION = "gazetteer";
 	public static final String DEFAULT_VALUE_FIELD = "value";
 	
-	private DBCollection coll;
+	private MongoCollection<Document> coll;
 	
 	private String valueField;
 	
@@ -77,7 +75,7 @@ public class MongoGazetteer extends AbstractMultiMapGazetteer<ObjectId> {
 			return Collections.emptyMap();
 		}
 		
-		DBObject doc = coll.findOne(new BasicDBObject("_id", id), new BasicDBObject().append(valueField, 0).append("_id", 0));
+		Document doc = coll.find(new Document("_id", id)).projection(new Document(valueField, 0).append("_id", 0)).first();
 		if(doc == null){
 			return Collections.emptyMap();
 		}
@@ -103,9 +101,7 @@ public class MongoGazetteer extends AbstractMultiMapGazetteer<ObjectId> {
 	public void reloadValues(){
 		reset();
 		
-		DBCursor cursor = coll.find();
-		while(cursor.hasNext()){
-			DBObject doc = cursor.next();
+		for(Document doc : coll.find()){
 			ObjectId id = (ObjectId) doc.get("_id");
 
 			Object val = doc.get(valueField);
@@ -119,6 +115,5 @@ public class MongoGazetteer extends AbstractMultiMapGazetteer<ObjectId> {
 				}
 			}
 		}
-		cursor.close();
 	}
 }

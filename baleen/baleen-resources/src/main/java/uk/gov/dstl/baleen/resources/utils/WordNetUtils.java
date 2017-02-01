@@ -24,17 +24,19 @@ public final class WordNetUtils {
 	public static POS toPos(String pos) {
 		final String lc = pos.toLowerCase();
 
+		POS ret = null;
+		
 		if (lc.startsWith("n")) {
-			return POS.NOUN;
+			ret = POS.NOUN;
 		} else if (lc.startsWith("v")) {
-			return POS.VERB;
+			ret = POS.VERB;
 		} else if (lc.startsWith("r") || lc.startsWith("adv")) {
-			return POS.ADVERB;
+			ret = POS.ADVERB;
 		} else if (lc.startsWith("j") || lc.startsWith("adj")) {
-			return POS.ADJECTIVE;
-		} else {
-			return null;
+			ret = POS.ADJECTIVE;
 		}
+		
+		return ret;
 	}
 
 }

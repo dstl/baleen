@@ -250,7 +250,10 @@ function getConsumer(name, id){
 }
 
 var annotatorId = 0;
-function addAnnotator(name = null){
+function addAnnotator(){
+	addAnnotator(null);
+}
+function addAnnotator(name){
 	var currId = annotatorId;
 	currId++;
 	var annotator = $("#annotatorDivTemplate").clone();
@@ -289,7 +292,10 @@ function addAllAnnotators(){
 }
 
 var consumerId = 0;
-function addConsumer(name = null){
+function addConsumer(){
+	addConsumer(null);
+}
+function addConsumer(name){
 	var currId = consumerId;
 	currId++;
 	var consumer = $("#consumerDivTemplate").clone();
@@ -442,7 +448,7 @@ function createCollectionReaderYaml(){
 
 		if(value != null && value != $("#"+id+"-default").val()){
 			content += "  " + id.substring(collectionreader.length + 1) + ": ";
-			if(value.contains("\n")){
+			if(value.indexOf("\n") != -1){
 				var values = value.match(/[^\r\n]+/g);
 				content += "\n";
 				values.forEach(function(el){
@@ -467,7 +473,7 @@ function createCollectionReaderYaml(){
 
 		if(value != null && value != $("#"+id+"-default").val()){
 			content += "  " + id.substring(contentextractor.length + 1) + ": ";
-			if(value.contains("\n")){
+			if(value.indexOf("\n") != -1){
 				var values = value.match(/[^\r\n]+/g);
 				content += "\n";
 				values.forEach(function(el){
@@ -499,7 +505,7 @@ function createAnnotatorYaml(){
 			if(value != null && value != $("#"+paramId+"-default").val()){
 				var paramName = paramId.substring(annotator.length + 1, paramId.length - (1+id.length)) + ": ";
 				
-				if(value.contains("\n")){
+				if(value.indexOf("\n") != -1){
 					params.push(paramName);
 					var values = value.match(/[^\r\n]+/g);
 					values.forEach(function(el){
@@ -541,7 +547,7 @@ function createConsumerYaml(){
 			if(value != null && value != $("#"+paramId+"-default").val()){
 				var paramName = paramId.substring(consumer.length + 1, paramId.length - (1+id.length)) + ": ";
 				
-				if(value.contains("\n")){
+				if(value.indexOf("\n") != -1){
 					params.push(paramName);
 					var values = value.match(/[^\r\n]+/g);
 					values.forEach(function(el){
@@ -598,7 +604,7 @@ function createResourcesYaml(){
 			if(value != null && value != defaultValue){
 				params += "  " + groups[group][key] + ": ";
 				
-				if(value.contains("\n")){
+				if(value("\n")){
 					params += "\n";
 					var valLines = value.match(/[^\r\n]+/g);
 					valLines.forEach(function(el){

@@ -5,19 +5,18 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.language.Dependency;
 import uk.gov.dstl.baleen.types.language.WordToken;
-import uk.gov.dstl.baleen.uima.grammar.Edge;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class EdgeTest {
 
 	@Test
 	public void test() throws UIMAException {
-		final JCas jCas = JCasFactory.createJCas();
+		final JCas jCas = JCasSingleton.getJCasInstance();
 
 		final WordToken from = new WordToken(jCas);
 		final WordToken to = new WordToken(jCas);

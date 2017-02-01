@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Baleen - Developing Collection Readers</title>
+		
+		<link rel="stylesheet" type="text/css" href="../bootstrap/css/bootstrap.min.css" />
+		<style type="text/css">
+			body{
+				padding-top: 70px;
+				padding-bottom: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+						aria-control="navbar">
+						<span class="sr-only">Toggle navigation</span> <span
+							class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a href="../index.html" class="navbar-brand">Baleen</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="../index.html">About</a></li>
+						<li class="active"><a href="index.html">Guides</a></li>
+						<li><a href="/javadoc">JavaDoc</a></li>
+						<li><a href="/plankton">Plankton</a></li>
+						<li><a href="/swagger">REST API</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		
+		<div class="container">
+			<div class="jumbotron">
+				<h1>Developing Collection Readers</h1>
+				<p>This guide will walk you through the development of a collection reader for Baleen.</p>
+				<p>Collection readers are the first component in a Baleen pipeline, and responsible for finding data to process.
+				Generally, they will then pass this data to a content extractor to convert it into plain text,
+				before passing this text onwards to the Annotator stage of the pipeline.</p>
+			</div>
+		</div>
+		
+		<div class="container">
+			<p>In this guide, we will be developing a collection reader to read files in a directory.
+			For the purposes of this guide, we will not worry about changes to the folder or recursion;
+			for examples of how this would work see the source code for <code>FolderReader</code>.</p>
+			
+			<h2>Creating the Class</h2>
+			<p>To start with, let's create a new Java class called <code>SimpleFolderReader</code> which extends <code>BaleenCollectionReader</code>.
+			The <code>BaleenCollectionReader</code> class is an abstract class that does a lot of the behind-the-scenes work required by Baleen,
+			but leaves us free to implement the logic of the collection reader.</p>
+			<p>We will create it in the <code>uk.gov.dstl.baleen.collectionreaders.guides</code> package to keep it separate from existing collection readers.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">SimpleFolderReader.java</div>
+				<div class="panel-body">
+<pre>
+package uk.gov.dstl.baleen.collectionreaders.guides;
+
+import java.io.IOException;
+
+import org.apache.uima.UimaContext;
+import org.apache.uima.collection.CollectionException;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
+
+import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
+
+public class SimpleFolderReader extends BaleenCollectionReader {
+	@Override
+	protected void doInitialize(UimaContext context) throws ResourceInitializationException {
+
+	}
+
+	@Override
+	protected void doGetNext(JCas jCas) throws IOException, CollectionException {
+
+	}
+
+	@Override
+	protected void doClose() throws IOException {
+
+	}
+
+	@Override
+	public boolean doHasNext() throws IOException, CollectionException {
+		return false;
+	}
+}
+</pre>
+				</div>
+			</div>
+			
+			<p>There are four stub methods for us to populate, which we will do in the following sections.</p>
+			
+			<h2>Initialisation and Clean Up</h2>
+			<p>The first thing we will want to do is initialise our collection reader using some user provided configuration.
+			In our case, the configuration we are interested in is the content extractor to pass files to, and the folder in which to find the files.
+			We will add both of these as configuration parameters at the top of the class.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">Extract of SimpleFolderReader.java</div>
+				<div class="panel-body">
+<pre>
+/**
+ * The folder containing files
+ * 
+ * @baleen.config <i>Current directory</i>
+ */
+public static final String PARAM_FOLDER = "folder";
+@ConfigurationParameter(name = PARAM_FOLDER, defaultValue = ".")
+private String folder;
+
+/**
+ * The content extractor to use to extract content from files
+ * 
+ * @baleen.config TikaContentExtractor
+ */
+public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
+@ConfigurationParameter(name = PARAM_CONTENT_EXTRACTOR, defaultValue="TikaContentExtractor")
+private String contentExtractor = "TikaContentExtractor";
+
+private IContentExtractor extractor;
+List&lt;File&gt; files;
+</pre>
+				</div>
+			</div>
+			
+			<p>Now that we have the configuration parameters provided by the user, along with some defaults in case they aren't provided,
+			we can use these in the <code>doInitialise</code> function to initialise the collection reader.
+			To keep things simple, here we don't worry too much about error catching or invalid configuration parameters.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">SimpleFolderReader.java (doInitialise)</div>
+				<div class="panel-body">
+<pre>
+@Override
+public void doInitialize(UimaContext context) throws ResourceInitializationException {
+	//Initialise the content extractor using helper functions
+	try{
+		extractor = getContentExtractor(contentExtractor);
+	}catch(InvalidParameterException ipe){
+		throw new ResourceInitializationException(ipe);
+	}
+	extractor.initialize(context, getConfigParameters(context));
+
+	
+	//Get a list of files in the folder
+	File f = new File(folder);
+	files = Arrays.asList(f.listFiles(new FileFilter() {
+		@Override
+		public boolean accept(File pathname) {
+			return pathname.isFile();
+		}
+	}));
+}
+</pre>
+				</div>
+			</div>
+			
+			<p>Because we created a content extractor during initialisation, we also need to destroy that instance properly during shutdown.
+			This can be done in the <code>doClose</code> function.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">SimpleFolderReader.java (doInitialise)</div>
+				<div class="panel-body">
+<pre>
+@Override
+protected void doClose() throws IOException {
+	if(extractor != null) {
+		extractor.destroy();
+		extractor = null;
+	}
+}
+</pre>
+				</div>
+			</div>
+			
+			<h2>Reading the File</h2>
+			<p>We now have an initialised collection reader with a list of files to be processed.
+			This is done by populating two methods: <code>doHasNext</code> and <code>doGetNext</code>.
+			The function <code>doHasNext</code> is regularly polled by the <code>BaleenCollectionReader</code> to see whether there are new files to process.
+			If it returns true, then <code>doGetNext</code> is called.
+			If it returns false, then there is a short delay (1 second by default) before it is called again to see if there are now files available for processing.</p>
+			
+			<p>In our case, whether we have more files to process can be determined simply by looking at whether the List <code>files</code> is empty or not.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">SimpleFolderReader.java (doHasNext)</div>
+				<div class="panel-body">
+<pre>
+@Override
+public boolean doHasNext() throws IOException, CollectionException {
+	return !files.isEmpty();
+}
+</pre>
+				</div>
+			</div>
+			
+			<p>In the <code>doGetNext</code> function, we need to pull a file from the <code>files</code> list and pass it through to the content extractor.
+			ContentExtractors accept a InputStream of the file to process and a String containing source information.
+			The JCas object provided by Baleen is also provided for the content extractor to populate.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">SimpleFolderReader.java (doHasNext)</div>
+				<div class="panel-body">
+<pre>
+@Override
+protected void doGetNext(JCas jCas) throws IOException, CollectionException {
+	//Check that we have a file to process
+	if(files.isEmpty()){
+		getMonitor().error("No documents on the queue - this method should not have been called");
+		throw new CollectionException();
+	}
+
+	//Remove the file from the list
+	File f = files.remove(0);
+	
+	//Pass the file to the Content Extractor
+	try(
+		InputStream is = new FileInputStream(f);
+	){
+		extractor.processStream(is, f.getAbsolutePath(), jCas);
+	}
+}
+</pre>
+				</div>
+			</div>
+			
+			<h2>Conclusion</h2>
+			<p>And that's it, we now have a collection reader that will find all of the files in a directory and pass them to a content extractor to parse.
+			The complete code for the example is available below.</p>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">SimpleFolderReader.java (doHasNext)</div>
+				<div class="panel-body">
+<pre>
+package uk.gov.dstl.baleen.collectionreaders.guides;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.uima.UimaContext;
+import org.apache.uima.collection.CollectionException;
+import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
+
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
+import uk.gov.dstl.baleen.uima.IContentExtractor;
+
+public class SimpleFolderReader extends BaleenCollectionReader {
+	/**
+	 * The folder containing files
+	 * 
+	 * @baleen.config <i>Current directory</i>
+	 */
+	public static final String PARAM_FOLDER = "folder";
+	@ConfigurationParameter(name = PARAM_FOLDER, defaultValue = ".")
+	private String folder;
+
+	/**
+	 * The content extractor to use to extract content from files
+	 * 
+	 * @baleen.config TikaContentExtractor
+	 */
+	public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
+	@ConfigurationParameter(name = PARAM_CONTENT_EXTRACTOR, defaultValue="TikaContentExtractor")
+	private String contentExtractor = "TikaContentExtractor";
+
+	private IContentExtractor extractor;
+	List&lt;File&gt; files;
+	
+	@Override
+	protected void doInitialize(UimaContext context) throws ResourceInitializationException {
+		//Initialise the content extractor using helper functions
+		try{
+			extractor = getContentExtractor(contentExtractor);
+		}catch(InvalidParameterException ipe){
+			throw new ResourceInitializationException(ipe);
+		}
+		extractor.initialize(context, getConfigParameters(context));
+		
+		//Get a list of files in the folder
+		File f = new File(folder);
+		files = Arrays.asList(f.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.isFile();
+			}
+		}));
+	}
+
+	@Override
+	protected void doGetNext(JCas jCas) throws IOException, CollectionException {
+		//Check that we have a file to process
+		if(files.isEmpty()){
+			getMonitor().error("No documents on the queue - this method should not have been called");
+			throw new CollectionException();
+		}
+
+		//Remove the file from the list
+		File f = files.remove(0);
+		
+		//Pass the file to the Content Extractor
+		try(
+			InputStream is = new FileInputStream(f);
+		){
+			extractor.processStream(is, f.getAbsolutePath(), jCas);
+		}
+	}
+
+	@Override
+	protected void doClose() throws IOException {
+		if(extractor != null) {
+			extractor.destroy();
+			extractor = null;
+		}
+	}
+
+	@Override
+	public boolean doHasNext() throws IOException, CollectionException {
+		return !files.isEmpty();
+	}
+}
+</pre>
+				</div>
+			</div>
+			
+			<p>Now you've built your collection reader and want to include it in Baleen, all you need to do is ensure that your class is on the classpath,
+			and then in your pipeline configuration include your class in the pipeline ensuring that you specify the full package and classname.</p>
+			
+		</div>
+	
+		<script src="../bootstrap/jquery-1.11.0.js"></script>
+		<script src="../bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>

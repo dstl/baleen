@@ -15,7 +15,7 @@ import uk.gov.dstl.baleen.types.semantic.Temporal;
  * @baleen.javadoc
  */
 public class UnqualifiedDate extends AbstractRegexAnnotator<Temporal> {
-	private static final String DAYS = "(Mon(day)?+|Tue(s(day)?+)?+|Wed(nesday)?+|Thur(s(day)?+)?+|Fri(day)?+|Sat(urday)?+|Sun(day)?+)";
+	private static final String DAYS = "(Mon(day)?+|Tue(s(day)?+)?+|Wed(nesday)?+|Thu(r(s(day)?+)?+)?+|Fri(day)?+|Sat(urday)?+|Sun(day)?+)";
 	private static final String SUFFIXES = "(st|nd|rd|th)";
 	private static final String MONTHS = "(Jan(uary)?+|Feb(ruary)?+|Mar(ch)?+|Apr(il)?+|May|Jun(e)?+|Jul(y)?+|Aug(ust)?+|Sep(t(ember)?+)?+|Oct(ober)?+|Nov(ember)?+|Dec(ember)?+)";
 
@@ -39,14 +39,14 @@ public class UnqualifiedDate extends AbstractRegexAnnotator<Temporal> {
 	
 	@Override
 	protected Temporal create(JCas jCas, Matcher matcher) {
-		if(matcher.group(71) != null){
+		if(matcher.group(72) != null){
 			return null;
 		}
-		if(allowLowercase == false && (startsWithCapital(matcher.group(2)) == false
-				|| startsWithCapital(matcher.group(17)) == false
-				|| startsWithCapital(matcher.group(30)) == false
-				|| startsWithCapital(matcher.group(45)) == false
-				|| startsWithCapital(matcher.group(60)) == false))
+		if(!allowLowercase && (!startsWithCapital(matcher.group(2))
+				|| !startsWithCapital(matcher.group(18))
+				|| !startsWithCapital(matcher.group(31))
+				|| !startsWithCapital(matcher.group(46))
+				|| !startsWithCapital(matcher.group(61))))
 			return null;
 		
 		Temporal t = new Temporal(jCas);

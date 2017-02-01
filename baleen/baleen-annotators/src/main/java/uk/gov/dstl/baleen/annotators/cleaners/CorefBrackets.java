@@ -26,6 +26,7 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
+import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
 /**
@@ -61,7 +62,7 @@ public class CorefBrackets extends BaleenAnnotator {
 	public void doInitialize(UimaContext aContext) throws ResourceInitializationException{
 		JCas jCas;
 		try {
-			jCas = JCasFactory.createJCas();
+			jCas = JCasFactory.createJCas(TypeSystemSingleton.getTypeSystemDescriptionInstance());
 		} catch (UIMAException e) {
 			throw new ResourceInitializationException(e);
 		}

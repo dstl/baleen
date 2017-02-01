@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.cas.FeatureStructure;
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.jcas.cas.StringArray;
@@ -23,13 +22,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class UimaTypesUtilsTest {
 	private static JCas jCas;
 
 	@BeforeClass
 	public static void beforeClass() throws UIMAException {
-		jCas = JCasFactory.createJCas();
+		jCas = JCasSingleton.getJCasInstance();
 	}
 
 	@Before
@@ -108,7 +108,8 @@ public class UimaTypesUtilsTest {
 
 	@Test
 	public void testToList() {
-		assertTrue(UimaTypesUtils.toList(null).isEmpty());
+		assertTrue(UimaTypesUtils.toList((StringArray)null).isEmpty());
+		assertTrue(UimaTypesUtils.toList((FSArray)null).isEmpty());
 
 		// Empty list
 		FSArray array = new FSArray(jCas, 2);

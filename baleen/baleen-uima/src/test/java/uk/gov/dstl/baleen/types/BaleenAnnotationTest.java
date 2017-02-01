@@ -3,12 +3,12 @@ package uk.gov.dstl.baleen.types;
 
 import static org.junit.Assert.assertEquals;
 
-import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.core.utils.IdentityUtils;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
+import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class BaleenAnnotationTest {
 	private static final String HASH_TWO = "42e8536751651b04ca051139437c55b0ec26f3a9810014b7e7993c1dc3775aff";
@@ -16,7 +16,7 @@ public class BaleenAnnotationTest {
 
 	@Test
 	public void testIds() throws Exception {
-		JCas jCas = JCasFactory.createJCas();
+		JCas jCas = JCasSingleton.getJCasInstance();
 		jCas.setDocumentText("E-mail address: example@foo.com");
 		
 		long currId = IdentityUtils.getInstance().getNewId();

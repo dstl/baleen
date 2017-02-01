@@ -4,9 +4,9 @@ package uk.gov.dstl.baleen.history.mongo;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
+import com.mongodb.client.MongoCollection;
 
 import uk.gov.dstl.baleen.core.history.AbstractBaleenHistory;
 import uk.gov.dstl.baleen.core.history.DocumentHistory;
@@ -47,7 +47,7 @@ public class MongoHistory extends AbstractBaleenHistory {
 	@ConfigurationParameter(name = PARAM_COLLECTION, defaultValue="history")
 	private String collectionName;
 
-	private DBCollection collection;
+	private MongoCollection<Document> collection;
 	
 	/** New instance, used for UIMA fit dependency injection.
 	 * 
@@ -69,7 +69,7 @@ public class MongoHistory extends AbstractBaleenHistory {
 		// Our initialisation needs to wait for Mongo to be initialised and then injected
 		
 		collection = mongo.getDB().getCollection(collectionName);
-		collection.createIndex(new BasicDBObject("docId", 1));
+		collection.createIndex(new Document("docId", 1));
 	}
 	
 

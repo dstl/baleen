@@ -1,6 +1,10 @@
 //Dstl (c) Crown Copyright 2015
 package uk.gov.dstl.baleen.uima.utils;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.uima.cas.CAS;
 import org.apache.uima.cas.CommonArrayFS;
 import org.apache.uima.cas.Feature;
@@ -77,6 +81,21 @@ public class FeatureUtils {
 		}
 		
 		return ret;
+	}
+	
+	/**
+	 * Convert a UIMA feature array to a List of Java objects of the correct type, parsing Strings to objects where possible
+	 *
+	 * @param f UIMA CAS Feature
+	 * @param a UIMA CAS Annotation
+	 * @return List of Java objects, or empty if unable to convert
+	 */
+	public static List<Object> featureToList(Feature f, Annotation a){
+		if(a.getFeatureValue(f) == null){
+			return Collections.emptyList();
+		}
+
+		return Arrays.asList(toArray(f, a));
 	}
 	
 	private static Object[] toArray(Feature f, Annotation a){
