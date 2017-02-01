@@ -19,6 +19,7 @@
 	
 	<scm>
 		<url>http://github.com/dstl/baleen</url>
+		<connection>scm:git:git://github.com/dstl/baleen.git</connection>
 	</scm>
 
 	<developers>
