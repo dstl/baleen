@@ -1,0 +1,734 @@
+swagger: "2.0"
+info:
+  description: "Baleen is a Dstl developed text processing framework. It performs information extraction - for example, entity extraction and metadata extraction - on unstructured documents. This web service provides the ability to control Baleen via a REST API."
+  version: "2.4.0"
+  title: "Baleen"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:6413"
+basePath: "/api/1"
+tags:
+- name: "annotators"
+  description: "Query the available annotators"
+- name: "collectionreaders"
+  description: "Query the available collection readers"
+- name: "config"
+  description: "Retrieve information about the current configuration"
+- name: "consumers"
+  description: "Query the available consumers"
+- name: "contentextractors"
+  description: "Query the available content extractors"
+- name: "contentmanipulators"
+  description: "Query the available content manipulators"
+- name: "contentmappers"
+  description: "Query the available content mappers"
+- name: "jobs"
+  description: "Control jobs within Baleen"
+- name: "logs"
+  description: "Query logging information"
+- name: "manager"
+  description: "Control Baleen"
+- name: "metrics"
+  description: "Query metrics information"
+- name: "orderers"
+  description: "Query the available pipeline orderers"
+- name: "pipelines"
+  description: "Control pipelines within Baleen"
+- name: "schedules"
+  description: "Query the available schedules"
+- name: "status"
+  description: "Request status information"
+- name: "tasks"
+  description: "Query the available tasks"
+- name: "types"
+  description: "Query the available types"
+
+schemes:
+- "http"
+paths:
+  /annotators:
+    get:
+      tags:
+      - "annotators"
+      summary: "List all currently available annotators"
+      description: "Produces a YAML formatted list of all the annotators (classes extending BaleenAnnotator) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /annotators/{annotatorName}:
+    get:
+      tags:
+      - "annotators"
+      summary: "List the parameters and resources associated with a particular annotator"
+      description: "Produces a JSON object describing the resources and parameters associated with the given annotator"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "annotatorName"
+        in: "path"
+        description: "The name of the annotator to query, as it would appear in a pipeline configuration file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Could not find annotator"
+        503:
+          description: "Unable to load annotator class"
+  /collectionreaders:
+    get:
+      tags:
+      - "collectionreaders"
+      summary: "List all currently available collection readers"
+      description: "Produces a YAML formatted list of all the collection readers (classes extending BaleenCollectionReader) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /collectionreaders/{collectionReaderName}:
+    get:
+      tags:
+      - "collectionreaders"
+      summary: "List the parameters and resources associated with a particular collection reader"
+      description: "Produces a JSON object describing the resources and parameters associated with the given collection reader"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "collectionReaderName"
+        in: "path"
+        description: "The name of the collection reader to query, as it would appear in a pipeline configuration file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Could not find collection reader"
+        503:
+          description: "Unable to load collection reader class"
+  /config/jobs:
+    get:
+      tags:
+      - "config"
+      summary: "Get the job YAML configuration"
+      description: "Get YAML configuration of a job (if it is available) or returns an empty response if the configuration is not available."
+      produces:
+      - "text/x-yaml"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the job"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Job name not provided"
+        404:
+          description: "Job does not exist"
+  /config/manager:
+    get:
+      tags:
+      - "config"
+      summary: "Get the YAML configuration of Baleen"
+      description: "Get YAML configuration used to configure Baleen"
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /config/pipelines:
+    get:
+      tags:
+      - "config"
+      summary: "Get the original pipeline YAML configuration"
+      description: "Get original YAML configuration (i.e. before ordering) of a pipeline (if it is available) or returns an empty response if the configuration is not available."
+      produces:
+      - "text/x-yaml"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the pipeline"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Pipeline name not provided"
+        404:
+          description: "Pipeline does not exist"
+  /config/pipelines/ordered:
+    get:
+      tags:
+      - "config"
+      summary: "Get the ordered pipeline YAML configuration"
+      description: "Get ordered YAML configuration (i.e. what is actually running) of a pipeline (if it is available) or returns an empty response if the configuration is not available."
+      produces:
+      - "text/x-yaml"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the pipeline"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Pipeline name not provided"
+        404:
+          description: "Pipeline does not exist"
+  /consumers:
+    get:
+      tags:
+      - "consumers"
+      summary: "List all currently available consumers"
+      description: "Produces a YAML formatted list of all the consumers (classes extending BaleenConsumer) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /consumers/{consumerName}:
+    get:
+      tags:
+      - "consumers"
+      summary: "List the parameters and resources associated with a particular consumer"
+      description: "Produces a JSON object describing the resources and parameters associated with the given consumer"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "consumerName"
+        in: "path"
+        description: "The name of the consumer to query, as it would appear in a pipeline configuration file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Could not find consumer"
+        503:
+          description: "Unable to load consumer class"
+  /contentextractors:
+    get:
+      tags:
+      - "contentextractors"
+      summary: "List all currently available content extractors"
+      description: "Produces a YAML formatted list of all the content extractors (classes extending BaleenContentExtractor) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /contentextractors/{contentExtractorName}:
+    get:
+      tags:
+      - "contentextractors"
+      summary: "List the parameters and resources associated with a particular content extractors"
+      description: "Produces a JSON object describing the resources and parameters associated with the given content extractor"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "contentExtractorName"
+        in: "path"
+        description: "The name of the content extractors to query, as it would appear in a pipeline configuration file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Could not find content extractor"
+        503:
+          description: "Unable to load content extractor class"
+  /contentmanipulators:
+    get:
+      tags:
+      - "contentmanipulators"
+      summary: "List all currently available content manipulators"
+      description: "Produces a YAML formatted list of all the content manipulators (classes extending ContentManipulator) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /contentmappers:
+    get:
+      tags:
+      - "contentmappers"
+      summary: "List all currently available content mappers"
+      description: "Produces a YAML formatted list of all the content mappers (classes extending ContentMapper) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /jobs:
+    get:
+      tags:
+      - "jobs"
+      summary: "Get job details"
+      description: "Get details of one or more jobs"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the job"
+        required: false
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Jobs"
+    post:
+      tags:
+      - "jobs"
+      summary: "Create a new job"
+      description: "Create a new job by submitting the name and YAML configuration"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "formData"
+        description: "The name of the job (must not already be in use)"
+        required: true
+        type: "string"
+      - name: "yaml"
+        in: "formData"
+        description: "The YAML configuration for this job"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Jobs"
+        400:
+          description: "Unable to create job"
+    delete:
+      tags:
+      - "jobs"
+      summary: "Deletes a job"
+      description: "Stops and then deletes one or more jobs by name"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the job"
+        required: false
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Unable to delete job"
+  /jobs/pause:
+    post:
+      tags:
+      - "jobs"
+      summary: "Pause a job"
+      description: "Pause a job by name"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the job"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Jobs"
+        400:
+          description: "Unable to pause job"
+  /jobs/unpause:
+    post:
+      tags:
+      - "jobs"
+      summary: "Unpause a job"
+      description: "Unpause a job by name"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the job"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Jobs"
+        400:
+          description: "Unable to unpause job"
+  /logs:
+    get:
+      tags:
+      - "logs"
+      summary: "Get logs"
+      description: "Get recent log events, limited to a number defined in the Baleen configuration"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Logs"
+  /manager/stop:
+    post:
+      tags:
+      - "manager"
+      summary: "Stop Baleen"
+      description: "Stops all jobs and pipelines, and shuts down Baleen"
+      responses:
+        200:
+          description: "Successful operation"
+  /metrics:
+    get:
+      tags:
+      - "metrics"
+      summary: "Get metric information"
+      description: "Gets metrics infromation from Baleen and any pipelines or jobs within Baleen"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "filter"
+        in: "query"
+        description: "Filter the returned metrics based on the metric name. Single *'s should be used to replace one 'level' and double *'s can be used to replace multiple levels. For example baleen.*.example would match the metric baleen.foo.example, but not baleen.foo.bar.example, whereas baleen.**.example would match the metric baleen.foo.example and baleen.foo.bar.example."
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+  /orderers:
+    get:
+      tags:
+      - "orderers"
+      summary: "List all currently available pipeline orderers"
+      description: "Produces a YAML formatted list of all the pipeline orderers (classes extending IPipelineOrderer) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /pipelines:
+    get:
+      tags:
+      - "pipelines"
+      summary: "Get pipeline details"
+      description: "Get details of one or more pipelines"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the pipeline"
+        required: false
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Pipelines"
+    post:
+      tags:
+      - "pipelines"
+      summary: "Create a new pipeline"
+      description: "Create a new pipeline by submitting the name and YAML configuration"
+      consumes:
+      - "multipart/form-data"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "formData"
+        description: "The name of the pipeline (must not already be in use)"
+        required: true
+        type: "string"
+      - name: "yaml"
+        in: "formData"
+        description: "The YAML configuration for this pipeline"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Pipelines"
+        400:
+          description: "Unable to create pipeline"
+    delete:
+      tags:
+      - "pipelines"
+      summary: "Deletes a pipeline"
+      description: "Stops and then deletes one or more pipelines by name"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the pipeline"
+        required: false
+        type: "string"
+        collectionFormat: "multi"
+      responses:
+        200:
+          description: "Successful operation"
+        400:
+          description: "Unable to delete pipeline"
+  /pipelines/pause:
+    post:
+      tags:
+      - "pipelines"
+      summary: "Pause a pipeline"
+      description: "Pause a pipeline by name"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the pipeline"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Pipelines"
+        400:
+          description: "Unable to pause pipeline"
+  /pipelines/unpause:
+    post:
+      tags:
+      - "pipelines"
+      summary: "Unpause a pipeline"
+      description: "Unpause a pipeline by name"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "query"
+        description: "The name of the pipeline"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Pipelines"
+        400:
+          description: "Unable to unpause pipeline"
+  /schedules:
+    get:
+      tags:
+      - "schedules"
+      summary: "List all currently available schedules"
+      description: "Produces a YAML formatted list of all the schedules (classes extending BaleenSchedule) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /schedules/{scheduleName}:
+    get:
+      tags:
+      - "schedules"
+      summary: "List the parameters and resources associated with a particular schedule"
+      description: "Produces a JSON object describing the resources and parameters associated with the given schedule"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "scheduleName"
+        in: "path"
+        description: "The name of the schedule to query, as it would appear in a pipeline configuration file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Could not find schedule"
+        503:
+          description: "Unable to load schedule class"
+  /status:
+    get:
+      tags:
+      - "status"
+      summary: "Get status"
+      description: "Request a status message from Baleen to confirm it is currently running"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+          schema:
+            $ref: "#/definitions/Status"
+    
+  /tasks:
+    get:
+      tags:
+      - "tasks"
+      summary: "List all currently available tasks"
+      description: "Produces a YAML formatted list of all the schedules (classes extending BaleenTask) currently available on the class path."
+      produces:
+      - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /tasks/{taskName}:
+    get:
+      tags:
+      - "tasks"
+      summary: "List the parameters and resources associated with a particular task"
+      description: "Produces a JSON object describing the resources and parameters associated with the given task"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "taskName"
+        in: "path"
+        description: "The name of the task to query, as it would appear in a pipeline configuration file"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful operation"
+        404:
+          description: "Could not find task"
+        503:
+          description: "Unable to load task class"
+  /types:
+    get:
+      tags:
+      - "types"
+      summary: "List all currently available types"
+      description: "Produces a JSON list of all the types (classes extending BaleenAnnotation) currently available on the class path."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+  /types/entities:
+    get:
+      tags:
+      - "types"
+      summary: "List all currently available entities"
+      description: "Produces a JSON list of all the types (classes extending Entity) currently available on the class path."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+  /types/events:
+    get:
+      tags:
+      - "types"
+      summary: "List all currently available events"
+      description: "Produces a JSON list of all the types (classes extending Event) currently available on the class path."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+  /types/relations:
+    get:
+      tags:
+      - "types"
+      summary: "List all currently available relations"
+      description: "Produces a JSON list of all the types (classes extending Relation) currently available on the class path."
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Successful operation"
+
+definitions:
+  Job:
+    type: "object"
+    properties:
+      name:
+        description: "The name of the job"
+        type: "string"
+        example: "My Job"
+      paused:
+        description: "Whether the job is currently paused or not"
+        type: "boolean"
+  Jobs:
+    type: "array"
+    items:
+      $ref: "#/definitions/Job"
+  Log:
+    type: "object"
+    properties:
+      message:
+        description: "The log message"
+        type: "string"
+      level:
+        description: "The log level"
+        type: "string"
+      logger:
+        description: "The name of the logger"
+        type: "string"
+      thread:
+        description: "The thread from which the log was sent"
+        type: "string"
+      timestamp:
+        description: "The timestamp (since epoch) of the log"
+        type: "integer"
+        format: "int64"
+  Logs:
+    type: "array"
+    items:
+      $ref: "#/definitions/Log"
+  Pipeline:
+    type: "object"
+    properties:
+      name:
+        description: "The name of the pipeline"
+        type: "string"
+        example: "My Pipeline"
+      paused:
+        description: "Whether the pipeline is currently paused or not"
+        type: "boolean"
+  Pipelines:
+    type: "array"
+    items:
+      $ref: "#/definitions/Pipeline"
+  Status:
+    type: "object"
+    properties:
+      name:
+        description: "The name of the software"
+        type: "string"
+        example: "Baleen"
+      version:
+        description: "The version of Baleen"
+        type: "string"
+        example: "2.4.0"
+      status:
+        description: "The current status"
+        type: "string"
+        example: "ok"
+      uptime:
+        description: "The number of seconds Baleen has been running"
+        type: "integer"
+        format: "int64"
+        

@@ -1,7 +1,0 @@
-#Test pipeline where the collection reader is invalid
-
-collectionreader:
-  name: No class specified
-
-annotators:
-  - class: uk.gov.dstl.baleen.testing.DummyAnnotator1

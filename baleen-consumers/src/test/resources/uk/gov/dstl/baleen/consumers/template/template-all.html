@@ -1,0 +1,92 @@
+<html>
+<body>
+	<h1>All metadata</h1>
+	<div>
+		<table>
+			<tbody>
+				{{#metadata.entrySet}}
+				<tr>
+					<th>{{key}}</th>
+					<td>{{value}}</td>
+				</tr>
+				{{/metadata.entrySet}}
+			</tbody>
+		</table>
+	</div>
+	<h1>Single metadata field</h1>
+	<table>
+		<tbody>
+			<tr>
+				<th>Author</th>
+				<td>{{metadata.author}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div>
+		<h1>Content</h1>
+		<pre>
+{{content}}
+		</pre>
+	</div>
+	<div>
+		<h1>Sources</h1>
+		{{#sources.entrySet}}
+		<div>
+			<h2>{{key}}</h2>
+			{{#value.entrySet}}
+			<h3>Record {{key}}</h3>
+			<h4>Fields</h4>
+			<table>
+				<tbody>
+					{{#value.entrySet}}
+					<tr>
+						<th>{{key}}</th>
+						<td>{{value}}</td>
+					</tr>
+					{{/value.entrySet}}
+				</tbody>
+			</table>
+			{{/value.entrySet}}
+		</div>
+		{{/sources.entrySet}}
+	</div>
+
+	<div>
+		<h1>Flattened Records</h1>
+		{{#records.entrySet}}
+		<div>
+			<h2>Record {{key}}</h2>
+			<h3>Fields</h3>
+			<table>
+				<tbody>
+					{{#value.entrySet}}
+					<tr>
+						<th>{{key}}</th>
+						<td>{{value}}</td>
+					</tr>
+					{{/value.entrySet}}
+				</tbody>
+			</table>
+		</div>
+		{{/records.entrySet}}
+	</div>
+
+
+	<div>
+		<h1>Fields</h1>
+		<div>
+			<table>
+				<tbody>
+					{{#fields.entrySet}}
+					<tr>
+						<th>{{key}}</th>
+						<td>{{value}}</td>
+					</tr>
+					{{/fields.entrySet}}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+</body>
+</html>

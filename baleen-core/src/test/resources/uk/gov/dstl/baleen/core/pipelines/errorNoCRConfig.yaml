@@ -1,0 +1,2 @@
+annotators:
+  - class: uk.gov.dstl.baleen.testing.DummyAnnotator1

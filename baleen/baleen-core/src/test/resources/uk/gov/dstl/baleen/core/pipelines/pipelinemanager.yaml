@@ -1,3 +1,0 @@
-pipelines:
-  - name: test_pipeline
-    file: hello

@@ -1,0 +1,6 @@
+key: Foo
+
+tasks:
+- uk.gov.dstl.baleen.testing.DummyTask
+- class: uk.gov.dstl.baleen.testing.DummyTaskParams
+  key: Bar

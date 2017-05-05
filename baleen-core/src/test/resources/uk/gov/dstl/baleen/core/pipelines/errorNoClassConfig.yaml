@@ -1,0 +1,5 @@
+collectionreader:
+  class: uk.gov.dstl.baleen.testing.DummyCollectionReader
+
+annotators:
+  - name: uk.gov.dstl.baleen.testing.DummyAnnotator1

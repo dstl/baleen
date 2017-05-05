@@ -1,0 +1,18 @@
+example:
+  color: red
+  count: 7
+orderer: NoOpPipelineOrderer
+collectionreader: uk.gov.dstl.baleen.testing.DummyCollectionReader
+annotators:
+- uk.gov.dstl.baleen.testing.DummyAnnotator1
+- class: uk.gov.dstl.baleen.testing.DummyAnnotator1
+  example.color: green
+- class: uk.gov.dstl.baleen.testing.DummyAnnotator1
+- class: uk.gov.dstl.baleen.testing.DummyAnnotator2
+  example.count: 6
+  shape: square
+consumers:
+- uk.gov.dstl.baleen.testing.DummyConsumer
+- class: uk.gov.dstl.baleen.testing.DummyConsumer
+  shape: circle
+  example.color: blue

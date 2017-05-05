@@ -1,0 +1,102 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>uk.gov.dstl.baleen</groupId>
+		<artifactId>baleen</artifactId>
+		<version>2.4.0</version>
+	</parent>
+	<artifactId>baleen-runner</artifactId>
+	<name>Baleen Runner</name>
+	<description>Provides a command line runner for Baleen</description>
+	<dependencies>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-annotators</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-collectionreaders</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-consumers</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-jobs</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>			
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-core</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-resources</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-uima</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-history</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.gov.dstl.baleen</groupId>
+			<artifactId>baleen-orderers</artifactId>
+			<version>${baleen.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<!-- Shade: Create a single fat jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>${maven-shade-plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+						<!--
+						Included because it now fails to build due to a signed jar dependency
+						See: http://zhentao-li.blogspot.co.uk/2012/06/maven-shade-plugin-invalid-signature.html
+						-->
+							<filters>
+								<filter>
+									<artifact>*.*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						<!-- to here for signed jar fix -->
+						
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>uk.gov.dstl.baleen.runner.Baleen</mainClass>
+								</transformer>
+							</transformers>
+							<outputFile>${project.build.directory}/../../target/baleen-${baleen.version}.jar</outputFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

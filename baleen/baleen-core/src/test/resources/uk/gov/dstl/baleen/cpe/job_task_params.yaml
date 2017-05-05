@@ -1,5 +1,0 @@
-job:
-  schedule: Other
-  tasks:
-  - class: uk.gov.dstl.baleen.testing.DummyTaskParams
-    key: value

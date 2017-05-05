@@ -1,0 +1,17 @@
+<html>
+<body>
+	<h1>{{metadata.author}}</h1>
+	<div>
+		<table>
+			<tbody>
+				{{#metadata.entrySet}}
+				<tr>
+					<th>{{key}}</th>
+					<td>{{value}}</td>
+				</tr>
+				{{/metadata.entrySet}}
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

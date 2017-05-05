@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typeSystemDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <name>Baleen Type System - Templates</name>
+  <description>XML definition of the Baleen type system for document templates.
+
+    This XML file classified as UK OFFICIAL.</description>
+  <version>1.0</version>
+  <vendor>Dstl</vendor>
+  <imports>
+    <import name="types/base_type_system"/>
+  </imports>
+  <types>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition</name>
+      <description>A field definition in a template document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>name</name>
+          <description>The name of the identified template field.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>regex</name>
+          <description>An optional regular expresison to extract the field from the structural element.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>defaultValue</name>
+          <description>An optional default value to be used if the field is not matched for the record.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription> 
+        <featureDescription>
+          <name>required</name>
+          <description>Set true to declare that the field is required. If a default is set, this is redundant as it will always exist</description>
+          <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+        </featureDescription>     
+      <featureDescription>
+          <name>repeat</name>
+          <description>Indicate that this field can be repeated in the document.</description>
+          <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.templates.TemplateField</name>
+      <description>An field identified from a template</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>name</name>
+          <description>The name of the identified template field.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>value</name>
+          <description>An value assigned to this field. Typically taken from the text, but can be assigned using default value.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription> 
+        <featureDescription>
+          <name>source</name>
+          <description/>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.templates.TemplateRecordDefinition</name>
+      <description>Beginning / end marker of a record (multiple fields) in a template document, used to create record definitions for subsequent annotation of real documents.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>name</name>
+          <description>The name of the record, eg Address</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>repeat</name>
+          <description>Declare that this record is repeatable in the document. For example, a repeating record spaning a row of a table would create a record for each row in the table.</description>
+          <rangeTypeName>uima.cas.Boolean</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+    <typeDescription>
+      <name>uk.gov.dstl.baleen.types.templates.TemplateRecord</name>
+      <description>A covering annotation that marks the extent of a record within an annotated document.</description>
+      <supertypeName>uk.gov.dstl.baleen.types.Base</supertypeName>
+      <features>
+        <featureDescription>
+          <name>name</name>
+          <description>The name of the record, eg Address</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      <featureDescription>
+          <name>source</name>
+          <description>The source of the record definition</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
+    </typeDescription>
+  </types>
+</typeSystemDescription>

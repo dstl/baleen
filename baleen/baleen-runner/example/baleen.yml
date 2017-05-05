@@ -1,7 +1,0 @@
-pipelines:
-- name: Example pipeline
-  file: pipeline.yml
-  
-jobs:
-- name: Stats job
-  file: job.yml
