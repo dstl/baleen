@@ -12,7 +12,7 @@ import uk.gov.dstl.baleen.uima.utils.select.Node;
  */
 public class Structures extends AbstractStructureConsumer {
 
-	public void print(int level, StringBuilder sb, Node<Structure> n) {
+	private void print(int level, StringBuilder sb, Node<Structure> n) {
 		startTag(level, sb, n.getItem());
 		int offset = 0;
 		for (final Node<Structure> child : n.getChildren()) {

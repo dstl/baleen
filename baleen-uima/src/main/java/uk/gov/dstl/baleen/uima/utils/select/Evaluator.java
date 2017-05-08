@@ -29,6 +29,11 @@ public abstract class Evaluator<T> {
   public static final class TypeName<T> extends Evaluator<T> {
     private final String typeName;
 
+    /**
+     * Construct evaluator for given typeName
+     * 
+     * @param typeName the typeName to look for
+     */
     public TypeName(String typeName) {
       this.typeName = typeName;
     }
@@ -45,11 +50,16 @@ public abstract class Evaluator<T> {
   }
 
   /**
-   * Evaluator for node id
+   * Evaluator for node id.
    */
   public static final class Id<T> extends Evaluator<T> {
     private final String id;
 
+    /**
+     * Construct an evaluator for the given id.
+     * 
+     * @param id the id to look for
+     */
     public Id(String id) {
       this.id = id;
     }
@@ -72,6 +82,11 @@ public abstract class Evaluator<T> {
   public static final class Class<T> extends Evaluator<T> {
     private final String className;
 
+    /**
+     * Construct an evaluator for the given className.
+     * 
+     * @param className the className to look for
+     */
     public Class(String className) {
       this.className = className;
     }
@@ -94,6 +109,11 @@ public abstract class Evaluator<T> {
   public static final class Attribute<T> extends Evaluator<T> {
     private final String key;
 
+    /**
+     * Construct an evaluator for the given attribute.
+     * 
+     * @param key the attribute name to look for
+     */
     public Attribute(String key) {
       this.key = key;
     }
@@ -115,7 +135,12 @@ public abstract class Evaluator<T> {
    */
   public static final class AttributeStarting<T> extends Evaluator<T> {
     private final String keyPrefix;
-
+    
+    /**
+     * Construct an evaluator for the given attribute prefix.
+     * 
+     * @param keyPrefix the prefix of the attribute name to look for
+     */
     public AttributeStarting(String keyPrefix) {
       Validate.notEmpty(keyPrefix);
       this.keyPrefix = keyPrefix.toLowerCase();
@@ -144,6 +169,13 @@ public abstract class Evaluator<T> {
    * Evaluator for attribute name/value matching
    */
   public static final class AttributeWithValue<T> extends AttributeKeyPair<T> {
+    
+    /**
+     * Construct an evaluator for the given attribute value.
+     * 
+     * @param key the attribute name to look for
+     * @param value the attribute value to look for
+     */
     public AttributeWithValue(String key, String value) {
       super(key, value);
     }
@@ -164,6 +196,13 @@ public abstract class Evaluator<T> {
    * Evaluator for attribute name != value matching
    */
   public static final class AttributeWithValueNot<T> extends AttributeKeyPair<T> {
+    
+    /**
+     * Construct an evaluator for an attribute without the given value.
+     * 
+     * @param key the attribute name to look for
+     * @param value the attribute value to lnot match
+     */
     public AttributeWithValueNot(String key, String value) {
       super(key, value);
     }
@@ -184,6 +223,13 @@ public abstract class Evaluator<T> {
    * Evaluator for attribute name/value matching (value prefix)
    */
   public static final class AttributeWithValueStarting<T> extends AttributeKeyPair<T> {
+    
+    /**
+     * Construct a starts with evaluator for the given attribute value.
+     * 
+     * @param key the attribute name to look for
+     * @param value the attribute value should start with
+     */
     public AttributeWithValueStarting(String key, String value) {
       super(key, value);
     }
@@ -205,6 +251,13 @@ public abstract class Evaluator<T> {
    * Evaluator for attribute name/value matching (value ending)
    */
   public static final class AttributeWithValueEnding<T> extends AttributeKeyPair<T> {
+    
+    /**
+     * Construct a ends with evaluator for the given attribute value.
+     * 
+     * @param key the attribute name to look for
+     * @param value the attribute value should end with
+     */
     public AttributeWithValueEnding(String key, String value) {
       super(key, value);
     }
@@ -226,6 +279,13 @@ public abstract class Evaluator<T> {
    * Evaluator for attribute name/value matching (value containing)
    */
   public static final class AttributeWithValueContaining<T> extends AttributeKeyPair<T> {
+    
+    /**
+     * Construct a contains with evaluator for the given attribute value.
+     * 
+     * @param key the attribute name to look for
+     * @param value the attribute value should contain
+     */
     public AttributeWithValueContaining(String key, String value) {
       super(key, value);
     }
@@ -250,6 +310,12 @@ public abstract class Evaluator<T> {
     final String key;
     final Pattern pattern;
 
+    /**
+     * Construct an matches evaluator for the given attribute value.
+     * 
+     * @param key the attribute name to look for
+     * @param value the attribute value should match
+     */
     public AttributeWithValueMatching(String key, Pattern pattern) {
       this.key = key.trim().toLowerCase();
       this.pattern = pattern;
@@ -274,6 +340,12 @@ public abstract class Evaluator<T> {
     final String key;
     final String value;
 
+    /**
+     * Construct the abstract attribute evaluator.
+     * 
+     * @param key the attribute name to look for
+     * @param value the attribute value should use in the evaluation
+     */
     public AttributeKeyPair(String key, String value) {
       Validate.notEmpty(key);
       Validate.notEmpty(value);
@@ -307,6 +379,12 @@ public abstract class Evaluator<T> {
    * Evaluator for matching by sibling index number (e {@literal <} idx)
    */
   public static final class IndexLessThan<T> extends IndexEvaluator<T> {
+    
+    /**
+     * Constructor for the less than index evaluator
+     * 
+     * @param index the index to be less than
+     */
     public IndexLessThan(int index) {
       super(index);
     }
@@ -327,6 +405,12 @@ public abstract class Evaluator<T> {
    * Evaluator for matching by sibling index number (e {@literal >} idx)
    */
   public static final class IndexGreaterThan<T> extends IndexEvaluator<T> {
+    
+    /**
+     * Constructor for the greater than index evaluator
+     * 
+     * @param index the index to be greater than
+     */
     public IndexGreaterThan(int index) {
       super(index);
     }
@@ -347,6 +431,12 @@ public abstract class Evaluator<T> {
    * Evaluator for matching by sibling index number (e = idx)
    */
   public static final class IndexEquals<T> extends IndexEvaluator<T> {
+    
+    /**
+     * Constructor for the equals index evaluator
+     * 
+     * @param index the index to be equal to
+     */
     public IndexEquals(int index) {
       super(index);
     }
@@ -379,7 +469,15 @@ public abstract class Evaluator<T> {
     }
   }
 
+  /**
+   * Evaluator for matching the first sibling of type (:first-of-type)
+   *
+   */
   public static final class IsFirstOfType<T> extends IsNthOfType<T> {
+    
+    /**
+     * Constructor fo first of type evaluator.
+     */
     public IsFirstOfType() {
       super(0, 1);
     }
@@ -395,6 +493,10 @@ public abstract class Evaluator<T> {
    *
    */
   public static final class IsLastOfType<T> extends IsNthLastOfType<T> {
+    
+    /**
+     * Constructor fo first of type evaluator.
+     */
     public IsLastOfType() {
       super(0, 1);
     }
@@ -407,18 +509,31 @@ public abstract class Evaluator<T> {
 
 
   /**
-   * Base evaluator for 'nth of' matches
+   * Base evaluator for 'nth of' matches.
+   * Using (an + b)
    *
    */
   public abstract static class NthEvaluator<T> extends Evaluator<T> {
+    
     final int a;
     final int b;
 
+    /**
+     * Constructor for the base nth evaluator defining both a and b.
+     * 
+     * @param a the a in (an+b)
+     * @param b the b in (an+b)
+     */
     public NthEvaluator(int a, int b) {
       this.a = a;
       this.b = b;
     }
 
+    /**
+     * Constructor for the base nth evaluator defining b and a=0.
+     * 
+     * @param b the b in (an+b)
+     */
     public NthEvaluator(int b) {
       this(0, b);
     }
@@ -462,6 +577,12 @@ public abstract class Evaluator<T> {
    */
   public static final class IsNthChild<T> extends NthEvaluator<T> {
 
+    /**
+     * Constructor for is nth child evaluator defining both a and b.
+     * 
+     * @param a the a in (an+b)
+     * @param b the b in (an+b)
+     */
     public IsNthChild(int a, int b) {
       super(a, b);
     }
@@ -484,6 +605,13 @@ public abstract class Evaluator<T> {
    * @see IndexEquals
    */
   public static final class IsNthLastChild<T> extends NthEvaluator<T> {
+    
+    /**
+     * Constructor for is nth last child evaluator defining both a and b.
+     * 
+     * @param a the a in (an+b)
+     * @param b the b in (an+b)
+     */
     public IsNthLastChild(int a, int b) {
       super(a, b);
     }
@@ -504,6 +632,13 @@ public abstract class Evaluator<T> {
    *
    */
   public static class IsNthOfType<T> extends NthEvaluator<T> {
+    
+    /**
+     * Constructor for is nth of type evaluator defining both a and b.
+     * 
+     * @param a the a in (an+b)
+     * @param b the b in (an+b)
+     */
     public IsNthOfType(int a, int b) {
       super(a, b);
     }
@@ -535,6 +670,12 @@ public abstract class Evaluator<T> {
    */
   public static class IsNthLastOfType<T> extends NthEvaluator<T> {
 
+    /**
+     * Constructor for is nth list child of type evaluator defining both a and b.
+     * 
+     * @param a the a in (an+b)
+     * @param b the b in (an+b)
+     */
     public IsNthLastOfType(int a, int b) {
       super(a, b);
     }
@@ -645,6 +786,11 @@ public abstract class Evaluator<T> {
   public abstract static class IndexEvaluator<T> extends Evaluator<T> {
     final int index;
 
+    /**
+     * Construcotr for base index evaluator.
+     * 
+     * @param index the index
+     */
     public IndexEvaluator(int index) {
       this.index = index;
     }
@@ -656,6 +802,11 @@ public abstract class Evaluator<T> {
   public static final class ContainsText<T> extends Evaluator<T> {
     private String searchText;
 
+    /**
+     * Constructor for the contains text evaluator.
+     * 
+     * @param searchText the text to search for
+     */
     public ContainsText(String searchText) {
       this.searchText = searchText.toLowerCase();
     }
@@ -672,11 +823,16 @@ public abstract class Evaluator<T> {
   }
 
   /**
-   * Evaluator for matching Node's own text
+   * Evaluator for matching Node's own text (this excludes the text contained in any children).
    */
   public static final class ContainsOwnText<T> extends Evaluator<T> {
     private final String searchText;
 
+    /**
+     * Constructor for the contains own text evaluator.
+     * 
+     * @param searchText the text to search for
+     */
     public ContainsOwnText(String searchText) {
       this.searchText = searchText.toLowerCase();
     }
@@ -698,6 +854,11 @@ public abstract class Evaluator<T> {
   public static final class Matches<T> extends Evaluator<T> {
     private final Pattern pattern;
 
+    /**
+     * Constructor for the matches text evaluator.
+     * 
+     * @param pattern the regular expression to match
+     */
     public Matches(Pattern pattern) {
       this.pattern = pattern;
     }
@@ -715,11 +876,16 @@ public abstract class Evaluator<T> {
   }
 
   /**
-   * Evaluator for matching Node's own text with regex
+   * Evaluator for matching Node's own text with regex (excluding text in children).
    */
   public static final class MatchesOwn<T> extends Evaluator<T> {
     private final Pattern pattern;
 
+    /**
+     * Constructor for the matches own text evaluator.
+     * 
+     * @param pattern the regular expression to match
+     */
     public MatchesOwn(Pattern pattern) {
       this.pattern = pattern;
     }
