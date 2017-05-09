@@ -7,7 +7,14 @@ import java.util.Map;
 import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.uima.utils.SelectorPart;
 
-
+/**
+ * 
+ * A node is a wrapping class to hold parent-child information to create tree structures over 
+ * the wrapped items and facilitate traversal of the tree structres.
+ * 
+ * 
+ * @param <T> the type of item the node wraps
+ */
 public interface Node<T> {
 
 
@@ -186,6 +193,11 @@ public interface Node<T> {
    */
   Nodes<T> getSiblings();
 
+  /**
+   * Get the text contained in the node and not in the children.
+   * 
+   * @return the nodes own text
+   */
   String ownText();
 
   /**
@@ -221,7 +233,5 @@ public interface Node<T> {
    * @return list of the classes (lower cased)
    */
   String id();
-
-
 
 }

@@ -2,7 +2,7 @@
 /**
  * Packages to support the CSS-style structure selector.
  *
- * This is based on JSoup by Jonathan Hedley and adapted here for with with the StructureHeirarchy
+ * This is based on JSoup by Jonathan Hedley and adapted here to work with the Structure heirarchy.
  *
  * Original licence:
  *

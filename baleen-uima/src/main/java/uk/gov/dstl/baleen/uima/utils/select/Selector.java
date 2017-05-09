@@ -377,10 +377,21 @@ public class Selector<T> {
     return output;
   }
 
+  /**
+   * Selector Parse Exception, for when the given selecotr query fails to parse.
+   * 
+   */
   public static class SelectorParseException extends IllegalStateException {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Constructor for the selector parse exception.
+     * 
+     * @param msg the (templated) message for the exception
+     * @param params the parameters for the (templated) message
+     * 
+     */
     public SelectorParseException(String msg, Object... params) {
       super(String.format(msg, params));
     }
