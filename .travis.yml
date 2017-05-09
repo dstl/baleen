@@ -1,9 +1,10 @@
 language: java
 jdk:
   - oraclejdk8
-install: true
 sudo: false
 addons:
   apt:
     packages:
       - oracle-java8-installer
+install: true
+before_script: echo "MAVEN_OPTS='-Xmx3072m'" > ~/.mavenrc
