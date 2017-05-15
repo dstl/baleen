@@ -303,4 +303,23 @@ public class RelativeDateTest extends AbstractAnnotatorTest {
 		assertEquals(relativeTo.minusYears(15).atStartOfDay().toEpochSecond(ZoneOffset.UTC), t4.getTimestampStart());
 		assertEquals(relativeTo.plusDays(1).atStartOfDay().toEpochSecond(ZoneOffset.UTC), t4.getTimestampStop());
 	}
+	
+	@Test
+	public void testMetadataCase() throws Exception{
+		jCas.setDocumentText("This week is the end of term.");
+		
+		Metadata md = new Metadata(jCas);
+		md.setKey("date");
+		md.setValue("15 MAY 17");
+		md.addToIndexes();
+		
+		processJCas(RelativeDate.PARAM_DATE_FORMAT, "d MMM yy");
+		
+		assertEquals(1, JCasUtil.select(jCas, Temporal.class).size());
+		
+		Temporal t1 = JCasUtil.selectByIndex(jCas, Temporal.class, 0);
+		assertEquals("This week", t1.getCoveredText());
+		assertEquals(LocalDate.of(2017, 5, 15).atStartOfDay().toEpochSecond(ZoneOffset.UTC), t1.getTimestampStart());
+		assertEquals(LocalDate.of(2017, 5, 22).atStartOfDay().toEpochSecond(ZoneOffset.UTC), t1.getTimestampStop());
+	}
 }
