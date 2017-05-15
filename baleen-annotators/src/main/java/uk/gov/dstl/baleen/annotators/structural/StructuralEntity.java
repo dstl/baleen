@@ -81,7 +81,7 @@ public class StructuralEntity extends BaleenAnnotator {
 	private String confidenceString;
 
 	/**
-	 * The entity subType to use for matched entities
+	 * The query identifying the entities to annotate
 	 *
 	 * @baleen.config
 	 */
