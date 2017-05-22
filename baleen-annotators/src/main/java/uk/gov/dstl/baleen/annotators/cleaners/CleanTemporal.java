@@ -15,6 +15,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
@@ -99,6 +100,9 @@ public class CleanTemporal extends BaleenAnnotator {
 	}
 	
 	private boolean isMoney(String text){
+		if(Strings.isNullOrEmpty(text))
+			return false;
+		
 		return text.startsWith("£") || text.startsWith("$") || text.startsWith("€");
 	}
 	

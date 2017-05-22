@@ -8,6 +8,7 @@ import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.Collections;
@@ -100,7 +101,10 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
 		
 		DateTimeFormatter dtf = null;
 		try{
-			dtf = DateTimeFormatter.ofPattern(dateFormat);
+			dtf = new DateTimeFormatterBuilder()
+				.parseCaseInsensitive()
+				.appendPattern(dateFormat)
+				.toFormatter();
 		}catch(IllegalArgumentException iae){
 			getMonitor().error("Invalid date format, no relative date will be set", iae);
 		}

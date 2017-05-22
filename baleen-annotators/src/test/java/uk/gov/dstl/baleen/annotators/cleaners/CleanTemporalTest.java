@@ -82,5 +82,24 @@ public class CleanTemporalTest extends AnnotatorTestBase {
 		
 		assertEquals(0, JCasUtil.select(jCas, Temporal.class).size());
 	}
+	
+	@Test
+	public void testCurrencyInDateNoValue() throws Exception{
+		AnalysisEngine ae = AnalysisEngineFactory.createEngine(CleanTemporal.class);
+
+		jCas.setDocumentText("It cost $4.10");
+		
+		Temporal dt = new Temporal(jCas);
+		dt.setBegin(8);
+		dt.setEnd(13);
+		
+		dt.addToIndexes();
+		
+		assertEquals(1, JCasUtil.select(jCas, Temporal.class).size());
+		
+		ae.process(jCas);
+		
+		assertEquals(0, JCasUtil.select(jCas, Temporal.class).size());
+	}
 
 }
