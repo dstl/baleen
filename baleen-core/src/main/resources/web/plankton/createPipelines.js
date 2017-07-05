@@ -486,7 +486,7 @@ function createCollectionReaderYaml(){
 	
 	var contentextractor = $("#contentExtractor").val();
 	if(contentextractor != $("#contentExtractor-default").val()){
-		content += "  contentextractor: "+ contentextractor + "\n";
+		content += "  contentExtractor: "+ contentextractor + "\n";
 	}
 	
 	$("#contentExtractorParameters .form-control").each(function(index, element){
