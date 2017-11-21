@@ -11,6 +11,15 @@ function componentListLoaded(){
 	}
 }
 
+var baleenDefaultValues;
+function getDefaults(){
+    $.ajax({
+        url: baleenUrl + "api/1/defaults"
+    }).done(function(data){
+        baleenDefaultValues = data;
+    });
+}
+
 function loadOrderers(){
 	$.ajax({
 		url: baleenUrl + "api/1/orderers",
@@ -120,8 +129,10 @@ function getCollectionReader(name){
 		data.forEach(function(el){
 			if(el.type == "parameter"){
 				if(el.name == "contentExtractor"){
-					$("#contentExtractor").val(el.defaultValue);
-					$("#contentExtractor-default").val(el.defaultValue);
+				    var defaultContentExtractor = el.defaultValue.replace(baleenDefaultValues.DEFAULT_CONTENT_EXTRACTOR_PACKAGE + ".", "");
+
+				    $("#contentExtractor").val(defaultContentExtractor);
+					$("#contentExtractor-default").val(defaultContentExtractor);
 					$("#contentExtractor").change();
 					$("#contentExtractorPanel").removeClass("hidden");
 				}else{				
