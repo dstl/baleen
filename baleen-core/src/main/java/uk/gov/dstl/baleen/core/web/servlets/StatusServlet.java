@@ -33,7 +33,7 @@ public class StatusServlet extends AbstractApiServlet {
 	 */
 	public static class BaleenStatus {
 		private String name = "Baleen";
-		private String version = "2.4.0";
+		private String version = "2.5.0-SNAPSHOT";
 		private String status = "ok";
 		private LocalDateTime timestamp;
 

@@ -54,3 +54,6 @@ target/
 
 # Baleen specific
 testing.log
+
+# IntelliJ IDEA
+*.iml
