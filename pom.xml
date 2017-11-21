@@ -77,7 +77,7 @@
 		<metrics.version>3.0.2</metrics.version>
 		<metrics-elasticsearch.version>2.2.0</metrics-elasticsearch.version>
 		<mongodb.version>3.4.2</mongodb.version>
-		<opencsv.version>3.9</opencsv.version>
+		<opencsv.version>4.1</opencsv.version>
 		<opennlp.version>1.8.3</opennlp.version>
 		<postgres.version>42.1.4</postgres.version>
 		<reflections.version>0.9.11</reflections.version>
