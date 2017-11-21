@@ -1,12 +1,7 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.mongodb.client.MongoCollection;
 import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
@@ -16,15 +11,18 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
-import com.mongodb.client.MongoCollection;
-
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This collection reader will process an entire Mongo collection, and then watch for new documents.
@@ -144,6 +142,9 @@ public class MongoReader extends BaleenCollectionReader {
 	}
 
 	private void processMongoMetadataField(JCas jCas, String key, Object obj){
+		if(obj == null)
+			return;
+
 		if(obj instanceof List){
 			List<?> list = (List<?>) obj;
 			for(Object o : list){
