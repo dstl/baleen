@@ -74,8 +74,8 @@ public class MongoReaderTest extends AbstractReaderTest {
 		assertEquals("key3", metadata.get(3).getKey());
 		assertEquals("foo", metadata.get(0).getValue());
 		assertEquals("bar", metadata.get(1).getValue());
-		assertEquals("howdy", metadata.get(3).getValue());
-		assertEquals("hey", metadata.get(2).getValue());
+		assertEquals("howdy", metadata.get(2).getValue());
+		assertEquals("hey", metadata.get(3).getValue());
 		jCas.reset();
 
 		assertFalse(bcr.doHasNext());
