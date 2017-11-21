@@ -1,33 +1,29 @@
 //Dstl (c) Crown Copyright 2017
+//NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import org.apache.lucene.search.join.ScoreMode;
+import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
+import org.apache.uima.resource.ResourceInitializationException;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
-import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.index.IndexNotFoundException;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.node.NodeValidationException;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.junit.AfterClass;
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
+import uk.gov.dstl.baleen.resources.EmbeddedElasticsearch5;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
@@ -38,6 +34,15 @@ import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
+
+import static org.junit.Assert.*;
+
 public abstract class ElasticsearchTestBase {
 	private static final String EXTERNAL_ID = "externalId";
 	private static final String VALUE = "value";
@@ -47,39 +52,57 @@ public abstract class ElasticsearchTestBase {
 	private static final String BEGIN = "begin";
 	private static final String DOC_TYPE = "docType";
 	private static final String BALEEN_INDEX = "baleen_index";
+
+	protected static final String CLUSTER = "test-cluster";
 	
-	protected static JCas jCas;
-	protected static Client client;
+	protected JCas jCas;
+	protected AnalysisEngine ae;
 
-	protected static AnalysisEngine ae;
+	protected Client client;
 
-	@AfterClass
-	public static void destroyClass(){
-		if (client != null) {
-			client.close();
-		}
-
-		if (ae != null) {
-			ae.destroy();
-		}
-	}
+	private Path tmpDir;
+	private EmbeddedElasticsearch5 es5;
 	
 	@Before
 	public void beforeTest() throws Exception{
 		jCas = JCasSingleton.getJCasInstance();
 
 		try{
-			//Find all documents in index and delete the documents
-			BulkRequestBuilder brb = client.prepareBulk();
-			SearchHits results = client.search(new SearchRequest()).actionGet().getHits();
-			for(SearchHit sh : results){
-				brb.add(client.prepareDelete("baleen_index", "baleen_output", sh.getId()).request());
-			}
-			if(brb.numberOfActions() > 0)
-				brb.get();
-		}catch(IndexNotFoundException infe){
-			//Index doesn't exist - ignore
+			tmpDir = Files.createTempDirectory("elasticsearch");
+		}catch(IOException ioe){
+			throw new ResourceInitializationException(ioe);
 		}
+
+		try {
+			es5 = new EmbeddedElasticsearch5(tmpDir.toString(), CLUSTER);
+		}catch (NodeValidationException nve){
+			throw new UIMAException(nve);
+		}
+
+		Settings settings = Settings.builder().put("cluster.name", CLUSTER).build();
+		try {
+			client = new PreBuiltTransportClient(settings)
+					.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
+		}catch(UnknownHostException uhe){
+			throw new UIMAException(uhe);
+		}
+	}
+
+	@After
+	public void afterTest(){
+		ae.destroy();
+
+		if (client != null) {
+			client.close();
+		}
+		client = null;
+
+		try {
+			es5.close();
+		}catch(IOException ioe){
+			//Do nothing
+		}
+		es5 = null;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -93,7 +116,7 @@ public abstract class ElasticsearchTestBase {
 
 		assertEquals(new Long(1), getCount());
 
-		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().hits()[0];
+		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
 		assertEquals("Hello World", result.getSource().get("content"));
 		assertEquals("en", result.getSource().get("language"));
 		assertEquals(timestamp, result.getSource().get("dateAccessed"));
@@ -122,7 +145,7 @@ public abstract class ElasticsearchTestBase {
 
 		assertEquals(new Long(1), getCount());
 
-		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().hits()[0];
+		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
 		List<String> pids = (List<String>) result.getSource().get("publishedId");
 		assertEquals("id_1", pids.get(0));
 		assertEquals("id_2", pids.get(1));
@@ -147,7 +170,7 @@ public abstract class ElasticsearchTestBase {
 
 		assertEquals(new Long(1), getCount());
 
-		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().hits()[0];
+		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
 		List<Map<String, Object>> entities = (List<Map<String, Object>>) result.getSource().get("entities");
 		assertEquals(4, entities.size());
 
@@ -171,7 +194,7 @@ public abstract class ElasticsearchTestBase {
 
 		Map<String, Object> geometryMap = new HashMap<>();
 		geometryMap.put(TYPE, "Point");
-		geometryMap.put("coordinates", new ArrayList<Double>(Arrays.asList(-0.1, 51.5)));
+		geometryMap.put("coordinates", new ArrayList<>(Arrays.asList(-0.1, 51.5)));
 
 		assertEquals(geometryMap, location.get("geoJson"));
 
@@ -209,7 +232,7 @@ public abstract class ElasticsearchTestBase {
 		client.admin().indices().refresh(new RefreshRequest("baleen_index")).actionGet();
 
 		assertEquals(new Long(1), getCount());
-		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().hits()[0];
+		SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
 		
 		// This checks the last document is tone we are getting
 		assertEquals("TEST", result.getSource().get("classification"));
@@ -231,7 +254,8 @@ public abstract class ElasticsearchTestBase {
 		SearchRequestBuilder srb = client.prepareSearch("baleen_index").setQuery(
 			QueryBuilders.nestedQuery("entities", QueryBuilders.boolQuery()
 					.must(QueryBuilders.matchQuery("entities.type", "Location"))
-					.must(QueryBuilders.matchQuery("entities.value", "London")))
+					.must(QueryBuilders.matchQuery("entities.value", "London")),
+					ScoreMode.Avg)
 		);
 		
 		SearchHits results = client.search(srb.request()).actionGet().getHits();

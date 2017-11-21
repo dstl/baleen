@@ -1,25 +1,25 @@
 //Dstl (c) Crown Copyright 2017
+//NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
-import java.io.IOException;
-import java.util.Map;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.uima.fit.descriptor.ExternalResource;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-
-import io.searchbox.client.JestClient;
-import io.searchbox.client.JestResult;
-import io.searchbox.core.Index;
-import io.searchbox.indices.CreateIndex;
-import io.searchbox.indices.IndicesExists;
-import io.searchbox.indices.mapping.PutMapping;
 import uk.gov.dstl.baleen.consumers.utils.AbstractElasticsearchConsumer;
 import uk.gov.dstl.baleen.resources.SharedElasticsearchRestResource;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
 
 /**
 * Use the Elasticsearch REST API to save processed documents, using the schema defined in AbstractElasticsearchConsumer.
 * 
-* Because we use the REST API, this should be compatible with both Elasticsearch 1.x and Elasticsearch 2.x.
+* Because we use the REST API, this should be compatible with all versions of Elasticsearch.
 * 
 * @baleen.javadoc
 */
@@ -32,16 +32,19 @@ public class ElasticsearchRest extends AbstractElasticsearchConsumer {
 	public static final String KEY_ELASTICSEARCH_REST = "elasticsearchRest";
 	@ExternalResource(key = KEY_ELASTICSEARCH_REST)
 	private SharedElasticsearchRestResource esrResource;
+
+	private ObjectMapper objectMapper = new ObjectMapper();
 	
 	@Override
 	public boolean createIndex() {
-		JestClient client = esrResource.getClient();
-		
-		try{
-			JestResult result = client.execute(new IndicesExists.Builder(index).build());
-			if(result.getResponseCode() != 200){
-				client.execute(new CreateIndex.Builder(index).build());
-				
+		RestClient client = esrResource.getClient();
+
+		try {
+			Response r = client.performRequest("HEAD", "/" + index);
+
+			if(r.getStatusLine().getStatusCode() != 200) {
+				client.performRequest("PUT", "/" + index);
+
 				return true;
 			}
 		}catch(IOException ioe){
@@ -54,8 +57,11 @@ public class ElasticsearchRest extends AbstractElasticsearchConsumer {
 	@Override
 	public void addMapping(XContentBuilder mapping) {
 		try{
-			PutMapping putMapping = new PutMapping.Builder(index, type, mapping.string()).build();
-			esrResource.getClient().execute(putMapping);
+			HttpEntity entity = new StringEntity(mapping.string());
+
+			esrResource.getClient().performRequest("PUT", "/"+index+"/_mapping/"+type,
+					Collections.emptyMap(),
+					entity);
 		}catch(IOException ioe){
 			getMonitor().error("Unable to add mapping to index", ioe);
 		}
@@ -64,8 +70,11 @@ public class ElasticsearchRest extends AbstractElasticsearchConsumer {
 	@Override
 	public void addDocument(String id, Map<String, Object> json) {
 		try{
-			Index doc = new Index.Builder(json).id(id).index(index).type(type).build();
-			esrResource.getClient().execute(doc);
+			HttpEntity entity = new StringEntity(objectMapper.writeValueAsString(json));
+
+			esrResource.getClient().performRequest("PUT", "/"+index+"/"+type+"/"+id,
+					Collections.emptyMap(),
+					entity);
 		}catch(IOException ioe){
 			getMonitor().error("Couldn't persist document to Elasticsearch", ioe);
 		}

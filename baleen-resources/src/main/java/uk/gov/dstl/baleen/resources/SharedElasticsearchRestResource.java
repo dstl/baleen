@@ -1,18 +1,29 @@
 //Dstl (c) Crown Copyright 2017
+//NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.resources;
 
-import java.util.Map;
-
+import com.google.common.base.Strings;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.message.BasicHeader;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
-
-import com.google.common.base.Strings;
-
-import io.searchbox.client.JestClient;
-import io.searchbox.client.JestClientFactory;
-import io.searchbox.client.config.HttpClientConfig;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.gov.dstl.baleen.uima.BaleenResource;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
 
 /**
  * A shared Elasticsearch REST resource.
@@ -49,35 +60,53 @@ public class SharedElasticsearchRestResource extends BaleenResource {
 	@ConfigurationParameter(name = PARAM_PASS, defaultValue="")
 	private String pass;
 
-	JestClientFactory factory = new JestClientFactory();
+	RestClient client;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SharedElasticsearchResource.class);
 
 	@Override
 	protected boolean doInitialize(ResourceSpecifier specifier, Map<String, Object> additionalParams) throws ResourceInitializationException {
-		if (!Strings.isNullOrEmpty(user) && !Strings.isNullOrEmpty(pass)) {
-			factory.setHttpClientConfig(new HttpClientConfig
-					.Builder(url)
-					.defaultCredentials(user, pass)
-					.build());
-		}else{
-			factory.setHttpClientConfig(new HttpClientConfig
-					.Builder(url)
-					.build());
+
+		URL parsedUrl = null;
+		try {
+			parsedUrl = new URL(url);
+		} catch (MalformedURLException e) {
+			throw new ResourceInitializationException(e);
 		}
+
+		RestClientBuilder rcb = RestClient.builder(new HttpHost(parsedUrl.getHost(), parsedUrl.getPort(), parsedUrl.getProtocol()));
+
+		if (!Strings.isNullOrEmpty(user) && !Strings.isNullOrEmpty(pass)) {
+			Header[] headers = { new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/json") };
+
+			final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+			credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(user, pass));
+
+			rcb.setDefaultHeaders(headers);
+			rcb.setHttpClientConfigCallback(builder -> builder.setDefaultCredentialsProvider(credentialsProvider));
+		}
+
+		client = rcb.build();
 
 		return true;
 	}
 	
 	/**
-	 * Returns the JestClient associated with this resource
+	 * Returns the RestClient associated with this resource
 	 * 
-	 * @return the JestClient
+	 * @return the RestClient
 	 */
-	public JestClient getClient(){
-		return factory.getObject();
+	public RestClient getClient(){
+		return client;
 	}
 	
 	@Override
 	protected void doDestroy() {
-		factory = null;
+		try {
+			client.close();
+		}catch(IOException ioe){
+			LOGGER.warn("Error occurred whilst closing Elasticsearch REST Client", ioe);
+		}
+		client = null;
 	}
 }
