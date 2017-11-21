@@ -23,6 +23,8 @@ tags:
   description: "Query the available content manipulators"
 - name: "contentmappers"
   description: "Query the available content mappers"
+- name: "defaults"
+  description: "List the default values for this instance of Baleen"
 - name: "jobs"
   description: "Control jobs within Baleen"
 - name: "logs"
@@ -268,6 +270,17 @@ paths:
       description: "Produces a YAML formatted list of all the content mappers (classes extending ContentMapper) currently available on the class path."
       produces:
       - "text/x-yaml"
+      responses:
+        200:
+          description: "Successful operation"
+  /defaults:
+    get:
+      tags:
+      - "defaults"
+      summary: "Get default values"
+      description: "List the default configuration values for this instance of Baleen"
+      produces:
+      - "application/json"
       responses:
         200:
           description: "Successful operation"

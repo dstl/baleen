@@ -1,10 +1,11 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
 
+import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
+import uk.gov.dstl.baleen.core.web.security.WebPermission;
+
 import java.util.Arrays;
 import java.util.Collections;
-
-import uk.gov.dstl.baleen.core.web.security.WebPermission;
 
 /**
  * List all content extractors (inheriting from BaleenContentExtractor) on the class path
@@ -22,7 +23,7 @@ public class ContentExtractorsServlet extends AbstractComponentApiServlet{
 	 */
 	public ContentExtractorsServlet(){
 		super(EXTRACTOR_CLASS,
-				"uk.gov.dstl.baleen.contentextractors",
+				BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR_PACKAGE,
 				Collections.emptyList(),
 				Arrays.asList(".*\\.internals", ".*\\.helpers", "uk.gov.dstl.baleen.uima(\\..*)?"),
 				ContentExtractorsServlet.class);

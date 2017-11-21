@@ -1,21 +1,9 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web;
 
-import java.io.File;
-import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.servlet.DispatcherType;
-import javax.servlet.Servlet;
-
+import com.codahale.metrics.servlet.InstrumentedFilter;
+import com.google.common.base.Strings;
+import com.google.common.primitives.Ints;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -33,11 +21,6 @@ import org.eclipse.jetty.util.security.Credential;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.codahale.metrics.servlet.InstrumentedFilter;
-import com.google.common.base.Strings;
-import com.google.common.primitives.Ints;
-
 import uk.gov.dstl.baleen.core.manager.AbstractBaleenComponent;
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
@@ -46,28 +29,17 @@ import uk.gov.dstl.baleen.core.web.security.WebAuthConfig;
 import uk.gov.dstl.baleen.core.web.security.WebAuthConfig.AuthType;
 import uk.gov.dstl.baleen.core.web.security.WebPermission;
 import uk.gov.dstl.baleen.core.web.security.WebUser;
-import uk.gov.dstl.baleen.core.web.servlets.AbstractApiServlet;
-import uk.gov.dstl.baleen.core.web.servlets.AnnotatorsServlet;
-import uk.gov.dstl.baleen.core.web.servlets.BaleenManagerConfigServlet;
-import uk.gov.dstl.baleen.core.web.servlets.BaleenManagerServlet;
-import uk.gov.dstl.baleen.core.web.servlets.CollectionReadersServlet;
-import uk.gov.dstl.baleen.core.web.servlets.ConsumersServlet;
-import uk.gov.dstl.baleen.core.web.servlets.ContentExtractorsServlet;
-import uk.gov.dstl.baleen.core.web.servlets.ContentManipulatorServlet;
-import uk.gov.dstl.baleen.core.web.servlets.ContentMapperServlet;
-import uk.gov.dstl.baleen.core.web.servlets.JobConfigServlet;
-import uk.gov.dstl.baleen.core.web.servlets.JobManagerServlet;
-import uk.gov.dstl.baleen.core.web.servlets.LoggingServlet;
-import uk.gov.dstl.baleen.core.web.servlets.MetricsServlet;
-import uk.gov.dstl.baleen.core.web.servlets.OrderersServlet;
-import uk.gov.dstl.baleen.core.web.servlets.PipelineConfigServlet;
-import uk.gov.dstl.baleen.core.web.servlets.PipelineManagerServlet;
-import uk.gov.dstl.baleen.core.web.servlets.SchedulesServlet;
-import uk.gov.dstl.baleen.core.web.servlets.StatusServlet;
-import uk.gov.dstl.baleen.core.web.servlets.TasksServlet;
-import uk.gov.dstl.baleen.core.web.servlets.TypesServlet;
+import uk.gov.dstl.baleen.core.web.servlets.*;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+
+import javax.servlet.DispatcherType;
+import javax.servlet.Servlet;
+import java.io.File;
+import java.net.InetSocketAddress;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * Baleen Web API, hosted on its own port using an embedded server.
@@ -267,6 +239,7 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 		addServlet(new OrderersServlet(), "/orderers/*");
 		addServlet(new ContentManipulatorServlet(), "/contentmanipulators/*");
 		addServlet(new ContentMapperServlet(), "/contentmappers/*");
+		addServlet(new DefaultsServlet(), "/defaults");
 
 		installJavadocs(handlers);
 

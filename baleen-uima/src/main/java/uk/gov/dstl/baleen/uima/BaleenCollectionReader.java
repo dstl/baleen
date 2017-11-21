@@ -1,10 +1,6 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.component.JCasCollectionReader_ImplBase;
@@ -12,13 +8,17 @@ import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Progress;
-
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
+import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.core.utils.BuilderUtils;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class provides basic functionality for a collection reader, such as
@@ -172,7 +172,7 @@ public abstract class BaleenCollectionReader extends JCasCollectionReader_ImplBa
 	public static IContentExtractor getContentExtractor(String className) throws InvalidParameterException {
 		try {
 			return (IContentExtractor) BuilderUtils
-					.getClassFromString(className, "uk.gov.dstl.baleen.contentextractors").newInstance();
+					.getClassFromString(className, BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR_PACKAGE).newInstance();
 		} catch (Exception e1) {
 			throw new InvalidParameterException("Could not find or instantiate content extractor " + className, e1);
 		}
