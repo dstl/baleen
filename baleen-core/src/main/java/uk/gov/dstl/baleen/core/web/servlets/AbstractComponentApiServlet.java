@@ -99,7 +99,7 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
 		if (componentClazz == null) {
 			components = Optional.empty();
 		} else {
-			List<String> componentsList = classesToFilteredList(ReflectionUtils.getInstance().getSubTypesOf(componentClazz),
+			List<String> componentsList = classesToFilteredList(ReflectionUtils.getSubTypes(componentClazz),
 					componentPackage, excludeClazz, excludePackage);
 
 			StringBuilder componentBuilder = new StringBuilder();
@@ -221,8 +221,6 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
 	 *
 	 * @param className
 	 *            The name of the class
-	 * @param type
-	 *            The type that the class should extend
 	 * @param defaultPackage
 	 *            The package to look in if the className isn't a fully qualified name
 	 * @return The class specified

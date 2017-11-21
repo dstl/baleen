@@ -1,14 +1,6 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.uima.UIMAException;
 import org.apache.uima.UimaContext;
 import org.apache.uima.cas.FSIterator;
@@ -18,7 +10,6 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.maltparser.core.helper.HashSet;
-
 import uk.gov.dstl.baleen.annotators.cleaners.helpers.AbstractNestedEntities;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
@@ -26,6 +17,8 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
+
+import java.util.*;
 /**
  * Remove entities which are contained within other entities of the same type
  * 
@@ -101,7 +94,7 @@ public class RemoveNestedEntities extends AbstractNestedEntities<Entity> {
 
 	@Override
 	public AnalysisEngineAction getAction() {
-		Set<Class<? extends Entity>> types = ReflectionUtils.getInstance().getSubTypesOf(Entity.class);
+		Set<Class<? extends Entity>> types = ReflectionUtils.getSubTypes(Entity.class);
 		types.removeAll(classTypes);
 		
 		Set<Class<? extends Annotation>> annotations = new HashSet<>();
