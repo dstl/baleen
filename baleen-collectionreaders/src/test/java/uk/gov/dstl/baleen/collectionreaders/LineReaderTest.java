@@ -27,7 +27,7 @@ public class LineReaderTest extends AbstractReaderTest {
 	public void test() throws Exception {
 		File f = new File(getClass().getResource("lineReader.txt").getPath());
 		BaleenCollectionReader bcr = getCollectionReader(LineReader.PARAM_FILE, f.getPath(),
-				LineReader.PARAM_CONTENT_EXTRACTOR, "UimaContentExtractor");
+				LineReader.PARAM_CONTENT_EXTRACTOR, "PlainTextContentExtractor");
 
 		assertTrue(bcr.doHasNext());
 		bcr.getNext(jCas.getCas());

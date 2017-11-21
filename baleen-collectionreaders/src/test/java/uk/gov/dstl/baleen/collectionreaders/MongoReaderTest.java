@@ -41,7 +41,7 @@ public class MongoReaderTest extends AbstractReaderTest {
 	@Test
 	public void test() throws Exception {
 		BaleenCollectionReader bcr = getCollectionReader(MONGO, erd, "collection", COLLECTION,
-				"idField", "_id", "contentField", CONTENT, "contentExtractor", "UimaContentExtractor");
+				"idField", "_id", "contentField", CONTENT, "contentExtractor", "PlainTextContentExtractor");
 		bcr.initialize();
 
 		SharedFongoResource sfr =

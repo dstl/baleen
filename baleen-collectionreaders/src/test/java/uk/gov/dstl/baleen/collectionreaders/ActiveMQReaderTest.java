@@ -26,7 +26,7 @@ public class ActiveMQReaderTest extends AbstractReaderTest {
 	private static String HOST_VALUE = "localhost";
 	private static String PROTOCOL_VALUE = "vm";
 	private static String BROKERARGS_VALUE = "broker.persistent=false";
-	private static String CONTENT_EXTRACTOR_VALUE = "UimaContentExtractor";
+	private static String CONTENT_EXTRACTOR_VALUE = "PlainTextContentExtractor";
 	
 	final Object[] configArr = new String[] { SharedActiveMQResource.PARAM_PROTOCOL, PROTOCOL_VALUE, SharedActiveMQResource.PARAM_HOST, HOST_VALUE, SharedActiveMQResource.PARAM_BROKERARGS, BROKERARGS_VALUE };
 	final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(ACTIVEMQ, SharedActiveMQResource.class, configArr);
