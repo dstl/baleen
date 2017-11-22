@@ -1,23 +1,21 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.Message;
 
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.junit.Test;
-
 import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.resources.SharedActiveMQResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
+
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Message;
+
+import static org.junit.Assert.*;
 
 public class ActiveMQReaderTest extends AbstractReaderTest {
 	private static final String ACTIVEMQ = "activemq";
