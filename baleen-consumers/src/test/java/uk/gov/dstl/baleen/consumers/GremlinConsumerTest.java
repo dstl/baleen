@@ -1,3 +1,4 @@
+//NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
 import org.apache.uima.jcas.cas.StringArray;
