@@ -1,28 +1,24 @@
 //Dstl (c) Crown Copyright 2017
-// Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.bson.Document;
 import org.junit.Test;
-
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-
 import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 public class MongoReaderTest extends AbstractReaderTest {
 
@@ -41,7 +37,7 @@ public class MongoReaderTest extends AbstractReaderTest {
 	@Test
 	public void test() throws Exception {
 		BaleenCollectionReader bcr = getCollectionReader(MONGO, erd, "collection", COLLECTION,
-				"idField", "_id", "contentField", CONTENT, "contentExtractor", "UimaContentExtractor");
+				"idField", "_id", "contentField", CONTENT, "contentExtractor", "PlainTextContentExtractor");
 		bcr.initialize();
 
 		SharedFongoResource sfr =

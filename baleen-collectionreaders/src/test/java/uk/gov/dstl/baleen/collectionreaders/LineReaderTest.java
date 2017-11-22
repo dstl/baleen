@@ -1,21 +1,18 @@
 //Dstl (c) Crown Copyright 2017
-// Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
 
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.junit.Test;
-
 import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
+
+import java.io.File;
+
+import static org.junit.Assert.*;
 
 public class LineReaderTest extends AbstractReaderTest {
 
@@ -27,7 +24,7 @@ public class LineReaderTest extends AbstractReaderTest {
 	public void test() throws Exception {
 		File f = new File(getClass().getResource("lineReader.txt").getPath());
 		BaleenCollectionReader bcr = getCollectionReader(LineReader.PARAM_FILE, f.getPath(),
-				LineReader.PARAM_CONTENT_EXTRACTOR, "UimaContentExtractor");
+				LineReader.PARAM_CONTENT_EXTRACTOR, "PlainTextContentExtractor");
 
 		assertTrue(bcr.doHasNext());
 		bcr.getNext(jCas.getCas());
