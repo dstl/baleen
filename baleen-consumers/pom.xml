@@ -56,6 +56,11 @@
 			<version>${jmustache.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.tinkerpop</groupId>
+			<artifactId>gremlin-core</artifactId>
+			<version>${gremlin.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>uk.gov.dstl.baleen</groupId>
 			<artifactId>baleen-annotators</artifactId>
 			<version>${baleen.version}</version>
@@ -104,6 +109,12 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>${log4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tinkerpop</groupId>
+			<artifactId>tinkergraph-gremlin</artifactId>
+			<version>${gremlin.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
