@@ -1,4 +1,5 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
 
 import org.apache.uima.jcas.tcas.Annotation;

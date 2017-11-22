@@ -1,4 +1,5 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers.structure;
 
 import com.google.common.collect.ImmutableList;

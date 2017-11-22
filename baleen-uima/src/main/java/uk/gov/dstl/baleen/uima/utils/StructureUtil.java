@@ -1,23 +1,22 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
-import static java.util.stream.Collectors.toList;
+import com.google.common.collect.ImmutableSet;
+import org.apache.uima.jcas.tcas.Annotation;
+import org.apache.uima.resource.ResourceInitializationException;
+import uk.gov.dstl.baleen.core.utils.BuilderUtils;
+import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.types.BaleenAnnotation;
+import uk.gov.dstl.baleen.types.structure.Structure;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.uima.jcas.tcas.Annotation;
-import org.apache.uima.resource.ResourceInitializationException;
-
-import com.google.common.collect.ImmutableSet;
-
-import uk.gov.dstl.baleen.core.utils.BuilderUtils;
-import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
-import uk.gov.dstl.baleen.types.BaleenAnnotation;
-import uk.gov.dstl.baleen.types.structure.Structure;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Utility for working with {@link Structure}
