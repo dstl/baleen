@@ -1,16 +1,14 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.utils;
 
-import static org.junit.Assert.assertEquals;
-
 import org.junit.Test;
-import org.reflections.Reflections;
+
+import static org.junit.Assert.assertNotNull;
 
 public class ReflectionUtilsTest {
 	@Test
 	public void test(){
-		Reflections r = ReflectionUtils.getInstance();
-		
-		assertEquals(r, ReflectionUtils.getInstance());
+		assertNotNull(ReflectionUtils.getInstance());
 	}
 }

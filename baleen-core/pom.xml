@@ -118,9 +118,9 @@
 			<version>${metrics-elasticsearch.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.reflections</groupId>
-			<artifactId>reflections</artifactId>
-			<version>${reflections.version}</version>
+			<groupId>io.github.lukehutch</groupId>
+			<artifactId>fast-classpath-scanner</artifactId>
+			<version>${fastclasspathscanner.version}</version>
 		</dependency>
 
 		<!-- Required for integration tests only -->
