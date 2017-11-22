@@ -2,7 +2,6 @@
 package uk.gov.dstl.baleen.collectionreaders;
 
 import com.mongodb.client.MongoCollection;
-import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -18,8 +17,8 @@ import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
@@ -122,9 +121,7 @@ public class MongoReader extends BaleenCollectionReader {
 		}
 		
 		String content = (String) document.get(contentField);
-		InputStream is = IOUtils.toInputStream(content, Charset.defaultCharset());
-		
-		extractor.processStream(is, mongo.getMongoURI() + "." + collection + "#" + id, jCas);
+		extractor.processStream(new ByteArrayInputStream(content.getBytes(Charset.defaultCharset())), mongo.getMongoURI() + "." + collection + "#" + id, jCas);
 		
 		for(String key : document.keySet()){
 			if(contentField.equals(key) || idField.equals(key)){

@@ -1,52 +1,25 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.StringJoiner;
-
-import javax.mail.Address;
-import javax.mail.Authenticator;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Header;
-import javax.mail.Message;
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.MethodNotSupportedException;
-import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
-import javax.mail.Part;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.internet.InternetAddress;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
-
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
+
+import javax.mail.*;
+import javax.mail.Message.RecipientType;
+import javax.mail.internet.InternetAddress;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.util.*;
 
 /**
  * Connects to a specified mail server, treating each message and/or it's attachments as documents.
@@ -345,9 +318,8 @@ public class EmailReader extends BaleenCollectionReader {
 		
 		String subject = msg.getSubject();
 		String sender = getAddress(msg.getFrom()[0]);
-		
-		InputStream is = IOUtils.toInputStream(content, Charset.defaultCharset());
-		extractor.processStream(is, "mailto:"+sender + "#" + subject, jCas);
+
+		extractor.processStream(new ByteArrayInputStream(content.getBytes(Charset.defaultCharset())), "mailto:"+sender + "#" + subject, jCas);
 		
 		addMetadata(jCas, "sender", sender);
 		addMetadata(jCas, "subject", subject);

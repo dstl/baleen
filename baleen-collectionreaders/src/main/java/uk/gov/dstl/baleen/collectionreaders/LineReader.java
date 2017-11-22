@@ -1,27 +1,20 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
-
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Reads a file, and treats each line as a separate document.
@@ -106,8 +99,7 @@ public class LineReader extends BaleenCollectionReader {
 	
 	@Override
 	protected void doGetNext(JCas jCas) throws IOException, CollectionException {
-		InputStream is = IOUtils.toInputStream(line, Charset.defaultCharset());
-		extractor.processStream(is, file.getPath() + "#" + lineNumber, jCas);
+		extractor.processStream(new ByteArrayInputStream(line.getBytes(Charset.defaultCharset())), file.getPath() + "#" + lineNumber, jCas);
 		
 		Metadata md = new Metadata(jCas);
 		md.setKey("lineNumber");
