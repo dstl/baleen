@@ -1,15 +1,7 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
+import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -23,9 +15,6 @@ import org.jsoup.select.Elements;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.io.Files;
-
 import uk.gov.dstl.baleen.types.common.Buzzword;
 import uk.gov.dstl.baleen.types.common.Organisation;
 import uk.gov.dstl.baleen.types.common.Person;
@@ -36,6 +25,13 @@ import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
 
 /**
  *
@@ -159,7 +155,7 @@ public class Html5Test {
 		File f = new File(outputFolder, "multiline.txt.html");
 		assertTrue(f.exists());
 
-		assertTrue(Files.toString(f, StandardCharsets.UTF_8).contains("data-referent=\"\">James\n\nBond</span>"));
+		assertTrue(Files.asCharSource(f, StandardCharsets.UTF_8).read().contains("data-referent=\"\">James\n\nBond</span>"));
 	}
 
 	@Test

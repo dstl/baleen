@@ -83,7 +83,7 @@ public class YamlConfiguration {
 	 */
 	public YamlConfiguration read(File file) throws IOException {
 		// Read to string, so that we can check for tabs etc
-		String yamlString = Files.toString(file, StandardCharsets.UTF_8);
+		String yamlString = Files.asCharSource(file, StandardCharsets.UTF_8).read();
 		return read(yamlString);
 	}
 

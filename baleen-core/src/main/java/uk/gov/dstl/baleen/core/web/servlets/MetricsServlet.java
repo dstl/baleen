@@ -1,25 +1,22 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
 
+import com.codahale.metrics.Metric;
+import com.codahale.metrics.MetricRegistry;
+import com.codahale.metrics.json.MetricsModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.dstl.baleen.core.web.security.WebPermission;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import uk.gov.dstl.baleen.core.web.security.WebPermission;
-
-import com.codahale.metrics.Metric;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.json.MetricsModule;
 
 /**
  * Outputs all metrics in the registry as JSON.
@@ -91,18 +88,13 @@ public class MetricsServlet extends AbstractApiServlet {
 
 	@Override
 	protected void get(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String[] filters = req.getParameterValues(PARAM_FILTER);
+		String filter = req.getParameter(PARAM_FILTER);	//If more than one is provided, just use the first
 
 		Map<String, Metric> metrics;
-		if (filters == null || filters.length == 0) {
+		if (filter == null) {
 			metrics = registry.getMetrics();
 		} else {
-			metrics = registry.getMetrics().entrySet().stream().filter(e -> {
-				for (String s : filters) {
-					return filterMetric(e.getKey(), s);
-				}
-				return false;
-			}).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+			metrics = registry.getMetrics().entrySet().stream().filter(e -> filterMetric(e.getKey(), filter)).collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 		}
 
 		respondWithJson(resp, metrics);

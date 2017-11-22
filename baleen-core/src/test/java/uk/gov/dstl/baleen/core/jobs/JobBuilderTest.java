@@ -1,24 +1,22 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.jobs;
 
-import static org.junit.Assert.assertEquals;
+import com.google.common.io.Files;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.collection.CollectionReader;
+import org.junit.Test;
+import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.collection.CollectionReader;
-import org.junit.Test;
-
-import com.google.common.io.Files;
-
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
+import static org.junit.Assert.assertEquals;
 
 public class JobBuilderTest {
 	@Test
 	public void testValid1() throws Exception{
-		String yaml = Files.toString(getFile("jobConfig.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("jobConfig.yaml"), StandardCharsets.UTF_8).read();
 		
 		JobBuilder jb = new JobBuilder("Test Job", yaml);
 		BaleenJob job = (BaleenJob) jb.createNewPipeline();
@@ -48,7 +46,7 @@ public class JobBuilderTest {
 	
 	@Test
 	public void testValid2() throws Exception{
-		String yaml = Files.toString(getFile("jobConfig2.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("jobConfig2.yaml"), StandardCharsets.UTF_8).read();
 		
 		JobBuilder jb = new JobBuilder("Test Job", yaml);
 		BaleenJob job = (BaleenJob) jb.createNewPipeline();
@@ -78,7 +76,7 @@ public class JobBuilderTest {
 	
 	@Test
 	public void testValid3() throws Exception{
-		String yaml = Files.toString(getFile("jobConfig3.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("jobConfig3.yaml"), StandardCharsets.UTF_8).read();
 		
 		JobBuilder jb = new JobBuilder("Test Job", yaml);
 		BaleenJob job = (BaleenJob) jb.createNewPipeline();

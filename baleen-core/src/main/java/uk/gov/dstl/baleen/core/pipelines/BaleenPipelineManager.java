@@ -1,33 +1,26 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.pipelines;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import com.google.common.base.Strings;
+import com.google.common.io.Files;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Strings;
-import com.google.common.io.Files;
-
 import uk.gov.dstl.baleen.core.manager.AbstractBaleenComponent;
 import uk.gov.dstl.baleen.core.metrics.Metrics;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
 import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Manages one or more BaleenPipelines
@@ -171,7 +164,7 @@ public class BaleenPipelineManager extends AbstractBaleenComponent{
 	 */
 	public BaleenPipeline create(String name, File file) throws BaleenException {
 		try {
-			return create(name, Files.toString(file, StandardCharsets.UTF_8));
+			return create(name, Files.asCharSource(file, StandardCharsets.UTF_8).read());
 		} catch (IOException e) {
 			throw new BaleenException(e);
 		}
