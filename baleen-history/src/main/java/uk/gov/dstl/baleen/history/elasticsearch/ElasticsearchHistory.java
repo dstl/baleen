@@ -1,10 +1,9 @@
 //Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.history.elasticsearch;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.concurrent.LinkedBlockingDeque;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.elasticsearch.action.get.GetAction;
@@ -12,18 +11,18 @@ import org.elasticsearch.action.get.GetRequestBuilder;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexAction;
 import org.elasticsearch.action.index.IndexRequestBuilder;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.dstl.baleen.core.history.HistoryEvent;
 import uk.gov.dstl.baleen.core.history.memory.AbstractCachingBaleenHistory;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.history.utils.HistoryModule;
 import uk.gov.dstl.baleen.resources.SharedElasticsearchResource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * A history implementation which backs off to Elasticsearch.
@@ -121,7 +120,7 @@ public class ElasticsearchHistory extends AbstractCachingBaleenHistory<Elasticse
 			byte[] source = mapper.writeValueAsBytes(new ESHistory(documentId, dh.getAllHistory()));
 
 			new IndexRequestBuilder(elasticsearch.getClient(), IndexAction.INSTANCE).setIndex(documentId).setIndex(esIndex).setType(esType)
-					.setId(documentId).setSource(source).get();
+					.setId(documentId).setSource(source, XContentType.JSON).get();
 
 		} catch (JsonProcessingException e) {
 			LOGGER.warn("Unable to convert history to source, so can't be persisted {}", documentId, e);
