@@ -1,0 +1,17 @@
+---
+mongo:
+  db: baleen
+  host: mongo
+
+collectionreader:
+  class: FolderReader
+  folders:
+   - /data
+
+annotators:
+  - regex.Url
+  - language.OpenNLP
+  - gazetteer.Country
+
+consumers:
+  - Mongo
