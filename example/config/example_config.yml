@@ -1,0 +1,9 @@
+---
+logging:
+  loggers:
+    - name: console
+      minLevel: INFO
+
+pipelines:
+  - name: Example Pipeline
+    file: /config/example_pipeline.yml

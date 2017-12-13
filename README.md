@@ -16,9 +16,11 @@ Baleen 2.4 contains a number of changes that may make it incompatible with older
 
 Baleen includes an in-built server, which hosts full documentation and guides on how to use Baleen.
 To get started, you will need to launch this server and read this documentation.
-To launch the server, run the following command.
+To launch the server, run one of the following commands.
 
-> java -jar baleen-2.4.0.jar
+> `java -jar baleen-2.4.0.jar`
+
+> `docker-compose -f example/docker-compose.yml up`
 
 Once running, the server can be accessed at [http://localhost:6413](http://localhost:6413).
 
@@ -28,10 +30,15 @@ If you require the Javadoc to be available through the in-built server, then you
 
 ## Running
 
-To run Baleen, you will need:
+To run Baleen, you will need either;
 
 * A sensible amount of RAM. Start with 4GB and alter according to the number of annotators being employed. 
 * Java 8
+
+or
+
+* [Docker](https://www.docker.com/) v17+
+* [Docker Compose](https://docs.docker.com/compose/) v1.17+
  
 ## Developing
 

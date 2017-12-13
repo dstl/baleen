@@ -1,0 +1,21 @@
+---
+version: '3'
+services:
+  baleen:
+    image: baleen:2.4.1-SNAPSHOT
+    build:
+      context: ../
+      args:
+        baleen_version: 2.4.1-SNAPSHOT
+    ports:
+      - 6413:6413
+    command: /config/example_config.yml
+    volumes:
+      - ./config/:/config
+      - ./data/:/data
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:3.0
+    ports:
+      - 27017:27017
