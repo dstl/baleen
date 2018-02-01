@@ -1,4 +1,5 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.utils;
 
 /**
@@ -60,7 +61,12 @@ public class BaleenDefaults {
 	 * Default package for Content Manipulators
 	 */
 	public static final String DEFAULT_CONTENT_MANIPULATOR_PACKAGE = "uk.gov.dstl.baleen.contentmanipulators";
-	
+
+	/**
+	 * Default package for Content Extractors
+	 */
+	public static final String DEFAULT_CONTENT_EXTRACTOR_PACKAGE = "uk.gov.dstl.baleen.contentextractors";
+
 	private BaleenDefaults(){
 		//Private constructor
 	}
