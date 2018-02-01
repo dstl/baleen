@@ -50,7 +50,11 @@ public abstract class AbstractCsvConsumer extends BaleenConsumer {
 			// Attempt to create the path if it doesn't exist
 			new File(filename).getParentFile().mkdirs();
 
-			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(filename, false), StandardCharsets.UTF_8), '\t', CSVWriter.NO_QUOTE_CHARACTER);
+			writer = new CSVWriter(new OutputStreamWriter(new FileOutputStream(filename, false), StandardCharsets.UTF_8),
+					'\t',
+					CSVWriter.NO_QUOTE_CHARACTER,
+					CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+					CSVWriter.DEFAULT_LINE_END);
 			
 		} catch (final IOException e) {
 			throw new ResourceInitializationException(e);

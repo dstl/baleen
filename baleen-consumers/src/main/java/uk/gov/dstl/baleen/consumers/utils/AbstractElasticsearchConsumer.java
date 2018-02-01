@@ -1,8 +1,6 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.utils;
-
-import java.io.IOException;
-import java.util.Map;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -11,8 +9,10 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
-
 import uk.gov.dstl.baleen.uima.BaleenConsumer;
+
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Abstract class for producing the objects required by the Elasticsearch consumers
@@ -56,7 +56,8 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
 
 	private static final String ES_PROPERTIES = "properties";
 	private static final String ES_TYPE = "type";
-	private static final String ES_TYPE_STRING = "string";
+	private static final String ES_TYPE_KEYWORD = "keyword";
+	private static final String ES_TYPE_TEXT = "text";
 	private static final String ES_TYPE_INTEGER = "integer";
 	private static final String ES_TYPE_LONG = "long";
 	private static final String ES_TYPE_DOUBLE = "double";
@@ -101,17 +102,21 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
 		return XContentFactory.jsonBuilder().startObject()
 			.startObject(type)
 				.startObject(ES_PROPERTIES)
+					.startObject("content")
+						.field(ES_TYPE, ES_TYPE_TEXT)
+						.endObject()
 					.startObject("dateAccessed")
-						.field(ES_TYPE, ES_TYPE_LONG)
+						.field(ES_TYPE, ES_TYPE_DATE)
+						.field("format", "epoch_millis")
 						.endObject()
 					.startObject("metadata")
 						.field(ES_TYPE, ES_TYPE_NESTED)
 						.startObject(ES_PROPERTIES)
 							.startObject("value")
-								.field(ES_TYPE, ES_TYPE_STRING)
+								.field(ES_TYPE, ES_TYPE_KEYWORD)
 								.endObject()
 							.startObject("key")
-								.field(ES_TYPE, ES_TYPE_STRING)
+								.field(ES_TYPE, ES_TYPE_KEYWORD)
 								.endObject()
 							.endObject()
 						.endObject()
@@ -119,7 +124,7 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
 						.field(ES_TYPE, ES_TYPE_NESTED)
 						.startObject(ES_PROPERTIES)
 							.startObject("value")
-								.field(ES_TYPE, ES_TYPE_STRING)
+								.field(ES_TYPE, ES_TYPE_KEYWORD)
 								.endObject()
 							.startObject("begin")
 								.field(ES_TYPE, ES_TYPE_INTEGER)

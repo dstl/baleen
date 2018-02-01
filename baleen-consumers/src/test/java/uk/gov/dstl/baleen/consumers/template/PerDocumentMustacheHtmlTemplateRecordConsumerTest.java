@@ -81,7 +81,7 @@ public class PerDocumentMustacheHtmlTemplateRecordConsumerTest extends AbstractT
 
 		assertEquals("<html>\n" + "<body>\n" + "	<h1>The Author</h1>\n" + "	<div>\n" + "		<table>\n"
 				+ "			<tbody>\n" + "				<tr>\n" + "					<th>creator</th>\n"
-				+ "					<td>The Creator</td>\n" + "				</tr>\n" + "				<tr>\n"
+				+ "					<td>Baleen</td>\n" + "				</tr>\n" + "				<tr>\n"
 				+ "					<th>author</th>\n" + "					<td>The Author</td>\n"
 				+ "				</tr>\n" + "			</tbody>\n" + "		</table>\n" + "	</div>\n" + "</body>\n"
 				+ "</html>", generatedContent);
@@ -112,7 +112,7 @@ public class PerDocumentMustacheHtmlTemplateRecordConsumerTest extends AbstractT
 
 		assertEquals("<html>\n" + "<body>\n" + "	<h1>All metadata</h1>\n" + "	<div>\n" + "		<table>\n"
 				+ "			<tbody>\n" + "				<tr>\n" + "					<th>creator</th>\n"
-				+ "					<td>The Creator</td>\n" + "				</tr>\n" + "				<tr>\n"
+				+ "					<td>Baleen</td>\n" + "				</tr>\n" + "				<tr>\n"
 				+ "					<th>author</th>\n" + "					<td>The Author</td>\n"
 				+ "				</tr>\n" + "			</tbody>\n" + "		</table>\n" + "	</div>\n"
 				+ "	<h1>Single metadata field</h1>\n" + "	<table>\n" + "		<tbody>\n" + "			<tr>\n"

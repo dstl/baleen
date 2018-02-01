@@ -1,31 +1,31 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.template;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.searchbox.client.JestClient;
-import io.searchbox.client.JestResult;
-import io.searchbox.core.Index;
-import io.searchbox.indices.CreateIndex;
-import io.searchbox.indices.IndicesExists;
-import io.searchbox.indices.mapping.PutMapping;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
 import uk.gov.dstl.baleen.resources.SharedElasticsearchRestResource;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A RecordConsumer that writes extracted records documents to Elasticsearch.
@@ -95,7 +95,6 @@ public class ElasticsearchTemplateRecordConsumer extends AbstractTemplateRecordC
 	@Override
 	protected void writeRecords(JCas jCas, String documentSourceName,
 			Map<String, Collection<ExtractedRecord>> extractedRecords) throws AnalysisEngineProcessException {
-
 		String externalId = getUniqueId(jCas);
 		List<ElasticsearchExtractedRecord> elasticSearchRecords = extractedRecords.entrySet().stream()
 				.flatMap(entry -> {
@@ -113,13 +112,15 @@ public class ElasticsearchTemplateRecordConsumer extends AbstractTemplateRecordC
 				continue;
 			}
 
-			Index doc = new Index.Builder(json)
-					.id(String.format("%s-%s", externalId, elasticsearchExtractedRecord.getName())).index(index)
-					.type(type).build();
-			try {
-				esrResource.getClient().execute(doc);
-			} catch (IOException e) {
-				getMonitor().warn("Failed to index document in Elasticsearch for index " + index, e);
+			try{
+				HttpEntity entity = new StringEntity(json);
+
+				esrResource.getClient().performRequest("PUT", "/"+index+"/"+type+"/"+
+								String.format("%s-%s", externalId, elasticsearchExtractedRecord.getName()),
+						Collections.emptyMap(),
+						entity);
+			}catch(IOException ioe){
+				getMonitor().error("Failed to index document in Elasticsearch for index " + index, ioe);
 			}
 		}
 	}
@@ -149,16 +150,20 @@ public class ElasticsearchTemplateRecordConsumer extends AbstractTemplateRecordC
 	 * @return true if a new index has been created, false otherwise
 	 */
 	public boolean createIndex() {
-		JestClient client = esrResource.getClient();
+		RestClient client = esrResource.getClient();
+
 		try {
-			JestResult result = client.execute(new IndicesExists.Builder(index).build());
-			if (result.getResponseCode() != 200) {
-				client.execute(new CreateIndex.Builder(index).build());
+			Response r = client.performRequest("HEAD", "/" + index);
+
+			if(r.getStatusLine().getStatusCode() != 200) {
+				client.performRequest("PUT", "/" + index);
+
 				return true;
 			}
-		} catch (IOException ioe) {
+		}catch(IOException ioe){
 			getMonitor().error("Unable to create index", ioe);
 		}
+
 		return false;
 	}
 
@@ -167,10 +172,13 @@ public class ElasticsearchTemplateRecordConsumer extends AbstractTemplateRecordC
 	 * has been created
 	 */
 	public void addMapping(XContentBuilder mapping) {
-		try {
-			PutMapping putMapping = new PutMapping.Builder(index, type, mapping.string()).build();
-			esrResource.getClient().execute(putMapping);
-		} catch (IOException ioe) {
+		try{
+			HttpEntity entity = new StringEntity(mapping.string());
+
+			esrResource.getClient().performRequest("PUT", "/"+index+"/_mapping/"+type,
+					Collections.emptyMap(),
+					entity);
+		}catch(IOException ioe){
 			getMonitor().error("Unable to add mapping to index", ioe);
 		}
 	}

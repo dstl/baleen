@@ -1,18 +1,18 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
-
-import java.util.Map;
 
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.client.Requests;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-
 import uk.gov.dstl.baleen.consumers.utils.AbstractElasticsearchConsumer;
 import uk.gov.dstl.baleen.resources.SharedElasticsearchResource;
 
+import java.util.Map;
+
 /**
- * Output processed CAS object into Elasticsearch 2, using the schema defined in AbstractElasticsearchConsumer
+ * Output processed CAS object into Elasticsearch, using the schema defined in AbstractElasticsearchConsumer
  *
  * @baleen.javadoc
  */

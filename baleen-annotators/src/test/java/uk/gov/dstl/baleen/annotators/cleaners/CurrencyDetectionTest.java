@@ -37,11 +37,11 @@ public class CurrencyDetectionTest extends AnnotatorTestBase {
 		assertEquals("10 USD", JCasUtil.selectByIndex(jCas, Money.class, 0).getValue());
 		assertEquals("USD", JCasUtil.selectByIndex(jCas, Money.class, 0).getCurrency());
 		
-		assertEquals("GBP 6.60", JCasUtil.selectByIndex(jCas, Money.class, 2).getValue());
-		assertEquals("GBP", JCasUtil.selectByIndex(jCas, Money.class, 2).getCurrency());
+		assertEquals("GBP 6.60", JCasUtil.selectByIndex(jCas, Money.class, 1).getValue());
+		assertEquals("GBP", JCasUtil.selectByIndex(jCas, Money.class, 1).getCurrency());
 		
-		assertEquals("8.80EUR", JCasUtil.selectByIndex(jCas, Money.class, 1).getValue());
-		assertEquals("EUR", JCasUtil.selectByIndex(jCas, Money.class, 1).getCurrency());
+		assertEquals("8.80EUR", JCasUtil.selectByIndex(jCas, Money.class, 2).getValue());
+		assertEquals("EUR", JCasUtil.selectByIndex(jCas, Money.class, 2).getCurrency());
 	}
 	
 	@Test
@@ -67,10 +67,10 @@ public class CurrencyDetectionTest extends AnnotatorTestBase {
 		assertEquals("$10", JCasUtil.selectByIndex(jCas, Money.class, 0).getValue());
 		assertEquals("USD", JCasUtil.selectByIndex(jCas, Money.class, 0).getCurrency());
 		
-		assertEquals("£6.60", JCasUtil.selectByIndex(jCas, Money.class, 2).getValue());
-		assertEquals("GBP", JCasUtil.selectByIndex(jCas, Money.class, 2).getCurrency());
+		assertEquals("£6.60", JCasUtil.selectByIndex(jCas, Money.class, 1).getValue());
+		assertEquals("GBP", JCasUtil.selectByIndex(jCas, Money.class, 1).getCurrency());
 		
-		assertEquals("€8.80", JCasUtil.selectByIndex(jCas, Money.class, 1).getValue());
-		assertEquals("EUR", JCasUtil.selectByIndex(jCas, Money.class, 1).getCurrency());
+		assertEquals("€8.80", JCasUtil.selectByIndex(jCas, Money.class, 2).getValue());
+		assertEquals("EUR", JCasUtil.selectByIndex(jCas, Money.class, 2).getCurrency());
 	}
 }
