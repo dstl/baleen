@@ -257,10 +257,10 @@ public class Html5Test {
 		Element meta1 = metas.get(5);
 		assertEquals("author", meta1.attr("name"));
 		assertEquals("bakerj", meta1.attr("content"));
-		Element meta2 = metas.get(7);
+		Element meta2 = metas.get(6);
 		assertEquals("test-key", meta2.attr("name"));
 		assertEquals("test value", meta2.attr("content"));
-		Element meta3 = metas.get(6);
+		Element meta3 = metas.get(7);
 		assertEquals("documentTitle", meta3.attr("name"));
 		assertEquals("Test Document", meta3.attr("content"));
 
