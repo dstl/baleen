@@ -49,7 +49,7 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 
 		<!-- Dependencies -->
-		<activemq.version>5.15.2</activemq.version>
+		<activemq.version>5.15.3</activemq.version>
 		<ahocorasick.version>0.4.0</ahocorasick.version>
 		<commonscli.version>1.4</commonscli.version>
 		<commonslang3.version>3.7</commonslang3.version>
@@ -58,21 +58,21 @@
 		<evoinflector.version>1.2.2</evoinflector.version>
 		<extjwnl.version>1.9.4</extjwnl.version>
 		<extjwnldata.version>1.2</extjwnldata.version>
-		<fastclasspathscanner.version>2.12.1</fastclasspathscanner.version>
+		<fastclasspathscanner.version>2.18.1</fastclasspathscanner.version>
 		<gremlin.version>3.3.1</gremlin.version>
-		<guava.version>23.6-jre</guava.version>
+		<guava.version>24.0-jre</guava.version>
 		<h2.version>1.4.196</h2.version>
 		<httpclient.version>4.5.5</httpclient.version>
 		<httpcore.version>4.4.9</httpcore.version>
 		<jackson.version>2.9.4</jackson.version>
-		<javamail.version>1.6.0</javamail.version>
+		<javamail.version>1.6.1</javamail.version>
 		<javassist.version>3.20.0-GA</javassist.version>
 		<jetty.version>9.3.22.v20171030</jetty.version>
 		<jmustache.version>1.14</jmustache.version>
 		<jsonic.version>1.3.10</jsonic.version>
 		<jsoup.version>1.11.2</jsoup.version>
 		<jung.version>2.1.1</jung.version>
-		<krill.version>1.0.1</krill.version>
+		<krill.version>1.0.2</krill.version>
 		<languagedetector.version>0.6</languagedetector.version>
 		<logback.version>1.2.3</logback.version>
 		<maltparser.version>1.9.1</maltparser.version>
@@ -89,11 +89,11 @@
 		
 		<!-- Testing -->
 		<fongo.version>2.1.0</fongo.version>
-		<greenmail.version>1.5.6</greenmail.version>
+		<greenmail.version>1.5.7</greenmail.version>
 		<junit.version>4.12</junit.version>
 		<jts.version>1.13</jts.version>
 		<log4j.version>2.10.0</log4j.version>
-		<mockito.version>2.13.0</mockito.version>
+		<mockito.version>2.15.0</mockito.version>
 		<spatial4j.version>0.6</spatial4j.version>
 		
 		<!-- Build and Reporting -->
