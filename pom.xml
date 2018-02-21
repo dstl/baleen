@@ -75,7 +75,7 @@
 		<krill.version>1.0.2</krill.version>
 		<languagedetector.version>0.6</languagedetector.version>
 		<logback.version>1.2.3</logback.version>
-		<maltparser.version>1.9.1</maltparser.version>
+		<maltparser.version>1.9.2</maltparser.version>
 		<mboxiterator.version>0.8.1</mboxiterator.version>
 		<metrics.version>3.0.2</metrics.version>
 		<metrics-elasticsearch.version>2.2.0</metrics-elasticsearch.version>
@@ -88,7 +88,7 @@
 		<uimafit.version>2.4.0</uimafit.version>
 		
 		<!-- Testing -->
-		<fongo.version>2.1.0</fongo.version>
+		<fongo.version>2.1.1</fongo.version>
 		<greenmail.version>1.5.7</greenmail.version>
 		<junit.version>4.12</junit.version>
 		<jts.version>1.13</jts.version>
