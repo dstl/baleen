@@ -1,8 +1,32 @@
 //NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -12,15 +36,6 @@ import org.apache.uima.resource.ResourceInitializationException;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
  * Read a folder of CSV files and process each line in the CSV file as a separate document
@@ -160,8 +175,13 @@ public class CsvFolderReader extends BaleenCollectionReader {
             currPath = queue.remove(0);
             getMonitor().info("Processing file {}", currPath.toString());
 
-            List<String> lines = Files.lines(currPath).collect(Collectors.toList());
-
+            List<String> lines;
+            try (
+                Stream <String> ln = Files.lines(currPath)
+            ){
+            	lines = ln.collect(Collectors.toList());
+            }
+            
             String header = lines.remove(0);
             columnHeadings = Arrays.asList(csvParser.parseLine(header));
 
