@@ -2,6 +2,18 @@
 package uk.gov.dstl.baleen.collectionreaders;
 
 import com.google.common.base.Strings;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -14,15 +26,6 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * Processes all tables in an SQL database, treating each cell in the table as a separate document.
@@ -140,14 +143,19 @@ public class SqlDbCellReader extends BaleenCollectionReader {
         }
         extractor.initialize(context, getConfigParameters(context));
 
-        try {
+        try{
             if (Strings.isNullOrEmpty(user) || Strings.isNullOrEmpty(pass)) {
                 conn = DriverManager.getConnection(sqlConn);
             } else {
                 conn = DriverManager.getConnection(sqlConn, user, pass);
             }
+        } catch (SQLException e) {
+            throw new ResourceInitializationException(e);
+        }
 
-            ResultSet rsTables = conn.prepareStatement(tablesSql).executeQuery();
+        try(
+            ResultSet rsTables = conn.prepareStatement(tablesSql).executeQuery()
+        ) {
             while(rsTables.next()){
                 String tableName = rsTables.getString(1);
                 if (inArray(tableName, ignoreTables))
@@ -201,24 +209,27 @@ public class SqlDbCellReader extends BaleenCollectionReader {
         currTable = tables.remove(0);
         LOGGER.info("Now processing table {}", currTable);
 
-        ResultSet rsColumns = conn.prepareStatement(columnsSql.replaceAll("\\?", currTable)).executeQuery();
+        try(
+            ResultSet rsColumns = conn.prepareStatement(columnsSql.replaceAll("\\?", currTable)).executeQuery()
+        ) {
+            while (rsColumns.next()) {
+                String columnName = rsColumns.getString(1);
+                if (inArray(currTable+"."+columnName, ignoreColumns))
+                    continue;
 
-        while (rsColumns.next()) {
-            String columnName = rsColumns.getString(1);
-            if (inArray(currTable+"."+columnName, ignoreColumns))
-                continue;
+                columns.add(columnName);
+            }
 
-            columns.add(columnName);
+            LOGGER.info("{} columns found for processing", columns.size());
+            LOGGER.debug("Column names: {}", columns);
         }
-
-        LOGGER.info("{} columns found for processing", columns.size());
-        LOGGER.debug("Column names: {}", columns);
 
         StringJoiner sjCols = new StringJoiner("`,`","`","`");
         columns.forEach(sjCols::add);
 
+        // We can't wrap this line in a try-with-resources, as it is needed by doHasNext()
+        // We close this in doClose()
         rsCurrTable = conn.prepareStatement("SELECT "+sjCols.toString()+" FROM "+currTable).executeQuery();
-
         return true;
     }
 
@@ -234,6 +245,14 @@ public class SqlDbCellReader extends BaleenCollectionReader {
 
     @Override
     protected void doClose() throws IOException {
+        if(rsCurrTable != null){
+            try {
+                rsCurrTable.close();
+            } catch (SQLException e) {
+                LOGGER.warn("Error closing ResultSet", e);
+            }
+        }
+
         if(conn != null){
             try{
                 conn.close();
