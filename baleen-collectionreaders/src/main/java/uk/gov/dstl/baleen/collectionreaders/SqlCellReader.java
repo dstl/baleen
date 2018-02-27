@@ -1,12 +1,6 @@
 //NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import org.apache.uima.UimaContext;
-import org.apache.uima.collection.CollectionException;
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.resource.ResourceInitializationException;
-import uk.gov.dstl.baleen.collectionreaders.helpers.AbstractSqlReader;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -16,6 +10,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.apache.uima.UimaContext;
+import org.apache.uima.collection.CollectionException;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
+import uk.gov.dstl.baleen.collectionreaders.helpers.AbstractSqlReader;
 
 /**
  * Read each cell in an SQL table as a separate document.
@@ -63,14 +62,14 @@ public class SqlCellReader extends AbstractSqlReader {
         String col = colsToProcess.remove(0);
 
         String content;
-        try {
-            ResultSet rs = conn.prepareStatement("SELECT `" + col + "` FROM `" + table + "` WHERE `"+idColumn+"` = "+currId).executeQuery();
-
-            if(rs.next()){
-                content = rs.getObject(col).toString();
-            }else{
-                throw new IOException("Unable to get cell content - query returned no results");
-            }
+        try(
+            ResultSet rs = conn.prepareStatement("SELECT `" + col + "` FROM `" + table + "` WHERE `"+idColumn+"` = "+currId).executeQuery()
+        ) {
+        	 if(rs.next()){
+               content = rs.getObject(col).toString();
+        	 }else {
+               throw new IOException("Unable to get cell content - query returned no results");
+           }
 
         }catch (SQLException e) {
             throw new IOException("Unable to get cell content", e);
