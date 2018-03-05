@@ -2,6 +2,7 @@
 package uk.gov.dstl.baleen.collectionreaders.helpers;
 
 import com.google.common.base.Strings;
+import java.util.Collections;
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -152,9 +153,9 @@ public abstract class AbstractSqlReader extends BaleenCollectionReader {
     protected Set<String> getColumnNames(){
         Set<String> cols = new HashSet<>();
 
-        try {
-            ResultSet rsColumns = psListColumns.executeQuery();
-
+        try (
+            ResultSet rsColumns = psListColumns.executeQuery()
+        ) {
             while (rsColumns.next()) {
                 String columnName = rsColumns.getString("COLUMN_NAME");
                 if (inArray(columnName, ignore))
@@ -165,6 +166,7 @@ public abstract class AbstractSqlReader extends BaleenCollectionReader {
         }catch (SQLException e){
             LOGGER.error("Unable to get column names from table {}, empty set will be returned", table, e);
         }
+
         return cols;
     }
 
@@ -178,20 +180,42 @@ public abstract class AbstractSqlReader extends BaleenCollectionReader {
     protected Set<Long> getIds(Long startId){
         Set<Long> ids = new HashSet<>();
 
+        ResultSet rs = null;
+        PreparedStatement ps = null;
         try{
-            ResultSet rs;
             if(startId == null){
-                rs = conn.prepareStatement("SELECT `"+idColumn+"` FROM `"+table+"`").executeQuery();
+                ps = conn.prepareStatement("SELECT `"+idColumn+"` FROM `"+table+"`");
             }else{
-                rs = conn.prepareStatement("SELECT `"+idColumn+"` FROM `"+table+"` WHERE `"+idColumn+"` > "+startId).executeQuery();
+                ps = conn.prepareStatement("SELECT `"+idColumn+"` FROM `"+table+"` WHERE `"+idColumn+"` > ?");
+                ps.setLong(1,startId);
+
             }
+            rs = ps.executeQuery();
 
             while(rs.next()){
                 ids.add(rs.getLong(idColumn));
             }
         }catch (SQLException e){
             LOGGER.error("Unable to get IDs from table {}, empty set will be returned", table, e);
+            return Collections.emptySet();
+        }finally {
+            if (rs != null) {
+                try{
+                    rs.close();
+                } catch(SQLException e){
+                    LOGGER.error("Error closing result set", e);
+                }
+            }
+
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    LOGGER.error("Error closing prepared statement", e);
+                }
+            }
         }
+
 
         return ids;
     }
