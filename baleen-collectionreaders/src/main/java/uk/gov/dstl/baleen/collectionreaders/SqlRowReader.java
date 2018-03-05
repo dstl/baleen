@@ -1,6 +1,18 @@
 //NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringJoiner;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -8,13 +20,6 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import uk.gov.dstl.baleen.collectionreaders.helpers.AbstractSqlReader;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
 
 /**
  * Read each cell in an SQL table as a separate document.
@@ -77,9 +82,9 @@ public class SqlRowReader extends AbstractSqlReader {
 
         String content;
         Map<String, String> metadata = new HashMap<>();
-        try {
-            ResultSet rs = conn.prepareStatement("SELECT * FROM `" + table + "` WHERE `"+idColumn+"` = "+currId).executeQuery();
-
+        try (
+            ResultSet rs = conn.prepareStatement("SELECT * FROM `" + table + "` WHERE `"+idColumn+"` = "+currId).executeQuery()
+        ){
             if(rs.next()){
                 StringJoiner sj = new StringJoiner("\n\n");
                 for(String col : textCols){
@@ -93,7 +98,6 @@ public class SqlRowReader extends AbstractSqlReader {
             }else{
                 throw new IOException("Unable to get row content - query returned no results");
             }
-
         }catch (SQLException e) {
             throw new IOException("Unable to get row content", e);
         }
