@@ -17,7 +17,7 @@ public class DefaultsServlet extends AbstractApiServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultsServlet.class);
     private static final long serialVersionUID = 1L;
 
-    private Map<String, String> defaults = new TreeMap<>();
+    private final Map<String, String> defaults = new TreeMap<>();
 
     public DefaultsServlet(){
         super(LOGGER, DefaultsServlet.class);
