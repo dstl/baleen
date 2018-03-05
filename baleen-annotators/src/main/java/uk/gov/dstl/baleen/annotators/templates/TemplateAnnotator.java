@@ -357,8 +357,6 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
 	 *
 	 * @param jCas
 	 *            JCas object to process
-	 * @param manager
-	 *            the record structure manager
 	 * @param source
 	 *            the source template definition file name
 	 * @param field
