@@ -6,6 +6,7 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
@@ -54,7 +55,7 @@ public class SharedElasticsearchResource extends BaleenResource {
 	@ConfigurationParameter(name = PARAM_CLUSTER, defaultValue = "elasticsearch")
 	private String esCluster;
 
-	private Client client = null;
+	private TransportClient client = null;
 
 	@Override
 	protected boolean doInitialize(ResourceSpecifier specifier, Map<String, Object> additionalParams)
@@ -66,8 +67,8 @@ public class SharedElasticsearchResource extends BaleenResource {
 		Settings.Builder settings = Settings.builder();
 		settings.put("cluster.name", esCluster);
 
-		client = new PreBuiltTransportClient(settings.build())
-				.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(esHost, esPort)));
+		client = new PreBuiltTransportClient(settings.build());
+		client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(esHost, esPort)));
 
 		return client != null;
 	}
