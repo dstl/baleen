@@ -8,9 +8,9 @@ Baleen was written by the Defence Science and Technology Laboratory (Dstl) in su
 
 Baleen is still under active development, and is released here not as a final product but as a work in progress. As such, there may be bugs, issues, typos, mistakes in the documentation, and more. We hope that contributions from other users will improve Baleen and result in a better framework for others to use.
 
-# Upgrading to 2.4
+# Upgrading to 2.4 and later
 
-Baleen 2.4 contains a number of changes that may make it incompatible with older pipelines - for upgrade guidance see the [Upgrading Between Versions](https://github.com/dstl/baleen/wiki/Upgrading-Between-Versions#upgrading-230-to-240) wiki page.
+Baleen 2.4 (and later) contain a number of changes that may make it incompatible with older pipelines - for upgrade guidance see the [Upgrading Between Versions](https://github.com/dstl/baleen/wiki/Upgrading-Between-Versions#upgrading-230-to-240) wiki page.
 
 # Getting Started
 
@@ -43,6 +43,16 @@ The develop with Baleen, we suggest you use:
 
 Baleen requires Java 8 or later.
 
+## What's coming in Baleen 2.5
+Baleen 2.5.0-SNAPSHOT contains the following new functionality and components:
+* New components
+  * Annotators: CVE (Common Vulnerabilities and Exposures), Epoch Time, IPv6, Lenient URL
+  * Collection Readers: CSV Folder, MBOX, SQL Cell, SQL DB Cell, SQL Row
+  * Consumers: Elastic-Kibana, Gremlin
+* Upgrades Elasticsearch to 5.6.4 - this is likely to be a breaking change and will require Elasticsearch servers to be upgraded. It is possible that the ElasticsearchRest consumer may still work with Elasticsearch 2 but this is untested.
+* Java 9 support
+
+as well as a number of bug fixes and improvements to previous versions.
 # Licence
 
 Crown copyright 2017
