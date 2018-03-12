@@ -7,6 +7,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReaderBuilder;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 
@@ -55,8 +58,10 @@ public class CsvContentExtractor extends AbstractContentExtractor {
 	@Override
 	public void doProcessStream(InputStream stream, String source, JCas jCas) throws IOException {
 		super.doProcessStream(stream, source, jCas);
+		CSVParser parser = new CSVParserBuilder().withSeparator(separator.charAt(0)).build();
 		try(
-			CSVReader reader = new CSVReader(new InputStreamReader(stream, StandardCharsets.UTF_8), separator.charAt(0))
+				CSVReader reader = new CSVReaderBuilder(new InputStreamReader(stream, StandardCharsets.UTF_8))
+						.withCSVParser(parser).build()
 		){
 			String[] cols = reader.readNext();
 			if(cols == null || cols.length < contentColumn){

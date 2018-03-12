@@ -139,19 +139,17 @@ public class Postgres extends BaleenConsumer {
 	private void checkVersion() throws ResourceInitializationException{
 		try(
 			Statement s = postgresResource.getConnection().createStatement();
+			ResultSet rs = s.executeQuery("SELECT PostGIS_Lib_Version() AS version")
 		){
-			ResultSet rs = s.executeQuery("SELECT PostGIS_Lib_Version() AS version");
-			
 			rs.next();
 			String version = rs.getString("version");
-			
+
 			String[] versionParts = version.split("\\.");
 			Integer majorVersion = Integer.parseInt(versionParts[0]);
-			
+
 			if(majorVersion < 2){
 				throw new BaleenException("Unsupported PostGIS Version");
 			}
-				
 		}catch(SQLException | NumberFormatException | NullPointerException e){
 			getMonitor().error("Unable to retrieve PostGIS version");
 			throw new ResourceInitializationException(e);
@@ -159,7 +157,7 @@ public class Postgres extends BaleenConsumer {
 			throw new ResourceInitializationException(e);
 		}
 	}
-	
+
 	/**
 	 * If the tables don't already exist, then create them.
 	 */
@@ -389,11 +387,13 @@ public class Postgres extends BaleenConsumer {
 	}
 	
 	private Integer getKey(Statement s) throws SQLException{
-		ResultSet generatedKeys = s.getGeneratedKeys();
-		if(generatedKeys.next()){
-			return generatedKeys.getInt(1);
-		}else{
-			return null;
+		try(ResultSet generatedKeys = s.getGeneratedKeys();)
+		{
+			if(generatedKeys.next()){
+				return generatedKeys.getInt(1);
+			}else{
+				return null;
+			}
 		}
 	}
 }

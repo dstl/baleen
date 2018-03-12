@@ -144,7 +144,13 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
       f = new File(outputFolder, id + FILE_EXTENSION);
     } else {
       try {
-        final String name = source.substring(source.lastIndexOf(File.separator) + 1);
+        final String name;
+        if(source.contains(File.separator)){
+          name = source.substring(source.lastIndexOf(File.separator) + 1);
+        }else{
+          //If it doesn't contain the file system separator, assume it is a URI
+          name = source.substring(source.lastIndexOf('/') + 1);
+        }
 
         f = new File(outputFolder, name + FILE_EXTENSION);
 
@@ -170,7 +176,6 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
 
     return f;
   }
-
 
   /*
    * (non-Javadoc)

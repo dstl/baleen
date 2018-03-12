@@ -1,8 +1,6 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.resources;
-
-import java.net.InetSocketAddress;
-import java.util.Map;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
@@ -11,15 +9,16 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.node.Node;
-import org.elasticsearch.node.NodeBuilder;
-
+import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import uk.gov.dstl.baleen.core.utils.ConfigUtils;
 import uk.gov.dstl.baleen.uima.BaleenResource;
 
+import java.net.InetSocketAddress;
+import java.util.Map;
+
 /**
  * A shared Elasticsearch resource effectively allowing a single pool of
- * connections to an ES server.
+ * connections to an Elasticsearch 5 server.
  *
  * 
  * @baleen.javadoc
@@ -36,7 +35,7 @@ public class SharedElasticsearchResource extends BaleenResource {
 	private String esHost;
 
 	/**
-	 * The Elasticsearch port to connect on
+	 * The Elasticsearch port to connect on - should be the transport port
 	 * 
 	 * @baleen.config 9300
 	 */
@@ -56,41 +55,20 @@ public class SharedElasticsearchResource extends BaleenResource {
 	@ConfigurationParameter(name = PARAM_CLUSTER, defaultValue = "elasticsearch")
 	private String esCluster;
 
-	private Client client = null;
-
-	private Node node;
+	private TransportClient client = null;
 
 	@Override
 	protected boolean doInitialize(ResourceSpecifier specifier, Map<String, Object> additionalParams)
 			throws ResourceInitializationException {
 
 		esPort = ConfigUtils.stringToInteger(esPortString, 9300);
-		
-		if(esPort < 9300) {
-			Settings settings = Settings.builder()
-					.put("path.home", System.getProperty("user.dir"))
-					.build();
-			
-			// Use the node client
-			node = NodeBuilder.nodeBuilder()
-				.settings(settings)
-				.client(true)
-				.data(false)
-				.clusterName(esCluster)
-				.build();
 
+		// Use the transport client
+		Settings.Builder settings = Settings.builder();
+		settings.put("cluster.name", esCluster);
 
-			client = node.client();
-		} else {
-			// Use the transport client
-
-			Settings settings = Settings.builder().put("cluster.name", esCluster).build();
-
-			TransportClient tc = TransportClient.builder().settings(settings).build();
-			tc.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(esHost, esPort)));
-
-			client = tc;
-		}
+		client = new PreBuiltTransportClient(settings.build());
+		client.addTransportAddress(new InetSocketTransportAddress(new InetSocketAddress(esHost, esPort)));
 
 		return client != null;
 	}
@@ -107,11 +85,6 @@ public class SharedElasticsearchResource extends BaleenResource {
 		if (client != null) {
 			client.close();
 			client = null;
-		}
-
-		if (node != null) {
-			node.close();
-			node = null;
 		}
 	}
 

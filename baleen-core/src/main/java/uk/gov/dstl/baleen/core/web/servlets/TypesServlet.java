@@ -1,21 +1,19 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.uima.jcas.tcas.Annotation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
 import uk.gov.dstl.baleen.core.web.security.WebPermission;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Return a list of all the UIMA types currently available on the class path
@@ -88,7 +86,7 @@ public class TypesServlet extends AbstractApiServlet{
 	 * The baseClass will not be included in the list.
 	 */
 	public List<String> getTypes(Class<? extends Annotation> baseClass){
-		return ReflectionUtils.getInstance().getSubTypesOf(baseClass).stream().map(Class::getName).collect(Collectors.toList());
+		return ReflectionUtils.getInstance().getNamesOfSubclassesOf(baseClass);
 	}
 	
 	@Override

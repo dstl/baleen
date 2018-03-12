@@ -298,7 +298,8 @@
 				.done(function(data){
 					$("#alertCouldntConnect").addClass("hidden");
 					$("#operations").removeClass("hidden");
-					
+
+					getDefaults();
 					getExistingPipelines();
 					loadOrderers();
 					loadCollectionReaders();

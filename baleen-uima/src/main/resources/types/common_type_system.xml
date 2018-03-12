@@ -144,5 +144,10 @@ If empty or null, it is assumed to be UNKNOWN.</description>
       <description>A chemical or substance</description>
       <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
     </typeDescription>
+  <typeDescription>
+      <name>uk.gov.dstl.baleen.types.common.Vulnerability</name>
+      <description>Cyber vulnerabilities</description>
+      <supertypeName>uk.gov.dstl.baleen.types.semantic.Entity</supertypeName>
+  </typeDescription>
   </types>
 </typeSystemDescription>

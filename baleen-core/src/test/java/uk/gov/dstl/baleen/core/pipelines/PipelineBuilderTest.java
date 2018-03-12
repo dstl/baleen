@@ -1,26 +1,25 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.pipelines;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import com.google.common.io.Files;
+import org.apache.uima.analysis_engine.AnalysisEngine;
+import org.apache.uima.collection.CollectionReader;
+import org.junit.Test;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import org.apache.uima.analysis_engine.AnalysisEngine;
-import org.apache.uima.collection.CollectionReader;
-import org.junit.Test;
-
-import com.google.common.io.Files;
-
-import uk.gov.dstl.baleen.exceptions.BaleenException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class PipelineBuilderTest {
 
 	@Test
 	public void testValid() throws Exception{
-		String yaml = Files.toString(getFile("pipelineConfig.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("pipelineConfig.yaml"), StandardCharsets.UTF_8).read();
 		
 		PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
 		BaleenPipeline pipeline = pb.createNewPipeline();
@@ -78,7 +77,7 @@ public class PipelineBuilderTest {
 	
 	@Test
 	public void testResources() throws Exception{
-		String yaml = Files.toString(getFile("resourceConfig.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("resourceConfig.yaml"), StandardCharsets.UTF_8).read();
 		
 		PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
 		BaleenPipeline pipeline = pb.createNewPipeline();
@@ -91,7 +90,7 @@ public class PipelineBuilderTest {
 	
 	@Test
 	public void testErrorNotFound() throws Exception{
-		String yaml = Files.toString(getFile("errorNotFoundConfig.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("errorNotFoundConfig.yaml"), StandardCharsets.UTF_8).read();
 		
 		PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
 		BaleenPipeline pipeline = pb.createNewPipeline();
@@ -105,7 +104,7 @@ public class PipelineBuilderTest {
 	
 	@Test
 	public void testErrorNoClass() throws Exception{
-		String yaml = Files.toString(getFile("errorNoClassConfig.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("errorNoClassConfig.yaml"), StandardCharsets.UTF_8).read();
 		
 		PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
 		BaleenPipeline pipeline = pb.createNewPipeline();
@@ -119,7 +118,7 @@ public class PipelineBuilderTest {
 	
 	@Test
 	public void testErrorNoCR() throws Exception{
-		String yaml = Files.toString(getFile("errorNoCRConfig.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("errorNoCRConfig.yaml"), StandardCharsets.UTF_8).read();
 		
 		PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
 		
@@ -134,7 +133,7 @@ public class PipelineBuilderTest {
 	
 	@Test
 	public void testErrorNotFoundCR() throws Exception{
-		String yaml = Files.toString(getFile("errorNotFoundCRConfig.yaml"), StandardCharsets.UTF_8);
+		String yaml = Files.asCharSource(getFile("errorNotFoundCRConfig.yaml"), StandardCharsets.UTF_8).read();
 		
 		PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
 		

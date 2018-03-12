@@ -1,4 +1,5 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.utils;
 
 import java.io.File;
@@ -83,7 +84,7 @@ public class YamlConfiguration {
 	 */
 	public YamlConfiguration read(File file) throws IOException {
 		// Read to string, so that we can check for tabs etc
-		String yamlString = Files.toString(file, StandardCharsets.UTF_8);
+		String yamlString = Files.asCharSource(file, StandardCharsets.UTF_8).read();
 		return read(yamlString);
 	}
 

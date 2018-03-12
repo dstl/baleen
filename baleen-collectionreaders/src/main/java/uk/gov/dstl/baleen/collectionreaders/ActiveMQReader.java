@@ -1,27 +1,26 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.TextMessage;
-
-import org.apache.tika.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
-
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedActiveMQResource;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
+
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageConsumer;
+import javax.jms.TextMessage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * This collection reader will process all waiting messages available on the
@@ -100,9 +99,7 @@ public class ActiveMQReader extends BaleenCollectionReader {
 			final Message msg = this.consumer.receive();
 			if (msg instanceof TextMessage) {
 				final String text = ((TextMessage) msg).getText();
-				final InputStream is = IOUtils.toInputStream(text);
-
-				this.extractor.processStream(is, source, jCas);
+				this.extractor.processStream(new ByteArrayInputStream(text.getBytes(Charset.defaultCharset())), source, jCas);
 			} else {
 				throw new IOException(String.format("Unexpected message type for message with id %1 from source %2",
 						msg.getJMSMessageID(), source));

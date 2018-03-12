@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.uima.util.FileUtils;
@@ -40,13 +41,19 @@ public class SharedFileResource extends BaleenResource {
 	 * 
 	 * Implemented as per BufferedReader.
 	 * 
-	 * @param the file to load
+	 * @param file the file to load
 	 * @return non-null, but potentially empty, array of string (one line per string)
 	 * @throws IOException on error accessing or reading from the file.
 	 */
 	public static String[] readFileLines(File file) throws IOException {
 		List<String> lines = new LinkedList<>();
-		Files.lines(file.toPath()).forEach(l -> lines.add(StringUtils.strip(l.replaceAll("\r\n","\n"))));
+		try(
+				Stream<String> stream = Files.lines(file.toPath())
+		)	{
+			stream
+					.map(l -> l.replaceAll("\r\n", "\n"))
+					.forEach(l -> lines.add(StringUtils.strip(l)));
+		}
 		
 		while(StringUtils.strip(lines.get(0)).isEmpty()){
 			lines.remove(0);

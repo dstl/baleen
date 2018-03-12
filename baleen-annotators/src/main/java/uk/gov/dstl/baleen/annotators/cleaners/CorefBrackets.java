@@ -1,16 +1,9 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.apache.uima.UIMAException;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -20,10 +13,6 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.resource.ResourceInitializationException;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
-
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
@@ -32,6 +21,11 @@ import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Coreference entities where a series of entities of the same type appears in brackets.
@@ -116,7 +110,7 @@ public class CorefBrackets extends BaleenAnnotator {
 	
 	@Override
 	public AnalysisEngineAction getAction() {
-		Set<Class<? extends Entity>> types = ReflectionUtils.getInstance().getSubTypesOf(Entity.class);
+		Set<Class<? extends Entity>> types = ReflectionUtils.getSubTypes(Entity.class);
 		types.removeAll(classTypes);
 		
 		Set<Class<? extends Annotation>> annotations = new HashSet<>();

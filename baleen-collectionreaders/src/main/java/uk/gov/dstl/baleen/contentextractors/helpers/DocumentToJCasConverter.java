@@ -83,8 +83,10 @@ public class DocumentToJCasConverter {
 		// (though in fairness they are all the same begin-end and same element too)
 
 		// Walk the children
-		for (final Node node : root.childNodes()) {
-			walk(builder, node, depth + 1, captureText);
+		if(root.childNodeSize() > 0) {
+			for (final Node node : root.childNodes()) {
+				walk(builder, node, depth + 1, captureText);
+			}
 		}
 
 		// Add annotations to the JCas

@@ -1,31 +1,23 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
 
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.common.net.MediaType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.net.MediaType;
-
 import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 
 /**
  * Abstract class for listing components based on their super type (for example, BaleenAnnotator).
@@ -99,7 +91,7 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
 		if (componentClazz == null) {
 			components = Optional.empty();
 		} else {
-			List<String> componentsList = classesToFilteredList(ReflectionUtils.getInstance().getSubTypesOf(componentClazz),
+			List<String> componentsList = classesToFilteredList(ReflectionUtils.getSubTypes(componentClazz),
 					componentPackage, excludeClazz, excludePackage);
 
 			StringBuilder componentBuilder = new StringBuilder();
@@ -221,8 +213,6 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
 	 *
 	 * @param className
 	 *            The name of the class
-	 * @param type
-	 *            The type that the class should extend
 	 * @param defaultPackage
 	 *            The package to look in if the className isn't a fully qualified name
 	 * @return The class specified

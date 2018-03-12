@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -50,9 +51,11 @@ public abstract class AbstractTemplateAnnotator extends BaleenAnnotator {
 	 *             if the record definitions path is not found
 	 */
 	private void readRecordDefinitions() throws ResourceInitializationException {
-		final Path path = Paths.get(recordDefinitionsDirectory);
-		try {
-			Files.list(path).filter(Files::isRegularFile).forEach(this::readRecordDefinitionsFromFile);
+		try(
+				Stream<Path> filt = Files.list(Paths.get(recordDefinitionsDirectory)).filter(Files::isRegularFile)
+		) {
+			filt.forEach(this::readRecordDefinitionsFromFile);
+
 		} catch (IOException e) {
 			throw new ResourceInitializationException(e);
 		}

@@ -1,24 +1,23 @@
 //Dstl (c) Crown Copyright 2017
+//Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Map;
-
+import com.google.common.base.Strings;
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
-
-import com.google.common.base.Strings;
-
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Map;
 
 /** Base implementation of a ContentExtractor.
  *
@@ -139,7 +138,7 @@ public abstract class BaleenContentExtractor implements IContentExtractor {
 	 * Add an annotation to the JCas index, notifying UimaMonitor of the fact we
 	 * have done so
 	 *
-	 * @param annot
+	 * @param annotations
 	 *            Annotation(s) to add
 	 */
 	protected void addToJCasIndex(Annotation... annotations) {
@@ -150,7 +149,7 @@ public abstract class BaleenContentExtractor implements IContentExtractor {
 	 * Add an annotation to the JCas index, notifying UimaMonitor of the fact we
 	 * have done so
 	 *
-	 * @param annot
+	 * @param annotations
 	 *            Annotation(s) to add
 	 */
 	protected void addToJCasIndex(Collection<? extends Annotation> annotations) {
