@@ -1,0 +1,7 @@
+# Set the default behaviour, in case people don't have core.autocrlf set.
+* text=auto
+
+# these files should always be checked out as LF as tests assume that is the case
+*.java text eol=lf
+*.html text eol=lf 
+
