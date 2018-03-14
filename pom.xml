@@ -101,6 +101,7 @@
 		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
 		<maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
 		<maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
+		<maven-spotless.version>1.0.0.BETA4</maven-spotless.version>
 	</properties>
 
 	<dependencies>
@@ -168,6 +169,31 @@
 						</taglet>
 					</taglets>
 				</configuration>
+			</plugin>
+			<!--  formatter -->
+			<plugin>
+				<groupId>com.diffplug.spotless</groupId>
+				<artifactId>spotless-maven-plugin</artifactId>
+				<version>${maven-spotless.version}</version>
+				<configuration>
+					<java>
+						<googleJavaFormat>
+							<style>GOOGLE</style>
+						</googleJavaFormat>
+						<removeUnusedImports />
+						<importOrder>
+							<order>java,javax,org,com,uk</order>
+						</importOrder>
+					</java>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>apply</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
