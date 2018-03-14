@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
 import static org.junit.Assert.assertEquals;
@@ -20,54 +20,51 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class ComparableEntitySpanUtilsTest {
 
-	private JCas jCas;
+  private JCas jCas;
 
-	@Before
-	public void before() throws UIMAException {
-		jCas = JCasSingleton.getJCasInstance();
-	}
+  @Before
+  public void before() throws UIMAException {
+    jCas = JCasSingleton.getJCasInstance();
+  }
 
-	@Test
-	public void testCopyEntity() {
-		final Entity e = new Entity(jCas);
-		e.setBegin(0);
-		e.setBegin(5);
-		e.setValue("value");
-		e.addToIndexes();
+  @Test
+  public void testCopyEntity() {
+    final Entity e = new Entity(jCas);
+    e.setBegin(0);
+    e.setBegin(5);
+    e.setValue("value");
+    e.addToIndexes();
 
-		final Entity copyEntity = ComparableEntitySpanUtils.copyEntity(jCas, 10, 20, e);
-		copyEntity.addToIndexes();
+    final Entity copyEntity = ComparableEntitySpanUtils.copyEntity(jCas, 10, 20, e);
+    copyEntity.addToIndexes();
 
-		final List<Entity> select = new ArrayList<>(JCasUtil.select(jCas, Entity.class));
-		assertEquals(2, select.size());
+    final List<Entity> select = new ArrayList<>(JCasUtil.select(jCas, Entity.class));
+    assertEquals(2, select.size());
 
-		assertSame(e, select.get(0));
-		assertEquals("value", select.get(1).getValue());
-		assertEquals(10, select.get(1).getBegin());
-		assertEquals(20, select.get(1).getEnd());
+    assertSame(e, select.get(0));
+    assertEquals("value", select.get(1).getValue());
+    assertEquals(10, select.get(1).getBegin());
+    assertEquals(20, select.get(1).getEnd());
+  }
 
-	}
+  @Test
+  public void testOverlaps() {
+    final Entity a = new Entity(jCas);
+    a.setBegin(0);
+    a.setEnd(10);
 
-	@Test
-	public void testOverlaps() {
-		final Entity a = new Entity(jCas);
-		a.setBegin(0);
-		a.setEnd(10);
+    final Entity b = new Entity(jCas);
+    b.setBegin(8);
+    b.setEnd(15);
 
-		final Entity b = new Entity(jCas);
-		b.setBegin(8);
-		b.setEnd(15);
+    final Entity c = new Entity(jCas);
+    c.setBegin(20);
+    c.setEnd(30);
 
-		final Entity c = new Entity(jCas);
-		c.setBegin(20);
-		c.setEnd(30);
+    assertTrue(ComparableEntitySpanUtils.overlaps(a, b));
+    assertTrue(ComparableEntitySpanUtils.overlaps(b, a));
 
-		assertTrue(ComparableEntitySpanUtils.overlaps(a, b));
-		assertTrue(ComparableEntitySpanUtils.overlaps(b, a));
-
-		assertFalse(ComparableEntitySpanUtils.overlaps(a, c));
-		assertFalse(ComparableEntitySpanUtils.overlaps(c, a));
-
-	}
-
+    assertFalse(ComparableEntitySpanUtils.overlaps(a, c));
+    assertFalse(ComparableEntitySpanUtils.overlaps(c, a));
+  }
 }

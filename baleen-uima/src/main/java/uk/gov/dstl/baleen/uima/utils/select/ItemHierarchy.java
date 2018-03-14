@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import static java.util.stream.Collectors.toList;
@@ -15,9 +15,7 @@ import java.util.stream.Collectors;
 
 import uk.gov.dstl.baleen.uima.utils.SelectorPath;
 
-/**
- * A hierarchy of nodes with an index of items.
- */
+/** A hierarchy of nodes with an index of items. */
 public class ItemHierarchy<T> {
 
   /** the root node of all structure, and as such has no structure itself */
@@ -74,8 +72,6 @@ public class ItemHierarchy<T> {
     Node<T> node = getIndex().get(a);
     return getNext(node).map(Node::getItem);
   }
-
-
 
   /**
    * Get the previous item in the hierarchy, if it exists
@@ -166,8 +162,8 @@ public class ItemHierarchy<T> {
    * @return optional of the 'next' item
    */
   @SuppressWarnings("unchecked")
-  public <U extends T> Optional<U> getToType(T a, Class<U> type,
-      Function<Node<T>, Optional<Node<T>>> function) {
+  public <U extends T> Optional<U> getToType(
+      T a, Class<U> type, Function<Node<T>, Optional<Node<T>>> function) {
     Node<T> node = getIndex().get(a);
     Optional<Node<T>> current = function.apply(node);
     while (current.isPresent() && type.isInstance(current.get().getItem())) {
@@ -220,7 +216,6 @@ public class ItemHierarchy<T> {
     }
     return index;
   }
-
 
   /**
    * Internal method to create the index map
@@ -277,8 +272,8 @@ public class ItemHierarchy<T> {
 
   /**
    * The path for the given item
-   * <p>
-   * That is a list of the items from the root to the given item following the parent child
+   *
+   * <p>That is a list of the items from the root to the given item following the parent child
    * relation.
    *
    * @param s the item
@@ -296,8 +291,8 @@ public class ItemHierarchy<T> {
 
   /**
    * The path for the given item filter to the given item types
-   * <p>
-   * That is a list of the items from the root to the given item following the parent child
+   *
+   * <p>That is a list of the items from the root to the given item following the parent child
    * relation.
    *
    * @param s the item
@@ -311,8 +306,8 @@ public class ItemHierarchy<T> {
   /**
    * Find elements that match the {@link Selector} CSS style query, with the root as the starting
    * context.
-   * <p>
-   * See the query syntax documentation in {@link Selector}.
+   *
+   * <p>See the query syntax documentation in {@link Selector}.
    *
    * @param query a {@link Selector} CSS-like query
    * @return nodes that match the query (empty if none match)
@@ -321,5 +316,4 @@ public class ItemHierarchy<T> {
   public Nodes<T> select(String query) {
     return getRoot().select(query);
   }
-
 }

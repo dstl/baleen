@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.grammar;
 
 import static org.junit.Assert.assertFalse;
@@ -15,28 +15,26 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class EdgeTest {
 
-	@Test
-	public void test() throws UIMAException {
-		final JCas jCas = JCasSingleton.getJCasInstance();
+  @Test
+  public void test() throws UIMAException {
+    final JCas jCas = JCasSingleton.getJCasInstance();
 
-		final WordToken from = new WordToken(jCas);
-		final WordToken to = new WordToken(jCas);
-		final Dependency dependency = new Dependency(jCas);
+    final WordToken from = new WordToken(jCas);
+    final WordToken to = new WordToken(jCas);
+    final Dependency dependency = new Dependency(jCas);
 
-		final Edge edge = new Edge(from, dependency, to);
+    final Edge edge = new Edge(from, dependency, to);
 
-		assertSame(dependency, edge.getDependency());
-		assertSame(to, edge.getTo());
-		assertSame(from, edge.getFrom());
+    assertSame(dependency, edge.getDependency());
+    assertSame(to, edge.getTo());
+    assertSame(from, edge.getFrom());
 
-		assertSame(from, edge.getOther(to));
-		assertSame(to, edge.getOther(from));
+    assertSame(from, edge.getOther(to));
+    assertSame(to, edge.getOther(from));
 
-		assertFalse(edge.isFrom(to));
-		assertFalse(edge.isTo(from));
-		assertTrue(edge.isFrom(from));
-		assertTrue(edge.isTo(to));
-
-	}
-
+    assertFalse(edge.isFrom(to));
+    assertFalse(edge.isTo(from));
+    assertTrue(edge.isFrom(from));
+    assertTrue(edge.isTo(to));
+  }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
 
 import java.io.IOException;
@@ -18,46 +18,42 @@ import uk.gov.dstl.baleen.core.web.security.WebPermission;
 /**
  * Provides ability to control the BaleenManager instance {@link BaleenManager}
  *
- * End points:
+ * <p>End points:
  *
- * /stop will shutdown the whole baleen instance.
+ * <p>/stop will shutdown the whole baleen instance.
  *
- * If using authentication, the user will need the "manager.stop".
- *
- * 
- * 
- *
+ * <p>If using authentication, the user will need the "manager.stop".
  */
 public class BaleenManagerServlet extends AbstractApiServlet {
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaleenManagerServlet.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BaleenManagerServlet.class);
 
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	private final transient BaleenManager manager;
+  private final transient BaleenManager manager;
 
-	/**
-	 * New instance, to control the baleen manager.
-	 *
-	 * @param manager
-	 *            the pipeline manager what owns the pipelines
-	 */
-	public BaleenManagerServlet(BaleenManager manager) {
-		super(LOGGER, BaleenManagerServlet.class);
-		this.manager = manager;
-	}
+  /**
+   * New instance, to control the baleen manager.
+   *
+   * @param manager the pipeline manager what owns the pipelines
+   */
+  public BaleenManagerServlet(BaleenManager manager) {
+    super(LOGGER, BaleenManagerServlet.class);
+    this.manager = manager;
+  }
 
-	@Override
-	public WebPermission[] getPermissions() {
-		return new WebPermission[] { new WebPermission("Stop Baleen", HttpMethod.POST, "manager.stop") };
-	}
+  @Override
+  public WebPermission[] getPermissions() {
+    return new WebPermission[] {new WebPermission("Stop Baleen", HttpMethod.POST, "manager.stop")};
+  }
 
-	@Override
-	protected void post(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String servletPath = req.getRequestURI();
-		if (servletPath.endsWith("stop")) {
-			manager.stop();
-		} else {
-			respondWithError(resp, HttpStatus.BAD_REQUEST_400, "Unknown request");
-		}
-	}
+  @Override
+  protected void post(HttpServletRequest req, HttpServletResponse resp)
+      throws ServletException, IOException {
+    String servletPath = req.getRequestURI();
+    if (servletPath.endsWith("stop")) {
+      manager.stop();
+    } else {
+      respondWithError(resp, HttpStatus.BAD_REQUEST_400, "Unknown request");
+    }
+  }
 }

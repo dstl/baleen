@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
 import java.util.ArrayList;
@@ -14,23 +14,23 @@ import uk.gov.dstl.baleen.types.structure.Structure;
 
 /**
  * A selector path describes a location in a structure hierarchy.
- * <p>
- * Based on a CSS selector-like syntax for selecting structural annotations.
- * <p>
- * Currently only the (<code>&gt;</code> operator) is supported, and the optional
- * <code>nth-of-type(n)</code> pseudo selector. It is required that structural annotations have a
- * <code>depth</code> feature such that nesting can be approximated.
- * </p>
- * <p>
- * Example selectors:
- * </p>
- * <ul>
- * <li><code>Section > Heading</code>
- * <li><code>Heading:nth-of-type(2)</code>
- * <li><code>Section:nth-of-type(1) &gt; Paragraph</code>
- * <li><code>Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(3) &gt; TableCell:nth-of-type(2) &gt; Paragraph:nth-of-type(1)</code>
- * </ul>
  *
+ * <p>Based on a CSS selector-like syntax for selecting structural annotations.
+ *
+ * <p>Currently only the (<code>&gt;</code> operator) is supported, and the optional <code>
+ * nth-of-type(n)</code> pseudo selector. It is required that structural annotations have a <code>
+ * depth</code> feature such that nesting can be approximated.
+ *
+ * <p>Example selectors:
+ *
+ * <ul>
+ *   <li><code>Section > Heading</code>
+ *   <li><code>Heading:nth-of-type(2)</code>
+ *   <li><code>Section:nth-of-type(1) &gt; Paragraph</code>
+ *   <li><code>
+ *       Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(3) &gt; TableCell:nth-of-type(2) &gt; Paragraph:nth-of-type(1)
+ *       </code>
+ * </ul>
  */
 public class SelectorPath {
 
@@ -80,7 +80,8 @@ public class SelectorPath {
   public SelectorPath from(SelectorPath from) {
     int i = 0;
     List<SelectorPart> remaining = new ArrayList<>(path);
-    while (!remaining.isEmpty() && from.getDepth() > i
+    while (!remaining.isEmpty()
+        && from.getDepth() > i
         && from.path.get(i).equals(remaining.get(0))) {
       i++;
       remaining.remove(0);
@@ -170,5 +171,4 @@ public class SelectorPath {
   private static Class<Structure> getType(String typeName) throws InvalidParameterException {
     return BuilderUtils.getClassFromString(typeName, Structure.class.getPackage().getName());
   }
-
 }

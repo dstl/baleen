@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.testing;
 
 import static org.junit.Assert.assertEquals;
@@ -14,59 +14,55 @@ import org.junit.Before;
 
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
-/**
- *
- */
+/** */
 public class AnnotatorTestBase {
-	protected JCas jCas;
+  protected JCas jCas;
 
-	@Before
-	public void beforeTest() throws UIMAException {
-		jCas = JCasSingleton.getJCasInstance();
-	}
+  @Before
+  public void beforeTest() throws UIMAException {
+    jCas = JCasSingleton.getJCasInstance();
+  }
 
-	/**
-	 * Process the {@link AnnotatorTestBase} jCas object looking for supplied annotations.
-	 *
-	 * You must call processJcas (or equivalent first).
-	 *
-	 * @param size
-	 *            total number of annotations to expect of this type
-	 * @param annotationClass
-	 *            the annotation class to look for
-	 * @param annotations
-	 *            (a subset of) annotations to test
-	 * @throws AnalysisEngineProcessException
-	 * @throws ResourceInitializationException
-	 */
-	@SafeVarargs
-	protected final <T extends Annotation> void assertAnnotations(int size, Class<T> annotationClass,
-			TestAnnotation<T>... annotations) throws AnalysisEngineProcessException, ResourceInitializationException {
+  /**
+   * Process the {@link AnnotatorTestBase} jCas object looking for supplied annotations.
+   *
+   * <p>You must call processJcas (or equivalent first).
+   *
+   * @param size total number of annotations to expect of this type
+   * @param annotationClass the annotation class to look for
+   * @param annotations (a subset of) annotations to test
+   * @throws AnalysisEngineProcessException
+   * @throws ResourceInitializationException
+   */
+  @SafeVarargs
+  protected final <T extends Annotation> void assertAnnotations(
+      int size, Class<T> annotationClass, TestAnnotation<T>... annotations)
+      throws AnalysisEngineProcessException, ResourceInitializationException {
 
-		assertEquals(size, JCasUtil.select(jCas, annotationClass).size());
+    assertEquals(size, JCasUtil.select(jCas, annotationClass).size());
 
-		for (TestAnnotation<T> a : annotations) {
-			T t = JCasUtil.selectByIndex(jCas, annotationClass, a.getIndex());
-			a.validate(t);
-		}
-	}
+    for (TestAnnotation<T> a : annotations) {
+      T t = JCasUtil.selectByIndex(jCas, annotationClass, a.getIndex());
+      a.validate(t);
+    }
+  }
 
-	/**
-	 * Get the document annotation from the default jCas.
-	 * 
-	 * @return documentation annotation
-	 */
-	protected DocumentAnnotation getDocumentAnnotation() {
-		return getDocumentAnnotation(jCas);
-	}
+  /**
+   * Get the document annotation from the default jCas.
+   *
+   * @return documentation annotation
+   */
+  protected DocumentAnnotation getDocumentAnnotation() {
+    return getDocumentAnnotation(jCas);
+  }
 
-	/**
-	 * Get the document annotation from a jCas.
-	 * 
-	 * @param jCas
-	 * @return documentation annotation
-	 */
-	protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
-		return (DocumentAnnotation) jCas.getDocumentAnnotationFs();
-	}
+  /**
+   * Get the document annotation from a jCas.
+   *
+   * @param jCas
+   * @return documentation annotation
+   */
+  protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
+    return (DocumentAnnotation) jCas.getDocumentAnnotationFs();
+  }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.utils;
 
 import java.util.UUID;
@@ -10,44 +10,41 @@ import org.slf4j.LoggerFactory;
 import uk.gov.dstl.baleen.core.utils.IdentityUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
-/**
- * Helper functions for writing consumers.
- *
- */
+/** Helper functions for writing consumers. */
 public class ConsumerUtils {
-	private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerUtils.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerUtils.class);
 
-	private ConsumerUtils() {
-		// Singleton
-	}
+  private ConsumerUtils() {
+    // Singleton
+  }
 
-	/** Get a usable unique url
-	 * @param da document annotation
-	 * @param contentHashAsId true if should use the hash, false will use the source url
-	 * @return hash, source or if all else fails a UUID
-	 */
-	public static String getExternalId(DocumentAnnotation da, boolean contentHashAsId) {
-		if (contentHashAsId) {
-			return da.getHash();
-		} else {
-			try {
-				return IdentityUtils.hashStrings(da.getSourceUri());
-			} catch (BaleenException e) {
-				LOGGER.warn("Generating a random id, unable to hash string", e);
-				return UUID.randomUUID().toString();
-			}
-		}
-	}
+  /**
+   * Get a usable unique url
+   *
+   * @param da document annotation
+   * @param contentHashAsId true if should use the hash, false will use the source url
+   * @return hash, source or if all else fails a UUID
+   */
+  public static String getExternalId(DocumentAnnotation da, boolean contentHashAsId) {
+    if (contentHashAsId) {
+      return da.getHash();
+    } else {
+      try {
+        return IdentityUtils.hashStrings(da.getSourceUri());
+      } catch (BaleenException e) {
+        LOGGER.warn("Generating a random id, unable to hash string", e);
+        return UUID.randomUUID().toString();
+      }
+    }
+  }
 
-	/**
-	 * Lower-case the first letter of a string, leaving the rest in it's
-	 * original case
-	 *
-	 * @param s
-	 *            String to convert to camel-case
-	 * @return Camel-cased string
-	 */
-	public static String toCamelCase(String s) {
-		return s.substring(0, 1).toLowerCase() + s.substring(1);
-	}
+  /**
+   * Lower-case the first letter of a string, leaving the rest in it's original case
+   *
+   * @param s String to convert to camel-case
+   * @return Camel-cased string
+   */
+  public static String toCamelCase(String s) {
+    return s.substring(0, 1).toLowerCase() + s.substring(1);
+  }
 }

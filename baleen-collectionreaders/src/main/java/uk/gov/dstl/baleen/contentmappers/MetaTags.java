@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers;
 
 import org.apache.uima.jcas.JCas;
@@ -16,24 +16,24 @@ import uk.gov.dstl.baleen.types.metadata.Metadata;
  */
 public class MetaTags implements ContentMapper {
 
-	@Override
-	public void map(JCas jCas, Element element, AnnotationCollector collector) {
-		
-		if("meta".equalsIgnoreCase(element.tagName())){
-			Metadata md = new Metadata(jCas);
+  @Override
+  public void map(JCas jCas, Element element, AnnotationCollector collector) {
 
-			String name = element.attr("name");
-			md.setKey(name);
+    if ("meta".equalsIgnoreCase(element.tagName())) {
+      Metadata md = new Metadata(jCas);
 
-			String content = element.attr("content");
-			String charset = element.attr("charset");
-			if (!Strings.isNullOrEmpty(content)) {
-				md.setValue(content);
-			} else if (!Strings.isNullOrEmpty(charset)) {
-				md.setValue(charset);
-			}
+      String name = element.attr("name");
+      md.setKey(name);
 
-			collector.add(md);
-		}
-	}
+      String content = element.attr("content");
+      String charset = element.attr("charset");
+      if (!Strings.isNullOrEmpty(content)) {
+        md.setValue(content);
+      } else if (!Strings.isNullOrEmpty(charset)) {
+        md.setValue(charset);
+      }
+
+      collector.add(md);
+    }
+  }
 }

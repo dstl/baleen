@@ -1,15 +1,10 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.coreference.impl.sieves;
 
-/**
- * A sieve stage in the coreference pipeline.
- */
+/** A sieve stage in the coreference pipeline. */
 @FunctionalInterface
 public interface CoreferenceSieve {
 
-	/**
-	 * Apply the sieve.
-	 */
-	void sieve();
-
+  /** Apply the sieve. */
+  void sieve();
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
 
 import java.util.Collection;
@@ -20,227 +20,221 @@ import uk.gov.dstl.baleen.core.pipelines.orderers.IPipelineOrderer;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
 /**
- * This class provides basic functionality for an annotator, such as metrics and
- * logging, so that we don't need to put it into every annotator manually. All
- * annotators in Baleen should inherit from this class and use any utility
- * methods it provides as required to ensure we standardise logging and metrics
- * as much as possible.
- *
- * 
+ * This class provides basic functionality for an annotator, such as metrics and logging, so that we
+ * don't need to put it into every annotator manually. All annotators in Baleen should inherit from
+ * this class and use any utility methods it provides as required to ensure we standardise logging
+ * and metrics as much as possible.
  */
 public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
-	private UimaMonitor monitor;
-	private UimaSupport support;
+  private UimaMonitor monitor;
+  private UimaSupport support;
 
-	/**
-	 * Baleen History resource
-	 * 
-	 * @baleen.resource uk.gov.dstl.baleen.core.history.BaleenHistory
-	 */
-	public static final String KEY_HISTORY = PipelineBuilder.BALEEN_HISTORY;
-	@ExternalResource(key = KEY_HISTORY, mandatory = false)
-	private BaleenHistory history;
+  /**
+   * Baleen History resource
+   *
+   * @baleen.resource uk.gov.dstl.baleen.core.history.BaleenHistory
+   */
+  public static final String KEY_HISTORY = PipelineBuilder.BALEEN_HISTORY;
 
-	@Override
-	public void initialize(UimaContext context) throws ResourceInitializationException {
-		// This will do initialization of resources,
-		// but won't be included in the metrics
-		super.initialize(context);
+  @ExternalResource(key = KEY_HISTORY, mandatory = false)
+  private BaleenHistory history;
 
-		String pipelineName = UimaUtils.getPipelineName(context);
-		monitor = createMonitor(pipelineName);
-		support = createSupport(pipelineName, context);
+  @Override
+  public void initialize(UimaContext context) throws ResourceInitializationException {
+    // This will do initialization of resources,
+    // but won't be included in the metrics
+    super.initialize(context);
 
-		monitor.startFunction("initialize");
+    String pipelineName = UimaUtils.getPipelineName(context);
+    monitor = createMonitor(pipelineName);
+    support = createSupport(pipelineName, context);
 
-		doInitialize(context);
+    monitor.startFunction("initialize");
 
-		monitor.finishFunction("initialize");
+    doInitialize(context);
 
-		String uuid = (String) getContext().getConfigParameterValue(PipelineBuilder.ANNOTATOR_UUID);
-		AnalysisEngineActionStore.getInstance().add(uuid, getAction());
-	}
+    monitor.finishFunction("initialize");
 
-	protected UimaSupport createSupport(String pipelineName, UimaContext context) {
-		return new UimaSupport(pipelineName, this.getClass(), history, monitor, UimaUtils.isMergeDistinctEntities(context));
-	}
+    String uuid = (String) getContext().getConfigParameterValue(PipelineBuilder.ANNOTATOR_UUID);
+    AnalysisEngineActionStore.getInstance().add(uuid, getAction());
+  }
 
-	protected UimaMonitor createMonitor(String pipelineName) {
-		return new UimaMonitor(pipelineName, this.getClass());
-	}
+  protected UimaSupport createSupport(String pipelineName, UimaContext context) {
+    return new UimaSupport(
+        pipelineName,
+        this.getClass(),
+        history,
+        monitor,
+        UimaUtils.isMergeDistinctEntities(context));
+  }
 
-	/**
-	 * Called when the analysis engine is being initialized. Any required
-	 * resources, for example, should be opened at this point.
-	 *
-	 * @param aContext
-	 *            UimaContext object passed by the Collection Processing Engine
-	 */
-	public void doInitialize(UimaContext aContext) throws ResourceInitializationException{
-		// Do nothing - this should be overridden in most cases
-	}
+  protected UimaMonitor createMonitor(String pipelineName) {
+    return new UimaMonitor(pipelineName, this.getClass());
+  }
 
-	@Override
-	public void process(JCas aJCas) throws AnalysisEngineProcessException {
-		monitor.startFunction("process");
+  /**
+   * Called when the analysis engine is being initialized. Any required resources, for example,
+   * should be opened at this point.
+   *
+   * @param aContext UimaContext object passed by the Collection Processing Engine
+   */
+  public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+    // Do nothing - this should be overridden in most cases
+  }
 
-		doProcess(aJCas);
+  @Override
+  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+    monitor.startFunction("process");
 
-		monitor.finishFunction("process");
-		monitor.persistCounts();
-	}
+    doProcess(aJCas);
 
-	/**
-	 * Called when UIMA wants the annotator to process a document. The passed
-	 * JCas object contains information about the document and any existing
-	 * annotations.
-	 *
-	 * @param jCas
-	 *            JCas object to process
-	 * @throws AnalysisEngineProcessException
-	 */
-	protected abstract void doProcess(JCas jCas) throws AnalysisEngineProcessException;
+    monitor.finishFunction("process");
+    monitor.persistCounts();
+  }
 
-	@Override
-	public void destroy() {
-		monitor.startFunction("destroy");
+  /**
+   * Called when UIMA wants the annotator to process a document. The passed JCas object contains
+   * information about the document and any existing annotations.
+   *
+   * @param jCas JCas object to process
+   * @throws AnalysisEngineProcessException
+   */
+  protected abstract void doProcess(JCas jCas) throws AnalysisEngineProcessException;
 
-		doDestroy();
+  @Override
+  public void destroy() {
+    monitor.startFunction("destroy");
 
-		monitor.finishFunction("destroy");
-	}
+    doDestroy();
 
-	/**
-	 * Called when the analysis engine has finished and is closing down. Any
-	 * open resources, for example, should be closed at this point.
-	 */
-	protected void doDestroy(){
-		//Do nothing - this should be overridden in most cases
-	}
+    monitor.finishFunction("destroy");
+  }
 
-	/** Get the UIMA monitor for this annotator.
-	 * @return the uima monitor
-	 */
-	protected UimaMonitor getMonitor() {
-		return monitor;
-	}
+  /**
+   * Called when the analysis engine has finished and is closing down. Any open resources, for
+   * example, should be closed at this point.
+   */
+  protected void doDestroy() {
+    // Do nothing - this should be overridden in most cases
+  }
 
+  /**
+   * Get the UIMA monitor for this annotator.
+   *
+   * @return the uima monitor
+   */
+  protected UimaMonitor getMonitor() {
+    return monitor;
+  }
 
-	/** Get the UIMA support for this annotator.
-	 * @return the uima support
-	 */
-	protected UimaSupport getSupport() {
-		return support;
-	}
+  /**
+   * Get the UIMA support for this annotator.
+   *
+   * @return the uima support
+   */
+  protected UimaSupport getSupport() {
+    return support;
+  }
 
-	// Direct access to common support functions
+  // Direct access to common support functions
 
-	/**
-	 * Add an annotation to the JCas index, notifying UimaMonitor of the fact we
-	 * have done so
-	 *
-	 * @param annot
-	 *            Annotation(s) to add
-	 */
-	protected void addToJCasIndex(Annotation... annotations) {
-		getSupport().add(annotations);
-	}
+  /**
+   * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
+   *
+   * @param annot Annotation(s) to add
+   */
+  protected void addToJCasIndex(Annotation... annotations) {
+    getSupport().add(annotations);
+  }
 
-	/**
-	 * Add an annotation to the JCas index, notifying UimaMonitor of the fact we
-	 * have done so
-	 *
-	 * @param annot
-	 *            Annotation(s) to add
-	 */
-	protected void addToJCasIndex(Collection<? extends Annotation> annotations) {
-		getSupport().add(annotations);
-	}
+  /**
+   * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
+   *
+   * @param annot Annotation(s) to add
+   */
+  protected void addToJCasIndex(Collection<? extends Annotation> annotations) {
+    getSupport().add(annotations);
+  }
 
-	/**
-	 * Remove an annotation to the JCas index, notifying UimaMonitor of the fact
-	 * we have done so
-	 *
-	 * @param annot
-	 *            Annotation(s) to remove
-	 */
-	protected void removeFromJCasIndex(Collection<? extends Annotation> annotations) {
-		getSupport().remove(annotations);
-	}
+  /**
+   * Remove an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
+   *
+   * @param annot Annotation(s) to remove
+   */
+  protected void removeFromJCasIndex(Collection<? extends Annotation> annotations) {
+    getSupport().remove(annotations);
+  }
 
-	/**
-	 * Remove an annotation to the JCas index, notifying UimaMonitor of the fact
-	 * we have done so
-	 *
-	 * @param annot
-	 *            Annotation(s) to remove
-	 */
-	protected void removeFromJCasIndex(Annotation... annotations) {
-		getSupport().remove(annotations);
-	}
+  /**
+   * Remove an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
+   *
+   * @param annot Annotation(s) to remove
+   */
+  protected void removeFromJCasIndex(Annotation... annotations) {
+    getSupport().remove(annotations);
+  }
 
-	/**
-	 * Add a new annotation, which is merged from the old annotations, removing the old annotations.
-	 *
-	 * @param newAnnotation
-	 *            The annotation which is to be added to the document as the merged result of the old annotations
-	 * @param annotations
-	 *            Annotation(s) which have been merged and should be removed
-	 */
-	protected void mergeWithNew(Annotation newAnnotation, Annotation... annotations) {
-		getSupport().mergeWithNew(newAnnotation, annotations);
-	}
+  /**
+   * Add a new annotation, which is merged from the old annotations, removing the old annotations.
+   *
+   * @param newAnnotation The annotation which is to be added to the document as the merged result
+   *     of the old annotations
+   * @param annotations Annotation(s) which have been merged and should be removed
+   */
+  protected void mergeWithNew(Annotation newAnnotation, Annotation... annotations) {
+    getSupport().mergeWithNew(newAnnotation, annotations);
+  }
 
-	/**
-	 * Add a new annotation, which is merged from the old annotations, removing the old annotations.
-	 *
-	 * @param newAnnotation
-	 *            The annotation which is to be added to the document as the merged result of the old annotations
-	 * @param annotations
-	 *            Annotation(s) which have been merged and should be removed
-	 */
-	protected void mergeWithNew(Annotation newAnnotation, Collection<? extends Annotation> annotations) {
-		getSupport().mergeWithNew(newAnnotation, annotations);
-	}
+  /**
+   * Add a new annotation, which is merged from the old annotations, removing the old annotations.
+   *
+   * @param newAnnotation The annotation which is to be added to the document as the merged result
+   *     of the old annotations
+   * @param annotations Annotation(s) which have been merged and should be removed
+   */
+  protected void mergeWithNew(
+      Annotation newAnnotation, Collection<? extends Annotation> annotations) {
+    getSupport().mergeWithNew(newAnnotation, annotations);
+  }
 
-	/**
-	 * Merge an existing annotation with old annotations, removing the old annotations.
-	 *
-	 * @param existingAnnotation
-	 *            The annotation which exists and is to be left in the document (merged)
-	 * @param annotations
-	 *            Annotation(s) which have been merged wiht existingAnnotation and then removed
-	 */
-	protected void mergeWithExisting(Annotation existingAnnotation, Annotation... annotations) {
-		getSupport().mergeWithExisting(existingAnnotation, annotations);
-	}
+  /**
+   * Merge an existing annotation with old annotations, removing the old annotations.
+   *
+   * @param existingAnnotation The annotation which exists and is to be left in the document
+   *     (merged)
+   * @param annotations Annotation(s) which have been merged wiht existingAnnotation and then
+   *     removed
+   */
+  protected void mergeWithExisting(Annotation existingAnnotation, Annotation... annotations) {
+    getSupport().mergeWithExisting(existingAnnotation, annotations);
+  }
 
-	/**
-	 * Add a new annotation, which is merged from the old annotations, removing the old annotations.
-	 *
-	 * @param existingAnnotation
-	 *            The annotation which exists and is to be left in the document (merged)
-	 * @param annotations
-	 *            Annotation(s) which have been merged wiht existingAnnotation and then removed
-	 */
-	protected void mergeWithExisting(Annotation existingAnnotation, Collection<? extends Annotation> annotations) {
-		getSupport().mergeWithExisting(existingAnnotation, annotations);
-	}
+  /**
+   * Add a new annotation, which is merged from the old annotations, removing the old annotations.
+   *
+   * @param existingAnnotation The annotation which exists and is to be left in the document
+   *     (merged)
+   * @param annotations Annotation(s) which have been merged wiht existingAnnotation and then
+   *     removed
+   */
+  protected void mergeWithExisting(
+      Annotation existingAnnotation, Collection<? extends Annotation> annotations) {
+    getSupport().mergeWithExisting(existingAnnotation, annotations);
+  }
 
-	/**
-	 * Return the document annotation.
-	 *
-	 * @param jCas
-	 * @return the document annotation
-	 */
-	protected DocumentAnnotation getDocumentAnnotation(JCas jCas){
-		return getSupport().getDocumentAnnotation(jCas);
-	}
-	
-	/**
-	 * Return an AnalysisEngineAction that programmatically describes
-	 * what the analysis engine is doing, such that it can be automatically
-	 * ordered by an {@link IPipelineOrderer}
-	 */
-	public abstract AnalysisEngineAction getAction();
+  /**
+   * Return the document annotation.
+   *
+   * @param jCas
+   * @return the document annotation
+   */
+  protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
+    return getSupport().getDocumentAnnotation(jCas);
+  }
+
+  /**
+   * Return an AnalysisEngineAction that programmatically describes what the analysis engine is
+   * doing, such that it can be automatically ordered by an {@link IPipelineOrderer}
+   */
+  public abstract AnalysisEngineAction getAction();
 }

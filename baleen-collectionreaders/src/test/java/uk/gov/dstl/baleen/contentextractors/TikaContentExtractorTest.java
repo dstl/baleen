@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentextractors;
 
 import static org.junit.Assert.assertEquals;
@@ -23,99 +23,95 @@ import uk.gov.dstl.baleen.uima.BaleenContentExtractor;
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class TikaContentExtractorTest {
-	
-	@Test
-	public void testTikaWord() throws Exception{
-		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasSingleton.getJCasInstance();
-		
-		BaleenContentExtractor contentExtractor = new TikaContentExtractor();
-		
-		File f = new File(getClass().getResource("test.docx").getPath());
-		
-		contentExtractor.initialize(context, Collections.emptyMap());
-		try(
-			InputStream is = new FileInputStream(f);
-		){
-			contentExtractor.processStream(is, f.getPath(), jCas);
-		}
-		contentExtractor.destroy();
-		
-		assertEquals("Test Document\nThis is a simple test document, with a title and a single sentence.\n", jCas.getDocumentText());
-		
-		Collection<Metadata> metadata = JCasUtil.select(jCas, Metadata.class);
-		assertEquals(44, metadata.size());
-		
-		Map<String, String> metadataMap = new HashMap<>();
-		for(Metadata md : metadata){
-			metadataMap.put(md.getKey(), md.getValue());
-		}
-		
-		assertTrue(metadataMap.containsKey("Page-Count"));
-		assertEquals("1", metadataMap.get("Page-Count"));
-		
-		assertTrue(metadataMap.containsKey("meta:author"));
-		assertEquals("James Baker", metadataMap.get("meta:author"));
-	}
-	
-	@Test
-	public void testTikaText() throws Exception{
-		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasSingleton.getJCasInstance();
-		
-		BaleenContentExtractor contentExtractor = new TikaContentExtractor();
-		
-		File f = new File(getClass().getResource("test.txt").getPath());
-		
-		contentExtractor.initialize(context, Collections.emptyMap());
-		try(
-			InputStream is = new FileInputStream(f);
-		){
-			contentExtractor.processStream(is, f.getPath(), jCas);
-		}
-		contentExtractor.destroy();
-		
-		assertEquals("Hello World\n", jCas.getDocumentText());
-		assertEquals(4, JCasUtil.select(jCas, Metadata.class).size());
-	}
-	
-	@Test
-	public void testTikaWrappingDocx() throws Exception{
-		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasSingleton.getJCasInstance();
-		
-		BaleenContentExtractor contentExtractor = new TikaContentExtractor();
-		
-		File f = new File(getClass().getResource("wrappingLines.docx").getPath());
-		
-		contentExtractor.initialize(context, Collections.emptyMap());
-		try(
-			InputStream is = new FileInputStream(f);
-		){
-			contentExtractor.processStream(is, f.getPath(), jCas);
-		}
-		contentExtractor.destroy();
-		
-		assertEquals("Test Document\nThis is my test document, which has a sentence that is long enough to wrap over two lines but we want it to appear as a single line when we extract the content.\nThis is a second paragraph. This is a third sentence, but still the second paragraph. Super-cali-fragi-listic-expi-alo-docious.\n", jCas.getDocumentText());
-	}
-	
-	@Test
-	public void testTikaCorruptFile() throws Exception{
-		UimaContext context = UimaContextFactory.createUimaContext();
-		JCas jCas = JCasSingleton.getJCasInstance();
-		
-		BaleenContentExtractor contentExtractor = new TikaContentExtractor();
-		
-		File f = new File(getClass().getResource("corrupt.docx").getPath());
-		
-		contentExtractor.initialize(context, Collections.emptyMap());
-		try(
-			InputStream is = new FileInputStream(f);
-		){
-			contentExtractor.processStream(is, f.getPath(), jCas);
-		}
-		contentExtractor.destroy();
-		
-		assertEquals(TikaContentExtractor.CORRUPT_FILE_TEXT, jCas.getDocumentText());
-	}
+
+  @Test
+  public void testTikaWord() throws Exception {
+    UimaContext context = UimaContextFactory.createUimaContext();
+    JCas jCas = JCasSingleton.getJCasInstance();
+
+    BaleenContentExtractor contentExtractor = new TikaContentExtractor();
+
+    File f = new File(getClass().getResource("test.docx").getPath());
+
+    contentExtractor.initialize(context, Collections.emptyMap());
+    try (InputStream is = new FileInputStream(f); ) {
+      contentExtractor.processStream(is, f.getPath(), jCas);
+    }
+    contentExtractor.destroy();
+
+    assertEquals(
+        "Test Document\nThis is a simple test document, with a title and a single sentence.\n",
+        jCas.getDocumentText());
+
+    Collection<Metadata> metadata = JCasUtil.select(jCas, Metadata.class);
+    assertEquals(44, metadata.size());
+
+    Map<String, String> metadataMap = new HashMap<>();
+    for (Metadata md : metadata) {
+      metadataMap.put(md.getKey(), md.getValue());
+    }
+
+    assertTrue(metadataMap.containsKey("Page-Count"));
+    assertEquals("1", metadataMap.get("Page-Count"));
+
+    assertTrue(metadataMap.containsKey("meta:author"));
+    assertEquals("James Baker", metadataMap.get("meta:author"));
+  }
+
+  @Test
+  public void testTikaText() throws Exception {
+    UimaContext context = UimaContextFactory.createUimaContext();
+    JCas jCas = JCasSingleton.getJCasInstance();
+
+    BaleenContentExtractor contentExtractor = new TikaContentExtractor();
+
+    File f = new File(getClass().getResource("test.txt").getPath());
+
+    contentExtractor.initialize(context, Collections.emptyMap());
+    try (InputStream is = new FileInputStream(f); ) {
+      contentExtractor.processStream(is, f.getPath(), jCas);
+    }
+    contentExtractor.destroy();
+
+    assertEquals("Hello World\n", jCas.getDocumentText());
+    assertEquals(4, JCasUtil.select(jCas, Metadata.class).size());
+  }
+
+  @Test
+  public void testTikaWrappingDocx() throws Exception {
+    UimaContext context = UimaContextFactory.createUimaContext();
+    JCas jCas = JCasSingleton.getJCasInstance();
+
+    BaleenContentExtractor contentExtractor = new TikaContentExtractor();
+
+    File f = new File(getClass().getResource("wrappingLines.docx").getPath());
+
+    contentExtractor.initialize(context, Collections.emptyMap());
+    try (InputStream is = new FileInputStream(f); ) {
+      contentExtractor.processStream(is, f.getPath(), jCas);
+    }
+    contentExtractor.destroy();
+
+    assertEquals(
+        "Test Document\nThis is my test document, which has a sentence that is long enough to wrap over two lines but we want it to appear as a single line when we extract the content.\nThis is a second paragraph. This is a third sentence, but still the second paragraph. Super-cali-fragi-listic-expi-alo-docious.\n",
+        jCas.getDocumentText());
+  }
+
+  @Test
+  public void testTikaCorruptFile() throws Exception {
+    UimaContext context = UimaContextFactory.createUimaContext();
+    JCas jCas = JCasSingleton.getJCasInstance();
+
+    BaleenContentExtractor contentExtractor = new TikaContentExtractor();
+
+    File f = new File(getClass().getResource("corrupt.docx").getPath());
+
+    contentExtractor.initialize(context, Collections.emptyMap());
+    try (InputStream is = new FileInputStream(f); ) {
+      contentExtractor.processStream(is, f.getPath(), jCas);
+    }
+    contentExtractor.destroy();
+
+    assertEquals(TikaContentExtractor.CORRUPT_FILE_TEXT, jCas.getDocumentText());
+  }
 }

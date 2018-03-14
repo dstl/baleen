@@ -1,27 +1,26 @@
-//Dstl (c) Crown Copyright 2017
-//Modified by NCA (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
+// Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
-import com.google.common.collect.ImmutableSet;
-import org.apache.uima.jcas.tcas.Annotation;
-import org.apache.uima.resource.ResourceInitializationException;
-import uk.gov.dstl.baleen.core.utils.BuilderUtils;
-import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
-import uk.gov.dstl.baleen.types.BaleenAnnotation;
-import uk.gov.dstl.baleen.types.structure.Structure;
+import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.stream.Collectors.toList;
+import org.apache.uima.jcas.tcas.Annotation;
+import org.apache.uima.resource.ResourceInitializationException;
 
-/**
- * Utility for working with {@link Structure}
- *
- */
+import com.google.common.collect.ImmutableSet;
+
+import uk.gov.dstl.baleen.core.utils.BuilderUtils;
+import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.types.BaleenAnnotation;
+import uk.gov.dstl.baleen.types.structure.Structure;
+
+/** Utility for working with {@link Structure} */
 public class StructureUtil {
 
   /** The Constant DEFAULT STRUCTURAL PACKAGE. */
@@ -31,9 +30,7 @@ public class StructureUtil {
   private static final String DEFAULT_ANNOTATION_PACKAGE =
       BaleenAnnotation.class.getPackage().getName();
 
-  /**
-   * Private constructor
-   */
+  /** Private constructor */
   private StructureUtil() {
     // Util class
   }
@@ -66,8 +63,8 @@ public class StructureUtil {
     } else {
       for (final String typeName : typeNames) {
         try {
-          structuralClasses
-              .add(BuilderUtils.getClassFromString(typeName, DEFAULT_STRUCTURAL_PACKAGE));
+          structuralClasses.add(
+              BuilderUtils.getClassFromString(typeName, DEFAULT_STRUCTURAL_PACKAGE));
         } catch (final InvalidParameterException e) {
           throw new ResourceInitializationException(e);
         }
@@ -85,7 +82,8 @@ public class StructureUtil {
    */
   public static Set<Class<? extends BaleenAnnotation>> getAnnotationClasses(
       Class<? extends BaleenAnnotation> annotationType) throws ResourceInitializationException {
-    return ImmutableSet.copyOf(ReflectionUtils.getSubTypes(DEFAULT_ANNOTATION_PACKAGE, annotationType));
+    return ImmutableSet.copyOf(
+        ReflectionUtils.getSubTypes(DEFAULT_ANNOTATION_PACKAGE, annotationType));
   }
 
   /**
@@ -96,9 +94,9 @@ public class StructureUtil {
    * @return the filtered list of the annotations
    */
   @SuppressWarnings("unchecked")
-  public static <T> List<T> filterAnnotations(Collection<? extends Annotation> collection,
-      Set<Class<? extends T>> annotationTypes) {
-    return (List<T>) collection.stream().filter(s -> annotationTypes.contains(s.getClass()))
-        .collect(toList());
+  public static <T> List<T> filterAnnotations(
+      Collection<? extends Annotation> collection, Set<Class<? extends T>> annotationTypes) {
+    return (List<T>)
+        collection.stream().filter(s -> annotationTypes.contains(s.getClass())).collect(toList());
   }
 }

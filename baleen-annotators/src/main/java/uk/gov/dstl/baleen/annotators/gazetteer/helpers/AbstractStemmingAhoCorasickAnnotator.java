@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.gazetteer.helpers;
 
 import java.util.Collection;
@@ -8,6 +8,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import opennlp.tools.stemmer.Stemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer.ALGORITHM;
+
 import org.ahocorasick.trie.Emit;
 import org.ahocorasick.trie.Trie;
 import org.ahocorasick.trie.Trie.TrieBuilder;
@@ -16,9 +20,6 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import opennlp.tools.stemmer.Stemmer;
-import opennlp.tools.stemmer.snowball.SnowballStemmer;
-import opennlp.tools.stemmer.snowball.SnowballStemmer.ALGORITHM;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.resources.gazetteer.IGazetteer;
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
@@ -28,142 +29,147 @@ import uk.gov.dstl.baleen.uima.data.TextBlock;
  * Abstract class that acts similarly to AbstractRadixTreeGazetteerAnnotator, but performs stemming
  * of terms prior to performing matching.
  *
- * This means that gazetteer terms don't necessarily have to be exact to match. For example, plurals
- * and different tenses should stem to the same root, and so would all be matched.
+ * <p>This means that gazetteer terms don't necessarily have to be exact to match. For example,
+ * plurals and different tenses should stem to the same root, and so would all be matched.
  *
- * Note that if multiple words in the gazetteer stem to the same form, then the coreferencing may
+ * <p>Note that if multiple words in the gazetteer stem to the same form, then the coreferencing may
  * give incorrect results.
  *
  * @baleen.javadoc
  */
 public abstract class AbstractStemmingAhoCorasickAnnotator extends AbstractAhoCorasickAnnotator {
 
-	/**
-	 * The stemming algorithm to use, as defined in OpenNLP's SnowballStemmer.ALGORITHM enum
-	 *
-	 * @baleen.config ENGLISH
-	 */
-	public static final String PARAM_ALGORITHM = "algorithm";
-	@ConfigurationParameter(name = PARAM_ALGORITHM, defaultValue = "ENGLISH")
-	protected String algorithm;
+  /**
+   * The stemming algorithm to use, as defined in OpenNLP's SnowballStemmer.ALGORITHM enum
+   *
+   * @baleen.config ENGLISH
+   */
+  public static final String PARAM_ALGORITHM = "algorithm";
 
-	protected Stemmer stemmer;
+  @ConfigurationParameter(name = PARAM_ALGORITHM, defaultValue = "ENGLISH")
+  protected String algorithm;
 
-	private static Pattern WORD_PATTERN = Pattern.compile("[a-z']+");
-	private final Map<String, String> stemmedToKey = new HashMap<>();
+  protected Stemmer stemmer;
 
-	@Override
-	public abstract IGazetteer configureGazetteer() throws BaleenException;
+  private static Pattern WORD_PATTERN = Pattern.compile("[a-z']+");
+  private final Map<String, String> stemmedToKey = new HashMap<>();
 
-	@Override
-	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-		ALGORITHM algo = ALGORITHM.valueOf(algorithm);
-		if (algo == null) {
-			algo = ALGORITHM.ENGLISH;
-		}
-		stemmer = new SnowballStemmer(algo);
+  @Override
+  public abstract IGazetteer configureGazetteer() throws BaleenException;
 
-		super.doInitialize(aContext);
-	}
+  @Override
+  public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+    ALGORITHM algo = ALGORITHM.valueOf(algorithm);
+    if (algo == null) {
+      algo = ALGORITHM.ENGLISH;
+    }
+    stemmer = new SnowballStemmer(algo);
 
-	@Override
-	protected void buildTrie() {
-		TrieBuilder builder = Trie.builder().onlyWholeWords();
+    super.doInitialize(aContext);
+  }
 
-		if (!caseSensitive) {
-			builder = builder.ignoreCase();
-		}
+  @Override
+  protected void buildTrie() {
+    TrieBuilder builder = Trie.builder().onlyWholeWords();
 
-		for (String s : gazetteer.getValues()) {
-			TransformedString stemmed = stem(s.trim());
+    if (!caseSensitive) {
+      builder = builder.ignoreCase();
+    }
 
-			builder = builder.addKeyword(stemmed.getTransformedString());
-			stemmedToKey.put(stemmed.getTransformedString(), stemmed.getOriginalString());
-		}
+    for (String s : gazetteer.getValues()) {
+      TransformedString stemmed = stem(s.trim());
 
-		trie = builder.build();
-	}
+      builder = builder.addKeyword(stemmed.getTransformedString());
+      stemmedToKey.put(stemmed.getTransformedString(), stemmed.getOriginalString());
+    }
 
-	@Override
-	public void doProcessTextBlock(TextBlock block) throws AnalysisEngineProcessException {
-		Map<String, List<BaleenAnnotation>> entities = new HashMap<>();
+    trie = builder.build();
+  }
 
-		TransformedString stemmed = stem(block.getCoveredText());
-		Collection<Emit> emits = trie.parseText(stemmed.getTransformedString());
+  @Override
+  public void doProcessTextBlock(TextBlock block) throws AnalysisEngineProcessException {
+    Map<String, List<BaleenAnnotation>> entities = new HashMap<>();
 
-		for (Emit emit : emits) {
-			try {
-				Integer start = stemmed.getMapping().get(emit.getStart());
-				Integer end = stemmed.getMapping().get(emit.getEnd() + 1);
+    TransformedString stemmed = stem(block.getCoveredText());
+    Collection<Emit> emits = trie.parseText(stemmed.getTransformedString());
 
-				validateSubstring(start, end, stemmed.getOriginalString());
+    for (Emit emit : emits) {
+      try {
+        Integer start = stemmed.getMapping().get(emit.getStart());
+        Integer end = stemmed.getMapping().get(emit.getEnd() + 1);
 
-				String match = stemmed.getOriginalString().substring(start, end);
-				String key = stemmedToKey.get(emit.getKeyword());
+        validateSubstring(start, end, stemmed.getOriginalString());
 
-				createEntityAndAliases(block, start, end, match, key, entities);
-			} catch (BaleenException be) {
-				getMonitor().error("Unable to create entity of type {} for value '{}'", entityType.getName(),
-						emit.getKeyword(), be);
-				continue;
-			}
-		}
+        String match = stemmed.getOriginalString().substring(start, end);
+        String key = stemmedToKey.get(emit.getKeyword());
 
-		createReferenceTargets(block, entities.values());
-	}
+        createEntityAndAliases(block, start, end, match, key, entities);
+      } catch (BaleenException be) {
+        getMonitor()
+            .error(
+                "Unable to create entity of type {} for value '{}'",
+                entityType.getName(),
+                emit.getKeyword(),
+                be);
+        continue;
+      }
+    }
 
-	/**
-	 * Convert a word, or words, into their stemmed form and return it along with a mapping between
-	 * the original and transformed strings
-	 */
-	protected TransformedString stem(String words) {
-		StringBuilder builder = new StringBuilder();
-		Map<Integer, Integer> indexMap = new HashMap<>();
+    createReferenceTargets(block, entities.values());
+  }
 
-		Integer index = 0;
-		String content = words.toLowerCase();
-		while (!content.isEmpty()) {
-			indexMap.put(builder.length(), index);
-			if (Character.isAlphabetic(content.charAt(0))) {
-				Matcher m = WORD_PATTERN.matcher(content);
+  /**
+   * Convert a word, or words, into their stemmed form and return it along with a mapping between
+   * the original and transformed strings
+   */
+  protected TransformedString stem(String words) {
+    StringBuilder builder = new StringBuilder();
+    Map<Integer, Integer> indexMap = new HashMap<>();
 
-				m.find();
-				String match = m.group();
-				CharSequence stemmedMatch = stemmer.stem(match);
+    Integer index = 0;
+    String content = words.toLowerCase();
+    while (!content.isEmpty()) {
+      indexMap.put(builder.length(), index);
+      if (Character.isAlphabetic(content.charAt(0))) {
+        Matcher m = WORD_PATTERN.matcher(content);
 
-				builder.append(stemmedMatch);
+        m.find();
+        String match = m.group();
+        CharSequence stemmedMatch = stemmer.stem(match);
 
-				index += match.length();
+        builder.append(stemmedMatch);
 
-				content = content.substring(match.length());
-			} else {
-				builder.append(content.substring(0, 1));
-				content = content.substring(1);
+        index += match.length();
 
-				index++;
-			}
-		}
+        content = content.substring(match.length());
+      } else {
+        builder.append(content.substring(0, 1));
+        content = content.substring(1);
 
-		indexMap.put(builder.length(), index);
+        index++;
+      }
+    }
 
-		return new TransformedString(words, builder.toString(), indexMap);
-	}
+    indexMap.put(builder.length(), index);
 
-	private void validateSubstring(Integer start, Integer end, String string) throws BaleenException {
-		if (start == null) {
-			throw new BaleenException("Variable start cannot be null");
-		}
+    return new TransformedString(words, builder.toString(), indexMap);
+  }
 
-		if (end == null) {
-			throw new BaleenException("Variable end cannot be null");
-		}
+  private void validateSubstring(Integer start, Integer end, String string) throws BaleenException {
+    if (start == null) {
+      throw new BaleenException("Variable start cannot be null");
+    }
 
-		if (start < 0) {
-			throw new BaleenException("Variable start cannot be less than 0");
-		}
+    if (end == null) {
+      throw new BaleenException("Variable end cannot be null");
+    }
 
-		if (end > string.length()) {
-			throw new BaleenException("Variable end cannot be greater than the string length");
-		}
-	}
+    if (start < 0) {
+      throw new BaleenException("Variable start cannot be less than 0");
+    }
+
+    if (end > string.length()) {
+      throw new BaleenException("Variable end cannot be greater than the string length");
+    }
+  }
 }

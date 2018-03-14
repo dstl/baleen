@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import java.util.ArrayList;
@@ -9,9 +9,7 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
 
-/**
- * Parses a CSS selector into an Evaluator tree.
- */
+/** Parses a CSS selector into an Evaluator tree. */
 public class QueryParser<T> {
 
   /** Combining tokens */
@@ -127,17 +125,20 @@ public class QueryParser<T> {
     // for most combinators: change the current eval into an AND of the current eval and the new
     // eval
     if (combinator == '>') {
-      currentEval = new CombiningEvaluator.And<>(newEval,
-          new StructuralEvaluator.ImmediateParent<>(currentEval));
+      currentEval =
+          new CombiningEvaluator.And<>(
+              newEval, new StructuralEvaluator.ImmediateParent<>(currentEval));
     } else if (combinator == ' ') {
       currentEval =
           new CombiningEvaluator.And<>(newEval, new StructuralEvaluator.Parent<>(currentEval));
     } else if (combinator == '+') {
-      currentEval = new CombiningEvaluator.And<>(newEval,
-          new StructuralEvaluator.ImmediatePreviousSibling<>(currentEval));
+      currentEval =
+          new CombiningEvaluator.And<>(
+              newEval, new StructuralEvaluator.ImmediatePreviousSibling<>(currentEval));
     } else if (combinator == '~') {
-      currentEval = new CombiningEvaluator.And<>(newEval,
-          new StructuralEvaluator.PreviousSibling<>(currentEval));
+      currentEval =
+          new CombiningEvaluator.And<>(
+              newEval, new StructuralEvaluator.PreviousSibling<>(currentEval));
     } else if (combinator == ',') { // group or.
       CombiningEvaluator.Or<T> or;
       if (currentEval instanceof CombiningEvaluator.Or) {
@@ -182,9 +183,7 @@ public class QueryParser<T> {
     return sq.toString();
   }
 
-  /**
-   * Match the next section of the query
-   */
+  /** Match the next section of the query */
   private void findElements() {
     if (tq.matchChomp("#")) {
       byId();
@@ -242,39 +241,30 @@ public class QueryParser<T> {
       throw new Selector.SelectorParseException(
           "Could not parse query '%s': unexpected token at '%s'", query, tq.remainder());
     }
-
   }
 
-  /**
-   * add the Id evaluator
-   */
+  /** add the Id evaluator */
   private void byId() {
     String id = tq.consumeIdentifier();
     Validate.notEmpty(id);
     evals.add(new Evaluator.Id<>(id));
   }
 
-  /**
-   * add the Class evaluator
-   */
+  /** add the Class evaluator */
   private void byClass() {
     String className = tq.consumeIdentifier();
     Validate.notEmpty(className);
     evals.add(new Evaluator.Class<>(className.trim()));
   }
 
-  /**
-   * add the Type Name evaluator
-   */
+  /** add the Type Name evaluator */
   private void byTypeName() {
     String typeName = tq.consumeNodeSelector();
     Validate.notEmpty(typeName);
     evals.add(new Evaluator.TypeName<>(typeName.trim()));
   }
 
-  /**
-   * add an Attribute evaluator, selecting the correct one as required
-   */
+  /** add an Attribute evaluator, selecting the correct one as required */
   private void byAttribute() {
     TokenQueue cq = new TokenQueue(tq.chompBalanced('[', ']')); // content queue
     String key = cq.consumeToAny(AttributeEvals); // eq, not, start, end, contain, match, (no val)
@@ -302,41 +292,31 @@ public class QueryParser<T> {
         evals.add(new Evaluator.AttributeWithValueMatching<>(key, Pattern.compile(cq.remainder())));
       } else {
         throw new Selector.SelectorParseException(
-            "Could not parse attribute query '%s': unexpected token at '%s'", query,
-            cq.remainder());
+            "Could not parse attribute query '%s': unexpected token at '%s'",
+            query, cq.remainder());
       }
     }
   }
 
-  /**
-   * add the all nodes evaluator
-   */
+  /** add the all nodes evaluator */
   private void allNodes() {
     evals.add(new Evaluator.AllNodes<>());
   }
 
-  /**
-   * add index less than evaluator
-   */
+  /** add index less than evaluator */
   private void indexLessThan() {
     evals.add(new Evaluator.IndexLessThan<>(consumeIndex()));
   }
 
-  /**
-   * add index greater than evaluator
-   */
+  /** add index greater than evaluator */
   private void indexGreaterThan() {
     evals.add(new Evaluator.IndexGreaterThan<>(consumeIndex()));
   }
 
-  /**
-   * add index equals evaluator
-   */
+  /** add index equals evaluator */
   private void indexEquals() {
     evals.add(new Evaluator.IndexEquals<>(consumeIndex()));
   }
-
-
 
   /**
    * Add nth child evaluator
@@ -363,8 +343,8 @@ public class QueryParser<T> {
       a = 0;
       b = Integer.parseInt(mB.group().replaceFirst("^\\+", ""));
     } else {
-      throw new Selector.SelectorParseException("Could not parse nth-index '%s': unexpected format",
-          argS);
+      throw new Selector.SelectorParseException(
+          "Could not parse nth-index '%s': unexpected format", argS);
     }
     if (ofType) {
       if (backwards) {
@@ -392,9 +372,7 @@ public class QueryParser<T> {
     return Integer.parseInt(indexS);
   }
 
-  /**
-   * add Has evaluator
-   */
+  /** add Has evaluator */
   private void has() {
     tq.consume(":has");
     String subQuery = tq.chompBalanced('(', ')');
@@ -435,9 +413,7 @@ public class QueryParser<T> {
     }
   }
 
-  /**
-   * add Not evaluator
-   */
+  /** add Not evaluator */
   private void not() {
     tq.consume(":not");
     String subQuery = tq.chompBalanced('(', ')');

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.history;
 
 import static org.junit.Assert.assertEquals;
@@ -20,53 +20,50 @@ import uk.gov.dstl.baleen.core.history.logging.LoggingBaleenHistory;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class LoggingBaleenHistoryTest {
 
-	@Mock
-	private Recordable recordable;
+  @Mock private Recordable recordable;
 
-	private HistoryEvent event;
+  private HistoryEvent event;
 
-	private String documentId = "fakeId";
+  private String documentId = "fakeId";
 
-	@Before
-	public void setUp() {
-		doReturn(1L).when(recordable).getInternalId();
-		event = HistoryEvents.createAdded(recordable, "referrer");
-	}
+  @Before
+  public void setUp() {
+    doReturn(1L).when(recordable).getInternalId();
+    event = HistoryEvents.createAdded(recordable, "referrer");
+  }
 
-	@Test
-	public void testNoExceptionInNormalUse() throws ResourceInitializationException {
-		LoggingBaleenHistory bh = new LoggingBaleenHistory();
+  @Test
+  public void testNoExceptionInNormalUse() throws ResourceInitializationException {
+    LoggingBaleenHistory bh = new LoggingBaleenHistory();
 
-		bh.initialize(new CustomResourceSpecifier_impl(), Maps.newHashMap());
+    bh.initialize(new CustomResourceSpecifier_impl(), Maps.newHashMap());
 
-		addAtLevel(bh, "info", documentId, event);
-		addAtLevel(bh, "errpr", documentId, event);
-		addAtLevel(bh, "warn", documentId, event);
-		addAtLevel(bh, "trace", documentId, event);
-		addAtLevel(bh, "debug", documentId, event);
-		addAtLevel(bh, "not valid", documentId, event);
-		addAtLevel(bh, null, documentId, event);
+    addAtLevel(bh, "info", documentId, event);
+    addAtLevel(bh, "errpr", documentId, event);
+    addAtLevel(bh, "warn", documentId, event);
+    addAtLevel(bh, "trace", documentId, event);
+    addAtLevel(bh, "debug", documentId, event);
+    addAtLevel(bh, "not valid", documentId, event);
+    addAtLevel(bh, null, documentId, event);
 
-		assertEquals("info", bh.getLevel());
+    assertEquals("info", bh.getLevel());
 
-		DocumentHistory history = bh.getHistory(documentId);
-		assertNotNull(history);
+    DocumentHistory history = bh.getHistory(documentId);
+    assertNotNull(history);
 
-		bh.closeHistory(documentId );
+    bh.closeHistory(documentId);
 
-		bh.destroy();
+    bh.destroy();
 
-		bh.add(documentId, event);
+    bh.add(documentId, event);
+  }
 
-	}
+  private void addAtLevel(
+      LoggingBaleenHistory bh, String level, String documentId, HistoryEvent event) {
+    bh.setLevel(level);
+    bh.add(documentId, event);
+  }
 
-	private void addAtLevel(LoggingBaleenHistory bh, String level, String documentId,
-			HistoryEvent event) {
-		bh.setLevel(level);
-		bh.add(documentId, event);				
-	}
-
-	
-	// TODO: Test naming
+  // TODO: Test naming
 
 }

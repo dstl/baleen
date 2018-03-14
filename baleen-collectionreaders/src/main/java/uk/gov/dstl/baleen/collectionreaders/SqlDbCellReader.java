@@ -1,7 +1,6 @@
-//NCA (c) Crown Copyright 2017
+// NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import com.google.common.base.Strings;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -14,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -21,6 +21,9 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
+
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
@@ -30,244 +33,255 @@ import uk.gov.dstl.baleen.uima.IContentExtractor;
 /**
  * Processes all tables in an SQL database, treating each cell in the table as a separate document.
  *
- * This collection reader does not keep track of new records being inserted into the database, and
- * should therefore only be used on static databases. If this collection reader is run on a non-static
- * database, no guarantees are made as to what data will be processed.
+ * <p>This collection reader does not keep track of new records being inserted into the database,
+ * and should therefore only be used on static databases. If this collection reader is run on a
+ * non-static database, no guarantees are made as to what data will be processed.
  *
  * @baleen.javadoc
  */
 public class SqlDbCellReader extends BaleenCollectionReader {
 
-    /**
-     * The content extractor to use to extract content from files
-     *
-     * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-     */
-    public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-    @ConfigurationParameter(name = PARAM_CONTENT_EXTRACTOR, defaultValue= BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR)
-    protected String contentExtractor;
+  /**
+   * The content extractor to use to extract content from files
+   *
+   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
+   */
+  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
 
-    /**
-     * The JDBC connection string, including database.
-     *
-     * For example: jdbc:mysql://localhost:3106/mydatabase
-     *
-     * @baleen.config
-     */
-    public static final String PARAM_SQL_CONNECTION = "connection";
-    @ConfigurationParameter(name = PARAM_SQL_CONNECTION)
-    protected String sqlConn;
+  @ConfigurationParameter(
+    name = PARAM_CONTENT_EXTRACTOR,
+    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
+  )
+  protected String contentExtractor;
 
-    /**
-     * The username for the database, or empty if there is no username.
-     * Both user and password must be set if you wish to use authentication.
-     *
-     * @baleen.config
-     */
-    public static final String PARAM_SQL_USER = "user";
-    @ConfigurationParameter(name = PARAM_SQL_USER, defaultValue = "", mandatory = false)
-    private String user;
+  /**
+   * The JDBC connection string, including database.
+   *
+   * <p>For example: jdbc:mysql://localhost:3106/mydatabase
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_SQL_CONNECTION = "connection";
 
-    /**
-     * The password for the database, or empty if there is no password.
-     * Both user and password must be set if you wish to use authentication.
-     *
-     * @baleen.config
-     */
-    public static final String PARAM_SQL_PASS = "password";
-    @ConfigurationParameter(name = PARAM_SQL_PASS, defaultValue = "", mandatory = false)
-    private String pass;
+  @ConfigurationParameter(name = PARAM_SQL_CONNECTION)
+  protected String sqlConn;
 
-    /**
-     * Ignore these tables
-     *
-     * @baleen.config
-     */
-    public static final String PARAM_SQL_IGNORE_TABLES = "ignoreTables";
-    @ConfigurationParameter(name = PARAM_SQL_IGNORE_TABLES, defaultValue = {})
-    protected String[] ignoreTables;
+  /**
+   * The username for the database, or empty if there is no username. Both user and password must be
+   * set if you wish to use authentication.
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_SQL_USER = "user";
 
-    /**
-     * Ignore these columns.
-     * Columns should be fully qualified (e.g. table.column_name)
-     *
-     * @baleen.config
-     */
-    public static final String PARAM_SQL_IGNORE_COLUMNS = "ignoreColumns";
-    @ConfigurationParameter(name = PARAM_SQL_IGNORE_COLUMNS, defaultValue = {})
-    protected String[] ignoreColumns;
+  @ConfigurationParameter(name = PARAM_SQL_USER, defaultValue = "", mandatory = false)
+  private String user;
 
-    /**
-     * The query to list the tables in the database. Table names should be returned
-     * in the first column.
-     *
-     * This may need changing depending on the database you are connecting to.
-     *
-     * @baleen.config SHOW TABLES
-     */
-    public static final String PARAM_SQL_TABLES = "tablesSql";
-    @ConfigurationParameter(name = PARAM_SQL_TABLES, defaultValue = "SHOW TABLES")
-    protected String tablesSql;
+  /**
+   * The password for the database, or empty if there is no password. Both user and password must be
+   * set if you wish to use authentication.
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_SQL_PASS = "password";
 
-    /**
-     * The query to list the columns in the database. Column names should be returned
-     * in the first column, and any instances of ? will be replaced by the
-     * table name.
-     *
-     * This may need changing depending on the database you are connecting to.
-     *
-     * @baleen.config SHOW COLUMNS FROM `?`
-     */
-    public static final String PARAM_SQL_COLUMNS = "columnsSql";
-    @ConfigurationParameter(name = PARAM_SQL_COLUMNS, defaultValue = "SHOW COLUMNS FROM `?`")
-    protected String columnsSql;
+  @ConfigurationParameter(name = PARAM_SQL_PASS, defaultValue = "", mandatory = false)
+  private String pass;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SqlDbCellReader.class);
+  /**
+   * Ignore these tables
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_SQL_IGNORE_TABLES = "ignoreTables";
 
-    private IContentExtractor extractor;
-    private Connection conn;
+  @ConfigurationParameter(
+    name = PARAM_SQL_IGNORE_TABLES,
+    defaultValue = {}
+  )
+  protected String[] ignoreTables;
 
-    private String currTable = "";
-    private long rowId = 0;
-    private List<String> tables = new ArrayList<>();
-    private List<String> columns = new ArrayList<>();
-    private ResultSet rsCurrTable = null;
-    private Map<String, Object> currRow = new HashMap<>();
+  /**
+   * Ignore these columns. Columns should be fully qualified (e.g. table.column_name)
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_SQL_IGNORE_COLUMNS = "ignoreColumns";
 
-    @Override
-    protected void doInitialize(UimaContext context) throws ResourceInitializationException {
-        try{
-            extractor = getContentExtractor(contentExtractor);
-        }catch(InvalidParameterException ipe){
-            throw new ResourceInitializationException(ipe);
-        }
-        extractor.initialize(context, getConfigParameters(context));
+  @ConfigurationParameter(
+    name = PARAM_SQL_IGNORE_COLUMNS,
+    defaultValue = {}
+  )
+  protected String[] ignoreColumns;
 
-        try{
-            if (Strings.isNullOrEmpty(user) || Strings.isNullOrEmpty(pass)) {
-                conn = DriverManager.getConnection(sqlConn);
-            } else {
-                conn = DriverManager.getConnection(sqlConn, user, pass);
-            }
-        } catch (SQLException e) {
-            throw new ResourceInitializationException(e);
-        }
+  /**
+   * The query to list the tables in the database. Table names should be returned in the first
+   * column.
+   *
+   * <p>This may need changing depending on the database you are connecting to.
+   *
+   * @baleen.config SHOW TABLES
+   */
+  public static final String PARAM_SQL_TABLES = "tablesSql";
 
-        try(
-            ResultSet rsTables = conn.prepareStatement(tablesSql).executeQuery()
-        ) {
-            while(rsTables.next()){
-                String tableName = rsTables.getString(1);
-                if (inArray(tableName, ignoreTables))
-                    continue;
+  @ConfigurationParameter(name = PARAM_SQL_TABLES, defaultValue = "SHOW TABLES")
+  protected String tablesSql;
 
-                tables.add(tableName);
-            }
+  /**
+   * The query to list the columns in the database. Column names should be returned in the first
+   * column, and any instances of ? will be replaced by the table name.
+   *
+   * <p>This may need changing depending on the database you are connecting to.
+   *
+   * @baleen.config SHOW COLUMNS FROM `?`
+   */
+  public static final String PARAM_SQL_COLUMNS = "columnsSql";
 
-            LOGGER.info("{} tables found for processing", tables.size());
-            LOGGER.debug("Table names: {}", tables);
+  @ConfigurationParameter(name = PARAM_SQL_COLUMNS, defaultValue = "SHOW COLUMNS FROM `?`")
+  protected String columnsSql;
 
-            if(tables.isEmpty()){
-                throw new ResourceInitializationException(new BaleenException("No tables found in database"));
-            }
+  private static final Logger LOGGER = LoggerFactory.getLogger(SqlDbCellReader.class);
 
-            getNextTable();
-        }catch(SQLException e){
-            throw new ResourceInitializationException(e);
-        }
+  private IContentExtractor extractor;
+  private Connection conn;
+
+  private String currTable = "";
+  private long rowId = 0;
+  private List<String> tables = new ArrayList<>();
+  private List<String> columns = new ArrayList<>();
+  private ResultSet rsCurrTable = null;
+  private Map<String, Object> currRow = new HashMap<>();
+
+  @Override
+  protected void doInitialize(UimaContext context) throws ResourceInitializationException {
+    try {
+      extractor = getContentExtractor(contentExtractor);
+    } catch (InvalidParameterException ipe) {
+      throw new ResourceInitializationException(ipe);
+    }
+    extractor.initialize(context, getConfigParameters(context));
+
+    try {
+      if (Strings.isNullOrEmpty(user) || Strings.isNullOrEmpty(pass)) {
+        conn = DriverManager.getConnection(sqlConn);
+      } else {
+        conn = DriverManager.getConnection(sqlConn, user, pass);
+      }
+    } catch (SQLException e) {
+      throw new ResourceInitializationException(e);
     }
 
-    @Override
-    public boolean doHasNext() throws IOException, CollectionException {
-        if(currRow.isEmpty()){
-            try {
-                if (!rsCurrTable.next()) {
-                    if (!getNextTable()){
-                        return false;
-                    }
-                    rowId = 0;
-                    rsCurrTable.next();
-                }
+    try (ResultSet rsTables = conn.prepareStatement(tablesSql).executeQuery()) {
+      while (rsTables.next()) {
+        String tableName = rsTables.getString(1);
+        if (inArray(tableName, ignoreTables)) continue;
 
-                rowId++;
-                for(String col : columns){
-                    currRow.put(col, rsCurrTable.getObject(col));
-                }
-            }catch (SQLException se){
-                throw new IOException(se);
-            }
-        }
-        return !currRow.isEmpty();
+        tables.add(tableName);
+      }
+
+      LOGGER.info("{} tables found for processing", tables.size());
+      LOGGER.debug("Table names: {}", tables);
+
+      if (tables.isEmpty()) {
+        throw new ResourceInitializationException(
+            new BaleenException("No tables found in database"));
+      }
+
+      getNextTable();
+    } catch (SQLException e) {
+      throw new ResourceInitializationException(e);
     }
+  }
 
-    private boolean getNextTable() throws SQLException{
-        if(tables.isEmpty())
+  @Override
+  public boolean doHasNext() throws IOException, CollectionException {
+    if (currRow.isEmpty()) {
+      try {
+        if (!rsCurrTable.next()) {
+          if (!getNextTable()) {
             return false;
-
-        columns.clear();
-
-        currTable = tables.remove(0);
-        LOGGER.info("Now processing table {}", currTable);
-
-        try(
-            ResultSet rsColumns = conn.prepareStatement(columnsSql.replaceAll("\\?", currTable)).executeQuery()
-        ) {
-            while (rsColumns.next()) {
-                String columnName = rsColumns.getString(1);
-                if (inArray(currTable+"."+columnName, ignoreColumns))
-                    continue;
-
-                columns.add(columnName);
-            }
-
-            LOGGER.info("{} columns found for processing", columns.size());
-            LOGGER.debug("Column names: {}", columns);
+          }
+          rowId = 0;
+          rsCurrTable.next();
         }
 
-        StringJoiner sjCols = new StringJoiner("`,`","`","`");
-        columns.forEach(sjCols::add);
-
-        // We can't wrap this line in a try-with-resources, as it is needed by doHasNext()
-        // We close this in doClose()
-        rsCurrTable = conn.prepareStatement("SELECT "+sjCols.toString()+" FROM "+currTable).executeQuery();
-        return true;
-    }
-
-    @Override
-    protected void doGetNext(JCas jCas) throws IOException, CollectionException {
-        String key = currRow.keySet().iterator().next();
-
-        Object o = currRow.remove(key);
-
-        String sourceUrl = sqlConn.substring(5) + "." + currTable + "#" + rowId + "." + key;
-        extractor.processStream(new ByteArrayInputStream(o.toString().getBytes(Charset.defaultCharset())), sourceUrl, jCas);
-    }
-
-    @Override
-    protected void doClose() throws IOException {
-        if(rsCurrTable != null){
-            try {
-                rsCurrTable.close();
-            } catch (SQLException e) {
-                LOGGER.warn("Error closing ResultSet", e);
-            }
+        rowId++;
+        for (String col : columns) {
+          currRow.put(col, rsCurrTable.getObject(col));
         }
+      } catch (SQLException se) {
+        throw new IOException(se);
+      }
+    }
+    return !currRow.isEmpty();
+  }
 
-        if(conn != null){
-            try{
-                conn.close();
-            }catch (SQLException e){
-                LOGGER.warn("Error closing connection to database", e);
-            }
-        }
+  private boolean getNextTable() throws SQLException {
+    if (tables.isEmpty()) return false;
+
+    columns.clear();
+
+    currTable = tables.remove(0);
+    LOGGER.info("Now processing table {}", currTable);
+
+    try (ResultSet rsColumns =
+        conn.prepareStatement(columnsSql.replaceAll("\\?", currTable)).executeQuery()) {
+      while (rsColumns.next()) {
+        String columnName = rsColumns.getString(1);
+        if (inArray(currTable + "." + columnName, ignoreColumns)) continue;
+
+        columns.add(columnName);
+      }
+
+      LOGGER.info("{} columns found for processing", columns.size());
+      LOGGER.debug("Column names: {}", columns);
     }
 
-    private static boolean inArray(String needle, String[] haystack){
-        for(String h : haystack){
-            if(needle.equalsIgnoreCase(h))
-                return true;
-        }
+    StringJoiner sjCols = new StringJoiner("`,`", "`", "`");
+    columns.forEach(sjCols::add);
 
-        return false;
+    // We can't wrap this line in a try-with-resources, as it is needed by doHasNext()
+    // We close this in doClose()
+    rsCurrTable =
+        conn.prepareStatement("SELECT " + sjCols.toString() + " FROM " + currTable).executeQuery();
+    return true;
+  }
+
+  @Override
+  protected void doGetNext(JCas jCas) throws IOException, CollectionException {
+    String key = currRow.keySet().iterator().next();
+
+    Object o = currRow.remove(key);
+
+    String sourceUrl = sqlConn.substring(5) + "." + currTable + "#" + rowId + "." + key;
+    extractor.processStream(
+        new ByteArrayInputStream(o.toString().getBytes(Charset.defaultCharset())), sourceUrl, jCas);
+  }
+
+  @Override
+  protected void doClose() throws IOException {
+    if (rsCurrTable != null) {
+      try {
+        rsCurrTable.close();
+      } catch (SQLException e) {
+        LOGGER.warn("Error closing ResultSet", e);
+      }
     }
+
+    if (conn != null) {
+      try {
+        conn.close();
+      } catch (SQLException e) {
+        LOGGER.warn("Error closing connection to database", e);
+      }
+    }
+  }
+
+  private static boolean inArray(String needle, String[] haystack) {
+    for (String h : haystack) {
+      if (needle.equalsIgnoreCase(h)) return true;
+    }
+
+    return false;
+  }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.resources;
 
 import static org.junit.Assert.assertEquals;
@@ -20,53 +20,53 @@ import org.junit.Test;
 import com.google.common.collect.Maps;
 
 public class SharedActiveMQResourceTest {
-	SharedActiveMQResource samr;
+  SharedActiveMQResource samr;
 
-	private static String HOST_VALUE = "localhost";
-	private static String PROTOCOL_VALUE = "vm";
-	private static String BROKERARGS_VALUE = "broker.persistent=false";
+  private static String HOST_VALUE = "localhost";
+  private static String PROTOCOL_VALUE = "vm";
+  private static String BROKERARGS_VALUE = "broker.persistent=false";
 
-	@Before
-	public void beforeTest() throws Exception {
+  @Before
+  public void beforeTest() throws Exception {
 
-		samr = new SharedActiveMQResource();
-		final CustomResourceSpecifier_impl samrSpecifier = new CustomResourceSpecifier_impl();
-		final Parameter[] configParams = new Parameter[] {
-				new Parameter_impl(SharedActiveMQResource.PARAM_PROTOCOL, PROTOCOL_VALUE),
-				new Parameter_impl(SharedActiveMQResource.PARAM_HOST, HOST_VALUE),
-				new Parameter_impl(SharedActiveMQResource.PARAM_BROKERARGS, BROKERARGS_VALUE) };
-		samrSpecifier.setParameters(configParams);
-		final Map<String, Object> config = Maps.newHashMap();
-		samr.initialize(samrSpecifier, config);
+    samr = new SharedActiveMQResource();
+    final CustomResourceSpecifier_impl samrSpecifier = new CustomResourceSpecifier_impl();
+    final Parameter[] configParams =
+        new Parameter[] {
+          new Parameter_impl(SharedActiveMQResource.PARAM_PROTOCOL, PROTOCOL_VALUE),
+          new Parameter_impl(SharedActiveMQResource.PARAM_HOST, HOST_VALUE),
+          new Parameter_impl(SharedActiveMQResource.PARAM_BROKERARGS, BROKERARGS_VALUE)
+        };
+    samrSpecifier.setParameters(configParams);
+    final Map<String, Object> config = Maps.newHashMap();
+    samr.initialize(samrSpecifier, config);
+  }
 
-	}
+  @Test
+  public void cleanInitialise() {
+    // as long as there are no exceptions then pass
+  }
 
-	@Test
-	public void cleanInitialise() {
-		// as long as there are no exceptions then pass
-	}
+  @Test
+  public void providesValidConsumer() throws JMSException {
+    final String queueName = "test";
+    final String messageSelector = "";
+    final MessageConsumer consumer = samr.createConsumer(queueName, messageSelector);
+    // use producer to test consumer receiving messages
+    // get same dest as consumer
+    final Destination destination = samr.getSession().createQueue(queueName);
+    final Message msg = samr.getSession().createTextMessage("hello, world");
+    samr.getProducer().send(destination, msg);
+    final Message received = consumer.receive();
+    // should get back the same message that was sent
+    assertEquals(msg, received);
+  }
 
-	@Test
-	public void providesValidConsumer() throws JMSException {
-		final String queueName = "test";
-		final String messageSelector = "";
-		final MessageConsumer consumer = samr.createConsumer(queueName, messageSelector);
-		// use producer to test consumer receiving messages
-		// get same dest as consumer
-		final Destination destination = samr.getSession().createQueue(queueName);
-		final Message msg = samr.getSession().createTextMessage("hello, world");
-		samr.getProducer().send(destination, msg);
-		final Message received = consumer.receive();
-		// should get back the same message that was sent
-		assertEquals(msg, received);
-
-	}
-
-	@After
-	public void afterTest() throws Exception {
-		if (samr != null) {
-			samr.destroy();
-			samr = null;
-		}
-	}
+  @After
+  public void afterTest() throws Exception {
+    if (samr != null) {
+      samr.destroy();
+      samr = null;
+    }
+  }
 }

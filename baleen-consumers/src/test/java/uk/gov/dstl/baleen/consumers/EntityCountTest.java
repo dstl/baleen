@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
 import static org.junit.Assert.assertEquals;
@@ -21,87 +21,105 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 public class EntityCountTest {
-	private static final String OUTPUT_FILE = "outputFile";
-	private static final String TEST1_TXT = "test1.txt";
-	JCas jCas;
+  private static final String OUTPUT_FILE = "outputFile";
+  private static final String TEST1_TXT = "test1.txt";
+  JCas jCas;
 
-	@Before
-	public void beforeTest() throws Exception{
-		jCas = JCasSingleton.getJCasInstance();
-	}
-	
-	@Test
-	public void testEntityCountOutput() throws Exception{
-		File output = Files.createTempFile("baleen-entitycount", ".tsv").toFile();
-		
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
-		
-		createDocument();
-		
-		consumer.process(jCas);
-		
-		assertEquals("test1.txt\t2", FileUtils.file2String(output).trim());
-		
-		consumer.destroy();
-		output.delete();
-	}
-	
-	@Test
-	public void testEntityCountOutputNewFile() throws Exception{
-		File outputFolder = Files.createTempDirectory("baleen").toFile();
-		File output = new File(outputFolder, "baleen-entitycount.tsv");
-		
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
-		
-		createDocument();
-		
-		consumer.process(jCas);
-		
-		assertEquals("test1.txt\t2", FileUtils.file2String(output).trim());
-		
-		consumer.destroy();
-		output.delete();
-		outputFolder.delete();
-	}
+  @Before
+  public void beforeTest() throws Exception {
+    jCas = JCasSingleton.getJCasInstance();
+  }
 
-	private void createDocument() {
-		DocumentAnnotation da = (DocumentAnnotation)jCas.getDocumentAnnotationFs();
-		da.setSourceUri(TEST1_TXT);
-		
-		CommsIdentifier ci = new CommsIdentifier(jCas);
-		ci.addToIndexes();
-		
-		Person p = new Person(jCas);
-		p.addToIndexes();
-	}
-	
-	@Test
-	public void testEntityCountOutputReadOnly() throws Exception{
-		File output = Files.createTempFile("baleen-entitycount", ".tsv").toFile();
-		output.setReadOnly();
-		
-		try{
-			AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
-			fail("Expected exception not thrown");
-		}catch(Exception ex){
-			// Do nothing
-		}
-		
-		output.delete();
-	}
-	
-	@Test
-	public void testEntityCountOutputCantWrite() throws Exception{
-		File output = Files.createTempDirectory("baleen").toFile();
-		
-		createDocument();
-		
-		//Try writing to folder
-		AnalysisEngine consumer = AnalysisEngineFactory.createEngine(EntityCount.class, TypeSystemSingleton.getTypeSystemDescriptionInstance(), OUTPUT_FILE, output.getPath());
-		consumer.process(jCas);
-		consumer.destroy();
+  @Test
+  public void testEntityCountOutput() throws Exception {
+    File output = Files.createTempFile("baleen-entitycount", ".tsv").toFile();
 
-		output.delete();
-	}
+    AnalysisEngine consumer =
+        AnalysisEngineFactory.createEngine(
+            EntityCount.class,
+            TypeSystemSingleton.getTypeSystemDescriptionInstance(),
+            OUTPUT_FILE,
+            output.getPath());
 
+    createDocument();
+
+    consumer.process(jCas);
+
+    assertEquals("test1.txt\t2", FileUtils.file2String(output).trim());
+
+    consumer.destroy();
+    output.delete();
+  }
+
+  @Test
+  public void testEntityCountOutputNewFile() throws Exception {
+    File outputFolder = Files.createTempDirectory("baleen").toFile();
+    File output = new File(outputFolder, "baleen-entitycount.tsv");
+
+    AnalysisEngine consumer =
+        AnalysisEngineFactory.createEngine(
+            EntityCount.class,
+            TypeSystemSingleton.getTypeSystemDescriptionInstance(),
+            OUTPUT_FILE,
+            output.getPath());
+
+    createDocument();
+
+    consumer.process(jCas);
+
+    assertEquals("test1.txt\t2", FileUtils.file2String(output).trim());
+
+    consumer.destroy();
+    output.delete();
+    outputFolder.delete();
+  }
+
+  private void createDocument() {
+    DocumentAnnotation da = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
+    da.setSourceUri(TEST1_TXT);
+
+    CommsIdentifier ci = new CommsIdentifier(jCas);
+    ci.addToIndexes();
+
+    Person p = new Person(jCas);
+    p.addToIndexes();
+  }
+
+  @Test
+  public void testEntityCountOutputReadOnly() throws Exception {
+    File output = Files.createTempFile("baleen-entitycount", ".tsv").toFile();
+    output.setReadOnly();
+
+    try {
+      AnalysisEngineFactory.createEngine(
+          EntityCount.class,
+          TypeSystemSingleton.getTypeSystemDescriptionInstance(),
+          OUTPUT_FILE,
+          output.getPath());
+      fail("Expected exception not thrown");
+    } catch (Exception ex) {
+      // Do nothing
+    }
+
+    output.delete();
+  }
+
+  @Test
+  public void testEntityCountOutputCantWrite() throws Exception {
+    File output = Files.createTempDirectory("baleen").toFile();
+
+    createDocument();
+
+    // Try writing to folder
+    AnalysisEngine consumer =
+        AnalysisEngineFactory.createEngine(
+            EntityCount.class,
+            TypeSystemSingleton.getTypeSystemDescriptionInstance(),
+            OUTPUT_FILE,
+            output.getPath());
+    consumer.process(jCas);
+    consumer.destroy();
+
+    output.delete();
+  }
 }

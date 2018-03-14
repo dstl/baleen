@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.csv;
 
 import static org.junit.Assert.assertEquals;
@@ -26,65 +26,65 @@ import uk.gov.dstl.baleen.types.semantic.Location;
 
 public class CsvEventEvalationConsumerTest extends AbstractAnnotatorTest {
 
-	public CsvEventEvalationConsumerTest() {
-		super(CsvEvent.class);
-	}
+  public CsvEventEvalationConsumerTest() {
+    super(CsvEvent.class);
+  }
 
-	@Test
-	public void test() throws AnalysisEngineProcessException, ResourceInitializationException, IOException {
-		final File file = File.createTempFile("test", "events");
-		file.deleteOnExit();
+  @Test
+  public void test()
+      throws AnalysisEngineProcessException, ResourceInitializationException, IOException {
+    final File file = File.createTempFile("test", "events");
+    file.deleteOnExit();
 
-		final String text = "John went to London. He saw Big Ben.";
-		jCas.setDocumentText(text);
+    final String text = "John went to London. He saw Big Ben.";
+    jCas.setDocumentText(text);
 
-		final Sentence s = new Sentence(jCas);
-		s.setBegin(0);
-		s.setEnd("John went to London.".length());
-		s.addToIndexes();
+    final Sentence s = new Sentence(jCas);
+    s.setBegin(0);
+    s.setEnd("John went to London.".length());
+    s.addToIndexes();
 
-		final Person p = new Person(jCas);
-		p.setBegin(text.indexOf("John"));
-		p.setEnd(p.getBegin() + "John".length());
-		p.setValue("John");
-		p.addToIndexes();
+    final Person p = new Person(jCas);
+    p.setBegin(text.indexOf("John"));
+    p.setEnd(p.getBegin() + "John".length());
+    p.setValue("John");
+    p.addToIndexes();
 
-		final Location l = new Location(jCas);
-		l.setBegin(text.indexOf("London"));
-		l.setEnd(l.getBegin() + "London".length());
-		l.setValue("London");
-		l.addToIndexes();
+    final Location l = new Location(jCas);
+    l.setBegin(text.indexOf("London"));
+    l.setEnd(l.getBegin() + "London".length());
+    l.setValue("London");
+    l.addToIndexes();
 
-		final Event r = new Event(jCas);
-		r.setBegin(text.indexOf("went"));
-		r.setEnd(r.getBegin() + "went".length());
-		r.setValue("went");
-		r.setEventType(new StringArray(jCas, 1));
-		r.setEventType(0, "MOVEMENT");
-		r.setEntities(new FSArray(jCas, 2));
-		r.setEntities(0, p);
-		r.setEntities(1, l);
-		r.setArguments(new StringArray(jCas, 2));
-		r.setArguments(0, "see");
-		r.setArguments(1, "Big Ben");
-		r.addToIndexes();
+    final Event r = new Event(jCas);
+    r.setBegin(text.indexOf("went"));
+    r.setEnd(r.getBegin() + "went".length());
+    r.setValue("went");
+    r.setEventType(new StringArray(jCas, 1));
+    r.setEventType(0, "MOVEMENT");
+    r.setEntities(new FSArray(jCas, 2));
+    r.setEntities(0, p);
+    r.setEntities(1, l);
+    r.setArguments(new StringArray(jCas, 2));
+    r.setArguments(0, "see");
+    r.setArguments(1, "Big Ben");
+    r.addToIndexes();
 
-		processJCas("filename", file.getAbsolutePath());
+    processJCas("filename", file.getAbsolutePath());
 
-		final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
+    final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
 
-		assertEquals(2, lines.size());
+    assertEquals(2, lines.size());
 
-		// Header
-		assertTrue(lines.get(0).contains("source"));
-		// Relation
-		assertTrue(lines.get(1).contains("\tJohn\t"));
-		assertTrue(lines.get(1).contains("\tLondon\t"));
-		assertTrue(lines.get(1).contains("\tMOVEMENT\t"));
-		assertTrue(lines.get(1).contains("\tsee\t"));
-		assertTrue(lines.get(1).contains("\tBig Ben"));
+    // Header
+    assertTrue(lines.get(0).contains("source"));
+    // Relation
+    assertTrue(lines.get(1).contains("\tJohn\t"));
+    assertTrue(lines.get(1).contains("\tLondon\t"));
+    assertTrue(lines.get(1).contains("\tMOVEMENT\t"));
+    assertTrue(lines.get(1).contains("\tsee\t"));
+    assertTrue(lines.get(1).contains("\tBig Ben"));
 
-		file.delete();
-	}
-
+    file.delete();
+  }
 }

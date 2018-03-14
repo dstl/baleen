@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
 import java.util.Collections;
@@ -14,29 +14,26 @@ import uk.gov.dstl.baleen.types.common.Organisation;
 
 /**
  * Annotate task forces within a document using regular expressions
- * 
- * <p>Look for text matching the following regular expression and annotate it as an Organisation:</p>
+ *
+ * <p>Look for text matching the following regular expression and annotate it as an Organisation:
+ *
  * <pre>\\b(tf|task force)[\\h]*[\\-0-9]+\\b</pre>
- * 
- * 
  */
 public class TaskForce extends AbstractRegexAnnotator<Organisation> {
-	private static final String TF_REGEX = "\\b(tf|task force)[\\h]*[\\-0-9]+\\b";
-	
-	/**
-	 * New instance.
-	 */
-	public TaskForce() {
-		super(TF_REGEX, false, 1.0);
-	}
-	
-	@Override
-	protected Organisation create(JCas jCas, Matcher matcher) {
-		return new Organisation(jCas);
-	}
+  private static final String TF_REGEX = "\\b(tf|task force)[\\h]*[\\-0-9]+\\b";
 
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(Collections.emptySet(), ImmutableSet.of(Organisation.class));
-	}
+  /** New instance. */
+  public TaskForce() {
+    super(TF_REGEX, false, 1.0);
+  }
+
+  @Override
+  protected Organisation create(JCas jCas, Matcher matcher) {
+    return new Organisation(jCas);
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(Collections.emptySet(), ImmutableSet.of(Organisation.class));
+  }
 }

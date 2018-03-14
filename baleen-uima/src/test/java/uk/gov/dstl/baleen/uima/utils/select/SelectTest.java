@@ -1,6 +1,5 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
-
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -193,7 +192,8 @@ public class SelectTest {
   @Test
   public void nthChild_simple() {
     for (int i = 1; i <= 10; i++) {
-      check(root.select(String.format("Section:nth-of-type(1) :nth-child(%d)", i)),
+      check(
+          root.select(String.format("Section:nth-of-type(1) :nth-child(%d)", i)),
           String.valueOf(i));
     }
   }
@@ -201,7 +201,8 @@ public class SelectTest {
   @Test
   public void nthOfType_unknownTag() {
     for (int i = 1; i <= 10; i++) {
-      check(root.select(String.format("Section:nth-of-type(2) Figure:nth-of-type(%d)", i)),
+      check(
+          root.select(String.format("Section:nth-of-type(2) Figure:nth-of-type(%d)", i)),
           String.valueOf(i));
     }
   }
@@ -209,7 +210,8 @@ public class SelectTest {
   @Test
   public void nthLastChild_simple() {
     for (int i = 1; i <= 10; i++) {
-      check(root.select(String.format("Section:nth-of-type(1) :nth-last-child(%d)", i)),
+      check(
+          root.select(String.format("Section:nth-of-type(1) :nth-last-child(%d)", i)),
           String.valueOf(11 - i));
     }
   }
@@ -217,7 +219,8 @@ public class SelectTest {
   @Test
   public void nthOfType_simple() {
     for (int i = 1; i <= 10; i++) {
-      check(root.select(String.format("Section:nth-of-type(2) Paragraph:nth-of-type(%d)", i)),
+      check(
+          root.select(String.format("Section:nth-of-type(2) Paragraph:nth-of-type(%d)", i)),
           String.valueOf(i));
     }
   }
@@ -225,8 +228,11 @@ public class SelectTest {
   @Test
   public void nthLastOfType_simple() {
     for (int i = 1; i <= 10; i++) {
-      check(root.select(String.format("Section:nth-of-type(2) :nth-last-of-type(%d)", i)),
-          String.valueOf(11 - i), String.valueOf(11 - i), String.valueOf(11 - i),
+      check(
+          root.select(String.format("Section:nth-of-type(2) :nth-last-of-type(%d)", i)),
+          String.valueOf(11 - i),
+          String.valueOf(11 - i),
+          String.valueOf(11 - i),
           String.valueOf(11 - i));
     }
   }
@@ -248,21 +254,25 @@ public class SelectTest {
   @Test
   public void nthOfType_advanced() {
     check(root.select("Section:nth-of-type(2) :nth-of-type(-5)"));
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-of-type(odd)"), "1", "3", "5", "7",
-        "9");
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-of-type(odd)"), "1", "3", "5", "7", "9");
     check(root.select("Section:nth-of-type(2) Style:nth-of-type(2n-1)"), "1", "3", "5", "7", "9");
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-of-type(2n+1)"), "1", "3", "5", "7",
-        "9");
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-of-type(2n+1)"), "1", "3", "5", "7", "9");
     check(root.select("Section:nth-of-type(2) Aside:nth-of-type(2n+3)"), "3", "5", "7", "9");
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-of-type(even)"), "2", "4", "6", "8",
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-of-type(even)"),
+        "2",
+        "4",
+        "6",
+        "8",
         "10");
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-of-type(2n)"), "2", "4", "6", "8",
-        "10");
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-of-type(2n)"), "2", "4", "6", "8", "10");
     check(root.select("Section:nth-of-type(2) Paragraph:nth-of-type(3n-1)"), "2", "5", "8");
     check(root.select("Section:nth-of-type(2) Paragraph:nth-of-type(-2n+5)"), "1", "3", "5");
     check(root.select("Section:nth-of-type(2) :nth-of-type(+5)"), "5", "5", "5", "5");
   }
-
 
   @Test
   public void nthLastChild_advanced() {
@@ -282,16 +292,41 @@ public class SelectTest {
   @Test
   public void nthLastOfType_advanced() {
     check(root.select("Section:nth-of-type(2) :nth-last-of-type(-5)"));
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(odd)"), "2", "4", "6", "8",
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(odd)"),
+        "2",
+        "4",
+        "6",
+        "8",
         "10");
-    check(root.select("Section:nth-of-type(2) Style:nth-last-of-type(2n-1)"), "2", "4", "6", "8",
+    check(
+        root.select("Section:nth-of-type(2) Style:nth-last-of-type(2n-1)"),
+        "2",
+        "4",
+        "6",
+        "8",
         "10");
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(2n+1)"), "2", "4", "6",
-        "8", "10");
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(2n+1)"),
+        "2",
+        "4",
+        "6",
+        "8",
+        "10");
     check(root.select("Section:nth-of-type(2) Aside:nth-last-of-type(2n+3)"), "2", "4", "6", "8");
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(even)"), "1", "3", "5",
-        "7", "9");
-    check(root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(2n)"), "1", "3", "5", "7",
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(even)"),
+        "1",
+        "3",
+        "5",
+        "7",
+        "9");
+    check(
+        root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(2n)"),
+        "1",
+        "3",
+        "5",
+        "7",
         "9");
     check(root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(3n-1)"), "3", "6", "9");
 
@@ -342,11 +377,10 @@ public class SelectTest {
     assertEquals("Number of elements", expectedContent.length, result.size());
     for (int i = 0; i < expectedContent.length; i++) {
       assertNotNull(result.get(i));
-      assertEquals("Expected element", expectedContent[i],
-          result.get(i).getItem().getCoveredText());
+      assertEquals(
+          "Expected element", expectedContent[i], result.get(i).getItem().getCoveredText());
     }
   }
-
 
   @Test
   public void root() {
@@ -354,5 +388,4 @@ public class SelectTest {
     assertEquals(1, sel.size());
     assertNotNull(sel.get(0));
   }
-
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.history;
 
 import static org.junit.Assert.assertTrue;
@@ -17,52 +17,46 @@ import uk.gov.dstl.baleen.core.history.logging.LoggingDocumentHistory;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class LoggingDocumentHistoryTest {
 
+  private String documentId = "fake";
 
-	private String documentId = "fake";
+  @Mock private LoggingBaleenHistory history;
 
-	@Mock
-	private LoggingBaleenHistory history;
+  @Mock private Recordable recordable;
 
-	@Mock
-	private Recordable recordable;
+  private String referrer = "referrer";
 
-	private String referrer = "referrer";
+  private HistoryEvent event;
 
-	private HistoryEvent event;
+  @Before
+  public void setUp() {
+    event = HistoryEvents.createAdded(recordable, referrer);
+  }
 
-	@Before
-	public void setUp() {
-		event = HistoryEvents.createAdded(recordable, referrer);
-	}
+  @Test
+  public void testAdd() {
+    LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
 
+    dh.add(event);
 
-	@Test
-	public void testAdd() {
-		LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
+    verify(history, only()).add(documentId, event);
+  }
 
-		dh.add(event);
+  @Test
+  public void testClose() {
+    LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
+    dh.close();
+    verify(history, only()).closeHistory(documentId);
+  }
 
-		verify(history, only()).add(documentId, event);
-	}
+  @Test
+  public void testGetAllHistory() {
+    LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
+    assertTrue(dh.getAllHistory().isEmpty());
+  }
 
-	@Test
-	public void testClose() {
-		LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
-		dh.close();
-		verify(history, only()).closeHistory(documentId);
-
-	}
-
-	@Test
-	public void testGetAllHistory() {
-		LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
-		assertTrue(dh.getAllHistory().isEmpty());
-	}
-
-	@Test
-	public void testGetHistory() {
-		LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
-		assertTrue(dh.getHistory(1).isEmpty());
-	}
-
+  @Test
+  public void testGetHistory() {
+    LoggingDocumentHistory dh = new LoggingDocumentHistory(history, documentId);
+    assertTrue(dh.getHistory(1).isEmpty());
+  }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers;
 
 import java.util.Collections;
@@ -51,14 +51,13 @@ import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
 /**
  * The default content mapper which convert generic HTML5 elements to Baleen Structural annotations.
  *
- * Since the Baleen structural types are modelled around HTML5 elements this mapper is mostly a
+ * <p>Since the Baleen structural types are modelled around HTML5 elements this mapper is mostly a
  * simple passthrough, dealing with some special casess (eg HTML a with and without a href has
  * different meanings).
  *
- * Due to the number of HTML tags refer to the source code to see the exact mapping.
+ * <p>Due to the number of HTML tags refer to the source code to see the exact mapping.
  *
- * NOTE: Not all formats will produce rich enough HTML to use all the mappings defined here.
- *
+ * <p>NOTE: Not all formats will produce rich enough HTML to use all the mappings defined here.
  */
 public class StructuralAnnotations implements ContentMapper {
 
@@ -67,12 +66,11 @@ public class StructuralAnnotations implements ContentMapper {
 
     Structure s = null;
     switch (element.tagName().toLowerCase()) {
-
       case "p":
         s = new Paragraph(jCas);
         break;
 
-      // Headings
+        // Headings
 
       case "h1":
         s = createHeading(jCas, 1);
@@ -93,7 +91,7 @@ public class StructuralAnnotations implements ContentMapper {
         s = createHeading(jCas, 6);
         break;
 
-      // Lists
+        // Lists
 
       case "ul":
         s = new Unordered(jCas);
@@ -118,7 +116,7 @@ public class StructuralAnnotations implements ContentMapper {
         s = new DefinitionDescription(jCas);
         break;
 
-      // Table
+        // Table
 
       case "table":
         s = new Table(jCas);
@@ -153,13 +151,13 @@ public class StructuralAnnotations implements ContentMapper {
         s = td;
         break;
 
-      // Links and anchors
+        // Links and anchors
 
       case "a":
         s = createAnchor(jCas, element);
         break;
 
-      // Images
+        // Images
 
       case "audio":
       case "video":
@@ -182,7 +180,7 @@ public class StructuralAnnotations implements ContentMapper {
         s = new Caption(jCas);
         break;
 
-      // Styling
+        // Styling
 
       case "ins":
         // fall through - HTML W3 http://www.w3schools.com/tags/tag_ins.asp says that ins would
@@ -228,7 +226,7 @@ public class StructuralAnnotations implements ContentMapper {
         s = createStyle(jCas, "highlighted");
         break;
 
-      // Purely structural
+        // Purely structural
 
       case "aside":
         s = new Aside(jCas);
@@ -276,7 +274,7 @@ public class StructuralAnnotations implements ContentMapper {
         s = new Quotation(jCas);
         break;
 
-      // Potential semantic types, but left to other mappers (SemanticHtml) to actually annotate
+        // Potential semantic types, but left to other mappers (SemanticHtml) to actually annotate
       case "time":
       case "meter":
       case "dfn":
@@ -291,7 +289,7 @@ public class StructuralAnnotations implements ContentMapper {
         }
         break;
 
-      // Misc ignored - head, details of embedded, ui specific, forms
+        // Misc ignored - head, details of embedded, ui specific, forms
       case "html":
       case "head":
       case "title":
@@ -374,7 +372,6 @@ public class StructuralAnnotations implements ContentMapper {
     return e.siblingIndex();
   }
 
-
   private Structure createAnchor(final JCas jCas, final Element element) {
     String href = element.absUrl("href");
     if (Strings.isNullOrEmpty(href)) {
@@ -400,7 +397,6 @@ public class StructuralAnnotations implements ContentMapper {
         // fall through
       default:
         return new Page(jCas);
-
     }
   }
 
@@ -449,5 +445,4 @@ public class StructuralAnnotations implements ContentMapper {
     h.setLevel(level);
     return h;
   }
-
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
 import java.util.ArrayList;
@@ -29,16 +29,16 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 
 /**
  * Removes relationships that don't match UIMA type constraints.
- * <p>
- * Many relationships will only make sense between specific entity types. For example (Person, went
- * to, Location) not (DateTime, went to, Location). This filter allows for relational type
+ *
+ * <p>Many relationships will only make sense between specific entity types. For example (Person,
+ * went to, Location) not (DateTime, went to, Location). This filter allows for relational type
  * constraints.
- * <p>
- * Since relationship extractors may have different capabilities (e.g. finding the direction of
+ *
+ * <p>Since relationship extractors may have different capabilities (e.g. finding the direction of
  * relationships, discovering new unknown relationships) there are several configuration parameters
  * which relax the strictness of filtering.
- * <p>
- * Mongo constraint documents are formed as:
+ *
+ * <p>Mongo constraint documents are formed as:
  *
  * <pre>
  *    {
@@ -55,166 +55,173 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  */
 public class RelationTypeFilter extends BaleenAnnotator {
 
-	/**
-	 * Connection to Mongo
-	 *
-	 * @baleen.resource uk.gov.dstl.baleen.resources.SharedMongoResource
-	 */
-	public static final String KEY_MONGO = "mongo";
-	@ExternalResource(key = KEY_MONGO)
-	private SharedMongoResource mongo;
+  /**
+   * Connection to Mongo
+   *
+   * @baleen.resource uk.gov.dstl.baleen.resources.SharedMongoResource
+   */
+  public static final String KEY_MONGO = "mongo";
 
-	/**
-	 * The name of the Mongo collection containing the relation types
-	 *
-	 * @baleen.config gazetteer
-	 */
-	public static final String PARAM_COLLECTION = "collection";
-	@ConfigurationParameter(name = PARAM_COLLECTION, defaultValue = "relationTypes")
-	private String collection;
+  @ExternalResource(key = KEY_MONGO)
+  private SharedMongoResource mongo;
 
-	/**
-	 * The name of the field in Mongo that contains the relation type
-	 *
-	 * @baleen.config type
-	 */
-	public static final String PARAM_TYPE_FIELD = "typeField";
-	@ConfigurationParameter(name = PARAM_TYPE_FIELD, defaultValue = "type")
-	private String typeField;
+  /**
+   * The name of the Mongo collection containing the relation types
+   *
+   * @baleen.config gazetteer
+   */
+  public static final String PARAM_COLLECTION = "collection";
 
-	/**
-	 * The name of the field in Mongo that contains the relation sub type
-	 *
-	 * @baleen.config type
-	 */
-	public static final String PARAM_SUBTYPE_FIELD = "subTypeField";
-	@ConfigurationParameter(name = PARAM_SUBTYPE_FIELD, defaultValue = "subType")
-	private String subTypeField;
+  @ConfigurationParameter(name = PARAM_COLLECTION, defaultValue = "relationTypes")
+  private String collection;
 
-	/**
-	 * The name of the field in Mongo that contains the relation source type
-	 *
-	 * @baleen.config source
-	 */
-	public static final String PARAM_SOURCE_FIELD = "sourceField";
-	@ConfigurationParameter(name = PARAM_SOURCE_FIELD, defaultValue = "source")
-	private String sourceField;
+  /**
+   * The name of the field in Mongo that contains the relation type
+   *
+   * @baleen.config type
+   */
+  public static final String PARAM_TYPE_FIELD = "typeField";
 
-	/**
-	 * The name of the field in Mongo that contains the relation source type
-	 *
-	 * @baleen.config target
-	 */
-	public static final String PARAM_TARGET_FIELD = "targetField";
-	@ConfigurationParameter(name = PARAM_TARGET_FIELD, defaultValue = "target")
-	private String targetField;
+  @ConfigurationParameter(name = PARAM_TYPE_FIELD, defaultValue = "type")
+  private String typeField;
 
-	/**
-	 * The name of the field in Mongo that contains the relation pos
-	 *
-	 * @baleen.config posField pos
-	 */
-	public static final String PARAM_POS_FIELD = "posField";
-	@ConfigurationParameter(name = PARAM_POS_FIELD, defaultValue = "pos")
-	private String posField;
+  /**
+   * The name of the field in Mongo that contains the relation sub type
+   *
+   * @baleen.config type
+   */
+  public static final String PARAM_SUBTYPE_FIELD = "subTypeField";
 
-	/**
-	 * Determines strictness of filtering.
-	 *
-	 * In strict mode the relationship type must be defined and the source and target type the same
-	 * in order to pass the filter. In non-strict mode, if the relationship type has no constraints
-	 * then the relationship will pass. If the relationship type has constraints then these must be
-	 * adhered too.
-	 *
-	 * @baleen.config false
-	 */
-	public static final String PARAM_STRICT = "strict";
-	@ConfigurationParameter(name = PARAM_STRICT, defaultValue = "false")
-	private boolean strict;
+  @ConfigurationParameter(name = PARAM_SUBTYPE_FIELD, defaultValue = "subType")
+  private String subTypeField;
 
-	/**
-	 * Determines if relations can be considered symmetric (source and target swapped)
-	 *
-	 * @baleen.config true
-	 */
-	public static final String PARAM_SYMMETRIC = "symmetric";
-	@ConfigurationParameter(name = PARAM_SYMMETRIC, defaultValue = "true")
-	private boolean symetric;
+  /**
+   * The name of the field in Mongo that contains the relation source type
+   *
+   * @baleen.config source
+   */
+  public static final String PARAM_SOURCE_FIELD = "sourceField";
 
-	private final Map<String, Set<RelationConstraint>> constraints = new HashMap<>();
+  @ConfigurationParameter(name = PARAM_SOURCE_FIELD, defaultValue = "source")
+  private String sourceField;
 
-	@Override
-	public void doInitialize(final UimaContext aContext) throws ResourceInitializationException {
-		super.doInitialize(aContext);
+  /**
+   * The name of the field in Mongo that contains the relation source type
+   *
+   * @baleen.config target
+   */
+  public static final String PARAM_TARGET_FIELD = "targetField";
 
-		final MongoCollection<Document> dbCollection = mongo.getDB().getCollection(collection);
+  @ConfigurationParameter(name = PARAM_TARGET_FIELD, defaultValue = "target")
+  private String targetField;
 
-		for(Document o : dbCollection.find()){
-			RelationConstraint constraint = new RelationConstraint((String) o.get(typeField),
-					(String) o.get(subTypeField),
-					(String) o.get(posField),
-					(String) o.get(sourceField),
-					(String) o.get(targetField));
+  /**
+   * The name of the field in Mongo that contains the relation pos
+   *
+   * @baleen.config posField pos
+   */
+  public static final String PARAM_POS_FIELD = "posField";
 
-			if (constraint.isValid()) {
-				Set<RelationConstraint> set = constraints.get(constraint.getType());
-				if (set == null) {
-					set = new HashSet<>();
-					constraints.put(constraint.getType().toLowerCase(), set);
-				}
-				set.add(constraint);
-			}
-		}
-	}
+  @ConfigurationParameter(name = PARAM_POS_FIELD, defaultValue = "pos")
+  private String posField;
 
-	@Override
-	protected void doProcess(final JCas jCas) throws AnalysisEngineProcessException {
+  /**
+   * Determines strictness of filtering.
+   *
+   * <p>In strict mode the relationship type must be defined and the source and target type the same
+   * in order to pass the filter. In non-strict mode, if the relationship type has no constraints
+   * then the relationship will pass. If the relationship type has constraints then these must be
+   * adhered too.
+   *
+   * @baleen.config false
+   */
+  public static final String PARAM_STRICT = "strict";
 
-		final List<Relation> toRemove = new ArrayList<>();
+  @ConfigurationParameter(name = PARAM_STRICT, defaultValue = "false")
+  private boolean strict;
 
-		for (final Relation relation : JCasUtil.select(jCas, Relation.class)) {
-			final String type = relation.getRelationshipType().toLowerCase();
-			final Set<RelationConstraint> rcs = constraints.get(type);
+  /**
+   * Determines if relations can be considered symmetric (source and target swapped)
+   *
+   * @baleen.config true
+   */
+  public static final String PARAM_SYMMETRIC = "symmetric";
 
-			boolean remove;
-			if (rcs == null || rcs.isEmpty()) {
+  @ConfigurationParameter(name = PARAM_SYMMETRIC, defaultValue = "true")
+  private boolean symetric;
 
-				// In strict mode we remove
-				if (strict) {
-					remove = true;
-				} else {
-					remove = false;
-				}
+  private final Map<String, Set<RelationConstraint>> constraints = new HashMap<>();
 
-			} else {
-				remove = !checkValid(rcs, relation);
-			}
+  @Override
+  public void doInitialize(final UimaContext aContext) throws ResourceInitializationException {
+    super.doInitialize(aContext);
 
-			if (remove) {
-				toRemove.add(relation);
-			}
-		}
+    final MongoCollection<Document> dbCollection = mongo.getDB().getCollection(collection);
 
-		removeFromJCasIndex(toRemove);
+    for (Document o : dbCollection.find()) {
+      RelationConstraint constraint =
+          new RelationConstraint(
+              (String) o.get(typeField),
+              (String) o.get(subTypeField),
+              (String) o.get(posField),
+              (String) o.get(sourceField),
+              (String) o.get(targetField));
 
-	}
+      if (constraint.isValid()) {
+        Set<RelationConstraint> set = constraints.get(constraint.getType());
+        if (set == null) {
+          set = new HashSet<>();
+          constraints.put(constraint.getType().toLowerCase(), set);
+        }
+        set.add(constraint);
+      }
+    }
+  }
 
-	/**
-	 * Check if the relation is valid against the constraints.
-	 *
-	 * @param rcs
-	 *            the rcs
-	 * @param relation
-	 *            the relation
-	 * @return true, if successful
-	 */
-	private boolean checkValid(final Set<RelationConstraint> rcs, final Relation relation) {
-		return rcs.stream()
-				.anyMatch(p -> p.matches(relation, symetric));
-	}
+  @Override
+  protected void doProcess(final JCas jCas) throws AnalysisEngineProcessException {
 
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(ImmutableSet.of(Relation.class), Collections.emptySet());
-	}
+    final List<Relation> toRemove = new ArrayList<>();
+
+    for (final Relation relation : JCasUtil.select(jCas, Relation.class)) {
+      final String type = relation.getRelationshipType().toLowerCase();
+      final Set<RelationConstraint> rcs = constraints.get(type);
+
+      boolean remove;
+      if (rcs == null || rcs.isEmpty()) {
+
+        // In strict mode we remove
+        if (strict) {
+          remove = true;
+        } else {
+          remove = false;
+        }
+
+      } else {
+        remove = !checkValid(rcs, relation);
+      }
+
+      if (remove) {
+        toRemove.add(relation);
+      }
+    }
+
+    removeFromJCasIndex(toRemove);
+  }
+
+  /**
+   * Check if the relation is valid against the constraints.
+   *
+   * @param rcs the rcs
+   * @param relation the relation
+   * @return true, if successful
+   */
+  private boolean checkValid(final Set<RelationConstraint> rcs, final Relation relation) {
+    return rcs.stream().anyMatch(p -> p.matches(relation, symetric));
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(ImmutableSet.of(Relation.class), Collections.emptySet());
+  }
 }

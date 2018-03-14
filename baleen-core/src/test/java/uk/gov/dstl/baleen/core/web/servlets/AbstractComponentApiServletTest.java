@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
 
 import static org.junit.Assert.assertEquals;
@@ -23,94 +23,105 @@ import uk.gov.dstl.baleen.testing.DummyAnnotator3;
 import uk.gov.dstl.baleen.testing.DummyResourceAnnotator;
 
 public class AbstractComponentApiServletTest {
-	@Test
-	public void testExcludeByPackage() {
-		List<String> excludePackages = Arrays.asList("uk\\.gov\\.dstl\\.baleen\\.test", ".*\\.helpers");
+  @Test
+  public void testExcludeByPackage() {
+    List<String> excludePackages = Arrays.asList("uk\\.gov\\.dstl\\.baleen\\.test", ".*\\.helpers");
 
-		assertTrue(excludeByPackage("uk.gov.dstl.baleen.test", excludePackages));
-		assertTrue(excludeByPackage("uk.gov.dstl.baleen.helpers", excludePackages));
-		assertTrue(excludeByPackage("uk.gov.dstl.helpers", excludePackages));
-		assertFalse(excludeByPackage("uk.gov.dstl.test", excludePackages));
-	}
+    assertTrue(excludeByPackage("uk.gov.dstl.baleen.test", excludePackages));
+    assertTrue(excludeByPackage("uk.gov.dstl.baleen.helpers", excludePackages));
+    assertTrue(excludeByPackage("uk.gov.dstl.helpers", excludePackages));
+    assertFalse(excludeByPackage("uk.gov.dstl.test", excludePackages));
+  }
 
-	@Test
-	public void testExcludeByClass() {
-		List<Class<?>> excludeClasses = Arrays.asList(Number.class, String.class);
+  @Test
+  public void testExcludeByClass() {
+    List<Class<?>> excludeClasses = Arrays.asList(Number.class, String.class);
 
-		assertTrue(excludeByClass(Number.class, excludeClasses));
-		assertTrue(excludeByClass(Integer.class, excludeClasses));
-		assertTrue(excludeByClass("Hello".getClass(), excludeClasses));
-		assertFalse(excludeByClass(Boolean.class, excludeClasses));
-	}
+    assertTrue(excludeByClass(Number.class, excludeClasses));
+    assertTrue(excludeByClass(Integer.class, excludeClasses));
+    assertTrue(excludeByClass("Hello".getClass(), excludeClasses));
+    assertFalse(excludeByClass(Boolean.class, excludeClasses));
+  }
 
-	@Test
-	@Ignore	//Works locally, but not building on Jenkins?
-	public void testComponents() throws Exception {
-		List<String> excludeClass = new ArrayList<>();
-		excludeClass.add("uk.gov.dstl.baleen.exceptions.InvalidParameterException");
-		excludeClass.add("my.nonexistent.JavaClass");
+  @Test
+  @Ignore // Works locally, but not building on Jenkins?
+  public void testComponents() throws Exception {
+    List<String> excludeClass = new ArrayList<>();
+    excludeClass.add("uk.gov.dstl.baleen.exceptions.InvalidParameterException");
+    excludeClass.add("my.nonexistent.JavaClass");
 
-		List<String> excludePackage = new ArrayList<>();
-		excludePackage.add("java\\.util\\..*");
+    List<String> excludePackage = new ArrayList<>();
+    excludePackage.add("java\\.util\\..*");
 
-		AbstractComponentApiServlet servlet = new AbstractComponentApiServlet("java.lang.Exception", "uk.gov.dstl.baleen.exceptions", excludeClass,
-				excludePackage, this.getClass());
-		String list = servlet.getComponents().get();
-		assertNotNull(list);
+    AbstractComponentApiServlet servlet =
+        new AbstractComponentApiServlet(
+            "java.lang.Exception",
+            "uk.gov.dstl.baleen.exceptions",
+            excludeClass,
+            excludePackage,
+            this.getClass());
+    String list = servlet.getComponents().get();
+    assertNotNull(list);
 
-		assertTrue(list.contains("- BaleenException"));
-		assertFalse(list.contains("EmptyStackException"));	//Excluded via package (java.util) exclusion
-		assertFalse(list.contains("InvalidParameterException"));	//Explicitly excluded
+    assertTrue(list.contains("- BaleenException"));
+    assertFalse(list.contains("EmptyStackException")); // Excluded via package (java.util) exclusion
+    assertFalse(list.contains("InvalidParameterException")); // Explicitly excluded
 
-		assertNotNull(servlet.getComponents().get());
-	}
+    assertNotNull(servlet.getComponents().get());
+  }
 
-	@Test
-	public void testClassFromString() throws Exception {
-		AbstractComponentApiServlet servlet = new AbstractComponentApiServlet("java.util.List", "java.util",
-				Collections.emptyList(), Collections.emptyList(), this.getClass());
+  @Test
+  public void testClassFromString() throws Exception {
+    AbstractComponentApiServlet servlet =
+        new AbstractComponentApiServlet(
+            "java.util.List",
+            "java.util",
+            Collections.emptyList(),
+            Collections.emptyList(),
+            this.getClass());
 
-		Class<?> al = servlet.getClassFromString("ArrayList", "java.util");
-		assertEquals(ArrayList.class.getName(), al.getName());
+    Class<?> al = servlet.getClassFromString("ArrayList", "java.util");
+    assertEquals(ArrayList.class.getName(), al.getName());
 
-		Class<?> al2 = servlet.getClassFromString("java.util.ArrayList", "foo.bar");
-		assertEquals(ArrayList.class.getName(), al2.getName());
+    Class<?> al2 = servlet.getClassFromString("java.util.ArrayList", "foo.bar");
+    assertEquals(ArrayList.class.getName(), al2.getName());
 
-		try {
-			servlet.getClassFromString("ArrayList", "java.util.foo");
+    try {
+      servlet.getClassFromString("ArrayList", "java.util.foo");
 
-			fail("Expected exception not thrown");
-		} catch (InvalidParameterException ipe) {
-			// Do nothing
-		}
-	}
+      fail("Expected exception not thrown");
+    } catch (InvalidParameterException ipe) {
+      // Do nothing
+    }
+  }
 
-	@Test
-	public void testGetParameters() throws Exception {
-		List<Map<String, Object>> ret = AbstractComponentApiServlet.getParameters(DummyAnnotator3.class);
-		assertNotNull(ret);
-		assertEquals(3, ret.size());
-	}
+  @Test
+  public void testGetParameters() throws Exception {
+    List<Map<String, Object>> ret =
+        AbstractComponentApiServlet.getParameters(DummyAnnotator3.class);
+    assertNotNull(ret);
+    assertEquals(3, ret.size());
+  }
 
-	@Test
-	public void testGetResources() throws Exception {
-		List<Map<String, Object>> ret = AbstractComponentApiServlet.getParameters(DummyResourceAnnotator.class);
-		assertNotNull(ret);
-		assertEquals(1, ret.size());
-	}
+  @Test
+  public void testGetResources() throws Exception {
+    List<Map<String, Object>> ret =
+        AbstractComponentApiServlet.getParameters(DummyResourceAnnotator.class);
+    assertNotNull(ret);
+    assertEquals(1, ret.size());
+  }
 
-	@Test
-	public void testStringArrayToString() {
-		Object o1 = AbstractComponentApiServlet.stringArrayToString(new String[] { "Hello" });
-		assertEquals("Hello", o1);
+  @Test
+  public void testStringArrayToString() {
+    Object o1 = AbstractComponentApiServlet.stringArrayToString(new String[] {"Hello"});
+    assertEquals("Hello", o1);
 
-		Object o2 = AbstractComponentApiServlet.stringArrayToString(new String[] { "Hello", "World" });
-		assertEquals(2, ((String[]) o2).length);
-		assertEquals("Hello", ((String[]) o2)[0]);
-		assertEquals("World", ((String[]) o2)[1]);
+    Object o2 = AbstractComponentApiServlet.stringArrayToString(new String[] {"Hello", "World"});
+    assertEquals(2, ((String[]) o2).length);
+    assertEquals("Hello", ((String[]) o2)[0]);
+    assertEquals("World", ((String[]) o2)[1]);
 
-		Object o3 = AbstractComponentApiServlet.stringArrayToString(new String[] {});
-		assertEquals(0, ((String[]) o3).length);
-
-	}
+    Object o3 = AbstractComponentApiServlet.stringArrayToString(new String[] {});
+    assertEquals(0, ((String[]) o3).length);
+  }
 }

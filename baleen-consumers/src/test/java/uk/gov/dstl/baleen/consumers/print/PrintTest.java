@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.print;
 
 import org.apache.uima.UIMAException;
@@ -19,84 +19,82 @@ import uk.gov.dstl.baleen.types.structure.Document;
 
 public class PrintTest extends AnnotatorTestBase {
 
-	// NOTE: These don't actually check anything is written, just no null
-	// pointers etc
+  // NOTE: These don't actually check anything is written, just no null
+  // pointers etc
 
-	@Test
-	public void testRelations() throws UIMAException {
+  @Test
+  public void testRelations() throws UIMAException {
 
-		final Person s = new Person(jCas);
-		s.setValue("source");
-		final Location t = new Location(jCas);
-		t.setValue("target");
+    final Person s = new Person(jCas);
+    s.setValue("source");
+    final Location t = new Location(jCas);
+    t.setValue("target");
 
-		final Relation r = new Relation(jCas);
-		r.setSource(s);
-		r.setTarget(t);
-		r.setRelationshipType("check");
-		r.addToIndexes();
+    final Relation r = new Relation(jCas);
+    r.setSource(s);
+    r.setTarget(t);
+    r.setRelationshipType("check");
+    r.addToIndexes();
 
-		SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Relations.class));
+    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Relations.class));
+  }
 
-	}
+  @Test
+  public void testEntities() throws UIMAException {
 
-	@Test
-	public void testEntities() throws UIMAException {
+    final Person s = new Person(jCas);
+    s.setValue("source");
+    s.addToIndexes();
 
-		final Person s = new Person(jCas);
-		s.setValue("source");
-		s.addToIndexes();
+    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Entities.class));
+  }
 
-		SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Entities.class));
-	}
+  @Test
+  public void testEvents() throws UIMAException {
 
-	@Test
-	public void testEvents() throws UIMAException {
+    final Location t = new Location(jCas);
+    t.setValue("target");
 
-		final Location t = new Location(jCas);
-		t.setValue("target");
+    final Event e = new Event(jCas);
+    e.setArguments(new StringArray(jCas, 1));
+    e.setArguments(0, "test");
+    e.setEntities(new FSArray(jCas, 1));
+    e.setEntities(0, t);
+    e.addToIndexes();
 
-		final Event e = new Event(jCas);
-		e.setArguments(new StringArray(jCas, 1));
-		e.setArguments(0, "test");
-		e.setEntities(new FSArray(jCas, 1));
-		e.setEntities(0, t);
-		e.addToIndexes();
+    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Events.class));
+  }
 
-		SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Events.class));
-	}
+  @Test
+  public void testPattern() throws UIMAException {
 
-	@Test
-	public void testPattern() throws UIMAException {
+    final Pattern s = new Pattern(jCas);
+    s.setWords(new FSArray(jCas, 1));
+    s.setWords(0, new WordToken(jCas));
+    s.addToIndexes();
 
-		final Pattern s = new Pattern(jCas);
-		s.setWords(new FSArray(jCas, 1));
-		s.setWords(0, new WordToken(jCas));
-		s.addToIndexes();
+    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Patterns.class));
+  }
 
-		SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Patterns.class));
-	}
+  @Test
+  public void testStructures() throws UIMAException {
+    jCas.setDocumentText("A sample document");
+    final Document s = new Document(jCas);
+    s.setBegin(0);
+    s.setEnd(10);
+    s.addToIndexes();
 
-	@Test
-	public void testStructures() throws UIMAException {
-		jCas.setDocumentText("A sample document");
-		final Document s = new Document(jCas);
-		s.setBegin(0);
-		s.setEnd(10);
-		s.addToIndexes();
+    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Structures.class));
+  }
 
-		SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Structures.class));
-	}
+  @Test
+  public void testSelectors() throws UIMAException {
+    jCas.setDocumentText("A sample document");
+    final Document s = new Document(jCas);
+    s.setBegin(0);
+    s.setEnd(10);
+    s.addToIndexes();
 
-	@Test
-	public void testSelectors() throws UIMAException {
-		jCas.setDocumentText("A sample document");
-		final Document s = new Document(jCas);
-		s.setBegin(0);
-		s.setEnd(10);
-		s.addToIndexes();
-
-		SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Selectors.class));
-	}
-
+    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(Selectors.class));
+  }
 }

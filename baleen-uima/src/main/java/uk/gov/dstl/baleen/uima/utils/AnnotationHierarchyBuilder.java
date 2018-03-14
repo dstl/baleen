@@ -1,6 +1,5 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
-
 
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -18,32 +17,28 @@ import uk.gov.dstl.baleen.uima.utils.select.Node;
 
 /**
  * A hierarchy builder for annotations within the document.
- * <p>
- * The hierarchy is build using the offset order and depth of structure annotations. Non structure
- * annotations are given maximum depth.
  *
+ * <p>The hierarchy is build using the offset order and depth of structure annotations. Non
+ * structure annotations are given maximum depth.
  *
  * @see Structure
- *
  */
 public class AnnotationHierarchyBuilder {
 
   private AnnotationHierarchyBuilder() {}
 
-
   /**
    * Build the hierarchy for the given jCas, using the types provided.
-   * <p>
-   * The structure is built by first using the offset of all annotations and then the depth of the
-   * Structure annotations, non structure annotations have maximum depth.
    *
+   * <p>The structure is built by first using the offset of all annotations and then the depth of
+   * the Structure annotations, non structure annotations have maximum depth.
    *
    * @param jCas the jCas
    * @param annotationClasses the annotations classes to use
    * @return the Structure base AnnotationHierachy
    */
-  public static <T extends Annotation> ItemHierarchy<T> build(JCas jCas,
-      Set<Class<? extends T>> annotationClasses) {
+  public static <T extends Annotation> ItemHierarchy<T> build(
+      JCas jCas, Set<Class<? extends T>> annotationClasses) {
     return new ItemHierarchy<>(buildRoot(jCas, annotationClasses));
   }
 
@@ -54,8 +49,8 @@ public class AnnotationHierarchyBuilder {
    * @param annotationTypes the annotations classes to use
    * @return the root structure node
    */
-  protected static <T extends Annotation> Node<T> buildRoot(JCas jCas,
-      Set<Class<? extends T>> annotationTypes) {
+  protected static <T extends Annotation> Node<T> buildRoot(
+      JCas jCas, Set<Class<? extends T>> annotationTypes) {
     return build(
         StructureUtil.filterAnnotations(JCasUtil.select(jCas, Annotation.class), annotationTypes));
   }
@@ -68,16 +63,18 @@ public class AnnotationHierarchyBuilder {
    * @return the root structure node
    */
   protected static <T extends Annotation> AnnotationNode<T> build(final List<T> annotations) {
-    Collections.sort(annotations, (s1, s2) -> {
-      int compare = Integer.compare(s1.getBegin(), s2.getBegin());
-      if (compare == 0) {
-        compare = Integer.compare(s2.getEnd(), s1.getEnd());
-      }
-      if (compare == 0) {
-        compare = Integer.compare(getDepth(s1), getDepth(s2));
-      }
-      return compare;
-    });
+    Collections.sort(
+        annotations,
+        (s1, s2) -> {
+          int compare = Integer.compare(s1.getBegin(), s2.getBegin());
+          if (compare == 0) {
+            compare = Integer.compare(s2.getEnd(), s1.getEnd());
+          }
+          if (compare == 0) {
+            compare = Integer.compare(getDepth(s1), getDepth(s2));
+          }
+          return compare;
+        });
 
     final AnnotationNode<T> parent = new AnnotationNode<>(null, null);
     final Deque<AnnotationNode<T>> deque = new ArrayDeque<>();
@@ -115,8 +112,8 @@ public class AnnotationHierarchyBuilder {
    * @param s the annotation
    * @return the parent annotation
    */
-  private static <T extends Annotation> AnnotationNode<T> getParent(Deque<AnnotationNode<T>> deque,
-      T s) {
+  private static <T extends Annotation> AnnotationNode<T> getParent(
+      Deque<AnnotationNode<T>> deque, T s) {
 
     while (testNodePassed(deque.peek(), s)) {
       deque.pop();
@@ -124,11 +121,9 @@ public class AnnotationHierarchyBuilder {
     return deque.peek();
   }
 
-
   private static <T extends Annotation> boolean testNodePassed(AnnotationNode<T> node, T s) {
     int begin = s.getBegin();
     int end = AnnotationNode.getEnd(node);
     return end < begin || end == begin && getDepth(node.getItem()) >= getDepth(s);
   }
-
 }

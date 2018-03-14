@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.jobs;
 
 import java.io.File;
@@ -26,9 +26,9 @@ import uk.gov.dstl.baleen.uima.JobSettings;
 /**
  * A task which outputs statistics on the Mongo database.
  *
- * Statistics are saved to a CSV file (specified through the configuration parameter 'file').
+ * <p>Statistics are saved to a CSV file (specified through the configuration parameter 'file').
  *
- * Typically this task will be used with a FixedRate scheduler for say hourly information:
+ * <p>Typically this task will be used with a FixedRate scheduler for say hourly information:
  *
  * <pre>
  * mongo:
@@ -49,79 +49,90 @@ import uk.gov.dstl.baleen.uima.JobSettings;
  */
 public class MongoStats extends BaleenTask {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MongoStats.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MongoStats.class);
 
-	/**
-	 * Connection to Mongo
-	 *
-	 * @baleen.resource uk.gov.dstl.baleen.resources.SharedMongoResource
-	 */
-	public static final String KEY_MONGO = "mongo";
-	@ExternalResource(key = KEY_MONGO)
-	private SharedMongoResource mongoResource;
+  /**
+   * Connection to Mongo
+   *
+   * @baleen.resource uk.gov.dstl.baleen.resources.SharedMongoResource
+   */
+  public static final String KEY_MONGO = "mongo";
 
-	/**
-	 * The collection to entities are output to
-	 *
-	 * @baleen.config entities
-	 */
-	public static final String PARAM_ENTITIES_COLLECTION = "entities";
-	@ConfigurationParameter(name = PARAM_ENTITIES_COLLECTION, defaultValue = "entities")
-	private String entitiesCollectionName;
+  @ExternalResource(key = KEY_MONGO)
+  private SharedMongoResource mongoResource;
 
-	/**
-	 * The collection to relationships are output to
-	 *
-	 * @baleen.config relations
-	 */
-	public static final String PARAM_RELATIONS_COLLECTION = "relations";
-	@ConfigurationParameter(name = PARAM_RELATIONS_COLLECTION, defaultValue = "relations")
-	private String relationsCollectionName;
+  /**
+   * The collection to entities are output to
+   *
+   * @baleen.config entities
+   */
+  public static final String PARAM_ENTITIES_COLLECTION = "entities";
 
-	/**
-	 * The collection to documents are output to
-	 *
-	 * @baleen.config documents
-	 */
-	public static final String PARAM_DOCUMENTS_COLLECTION = "documents";
-	@ConfigurationParameter(name = PARAM_DOCUMENTS_COLLECTION, defaultValue = "documents")
-	private String documentsCollectionName;
+  @ConfigurationParameter(name = PARAM_ENTITIES_COLLECTION, defaultValue = "entities")
+  private String entitiesCollectionName;
 
-	/**
-	 * The collection to output documents to
-	 *
-	 * @baleen.config documents
-	 */
-	public static final String PARAM_FILE = "file";
-	@ConfigurationParameter(name = PARAM_FILE, defaultValue = "mongo_stats.csv")
-	private String filename;
+  /**
+   * The collection to relationships are output to
+   *
+   * @baleen.config relations
+   */
+  public static final String PARAM_RELATIONS_COLLECTION = "relations";
 
-	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
+  @ConfigurationParameter(name = PARAM_RELATIONS_COLLECTION, defaultValue = "relations")
+  private String relationsCollectionName;
 
-	@Override
-	protected void execute(JobSettings settings) throws AnalysisEngineProcessException {
+  /**
+   * The collection to documents are output to
+   *
+   * @baleen.config documents
+   */
+  public static final String PARAM_DOCUMENTS_COLLECTION = "documents";
 
-		MongoCollection<Document> entityCollection = mongoResource.getDB().getCollection(entitiesCollectionName);
-		MongoCollection<Document> documentCollection = mongoResource.getDB().getCollection(documentsCollectionName);
-		MongoCollection<Document> relationCollection = mongoResource.getDB().getCollection(relationsCollectionName);
+  @ConfigurationParameter(name = PARAM_DOCUMENTS_COLLECTION, defaultValue = "documents")
+  private String documentsCollectionName;
 
-		File file = new File(filename);
-		boolean newFile = !file.exists() || file.length() == 0;
+  /**
+   * The collection to output documents to
+   *
+   * @baleen.config documents
+   */
+  public static final String PARAM_FILE = "file";
 
-		try (Writer writer = new OutputStreamWriter(new FileOutputStream(filename, true), StandardCharsets.UTF_8)) {
-			// We have a new file, so write a header line
-			if (newFile) {
-				writer.write("timestamp,documents,entities,relations\n");
-			}
+  @ConfigurationParameter(name = PARAM_FILE, defaultValue = "mongo_stats.csv")
+  private String filename;
 
-			writer.write(String.format("%s,%d,%d,%d%n", FORMATTER.format(LocalDateTime.now()),
-					documentCollection.count(),
-					entityCollection.count(),
-					relationCollection.count()));
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
-		} catch (IOException e) {
-			LOGGER.warn("Unable to write stats to file {} ", filename, e);
-		}
-	}
+  @Override
+  protected void execute(JobSettings settings) throws AnalysisEngineProcessException {
 
+    MongoCollection<Document> entityCollection =
+        mongoResource.getDB().getCollection(entitiesCollectionName);
+    MongoCollection<Document> documentCollection =
+        mongoResource.getDB().getCollection(documentsCollectionName);
+    MongoCollection<Document> relationCollection =
+        mongoResource.getDB().getCollection(relationsCollectionName);
+
+    File file = new File(filename);
+    boolean newFile = !file.exists() || file.length() == 0;
+
+    try (Writer writer =
+        new OutputStreamWriter(new FileOutputStream(filename, true), StandardCharsets.UTF_8)) {
+      // We have a new file, so write a header line
+      if (newFile) {
+        writer.write("timestamp,documents,entities,relations\n");
+      }
+
+      writer.write(
+          String.format(
+              "%s,%d,%d,%d%n",
+              FORMATTER.format(LocalDateTime.now()),
+              documentCollection.count(),
+              entityCollection.count(),
+              relationCollection.count()));
+
+    } catch (IOException e) {
+      LOGGER.warn("Unable to write stats to file {} ", filename, e);
+    }
+  }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers.structure;
 
 import static org.junit.Assert.assertEquals;
@@ -11,7 +11,6 @@ import org.junit.Test;
 import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.uima.utils.select.Node;
 import uk.gov.dstl.baleen.uima.utils.select.Nodes;
-
 
 public class SelectorTest extends AbstractHtmlToStructureTest {
 
@@ -32,8 +31,9 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void testByAttribute() throws UIMAException {
-    String h = "<a href=Foo />1<a href=Bar />2<a Style=Qux />3<a href=Bam />4<a href=SLAM />5"
-        + "<a href='with spaces'/>";
+    String h =
+        "<a href=Foo />1<a href=Bar />2<a Style=Qux />3<a href=Bam />4<a href=SLAM />5"
+            + "<a href='with spaces'/>";
     Node<Structure> doc = createStructure(h);
 
     Nodes<Structure> withTitle = doc.select("[target]");
@@ -72,7 +72,6 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
     assertEquals("with spaces", contains.last().attr("target"));
   }
 
-
   @Test
   public void testByAttributeStarting() throws UIMAException {
     Node<Structure> doc =
@@ -89,8 +88,9 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void testByAttributeRegex() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<p><img src=foo.png id=1>1<img src=bar.jpg id=2>2<img src=qux.JPEG id=3>3<img src=old.gif>4<img>5</p>");
+    Node<Structure> doc =
+        createStructure(
+            "<p><img src=foo.png id=1>1<img src=bar.jpg id=2>2<img src=qux.JPEG id=3>3<img src=old.gif>4<img>5</p>");
     Nodes<Structure> imgs = doc.select("Figure[target~=(?i)\\.(png|jpe?g)]");
     assertEquals(3, imgs.size());
     assertEquals("foo.png", imgs.get(0).attr("target"));
@@ -100,8 +100,9 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void testByAttributeRegexCharacterClass() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<p><img src=foo.png id=1><img src=bar.jpg id=2><img src=qux.JPEG id=3><img src=old.gif id=4></p>");
+    Node<Structure> doc =
+        createStructure(
+            "<p><img src=foo.png id=1><img src=bar.jpg id=2><img src=qux.JPEG id=3><img src=old.gif id=4></p>");
     Nodes<Structure> imgs = doc.select("Figure[target~=[o]]");
     assertEquals(2, imgs.size());
     assertEquals("foo.png", imgs.get(0).attr("target"));
@@ -149,7 +150,7 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
     assertEquals("bar", els.get(1).attr("target"));
     assertEquals("Section", els.get(2).getTypeName());
     assertTrue(els.get(2).attr("target").length() == 0); // missing attributes come back as empty
-                                                         // string
+    // string
     assertFalse(els.get(2).hasAttr("title"));
     assertEquals("Figure", els.get(3).getTypeName());
     assertEquals("qux", els.get(3).attr("target"));
@@ -183,7 +184,6 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
     Nodes<Structure> empty = root.select("Paragraph Paragraph");
     assertEquals(0, empty.size());
-
   }
 
   @Test
@@ -290,7 +290,6 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
     assertEquals("Three", sibs.get(1).text());
   }
 
-
   @Test
   public void notAdjacent() throws UIMAException {
     String h = "<h1>One</h1><h2>Two</h2><h3>Three</h3>";
@@ -330,8 +329,6 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
     assertEquals(1, sibs.size());
     assertEquals("Three", sibs.first().text());
   }
-
-
 
   // for http://github.com/jhy/jsoup/issues#issue/13
   @Test
@@ -398,8 +395,9 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void testPseudoCombined() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<h1 class='foo'><p>One</p><p>Two</p></h1><h1><p>Three</p><p>Four</p></h1>");
+    Node<Structure> doc =
+        createStructure(
+            "<h1 class='foo'><p>One</p><p>Two</p></h1><h1><p>Three</p><p>Four</p></h1>");
     Nodes<Structure> ps = doc.select("Heading.foo Paragraph:gt(0)");
     assertEquals(1, ps.size());
     assertEquals("Two", ps.get(0).text());
@@ -407,8 +405,9 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void testPseudoHas() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<div id=0><p><img>Hello</img></p></div> <div id=1><img src=foo>There</img></div> <div id=2><p>Not</p></div>");
+    Node<Structure> doc =
+        createStructure(
+            "<div id=0><p><img>Hello</img></p></div> <div id=1><img src=foo>There</img></div> <div id=2><p>Not</p></div>");
 
     Nodes<Structure> divs1 = doc.select("Section:has(Figure)");
     assertEquals(2, divs1.size());
@@ -454,8 +453,9 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void testPseudoContains() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<div><p>The Rain.</p> <p class=light>The <i>rain</i>.</p> <p>Rain, the.</p></div>");
+    Node<Structure> doc =
+        createStructure(
+            "<div><p>The Rain.</p> <p class=light>The <i>rain</i>.</p> <p>Rain, the.</p></div>");
 
     Nodes<Structure> ps1 = doc.select("Paragraph:contains(Rain)");
     assertEquals(3, ps1.size());
@@ -499,17 +499,18 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void testMatches() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<p id=1>The <i>Rain</i></p> <p id=2>There are 99 bottles.</p> <p id=3>Harder (this)</p> <p id=4>Rain</p>");
+    Node<Structure> doc =
+        createStructure(
+            "<p id=1>The <i>Rain</i></p> <p id=2>There are 99 bottles.</p> <p id=3>Harder (this)</p> <p id=4>Rain</p>");
 
     Nodes<Structure> p1 = doc.select("Paragraph:matches(The rain)"); // no match,
-                                                                     // case
-                                                                     // sensitive
+    // case
+    // sensitive
     assertEquals(0, p1.size());
 
     Nodes<Structure> p2 = doc.select("Paragraph:matches((?i)the rain)"); // case
-                                                                         // insense.
-                                                                         // should
+    // insense.
+    // should
     // include root,
     // html,
     // body
@@ -525,7 +526,7 @@ public class SelectorTest extends AbstractHtmlToStructureTest {
     assertEquals("There are 99 bottles.", p5.first().text());
 
     Nodes<Structure> p6 = doc.select("Paragraph:matches(\\w+\\s+\\(\\w+\\))"); // test
-                                                                               // bracket
+    // bracket
     // matching
     assertEquals(1, p6.size());
     assertEquals("Harder (this)", p6.first().text());

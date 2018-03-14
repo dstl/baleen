@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import java.util.ArrayList;
@@ -11,14 +11,13 @@ import org.apache.commons.lang.Validate;
  * CSS-like node selector, that finds nodes matching a query.
  *
  * <h2>Selector syntax</h2>
- * <p>
- * A selector is a chain of simple selectors, separated by combinators. Selectors are <b>case
+ *
+ * <p>A selector is a chain of simple selectors, separated by combinators. Selectors are <b>case
  * insensitive</b> (including against nodes, attributes, and attribute values).
- * </p>
- * <p>
- * The universal selector (*) is implicit when no node selector is supplied (i.e. {@code *.header}
- * and {@code .header} is equivalent).
- * </p>
+ *
+ * <p>The universal selector (*) is implicit when no node selector is supplied (i.e. {@code
+ * *.header} and {@code .header} is equivalent).
+ *
  * <table summary="">
  * <tr>
  * <th align="left">Pattern</th>
@@ -357,8 +356,6 @@ public class Selector<T> {
     return new Nodes<>(nodes);
   }
 
-
-
   // exclude set. package open so that Nodes can implement .not() selector.
   protected static <T> Nodes<T> filterOut(Collection<Node<T>> nodes, Collection<Node<T>> outs) {
     Nodes<T> output = new Nodes<>();
@@ -377,20 +374,16 @@ public class Selector<T> {
     return output;
   }
 
-  /**
-   * Selector Parse Exception, for when the given selecotr query fails to parse.
-   * 
-   */
+  /** Selector Parse Exception, for when the given selecotr query fails to parse. */
   public static class SelectorParseException extends IllegalStateException {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * Constructor for the selector parse exception.
-     * 
+     *
      * @param msg the (templated) message for the exception
      * @param params the parameters for the (templated) message
-     * 
      */
     public SelectorParseException(String msg, Object... params) {
       super(String.format(msg, params));

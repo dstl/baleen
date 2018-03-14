@@ -1,12 +1,10 @@
-//NCA (c) Crown Copyright 2017
+// NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -27,294 +25,330 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
+
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
- * Read a folder of CSV files and process each line in the CSV file as a separate document
- * (with one content column, and other columns being used as metadata).
+ * Read a folder of CSV files and process each line in the CSV file as a separate document (with one
+ * content column, and other columns being used as metadata).
  *
  * @baleen.javadoc
  */
 public class CsvFolderReader extends BaleenCollectionReader {
-    /**
-     * A list of folders to watch
-     *
-     * @baleen.config <i>Current directory</i>
-     */
-    public static final String PARAM_FOLDERS = "folders";
-    @ConfigurationParameter(name = PARAM_FOLDERS, defaultValue = {})
-    private String[] folders;
+  /**
+   * A list of folders to watch
+   *
+   * @baleen.config <i>Current directory</i>
+   */
+  public static final String PARAM_FOLDERS = "folders";
 
-    /**
-     * Should folders be processed recursively (i.e. should we watch subfolders too)?
-     *
-     * @baleen.config true
-     */
-    public static final String PARAM_RECURSIVE = "recursive";
-    @ConfigurationParameter(name = PARAM_RECURSIVE, defaultValue="true")
-    private boolean recursive = true;
+  @ConfigurationParameter(
+    name = PARAM_FOLDERS,
+    defaultValue = {}
+  )
+  private String[] folders;
 
-    /**
-     * The separator for the files
-     *
-     * @baleen.config ,
-     */
-    public static final String PARAM_SEPARATOR = "separator";
-    @ConfigurationParameter(name = PARAM_SEPARATOR, defaultValue = ",")
-    private String separator;
+  /**
+   * Should folders be processed recursively (i.e. should we watch subfolders too)?
+   *
+   * @baleen.config true
+   */
+  public static final String PARAM_RECURSIVE = "recursive";
 
-    /**
-     * The file extension to filter by
-     *
-     * @baleen.config csv
-     */
-    public static final String PARAM_EXTENSION = "extension";
-    @ConfigurationParameter(name = PARAM_EXTENSION, defaultValue = "csv")
-    private String extension;
+  @ConfigurationParameter(name = PARAM_RECURSIVE, defaultValue = "true")
+  private boolean recursive = true;
 
-    /**
-     * Text column(s) in CSV - these columns will be used as the main content to process.
-     * If more than one column is specified, then the content of the cells will be joined
-     * with two newlines.
-     *
-     * @baleen.config content
-     */
-    public static final String PARAM_TEXT_COLUMNS = "text";
-    @ConfigurationParameter(name = PARAM_TEXT_COLUMNS, defaultValue = {"content"})
-    private String[] textColumn;
+  /**
+   * The separator for the files
+   *
+   * @baleen.config ,
+   */
+  public static final String PARAM_SEPARATOR = "separator";
 
-    private WatchService watcher;
-    private Map<WatchKey, Path> watchKeys = new HashMap<>();
-    private List<Path> queue = new ArrayList<>();
+  @ConfigurationParameter(name = PARAM_SEPARATOR, defaultValue = ",")
+  private String separator;
 
-    private List<String> columnHeadings = new ArrayList<>();
-    private Path currPath;
-    private List<String> currLines = new ArrayList<>();
+  /**
+   * The file extension to filter by
+   *
+   * @baleen.config csv
+   */
+  public static final String PARAM_EXTENSION = "extension";
 
-    private CSVParser csvParser;
+  @ConfigurationParameter(name = PARAM_EXTENSION, defaultValue = "csv")
+  private String extension;
 
-    private IContentExtractor extractor;
+  /**
+   * Text column(s) in CSV - these columns will be used as the main content to process. If more than
+   * one column is specified, then the content of the cells will be joined with two newlines.
+   *
+   * @baleen.config content
+   */
+  public static final String PARAM_TEXT_COLUMNS = "text";
 
-    @Override
-    public void doInitialize(UimaContext context) throws ResourceInitializationException {
-        if(folders == null || folders.length == 0){
-            folders = new String[1];
-            folders[0] = System.getProperty("user.dir");
-        }
+  @ConfigurationParameter(
+    name = PARAM_TEXT_COLUMNS,
+    defaultValue = {"content"}
+  )
+  private String[] textColumn;
 
-        try{
-            watcher = FileSystems.getDefault().newWatchService();
-        }catch(IOException ioe){
-            throw new ResourceInitializationException(ioe);
-        }
+  private WatchService watcher;
+  private Map<WatchKey, Path> watchKeys = new HashMap<>();
+  private List<Path> queue = new ArrayList<>();
 
-        csvParser = new CSVParserBuilder().withSeparator(separator.charAt(0)).build();
-        registerFolders();
+  private List<String> columnHeadings = new ArrayList<>();
+  private Path currPath;
+  private List<String> currLines = new ArrayList<>();
+
+  private CSVParser csvParser;
+
+  private IContentExtractor extractor;
+
+  @Override
+  public void doInitialize(UimaContext context) throws ResourceInitializationException {
+    if (folders == null || folders.length == 0) {
+      folders = new String[1];
+      folders[0] = System.getProperty("user.dir");
     }
 
-    private void registerFolders() {
-        for(String folder : folders){
-            try{
-                Path p = Paths.get(folder);
-                p = p.toRealPath();
+    try {
+      watcher = FileSystems.getDefault().newWatchService();
+    } catch (IOException ioe) {
+      throw new ResourceInitializationException(ioe);
+    }
 
-                if(recursive){
-                    Files.walkFileTree(p, new SimpleFileVisitor<Path>(){
-                        @Override
-                        public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr) throws IOException{
-                            registerDirectory(dir);
-                            return FileVisitResult.CONTINUE;
-                        }
-                    });
-                }else{
-                    registerDirectory(p);
+    csvParser = new CSVParserBuilder().withSeparator(separator.charAt(0)).build();
+    registerFolders();
+  }
+
+  private void registerFolders() {
+    for (String folder : folders) {
+      try {
+        Path p = Paths.get(folder);
+        p = p.toRealPath();
+
+        if (recursive) {
+          Files.walkFileTree(
+              p,
+              new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attr)
+                    throws IOException {
+                  registerDirectory(dir);
+                  return FileVisitResult.CONTINUE;
                 }
-                addFilesFromDir(p.toFile());
-            }catch(IOException ioe){
-                getMonitor().warn("Could not find or register folder '{}' or it's subfolders - folder will be skipped", folder,ioe);
+              });
+        } else {
+          registerDirectory(p);
+        }
+        addFilesFromDir(p.toFile());
+      } catch (IOException ioe) {
+        getMonitor()
+            .warn(
+                "Could not find or register folder '{}' or it's subfolders - folder will be skipped",
+                folder,
+                ioe);
+      }
+    }
+  }
+
+  private void registerDirectory(Path path) throws IOException {
+    WatchKey key = path.register(watcher, ENTRY_CREATE, ENTRY_DELETE);
+    watchKeys.put(key, path);
+
+    getMonitor().counter("directories").inc();
+  }
+
+  private void addFilesFromDir(File dir) {
+    File[] files = dir.listFiles();
+
+    if (files == null) {
+      return;
+    }
+
+    for (File file : files) {
+      if (!file.isDirectory()) {
+        if (addFile(file.toPath())) getMonitor().counter("files").inc();
+      } else if (recursive) {
+        addFilesFromDir(file);
+      }
+    }
+  }
+
+  @Override
+  public void doGetNext(JCas jCas) throws IOException, CollectionException {
+    if (currLines.isEmpty()) {
+      // Read next file
+      currPath = queue.remove(0);
+      getMonitor().info("Processing file {}", currPath.toString());
+
+      List<String> lines;
+      try (Stream<String> ln = Files.lines(currPath)) {
+        lines = ln.collect(Collectors.toList());
+      }
+
+      String header = lines.remove(0);
+      columnHeadings = Arrays.asList(csvParser.parseLine(header));
+
+      currLines.addAll(lines);
+    }
+
+    String line = currLines.remove(0);
+    String[] cols = csvParser.parseLine(line);
+
+    StringJoiner sj = new StringJoiner("\n\n");
+    Map<String, String> meta = new HashMap<>();
+
+    for (int i = 0; i < columnHeadings.size(); i++) {
+      if (inArray(columnHeadings.get(i), textColumn)) {
+        sj.add(cols[i]);
+      } else {
+        meta.put(columnHeadings.get(i), cols[i]);
+      }
+    }
+
+    jCas.setDocumentText(sj.toString());
+    for (Map.Entry<String, String> e : meta.entrySet()) {
+      Metadata md = new Metadata(jCas);
+      md.setKey(e.getKey());
+      md.setValue(e.getValue());
+      md.addToIndexes();
+    }
+
+    DocumentAnnotation doc = getSupport().getDocumentAnnotation(jCas);
+    doc.setSourceUri(currPath.toString());
+    doc.setTimestamp(System.currentTimeMillis());
+  }
+
+  @Override
+  public void doClose() throws IOException {
+    if (watcher != null) {
+      watcher.close();
+      watcher = null;
+    }
+
+    watchKeys.clear();
+    queue.clear();
+
+    if (extractor != null) {
+      extractor.destroy();
+      extractor = null;
+    }
+  }
+
+  /**
+   * Every time doHasNext() is called, check the WatchService for new events and add all new events
+   * to the queue. Then return true if there are files on the queue, or false otherwise.
+   *
+   * <p>If the event indicates that a file has been deleted, ensure it is removed from the queue.
+   */
+  @Override
+  public boolean doHasNext() throws IOException, CollectionException {
+    WatchKey key;
+    while ((key = watcher.poll()) != null) {
+      for (WatchEvent<?> event : key.pollEvents()) {
+        processEvent(key, event);
+        getMonitor().meter("events").mark();
+      }
+
+      key.reset();
+    }
+
+    return !currLines.isEmpty() || !queue.isEmpty();
+  }
+
+  private void processEvent(WatchKey key, WatchEvent<?> event) {
+    @SuppressWarnings("unchecked")
+    WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
+
+    if (event.kind() == OVERFLOW) {
+      getMonitor().warn("OVERFLOW event received - some files may be missing from the queue");
+    } else if (event.kind() == ENTRY_DELETE) {
+      getMonitor()
+          .debug(
+              "ENTRY_DELETE event received - file '{}' will be removed from queue",
+              pathEvent.context());
+
+      try {
+        Path dir = watchKeys.get(key);
+        if (dir != null) {
+          Path resolved = dir.resolve(pathEvent.context());
+          queue.remove(resolved);
+        } else {
+          getMonitor()
+              .warn(
+                  "WatchKey not found - file '{}' will not be removed from the queue",
+                  pathEvent.context());
+        }
+      } catch (Exception ioe) {
+        getMonitor()
+            .warn(
+                "An error occurred - file '{}' will not be removed from the queue",
+                pathEvent.context(),
+                ioe);
+      }
+
+      queue.remove(pathEvent.context());
+    } else {
+      getMonitor()
+          .debug(
+              event.kind().name() + " event received - file '{}' will be added to the queue",
+              pathEvent.context());
+      try {
+        Path dir = watchKeys.get(key);
+        if (dir != null) {
+          Path resolved = dir.resolve(pathEvent.context());
+          if (resolved.toFile().isDirectory()) {
+            if (recursive) {
+              addFilesFromDir(resolved.toFile());
+              registerDirectory(resolved);
             }
+          } else {
+            addFile(resolved);
+          }
+        } else {
+          getMonitor()
+              .warn(
+                  "WatchKey not found - file '{}' will not be added to the queue",
+                  pathEvent.context());
         }
+      } catch (Exception ioe) {
+        getMonitor()
+            .warn(
+                "An error occurred - file '{}' will not be added to the queue",
+                pathEvent.context(),
+                ioe);
+      }
+    }
+  }
+
+  private boolean addFile(Path path) {
+    if (path.toString().toLowerCase().endsWith("." + extension)) {
+      queue.add(path);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /** Check whether the needle appears in the haystack (case insensitive) */
+  private static boolean inArray(String needle, String[] haystack) {
+    for (String h : haystack) {
+      if (needle.equalsIgnoreCase(h)) return true;
     }
 
-    private void registerDirectory(Path path) throws IOException{
-        WatchKey key = path.register(watcher, ENTRY_CREATE, ENTRY_DELETE);
-        watchKeys.put(key, path);
-
-        getMonitor().counter("directories").inc();
-    }
-
-    private void addFilesFromDir(File dir){
-        File[] files = dir.listFiles();
-
-        if(files == null){
-            return;
-        }
-
-        for (File file : files) {
-            if (!file.isDirectory()) {
-                if (addFile(file.toPath()))
-                    getMonitor().counter("files").inc();
-            } else if (recursive) {
-                addFilesFromDir(file);
-            }
-        }
-    }
-
-    @Override
-    public void doGetNext(JCas jCas) throws IOException, CollectionException {
-        if(currLines.isEmpty()){
-           //Read next file
-            currPath = queue.remove(0);
-            getMonitor().info("Processing file {}", currPath.toString());
-
-            List<String> lines;
-            try (
-                Stream <String> ln = Files.lines(currPath)
-            ){
-            	lines = ln.collect(Collectors.toList());
-            }
-            
-            String header = lines.remove(0);
-            columnHeadings = Arrays.asList(csvParser.parseLine(header));
-
-            currLines.addAll(lines);
-        }
-
-        String line = currLines.remove(0);
-        String[] cols = csvParser.parseLine(line);
-
-        StringJoiner sj = new StringJoiner("\n\n");
-        Map<String, String> meta = new HashMap<>();
-
-        for(int i = 0; i < columnHeadings.size(); i++){
-            if(inArray(columnHeadings.get(i), textColumn)){
-                sj.add(cols[i]);
-            }else{
-                meta.put(columnHeadings.get(i), cols[i]);
-            }
-        }
-
-        jCas.setDocumentText(sj.toString());
-        for(Map.Entry<String, String> e : meta.entrySet()){
-            Metadata md = new Metadata(jCas);
-            md.setKey(e.getKey());
-            md.setValue(e.getValue());
-            md.addToIndexes();
-        }
-
-        DocumentAnnotation doc = getSupport().getDocumentAnnotation(jCas);
-        doc.setSourceUri(currPath.toString());
-        doc.setTimestamp(System.currentTimeMillis());
-    }
-
-    @Override
-    public void doClose() throws IOException {
-        if(watcher != null) {
-            watcher.close();
-            watcher = null;
-        }
-
-        watchKeys.clear();
-        queue.clear();
-
-        if(extractor != null) {
-            extractor.destroy();
-            extractor = null;
-        }
-    }
-
-    /**
-     * Every time doHasNext() is called, check the WatchService for new events and add all new events to the queue.
-     * Then return true if there are files on the queue, or false otherwise.
-     *
-     * If the event indicates that a file has been deleted, ensure it is removed from the queue.
-     */
-    @Override
-    public boolean doHasNext() throws IOException, CollectionException {
-        WatchKey key;
-        while((key = watcher.poll()) != null){
-            for(WatchEvent<?> event : key.pollEvents()){
-                processEvent(key, event);
-                getMonitor().meter("events").mark();
-            }
-
-            key.reset();
-        }
-
-        return !currLines.isEmpty() || !queue.isEmpty();
-    }
-
-    private void processEvent(WatchKey key, WatchEvent<?> event) {
-        @SuppressWarnings("unchecked")
-        WatchEvent<Path> pathEvent = (WatchEvent<Path>) event;
-
-        if(event.kind() == OVERFLOW){
-            getMonitor().warn("OVERFLOW event received - some files may be missing from the queue");
-        }else if(event.kind() == ENTRY_DELETE){
-            getMonitor().debug("ENTRY_DELETE event received - file '{}' will be removed from queue", pathEvent.context());
-
-            try{
-                Path dir = watchKeys.get(key);
-                if(dir != null){
-                    Path resolved = dir.resolve(pathEvent.context());
-                    queue.remove(resolved);
-                }else{
-                    getMonitor().warn("WatchKey not found - file '{}' will not be removed from the queue", pathEvent.context());
-                }
-            }catch(Exception ioe){
-                getMonitor().warn("An error occurred - file '{}' will not be removed from the queue", pathEvent.context(), ioe);
-            }
-
-            queue.remove(pathEvent.context());
-        }else{
-            getMonitor().debug(event.kind().name() + " event received - file '{}' will be added to the queue", pathEvent.context());
-            try{
-                Path dir = watchKeys.get(key);
-                if(dir != null){
-                    Path resolved = dir.resolve(pathEvent.context());
-                    if (resolved.toFile().isDirectory()) {
-                        if (recursive) {
-                            addFilesFromDir(resolved.toFile());
-                            registerDirectory(resolved);
-                        }
-                    } else {
-                        addFile(resolved);
-                    }
-                }else{
-                    getMonitor().warn("WatchKey not found - file '{}' will not be added to the queue", pathEvent.context());
-                }
-            }catch(Exception ioe){
-                getMonitor().warn("An error occurred - file '{}' will not be added to the queue", pathEvent.context(), ioe);
-            }
-        }
-    }
-
-    private boolean addFile(Path path){
-        if(path.toString().toLowerCase().endsWith("."+extension)) {
-            queue.add(path);
-            return true;
-        }else{
-            return false;
-        }
-    }
-
-    /**
-     * Check whether the needle appears in the haystack (case insensitive)
-     */
-    private static boolean inArray(String needle, String[] haystack){
-        for(String h : haystack){
-            if(needle.equalsIgnoreCase(h))
-                return true;
-        }
-
-        return false;
-    }
+    return false;
+  }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers.helpers;
 
 import java.util.Arrays;
@@ -12,50 +12,48 @@ import uk.gov.dstl.baleen.contentmappers.SemanticHtml;
 
 /**
  * Collects annotations within {@link ContentMapper}.
- * 
- * This class is necessary since {@link ContentMapper} do not know the beginning and end offset of
- * the tag in the UIMA text.
- * 
- * 
- * Typically a content mapper will simply:
- * 
+ *
+ * <p>This class is necessary since {@link ContentMapper} do not know the beginning and end offset
+ * of the tag in the UIMA text.
+ *
+ * <p>Typically a content mapper will simply:
+ *
  * <pre>
  * collectors.add(new Heading(jCas));
  * </pre>
  *
- *
  * See {@link SemanticHtml} for details.
  */
 public class AnnotationCollector {
-	private List<Annotation> annotations;
+  private List<Annotation> annotations;
 
-	/**
-	 * Adds the annotations to the collector
-	 *
-	 * @param a the a
-	 */
-	public void add(Annotation... a) {
-		add(Arrays.asList(a));
-	}
+  /**
+   * Adds the annotations to the collector
+   *
+   * @param a the a
+   */
+  public void add(Annotation... a) {
+    add(Arrays.asList(a));
+  }
 
-	/**
-	 * Adds annotations to the collector
-	 *
-	 * @param collection the collection
-	 */
-	public void add(Collection<Annotation> collection) {
-		if (annotations == null) {
-			annotations = new LinkedList<>();
-		}
-		annotations.addAll(collection);
-	}
+  /**
+   * Adds annotations to the collector
+   *
+   * @param collection the collection
+   */
+  public void add(Collection<Annotation> collection) {
+    if (annotations == null) {
+      annotations = new LinkedList<>();
+    }
+    annotations.addAll(collection);
+  }
 
-	/**
-	 * Get annotations within this collector.
-	 * 
-	 * @return may be null (if no annotations have been added)
-	 */
-	public List<Annotation> getAnnotations() {
-		return annotations;
-	}
+  /**
+   * Get annotations within this collector.
+   *
+   * @return may be null (if no annotations have been added)
+   */
+  public List<Annotation> getAnnotations() {
+    return annotations;
+  }
 }

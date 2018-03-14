@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
 import java.util.Collections;
@@ -14,30 +14,28 @@ import uk.gov.dstl.baleen.types.common.Person;
 
 /**
  * Annotate callsigns using a regular expression and phrase chunking where available
- * 
- * <p>Noun phrases in the document are compared against the following regular expression, with matches being annotated as a person.</p>
+ *
+ * <p>Noun phrases in the document are compared against the following regular expression, with
+ * matches being annotated as a person.
+ *
  * <pre>\\bC[\\\\|/]S [A-Z ]+\\b</pre>
- * 
- * 
  */
 public class Callsign extends AbstractRegexNPAnnotator<Person> {
-	
-	public static final String REGEX_CS = "\\bC[\\\\|/]S [A-Z ]+\\b";
 
-	/** New instance.
-	 * 
-	 */
-	public Callsign() {
-		super(REGEX_CS, true, 1.0);
-	}
+  public static final String REGEX_CS = "\\bC[\\\\|/]S [A-Z ]+\\b";
 
-	@Override
-	protected Person create(JCas jCas, Matcher matcher) {
-		return new Person(jCas);
-	}
-	
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(Collections.emptySet(), ImmutableSet.of(Person.class));
-	}
+  /** New instance. */
+  public Callsign() {
+    super(REGEX_CS, true, 1.0);
+  }
+
+  @Override
+  protected Person create(JCas jCas, Matcher matcher) {
+    return new Person(jCas);
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(Collections.emptySet(), ImmutableSet.of(Person.class));
+  }
 }

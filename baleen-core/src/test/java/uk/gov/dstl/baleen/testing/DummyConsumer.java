@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.testing;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -15,37 +15,32 @@ import uk.gov.dstl.baleen.core.history.HistoryEvents;
 import uk.gov.dstl.baleen.core.history.Recordable;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
 
-/**
- * Dummy consumer, that logs the entity count per document
- *
- * 
- */
+/** Dummy consumer, that logs the entity count per document */
 public class DummyConsumer extends JCasAnnotator_ImplBase {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DummyConsumer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DummyConsumer.class);
 
-	public static class FakeRecordable extends Annotation implements Recordable {
+  public static class FakeRecordable extends Annotation implements Recordable {
 
-		public FakeRecordable(JCas jCas) {
-			super(jCas);
-		}
+    public FakeRecordable(JCas jCas) {
+      super(jCas);
+    }
 
-		@Override
-		public long getInternalId() {
-			return 1;
-		}
+    @Override
+    public long getInternalId() {
+      return 1;
+    }
+  }
 
-	}
+  @ExternalResource(key = PipelineBuilder.BALEEN_HISTORY)
+  private BaleenHistory history;
 
-	@ExternalResource(key=PipelineBuilder.BALEEN_HISTORY)
-	private BaleenHistory history;
+  @Override
+  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+    LOGGER.info("Document contains {} entities", JCasUtil.selectAll(aJCas).size());
 
-	@Override
-	public void process(JCas aJCas) throws AnalysisEngineProcessException {
-		LOGGER.info("Document contains {} entities", JCasUtil.selectAll(aJCas).size());
-
-		FakeRecordable fakeRecordable = new FakeRecordable(aJCas);
-		history.getHistory("fake").add(HistoryEvents.createAdded(fakeRecordable, DummyAnnotator1.class.getName()));
-	}
-
-
+    FakeRecordable fakeRecordable = new FakeRecordable(aJCas);
+    history
+        .getHistory("fake")
+        .add(HistoryEvents.createAdded(fakeRecordable, DummyAnnotator1.class.getName()));
+  }
 }

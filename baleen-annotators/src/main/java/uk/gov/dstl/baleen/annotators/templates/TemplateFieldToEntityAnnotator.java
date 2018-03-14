@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.templates;
 
 import java.lang.reflect.Constructor;
@@ -28,132 +28,135 @@ import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
 /**
- * Creates a new Entity of the configured type for each field of a given name in
- * each record with a given name.
- * 
- * Optionally, a source can be provided to disambiguate records/fields created
- * from multiple definition configurations.
- * 
- * Example configuration:
- * 
+ * Creates a new Entity of the configured type for each field of a given name in each record with a
+ * given name.
+ *
+ * <p>Optionally, a source can be provided to disambiguate records/fields created from multiple
+ * definition configurations.
+ *
+ * <p>Example configuration:
+ *
  * <pre>
-... 
-annotators:
-- class: templates.TemplateAnnotator
-  ...
-- class: templates.TemplateFieldToEntityAnnotator
-  entityType: Person
-  recordName: report
-  fieldName: athlete
-  source: athleteReportDefinitions
+ * ...
+ * annotators:
+ * - class: templates.TemplateAnnotator
+ * ...
+ * - class: templates.TemplateFieldToEntityAnnotator
+ * entityType: Person
+ * recordName: report
+ * fieldName: athlete
+ * source: athleteReportDefinitions
  * </pre>
- * 
  */
 public class TemplateFieldToEntityAnnotator extends BaleenAnnotator {
 
-	/** The Constant PARAM_ENTITY_TYPE. */
-	public static final String PARAM_ENTITY_TYPE = "entityType";
+  /** The Constant PARAM_ENTITY_TYPE. */
+  public static final String PARAM_ENTITY_TYPE = "entityType";
 
-	/**
-	 * The entity type to create.
-	 * 
-	 * @baleen.config semantic.Entity
-	 */
-	@ConfigurationParameter(name = PARAM_ENTITY_TYPE, mandatory = true)
-	private String entityType;
-	
-	private Class<? extends Entity> et = null;
+  /**
+   * The entity type to create.
+   *
+   * @baleen.config semantic.Entity
+   */
+  @ConfigurationParameter(name = PARAM_ENTITY_TYPE, mandatory = true)
+  private String entityType;
 
-	/** The Constant PARAM_RECORD_NAME. */
-	public static final String PARAM_RECORD_NAME = "recordName";
+  private Class<? extends Entity> et = null;
 
-	/**
-	 * The record type to search for the field.
-	 * 
-	 * @baleen.config record
-	 */
-	@ConfigurationParameter(name = PARAM_RECORD_NAME, mandatory = true)
-	private String recordName;
+  /** The Constant PARAM_RECORD_NAME. */
+  public static final String PARAM_RECORD_NAME = "recordName";
 
-	/** The Constant PARAM_FIELD_NAME. */
-	public static final String PARAM_FIELD_NAME = "fieldName";
+  /**
+   * The record type to search for the field.
+   *
+   * @baleen.config record
+   */
+  @ConfigurationParameter(name = PARAM_RECORD_NAME, mandatory = true)
+  private String recordName;
 
-	/**
-	 * The field name to find.
-	 * 
-	 * @baleen.config field
-	 */
-	@ConfigurationParameter(name = PARAM_FIELD_NAME, mandatory = true)
-	private String fieldName;
+  /** The Constant PARAM_FIELD_NAME. */
+  public static final String PARAM_FIELD_NAME = "fieldName";
 
-	/** The Constant PARAM_SOURCE. */
-	public static final String PARAM_SOURCE = "source";
+  /**
+   * The field name to find.
+   *
+   * @baleen.config field
+   */
+  @ConfigurationParameter(name = PARAM_FIELD_NAME, mandatory = true)
+  private String fieldName;
 
-	/**
-	 * The source type to search for the record.
-	 */
-	@ConfigurationParameter(name = PARAM_SOURCE, mandatory = false)
-	private String source;
+  /** The Constant PARAM_SOURCE. */
+  public static final String PARAM_SOURCE = "source";
 
-	@Override
-	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-		try{
-			et = TypeUtils.getEntityClass(entityType, JCasFactory.createJCas(TypeSystemSingleton.getTypeSystemDescriptionInstance()));
-		}catch(UIMAException | BaleenException e){
-			throw new ResourceInitializationException(e);
-		}
-	}
-	
-	@Override
-	protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-		Collection<TemplateRecord> records = JCasUtil.select(jCas, TemplateRecord.class);
-		for (TemplateRecord record : records) {
-			if (!StringUtils.equals(recordName, record.getName())
-					|| (!StringUtils.isEmpty(source) && !source.equalsIgnoreCase(record.getSource()))) {
-				continue;
-			}
+  /** The source type to search for the record. */
+  @ConfigurationParameter(name = PARAM_SOURCE, mandatory = false)
+  private String source;
 
-			List<TemplateField> fields = JCasUtil.selectCovered(TemplateField.class, record);
-			for (TemplateField field : fields) {
-				if (!StringUtils.equals(fieldName, field.getName())) {
-					continue;
-				}
-				try {
-					createEntity(jCas, field);
-				} catch (BaleenException e) {
-					getMonitor().warn("Failed to process entity for record " + recordName + " field " + fieldName, e);
-				}
-			}
-		}
-	}
+  @Override
+  public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+    try {
+      et =
+          TypeUtils.getEntityClass(
+              entityType,
+              JCasFactory.createJCas(TypeSystemSingleton.getTypeSystemDescriptionInstance()));
+    } catch (UIMAException | BaleenException e) {
+      throw new ResourceInitializationException(e);
+    }
+  }
 
-	/**
-	 * Creates a new entity of the configured type, setting the value to the
-	 * covered text of the matched template field.
-	 *
-	 * @param jCas
-	 *            the jCas
-	 * @param field
-	 *            the field
-	 * @throws BaleenException
-	 *             the baleen exception
-	 */
-	private void createEntity(JCas jCas, TemplateField field) throws BaleenException {
-		try {
-			Constructor<? extends Entity> constructor = et.getConstructor(JCas.class);
-			Entity entity = constructor.newInstance(jCas);
-			entity.setBegin(field.getBegin());
-			entity.setEnd(field.getEnd());
-			entity.setValue(field.getCoveredText());
-			addToJCasIndex(entity);
-		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | SecurityException
-				| IllegalArgumentException | InvocationTargetException e) {
-			throw new BaleenException("Failed to create entity of type " + entityType, e);
-		}
-	}
+  @Override
+  protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
+    Collection<TemplateRecord> records = JCasUtil.select(jCas, TemplateRecord.class);
+    for (TemplateRecord record : records) {
+      if (!StringUtils.equals(recordName, record.getName())
+          || (!StringUtils.isEmpty(source) && !source.equalsIgnoreCase(record.getSource()))) {
+        continue;
+      }
 
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(ImmutableSet.of(TemplateRecord.class, TemplateField.class), ImmutableSet.of(et));
-	}
+      List<TemplateField> fields = JCasUtil.selectCovered(TemplateField.class, record);
+      for (TemplateField field : fields) {
+        if (!StringUtils.equals(fieldName, field.getName())) {
+          continue;
+        }
+        try {
+          createEntity(jCas, field);
+        } catch (BaleenException e) {
+          getMonitor()
+              .warn("Failed to process entity for record " + recordName + " field " + fieldName, e);
+        }
+      }
+    }
+  }
+
+  /**
+   * Creates a new entity of the configured type, setting the value to the covered text of the
+   * matched template field.
+   *
+   * @param jCas the jCas
+   * @param field the field
+   * @throws BaleenException the baleen exception
+   */
+  private void createEntity(JCas jCas, TemplateField field) throws BaleenException {
+    try {
+      Constructor<? extends Entity> constructor = et.getConstructor(JCas.class);
+      Entity entity = constructor.newInstance(jCas);
+      entity.setBegin(field.getBegin());
+      entity.setEnd(field.getEnd());
+      entity.setValue(field.getCoveredText());
+      addToJCasIndex(entity);
+    } catch (InstantiationException
+        | IllegalAccessException
+        | NoSuchMethodException
+        | SecurityException
+        | IllegalArgumentException
+        | InvocationTargetException e) {
+      throw new BaleenException("Failed to create entity of type " + entityType, e);
+    }
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(
+        ImmutableSet.of(TemplateRecord.class, TemplateField.class), ImmutableSet.of(et));
+  }
 }

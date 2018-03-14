@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.coreference.impl.sieves;
 
 import java.util.Collection;
@@ -15,106 +15,107 @@ import uk.gov.dstl.baleen.annotators.coreference.impl.data.Mention;
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.MentionType;
 import uk.gov.dstl.baleen.resources.utils.StopwordUtils;
 
-/**
- * Head matching sieve that has controllable parameters.
- */
+/** Head matching sieve that has controllable parameters. */
 public class StrictHeadMatchSieve extends AbstractCoreferenceSieve {
 
-	private final boolean compatibleModifiers;
-	private final boolean wordInclusion;
-	private final Pattern stopwordsPattern;
-	
-	private static final Splitter WHITESPACE_SPLITTER = Splitter.on(" ").omitEmptyStrings().trimResults();
+  private final boolean compatibleModifiers;
+  private final boolean wordInclusion;
+  private final Pattern stopwordsPattern;
 
-	/**
-	 * Constructor for StrictHeadMatchSieve
-	 */
-	public StrictHeadMatchSieve(JCas jCas, List<Cluster> clusters, List<Mention> mentions,
-			boolean compatibleModifiers, boolean wordInclusion, Collection<String> stopwords) {
-		super(jCas, clusters, mentions);
+  private static final Splitter WHITESPACE_SPLITTER =
+      Splitter.on(" ").omitEmptyStrings().trimResults();
 
-		this.compatibleModifiers = compatibleModifiers;
-		this.wordInclusion = wordInclusion;
-		this.stopwordsPattern = StopwordUtils.buildStopwordPattern(stopwords, false);
-	}
+  /** Constructor for StrictHeadMatchSieve */
+  public StrictHeadMatchSieve(
+      JCas jCas,
+      List<Cluster> clusters,
+      List<Mention> mentions,
+      boolean compatibleModifiers,
+      boolean wordInclusion,
+      Collection<String> stopwords) {
+    super(jCas, clusters, mentions);
 
-	@Override
-	public void sieve() {
-		// TODO: We really need to work over clusters for this to make sense!
-		
-		List<Mention> mentions = getMentionsWithHead(MentionType.ENTITY, MentionType.NP);
+    this.compatibleModifiers = compatibleModifiers;
+    this.wordInclusion = wordInclusion;
+    this.stopwordsPattern = StopwordUtils.buildStopwordPattern(stopwords, false);
+  }
 
-		for (int i = 0; i < mentions.size(); i++) {
-			final Mention a = mentions.get(i);
+  @Override
+  public void sieve() {
+    // TODO: We really need to work over clusters for this to make sense!
 
-			for (int j = i + 1; j < mentions.size(); j++) {
-				final Mention b = mentions.get(j);
+    List<Mention> mentions = getMentionsWithHead(MentionType.ENTITY, MentionType.NP);
 
-				if(shouldAddToCluster(a, b))
-					addToCluster(a, b);
-			}
-		}
-	}
+    for (int i = 0; i < mentions.size(); i++) {
+      final Mention a = mentions.get(i);
 
-	private boolean haveSubsetOfSameModifier(Mention a, Mention b) {
-		final Set<String> aModifiers = getModifiers(a);
-		final Set<String> bModifiers = getModifiers(b);
+      for (int j = i + 1; j < mentions.size(); j++) {
+        final Mention b = mentions.get(j);
 
-		// NOTE: This is ordered, a is earlier than b and it is unusal to introduce more information
-		// to an entity later in the document
-		return !aModifiers.isEmpty() && !bModifiers.isEmpty() && aModifiers.containsAll(bModifiers);
-	}
+        if (shouldAddToCluster(a, b)) addToCluster(a, b);
+      }
+    }
+  }
 
-	// TODO: This should at a cluster level
-	private boolean hasSubsetOfNonStopWords(Mention a, Mention b) {
-		final List<String> aNonStop = getNonStopWords(a);
-		final List<String> bNonStop = getNonStopWords(b);
+  private boolean haveSubsetOfSameModifier(Mention a, Mention b) {
+    final Set<String> aModifiers = getModifiers(a);
+    final Set<String> bModifiers = getModifiers(b);
 
-		// TODO: This should not include the head word? See the paper for clarification.
+    // NOTE: This is ordered, a is earlier than b and it is unusal to introduce more information
+    // to an entity later in the document
+    return !aModifiers.isEmpty() && !bModifiers.isEmpty() && aModifiers.containsAll(bModifiers);
+  }
 
-		// NOTE: This is ordered, a is earlier than b and it is unusual to introduce more information
-		// to an entity later in the document
+  // TODO: This should at a cluster level
+  private boolean hasSubsetOfNonStopWords(Mention a, Mention b) {
+    final List<String> aNonStop = getNonStopWords(a);
+    final List<String> bNonStop = getNonStopWords(b);
 
-		// NOTE: We enforce that the set isn't empty otherwise we aren't really testing anything
-		return !aNonStop.isEmpty() && !bNonStop.isEmpty() && aNonStop.containsAll(bNonStop);
-	}
+    // TODO: This should not include the head word? See the paper for clarification.
 
-	private List<String> getNonStopWords(Mention a) {
-		return WHITESPACE_SPLITTER.splitToList(clean(a.getText().toLowerCase()));
-	}
-	
-	private String clean(String text) {
-		return text.replaceAll(stopwordsPattern.pattern(), "");
-	}
-	
-	private boolean shouldAddToCluster(Mention a, Mention b){
-		String aHead = a.getHead().toLowerCase();
-		String bHead = b.getHead().toLowerCase();
+    // NOTE: This is ordered, a is earlier than b and it is unusual to introduce more information
+    // to an entity later in the document
 
-		// Entity head match - does one head contain the others
-		if (!aHead.contains(bHead) && !bHead.contains(aHead)) {
-			return false;
-		}
+    // NOTE: We enforce that the set isn't empty otherwise we aren't really testing anything
+    return !aNonStop.isEmpty() && !bNonStop.isEmpty() && aNonStop.containsAll(bNonStop);
+  }
 
-		// Word inclusion - stop words of the mention are in the cluster
-		if (wordInclusion && !hasSubsetOfNonStopWords(a, b)) {
-			return false;
-		}
+  private List<String> getNonStopWords(Mention a) {
+    return WHITESPACE_SPLITTER.splitToList(clean(a.getText().toLowerCase()));
+  }
 
-		// Compatible modifiers only - do the two candidate mentions have the same adject /
-		// nouns
-		if (compatibleModifiers && !haveSubsetOfSameModifier(a, b)) {
-			return false;
-		}
+  private String clean(String text) {
+    return text.replaceAll(stopwordsPattern.pattern(), "");
+  }
 
-		// Not i-within-i
-		// NOTE: We just check for overlap here, not if a sub-NP, which is a cheap test and
-		// can come first (but not in the cluster based case since, then we need to find the
-		// mentions to test first.
-		if (a.overlaps(b)) {
-			return false;
-		}
-		
-		return true;
-	}
+  private boolean shouldAddToCluster(Mention a, Mention b) {
+    String aHead = a.getHead().toLowerCase();
+    String bHead = b.getHead().toLowerCase();
+
+    // Entity head match - does one head contain the others
+    if (!aHead.contains(bHead) && !bHead.contains(aHead)) {
+      return false;
+    }
+
+    // Word inclusion - stop words of the mention are in the cluster
+    if (wordInclusion && !hasSubsetOfNonStopWords(a, b)) {
+      return false;
+    }
+
+    // Compatible modifiers only - do the two candidate mentions have the same adject /
+    // nouns
+    if (compatibleModifiers && !haveSubsetOfSameModifier(a, b)) {
+      return false;
+    }
+
+    // Not i-within-i
+    // NOTE: We just check for overlap here, not if a sub-NP, which is a cheap test and
+    // can come first (but not in the cluster based case since, then we need to find the
+    // mentions to test first.
+    if (a.overlaps(b)) {
+      return false;
+    }
+
+    return true;
+  }
 }

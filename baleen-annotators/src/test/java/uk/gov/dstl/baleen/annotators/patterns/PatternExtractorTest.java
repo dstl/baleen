@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.patterns;
 
 import java.util.Collection;
@@ -24,115 +24,116 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 
 public class PatternExtractorTest extends AnnotatorTestBase {
 
-	private AnalysisEngine ae;
+  private AnalysisEngine ae;
 
-	@Override
-	public void beforeTest() throws UIMAException {
-		super.beforeTest();
+  @Override
+  public void beforeTest() throws UIMAException {
+    super.beforeTest();
 
-		ExternalResourceDescription stopwordsDesc = ExternalResourceFactory
-				.createExternalResourceDescription(PatternExtractor.KEY_STOPWORDS, SharedStopwordResource.class);
-		
-		final AnalysisEngineDescription desc = AnalysisEngineFactory.createEngineDescription(PatternExtractor.class, PatternExtractor.KEY_STOPWORDS, stopwordsDesc);
+    ExternalResourceDescription stopwordsDesc =
+        ExternalResourceFactory.createExternalResourceDescription(
+            PatternExtractor.KEY_STOPWORDS, SharedStopwordResource.class);
 
-		ae = AnalysisEngineFactory.createEngine(desc);
-	}
+    final AnalysisEngineDescription desc =
+        AnalysisEngineFactory.createEngineDescription(
+            PatternExtractor.class, PatternExtractor.KEY_STOPWORDS, stopwordsDesc);
 
-	@Test
-	public void testNegationProcess() throws AnalysisEngineProcessException {
-		final String text = "The fox did not jump over the dog.";
-		jCas.setDocumentText(text);
+    ae = AnalysisEngineFactory.createEngine(desc);
+  }
 
-		final Sentence sentence = new Sentence(jCas);
-		sentence.setBegin(0);
-		sentence.setEnd(text.length());
-		sentence.addToIndexes(jCas);
+  @Test
+  public void testNegationProcess() throws AnalysisEngineProcessException {
+    final String text = "The fox did not jump over the dog.";
+    jCas.setDocumentText(text);
 
-		int offset = 0;
-		while (offset < text.length()) {
-			int end = text.indexOf(" ", offset);
-			if (end == -1) {
-				end = text.indexOf(".", offset);
-			}
+    final Sentence sentence = new Sentence(jCas);
+    sentence.setBegin(0);
+    sentence.setEnd(text.length());
+    sentence.addToIndexes(jCas);
 
-			if (end > 0) {
-				final WordToken wordToken = new WordToken(jCas);
-				wordToken.setBegin(offset);
-				wordToken.setEnd(end);
-				// Fake the POS
-				wordToken.setPartOfSpeech("VBZ");
-				wordToken.addToIndexes(jCas);
-				offset = end + 1;
-			} else {
-				offset = text.length();
-			}
-		}
+    int offset = 0;
+    while (offset < text.length()) {
+      int end = text.indexOf(" ", offset);
+      if (end == -1) {
+        end = text.indexOf(".", offset);
+      }
 
-		final Entity fox = new Entity(jCas);
-		fox.setBegin(4);
-		fox.setEnd(7);
-		fox.addToIndexes(jCas);
+      if (end > 0) {
+        final WordToken wordToken = new WordToken(jCas);
+        wordToken.setBegin(offset);
+        wordToken.setEnd(end);
+        // Fake the POS
+        wordToken.setPartOfSpeech("VBZ");
+        wordToken.addToIndexes(jCas);
+        offset = end + 1;
+      } else {
+        offset = text.length();
+      }
+    }
 
-		final Entity dog = new Entity(jCas);
-		dog.setBegin(30);
-		dog.setEnd(33);
-		dog.addToIndexes(jCas);
+    final Entity fox = new Entity(jCas);
+    fox.setBegin(4);
+    fox.setEnd(7);
+    fox.addToIndexes(jCas);
 
-		SimplePipeline.runPipeline(jCas, ae);
+    final Entity dog = new Entity(jCas);
+    dog.setBegin(30);
+    dog.setEnd(33);
+    dog.addToIndexes(jCas);
 
-		final Collection<Pattern> patterns = JCasUtil.select(jCas, Pattern.class);
-		Assert.assertEquals(0, patterns.size());
-	}
+    SimplePipeline.runPipeline(jCas, ae);
 
-	@Test
-	public void testProcess() throws AnalysisEngineProcessException {
-		final String text = "The fox jumps over the dog.";
-		jCas.setDocumentText(text);
+    final Collection<Pattern> patterns = JCasUtil.select(jCas, Pattern.class);
+    Assert.assertEquals(0, patterns.size());
+  }
 
-		final Sentence sentence = new Sentence(jCas);
-		sentence.setBegin(0);
-		sentence.setEnd(text.length());
-		sentence.addToIndexes(jCas);
+  @Test
+  public void testProcess() throws AnalysisEngineProcessException {
+    final String text = "The fox jumps over the dog.";
+    jCas.setDocumentText(text);
 
-		int offset = 0;
-		while (offset < text.length()) {
-			int end = text.indexOf(" ", offset);
-			if (end == -1) {
-				end = text.indexOf(".", offset);
-			}
+    final Sentence sentence = new Sentence(jCas);
+    sentence.setBegin(0);
+    sentence.setEnd(text.length());
+    sentence.addToIndexes(jCas);
 
-			if (end > 0) {
-				final WordToken wordToken = new WordToken(jCas);
-				wordToken.setBegin(offset);
-				wordToken.setEnd(end);
-				// Fake the POS
-				wordToken.setPartOfSpeech("VBZ");
-				wordToken.addToIndexes(jCas);
-				offset = end + 1;
-			} else {
-				offset = text.length();
-			}
-		}
+    int offset = 0;
+    while (offset < text.length()) {
+      int end = text.indexOf(" ", offset);
+      if (end == -1) {
+        end = text.indexOf(".", offset);
+      }
 
-		final Entity fox = new Entity(jCas);
-		fox.setBegin(4);
-		fox.setEnd(7);
-		fox.addToIndexes(jCas);
+      if (end > 0) {
+        final WordToken wordToken = new WordToken(jCas);
+        wordToken.setBegin(offset);
+        wordToken.setEnd(end);
+        // Fake the POS
+        wordToken.setPartOfSpeech("VBZ");
+        wordToken.addToIndexes(jCas);
+        offset = end + 1;
+      } else {
+        offset = text.length();
+      }
+    }
 
-		final Entity dog = new Entity(jCas);
-		dog.setBegin(23);
-		dog.setEnd(26);
-		dog.addToIndexes(jCas);
+    final Entity fox = new Entity(jCas);
+    fox.setBegin(4);
+    fox.setEnd(7);
+    fox.addToIndexes(jCas);
 
-		SimplePipeline.runPipeline(jCas, ae);
+    final Entity dog = new Entity(jCas);
+    dog.setBegin(23);
+    dog.setEnd(26);
+    dog.addToIndexes(jCas);
 
-		final Collection<Pattern> patterns = JCasUtil.select(jCas, Pattern.class);
-		Assert.assertEquals(1, patterns.size());
+    SimplePipeline.runPipeline(jCas, ae);
 
-		final Pattern p = patterns.iterator().next();
-		Assert.assertEquals(1, p.getWords().size());
-		Assert.assertEquals("jumps", p.getWords(0).getCoveredText());
+    final Collection<Pattern> patterns = JCasUtil.select(jCas, Pattern.class);
+    Assert.assertEquals(1, patterns.size());
 
-	}
-
+    final Pattern p = patterns.iterator().next();
+    Assert.assertEquals(1, p.getWords().size());
+    Assert.assertEquals("jumps", p.getWords(0).getCoveredText());
+  }
 }

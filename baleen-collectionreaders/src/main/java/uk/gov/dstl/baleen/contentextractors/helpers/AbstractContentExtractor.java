@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentextractors.helpers;
 
@@ -16,30 +16,30 @@ import uk.gov.dstl.baleen.uima.BaleenContentExtractor;
 
 /**
  * Provides a basis for content extractors, implementing common functionality.
- * 
- * Sets the source and timestamp of the document, and the extraction class as metadata.
- * 
+ *
+ * <p>Sets the source and timestamp of the document, and the extraction class as metadata.
  */
 public abstract class AbstractContentExtractor extends BaleenContentExtractor {
-	private static final String METADATA_KEY_CONTENT_EXTRACTOR = "baleen:content-extractor";
+  private static final String METADATA_KEY_CONTENT_EXTRACTOR = "baleen:content-extractor";
 
-	@Override
-	public void doProcessStream(InputStream stream, String source, JCas jCas) throws IOException {
-		DocumentAnnotation doc = getSupport().getDocumentAnnotation(jCas);
-		doc.setSourceUri(source);
-		doc.setTimestamp(System.currentTimeMillis());
+  @Override
+  public void doProcessStream(InputStream stream, String source, JCas jCas) throws IOException {
+    DocumentAnnotation doc = getSupport().getDocumentAnnotation(jCas);
+    doc.setSourceUri(source);
+    doc.setTimestamp(System.currentTimeMillis());
 
-		// Add metadata item to capture which content extractor was used
-		addMetadata(jCas, METADATA_KEY_CONTENT_EXTRACTOR, this.getClass().getName());
-	}
+    // Add metadata item to capture which content extractor was used
+    addMetadata(jCas, METADATA_KEY_CONTENT_EXTRACTOR, this.getClass().getName());
+  }
 
-	@Override
-	public void doInitialize(UimaContext context, Map<String, Object> params) throws ResourceInitializationException {
-		ConfigurationParameterInitializer.initialize(this, params);
-	}
+  @Override
+  public void doInitialize(UimaContext context, Map<String, Object> params)
+      throws ResourceInitializationException {
+    ConfigurationParameterInitializer.initialize(this, params);
+  }
 
-	@Override
-	public void doDestroy() {
-		// Do nothing
-	}
+  @Override
+  public void doDestroy() {
+    // Do nothing
+  }
 }

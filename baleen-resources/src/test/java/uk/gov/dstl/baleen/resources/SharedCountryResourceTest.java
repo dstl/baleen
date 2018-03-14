@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.resources;
 
 import static org.junit.Assert.assertEquals;
@@ -16,51 +16,53 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class SharedCountryResourceTest {
-	SharedCountryResource scr;
-	
-	@Before
-	public void beforeTest() throws Exception{
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription("country", SharedCountryResource.class);
-		scr = new SharedCountryResource();
-		scr.initialize(erd.getResourceSpecifier(), Collections.emptyMap());
-	}
-	
-	@After
-	public void afterTest() throws Exception{
-		scr.destroy();
-		scr = null;
-	}
-	
-	@Test
-	public void testGetDemonyms() throws Exception{
-		Map<String, String> demonyms = scr.getDemonyms();
-		
-		assertTrue(demonyms.containsKey("mahoran"));
-		assertEquals("MYT", demonyms.get("mahoran"));
-		
-		assertEquals(231, demonyms.size());
-	}
-	
-	@Test
-	public void testGetGeoJson() throws Exception{
-		assertNotNull(scr.getGeoJson("BRA"));
-		assertNotNull(scr.getGeoJson("bra"));
-		assertNull(scr.getGeoJson("FOO"));
-	}
-	
-	@Test
-	public void testGetNames() throws Exception{
-		Map<String, String> names = scr.getCountryNames();
-		
-		assertTrue(names.containsKey("Aruba"));
-		assertEquals("ABW", names.get("Aruba"));
-		
-		int lbnCount = 0;
-		for(String s : names.values()){
-			if("LBN".equals(s)){
-				lbnCount++;
-			}
-		}
-		assertEquals(6, lbnCount);
-	}
+  SharedCountryResource scr;
+
+  @Before
+  public void beforeTest() throws Exception {
+    ExternalResourceDescription erd =
+        ExternalResourceFactory.createExternalResourceDescription(
+            "country", SharedCountryResource.class);
+    scr = new SharedCountryResource();
+    scr.initialize(erd.getResourceSpecifier(), Collections.emptyMap());
+  }
+
+  @After
+  public void afterTest() throws Exception {
+    scr.destroy();
+    scr = null;
+  }
+
+  @Test
+  public void testGetDemonyms() throws Exception {
+    Map<String, String> demonyms = scr.getDemonyms();
+
+    assertTrue(demonyms.containsKey("mahoran"));
+    assertEquals("MYT", demonyms.get("mahoran"));
+
+    assertEquals(231, demonyms.size());
+  }
+
+  @Test
+  public void testGetGeoJson() throws Exception {
+    assertNotNull(scr.getGeoJson("BRA"));
+    assertNotNull(scr.getGeoJson("bra"));
+    assertNull(scr.getGeoJson("FOO"));
+  }
+
+  @Test
+  public void testGetNames() throws Exception {
+    Map<String, String> names = scr.getCountryNames();
+
+    assertTrue(names.containsKey("Aruba"));
+    assertEquals("ABW", names.get("Aruba"));
+
+    int lbnCount = 0;
+    for (String s : names.values()) {
+      if ("LBN".equals(s)) {
+        lbnCount++;
+      }
+    }
+    assertEquals(6, lbnCount);
+  }
 }

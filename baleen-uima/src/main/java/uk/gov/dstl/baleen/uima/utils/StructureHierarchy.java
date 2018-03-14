@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
 import static uk.gov.dstl.baleen.uima.utils.StructureUtil.filterAnnotations;
@@ -15,8 +15,8 @@ import uk.gov.dstl.baleen.uima.utils.select.Node;
 
 /**
  * A hierarchy within the document of the structure annotations.
- * <p>
- * The hierarchy is build using offset and depth.
+ *
+ * <p>The hierarchy is build using offset and depth.
  */
 public class StructureHierarchy extends ItemHierarchy<Structure> {
 
@@ -26,9 +26,9 @@ public class StructureHierarchy extends ItemHierarchy<Structure> {
 
   /**
    * Build the structure hierarchy for the given jCas, using only the structural classes provided.
-   * <p>
-   * The structure is built by first using the offset of the Structure annotation and then using the
-   * depth.
+   *
+   * <p>The structure is built by first using the offset of the Structure annotation and then using
+   * the depth.
    *
    * @param jCas the jCas
    * @param types the structural classes
@@ -39,5 +39,4 @@ public class StructureHierarchy extends ItemHierarchy<Structure> {
         filterAnnotations(JCasUtil.select(jCas, Structure.class), types);
     return new StructureHierarchy(AnnotationHierarchyBuilder.build(structures));
   }
-
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.testing;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -7,9 +7,8 @@ import org.apache.uima.jcas.JCas;
 
 public class DummyTask extends JCasAnnotator_ImplBase {
 
-	@Override
-	public void process(JCas aJCas) throws AnalysisEngineProcessException {
-		// Do nothing
-	}
-
+  @Override
+  public void process(JCas aJCas) throws AnalysisEngineProcessException {
+    // Do nothing
+  }
 }

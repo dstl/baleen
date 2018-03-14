@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
 
 import static org.junit.Assert.assertEquals;
@@ -31,172 +31,163 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class BaleenAnnotatorTest {
 
-	private static final String PIPELINE_NAME = "testPipeline";
+  private static final String PIPELINE_NAME = "testPipeline";
 
-	@Mock
-	UimaSupport support;
+  @Mock UimaSupport support;
 
-	@Mock
-	UimaMonitor monitor;
+  @Mock UimaMonitor monitor;
 
-	UimaContext context;
+  UimaContext context;
 
-	JCas jCas;
+  JCas jCas;
 
-	Annotation annotation;
+  Annotation annotation;
 
-	@Before
-	public void setUp() throws UIMAException {
-		jCas = JCasSingleton.getJCasInstance();
-		annotation =  new Annotation(jCas);
-		context = UimaContextFactory.createUimaContext(PipelineBuilder.PIPELINE_NAME, PIPELINE_NAME);
-	}
+  @Before
+  public void setUp() throws UIMAException {
+    jCas = JCasSingleton.getJCasInstance();
+    annotation = new Annotation(jCas);
+    context = UimaContextFactory.createUimaContext(PipelineBuilder.PIPELINE_NAME, PIPELINE_NAME);
+  }
 
+  @Test
+  public void testDestroy() throws ResourceInitializationException {
+    FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
+    annotator.initialize(context);
+    annotator.destroy();
+    assertTrue(annotator.destroyed);
+  }
 
-	@Test
-	public void testDestroy() throws ResourceInitializationException {
-		FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
-		annotator.initialize(context);
-		annotator.destroy();
-		assertTrue(annotator.destroyed);
-	}
+  @Test
+  public void testDoInitialize() throws ResourceInitializationException {
+    FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
+    annotator.initialize(context);
+    assertTrue(annotator.initialised);
+  }
 
-	@Test
-	public void testDoInitialize() throws ResourceInitializationException {
-		FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
-		annotator.initialize(context);
-		assertTrue(annotator.initialised);
-	}
+  @Test
+  public void testProcessJCas() throws Exception {
+    FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
+    annotator.initialize(context);
+    annotator.process(jCas);
+    assertTrue(annotator.processed);
+  }
 
-	@Test
-	public void testProcessJCas() throws Exception {
-		FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
-		annotator.initialize(context);
-		annotator.process(jCas);
-		assertTrue(annotator.processed);
-	}
+  @Test
+  public void testGetMonitor() throws ResourceInitializationException {
+    FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
+    annotator.initialize(context);
+    assertNotNull(annotator.getMonitor());
+    assertEquals(PIPELINE_NAME, annotator.getMonitor().getPipelineName());
+  }
 
-	@Test
-	public void testGetMonitor() throws ResourceInitializationException {
-		FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
-		annotator.initialize(context);
-		assertNotNull(annotator.getMonitor());
-		assertEquals(PIPELINE_NAME, annotator.getMonitor().getPipelineName());
-	}
+  @Test
+  public void testGetSupport() throws ResourceInitializationException {
+    FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
+    annotator.initialize(context);
+    assertNotNull(annotator.getSupport());
+    assertEquals(PIPELINE_NAME, annotator.getSupport().getPipelineName());
+  }
 
-	@Test
-	public void testGetSupport() throws ResourceInitializationException {
-		FakeBaleenAnnotator annotator = new FakeBaleenAnnotator();
-		annotator.initialize(context);
-		assertNotNull(annotator.getSupport());
-		assertEquals(PIPELINE_NAME, annotator.getSupport().getPipelineName());
-	}
+  @Test
+  public void testSupport() throws ResourceInitializationException {
+    MockedBaleenAnnotator annotator = new MockedBaleenAnnotator();
+    annotator.initialize(context);
 
-	@Test
-	public void testSupport() throws ResourceInitializationException {
-		MockedBaleenAnnotator annotator = new MockedBaleenAnnotator();
-		annotator.initialize(context);
+    Annotation existingAnnotation = new Annotation(jCas);
+    List<Annotation> list = Collections.singletonList(annotation);
 
-		Annotation existingAnnotation = new Annotation(jCas);
-		List<Annotation> list = Collections.singletonList(annotation);
+    annotator.addToJCasIndex(annotation);
+    verify(support, only()).add(annotation);
+    resetMocked();
 
-		annotator.addToJCasIndex(annotation);
-		verify(support, only()).add(annotation);
-		resetMocked();
+    annotator.addToJCasIndex(list);
+    verify(support, only()).add(list);
+    resetMocked();
 
+    annotator.getDocumentAnnotation(jCas);
+    verify(support, only()).getDocumentAnnotation(jCas);
+    resetMocked();
 
-		annotator.addToJCasIndex(list);
-		verify(support, only()).add(list);
-		resetMocked();
+    annotator.mergeWithExisting(existingAnnotation, annotation);
+    verify(support, only()).mergeWithExisting(existingAnnotation, annotation);
+    resetMocked();
 
-		annotator.getDocumentAnnotation(jCas);
-		verify(support, only()).getDocumentAnnotation(jCas);
-		resetMocked();
+    annotator.mergeWithExisting(existingAnnotation, list);
+    verify(support, only()).mergeWithExisting(existingAnnotation, list);
+    resetMocked();
 
+    annotator.mergeWithNew(existingAnnotation, annotation);
+    verify(support, only()).mergeWithNew(existingAnnotation, annotation);
+    resetMocked();
 
-		annotator.mergeWithExisting(existingAnnotation, annotation);
-		verify(support, only()).mergeWithExisting(existingAnnotation, annotation);
-		resetMocked();
+    annotator.mergeWithNew(existingAnnotation, list);
+    verify(support, only()).mergeWithNew(existingAnnotation, list);
+    resetMocked();
 
-		annotator.mergeWithExisting(existingAnnotation, list);
-		verify(support, only()).mergeWithExisting(existingAnnotation, list);
-		resetMocked();
+    annotator.removeFromJCasIndex(annotation);
+    verify(support, only()).remove(annotation);
+    resetMocked();
 
-		annotator.mergeWithNew(existingAnnotation, annotation);
-		verify(support, only()).mergeWithNew(existingAnnotation, annotation);
-		resetMocked();
+    annotator.removeFromJCasIndex(list);
+    verify(support, only()).remove(list);
+    resetMocked();
+  }
 
-		annotator.mergeWithNew(existingAnnotation, list);
-		verify(support, only()).mergeWithNew(existingAnnotation, list);
-		resetMocked();
+  private void resetMocked() {
+    reset(support, monitor);
+  }
 
-		annotator.removeFromJCasIndex(annotation);
-		verify(support, only()).remove(annotation);
-		resetMocked();
+  // Use a consumer as it's derivced from annotator
+  private static class FakeBaleenAnnotator extends BaleenConsumer {
 
-		annotator.removeFromJCasIndex(list);
-		verify(support, only()).remove(list);
-		resetMocked();
+    private boolean processed;
+    private boolean initialised;
+    private boolean destroyed;
 
-	}
+    @Override
+    protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
+      processed = true;
+    }
 
-	private void resetMocked() {
-		reset(support, monitor);
-	}
+    @Override
+    public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+      super.doInitialize(aContext);
+      initialised = true;
+    }
 
-	// Use a consumer as it's derivced from annotator
-	private static class FakeBaleenAnnotator extends BaleenConsumer {
+    @Override
+    protected void doDestroy() {
+      super.doDestroy();
+      destroyed = true;
+    }
 
-		private boolean processed;
-		private boolean initialised;
-		private boolean destroyed;
+    @Override
+    public AnalysisEngineAction getAction() {
+      return new AnalysisEngineAction(Collections.emptySet(), Collections.emptySet());
+    }
+  }
 
-		@Override
-		protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-			processed = true;
-		}
+  private class MockedBaleenAnnotator extends BaleenConsumer {
 
-		@Override
-		public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-			super.doInitialize(aContext);
-			initialised = true;
-		}
+    @Override
+    protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
+      // Do nothing
+    }
 
-		@Override
-		protected void doDestroy() {
-			super.doDestroy();
-			destroyed = true;
-		}
+    @Override
+    protected UimaMonitor createMonitor(String pipelineName) {
+      return monitor;
+    }
 
-		@Override
-		public AnalysisEngineAction getAction() {
-			return new AnalysisEngineAction(Collections.emptySet(), Collections.emptySet());
-		}
-	}
+    @Override
+    protected UimaSupport createSupport(String pipelineName, UimaContext context) {
+      return support;
+    }
 
-
-	private class MockedBaleenAnnotator extends BaleenConsumer {
-
-		@Override
-		protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-			// Do nothing
-		}
-
-		@Override
-		protected UimaMonitor createMonitor(String pipelineName) {
-			return monitor;
-		}
-
-		@Override
-		protected UimaSupport createSupport(String pipelineName, UimaContext context) {
-			return support;
-		}
-		
-		@Override
-		public AnalysisEngineAction getAction() {
-			return new AnalysisEngineAction(Collections.emptySet(), Collections.emptySet());
-		}
-
-	}
-
+    @Override
+    public AnalysisEngineAction getAction() {
+      return new AnalysisEngineAction(Collections.emptySet(), Collections.emptySet());
+    }
+  }
 }

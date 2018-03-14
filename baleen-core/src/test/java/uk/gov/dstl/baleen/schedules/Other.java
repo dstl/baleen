@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.schedules;
 
 import java.io.IOException;
@@ -11,34 +11,32 @@ import org.apache.uima.util.Progress;
 
 public class Other extends JCasCollectionReader_ImplBase {
 
-	public static final String PARAM1 = "key";
-	@ConfigurationParameter(name = PARAM1, defaultValue = "default")
-	private String value;
+  public static final String PARAM1 = "key";
 
-	public String getValue() {
-		return value;
-	}
+  @ConfigurationParameter(name = PARAM1, defaultValue = "default")
+  private String value;
 
-	private boolean run = false;
+  public String getValue() {
+    return value;
+  }
 
-	@Override
-	public Progress[] getProgress() {
-		return new Progress[0];
-	}
+  private boolean run = false;
 
-	@Override
-	public boolean hasNext() throws IOException, CollectionException {
-		if (run) {
-			return false;
-		} else {
-			run = true;
-			return true;
-		}
-	}
+  @Override
+  public Progress[] getProgress() {
+    return new Progress[0];
+  }
 
-	@Override
-	public void getNext(JCas jCas) throws IOException, CollectionException {
+  @Override
+  public boolean hasNext() throws IOException, CollectionException {
+    if (run) {
+      return false;
+    } else {
+      run = true;
+      return true;
+    }
+  }
 
-	}
-
+  @Override
+  public void getNext(JCas jCas) throws IOException, CollectionException {}
 }

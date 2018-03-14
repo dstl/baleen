@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
 
 import static org.junit.Assert.assertEquals;
@@ -34,146 +34,140 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class BaleenContentExtractorTest {
 
-	private static final String VALUE = "value";
+  private static final String VALUE = "value";
 
-	private static final String KEY = "key";
+  private static final String KEY = "key";
 
-	private static final String PIPELINE_NAME = "testPipeline";
+  private static final String PIPELINE_NAME = "testPipeline";
 
-	@Mock
-	UimaSupport support;
+  @Mock UimaSupport support;
 
-	@Mock
-	UimaMonitor monitor;
+  @Mock UimaMonitor monitor;
 
-	UimaContext context;
+  UimaContext context;
 
-	JCas jCas;
+  JCas jCas;
 
-	Annotation annotation;
+  Annotation annotation;
 
-	@Before
-	public void setUp() throws UIMAException {
-		jCas = JCasSingleton.getJCasInstance();
-		annotation =  new Annotation(jCas);
-		context = UimaContextFactory.createUimaContext(PipelineBuilder.PIPELINE_NAME, PIPELINE_NAME);
-	}
+  @Before
+  public void setUp() throws UIMAException {
+    jCas = JCasSingleton.getJCasInstance();
+    annotation = new Annotation(jCas);
+    context = UimaContextFactory.createUimaContext(PipelineBuilder.PIPELINE_NAME, PIPELINE_NAME);
+  }
 
+  @Test
+  public void testDestroy() throws ResourceInitializationException {
+    FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
+    annotator.initialize(context, Collections.emptyMap());
+    annotator.destroy();
+    assertTrue(annotator.destroyed);
+  }
 
-	@Test
-	public void testDestroy() throws ResourceInitializationException {
-		FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
-		annotator.initialize(context, Collections.emptyMap());
-		annotator.destroy();
-		assertTrue(annotator.destroyed);
-	}
+  @Test
+  public void testDoInitialize() throws ResourceInitializationException {
+    FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
+    annotator.initialize(context, Collections.emptyMap());
+    assertTrue(annotator.initialised);
+  }
 
-	@Test
-	public void testDoInitialize() throws ResourceInitializationException {
-		FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
-		annotator.initialize(context, Collections.emptyMap());
-		assertTrue(annotator.initialised);
-	}
+  @Test
+  public void testProcess() throws Exception {
+    FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
+    annotator.initialize(context, Collections.emptyMap());
+    annotator.processStream(new ByteArrayInputStream("Hello World".getBytes()), "test", jCas);
+    assertTrue(annotator.processed);
+  }
 
-	@Test
-	public void testProcess() throws Exception {
-		FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
-		annotator.initialize(context, Collections.emptyMap());
-		annotator.processStream(new ByteArrayInputStream("Hello World".getBytes()), "test", jCas);
-		assertTrue(annotator.processed);
-	}
+  @Test
+  public void testGetMonitor() throws ResourceInitializationException {
+    FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
+    annotator.initialize(context, Collections.emptyMap());
+    assertNotNull(annotator.getMonitor());
+    assertEquals(PIPELINE_NAME, annotator.getMonitor().getPipelineName());
+  }
 
-	@Test
-	public void testGetMonitor() throws ResourceInitializationException {
-		FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
-		annotator.initialize(context, Collections.emptyMap());
-		assertNotNull(annotator.getMonitor());
-		assertEquals(PIPELINE_NAME, annotator.getMonitor().getPipelineName());
-	}
+  @Test
+  public void testGetSupport() throws ResourceInitializationException {
+    FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
+    annotator.initialize(context, Collections.emptyMap());
+    assertNotNull(annotator.getSupport());
+    assertEquals(PIPELINE_NAME, annotator.getSupport().getPipelineName());
+  }
 
-	@Test
-	public void testGetSupport() throws ResourceInitializationException {
-		FakeBaleenContentExtractor annotator = new FakeBaleenContentExtractor();
-		annotator.initialize(context, Collections.emptyMap());
-		assertNotNull(annotator.getSupport());
-		assertEquals(PIPELINE_NAME, annotator.getSupport().getPipelineName());
+  @Test
+  public void testSupport() throws ResourceInitializationException {
+    FakeBaleenContentExtractor annotator = new MockedBaleenContentExtractor();
+    annotator.initialize(context, Collections.emptyMap());
 
-	}
+    List<Annotation> list = Collections.singletonList(annotation);
 
-	@Test
-	public void testSupport() throws ResourceInitializationException {
-		FakeBaleenContentExtractor annotator = new MockedBaleenContentExtractor();
-		annotator.initialize(context, Collections.emptyMap());
+    annotator.addToJCasIndex(annotation);
+    verify(support, only()).add(annotation);
+    resetMocked();
 
-		List<Annotation> list = Collections.singletonList(annotation);
+    annotator.addToJCasIndex(list);
+    verify(support, only()).add(list);
+    resetMocked();
 
-		annotator.addToJCasIndex(annotation);
-		verify(support, only()).add(annotation);
-		resetMocked();
+    annotator.getDocumentAnnotation(jCas);
+    verify(support, only()).getDocumentAnnotation(jCas);
+    resetMocked();
+  }
 
+  @Test
+  public void testAddMetadata() throws ResourceInitializationException {
+    FakeBaleenContentExtractor annotator = new MockedBaleenContentExtractor();
+    annotator.initialize(context, Collections.emptyMap());
 
-		annotator.addToJCasIndex(list);
-		verify(support, only()).add(list);
-		resetMocked();
+    Metadata md = annotator.addMetadata(jCas, KEY, VALUE);
+    verify(support).add(md);
 
-		annotator.getDocumentAnnotation(jCas);
-		verify(support, only()).getDocumentAnnotation(jCas);
-		resetMocked();
-	}
-	
-	@Test
-	public void testAddMetadata() throws ResourceInitializationException {
-		FakeBaleenContentExtractor annotator = new MockedBaleenContentExtractor();
-		annotator.initialize(context, Collections.emptyMap());
+    assertNull(annotator.addMetadata(jCas, "", VALUE));
+    assertNull(annotator.addMetadata(jCas, null, VALUE));
+    assertNull(annotator.addMetadata(jCas, KEY, ""));
+    assertNull(annotator.addMetadata(jCas, KEY, null));
 
-		Metadata md = annotator.addMetadata(jCas, KEY, VALUE);
-		verify(support).add(md);
-		
-		assertNull(annotator.addMetadata(jCas, "", VALUE));
-		assertNull(annotator.addMetadata(jCas, null, VALUE));
-		assertNull(annotator.addMetadata(jCas, KEY, ""));
-		assertNull(annotator.addMetadata(jCas, KEY, null));
-		
-		resetMocked();
-	}
+    resetMocked();
+  }
 
-	private void resetMocked() {
-		reset(support, monitor);
-	}
+  private void resetMocked() {
+    reset(support, monitor);
+  }
 
-	private class FakeBaleenContentExtractor extends BaleenContentExtractor {
+  private class FakeBaleenContentExtractor extends BaleenContentExtractor {
 
-		private boolean initialised;
-		private boolean processed;
-		private boolean destroyed;
+    private boolean initialised;
+    private boolean processed;
+    private boolean destroyed;
 
-		@Override
-		public void doInitialize(UimaContext context, Map<String, Object> params) {
-			initialised = true;
-		}
+    @Override
+    public void doInitialize(UimaContext context, Map<String, Object> params) {
+      initialised = true;
+    }
 
-		@Override
-		protected void doProcessStream(InputStream stream, String source, JCas jCas)  {
-			processed = true;
-		}
+    @Override
+    protected void doProcessStream(InputStream stream, String source, JCas jCas) {
+      processed = true;
+    }
 
-		@Override
-		protected void doDestroy() {
-			destroyed = true;
-		}
-	}
+    @Override
+    protected void doDestroy() {
+      destroyed = true;
+    }
+  }
 
-	private class MockedBaleenContentExtractor extends FakeBaleenContentExtractor {
+  private class MockedBaleenContentExtractor extends FakeBaleenContentExtractor {
 
+    @Override
+    protected UimaMonitor createMonitor(String pipelineName) {
+      return monitor;
+    }
 
-		@Override
-		protected UimaMonitor createMonitor(String pipelineName) {
-			return monitor;
-		}
-
-		@Override
-		protected UimaSupport createSupport(String pipelineName, UimaContext context) {
-			return support;
-		}
-	}
+    @Override
+    protected UimaSupport createSupport(String pipelineName, UimaContext context) {
+      return support;
+    }
+  }
 }

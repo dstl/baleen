@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.jobs.patterns;
 
 import static org.junit.Assert.assertFalse;
@@ -25,30 +25,37 @@ import uk.gov.dstl.baleen.uima.AbstractBaleenTaskTest;
 
 public class IdentifyInteractionsTest extends AbstractBaleenTaskTest {
 
-	private ExternalResourceDescription fongoErd;
-	private ExternalResourceDescription wordnetErd;
+  private ExternalResourceDescription fongoErd;
+  private ExternalResourceDescription wordnetErd;
 
-	@Before
-	public void before() {
-		fongoErd = ExternalResourceFactory.createExternalResourceDescription("mongo", SharedFongoResource.class,
-				"fongo.collection", "patterns", "fongo.data",
-				"[ { \"_id\":\"1\", \"words\": [ { \"lemma\":\"went\", \"pos\":\"VERB\"}], \"source\":{\"type\":\"Person\"}, \"target\":{\"type\":\"Location\"}}, { \"_id\":\"2\", \"words\": [ { \"lemma\":\"went\", \"pos\":\"VERB\"}, { \"lemma\":\"after\", \"pos\":\"VERB\"} ], \"source\":{ \"type\":\"Person\" }, \"target\":{\"type\":\"Person\" } } ]");
+  @Before
+  public void before() {
+    fongoErd =
+        ExternalResourceFactory.createExternalResourceDescription(
+            "mongo",
+            SharedFongoResource.class,
+            "fongo.collection",
+            "patterns",
+            "fongo.data",
+            "[ { \"_id\":\"1\", \"words\": [ { \"lemma\":\"went\", \"pos\":\"VERB\"}], \"source\":{\"type\":\"Person\"}, \"target\":{\"type\":\"Location\"}}, { \"_id\":\"2\", \"words\": [ { \"lemma\":\"went\", \"pos\":\"VERB\"}, { \"lemma\":\"after\", \"pos\":\"VERB\"} ], \"source\":{ \"type\":\"Person\" }, \"target\":{\"type\":\"Person\" } } ]");
 
-		wordnetErd = ExternalResourceFactory.createExternalResourceDescription("wordnet", SharedWordNetResource.class);
-	}
+    wordnetErd =
+        ExternalResourceFactory.createExternalResourceDescription(
+            "wordnet", SharedWordNetResource.class);
+  }
 
-	@Test
-	public void test() throws UIMAException, IOException {
-		final File file = File.createTempFile("test", "iit");
-		file.deleteOnExit();
+  @Test
+  public void test() throws UIMAException, IOException {
+    final File file = File.createTempFile("test", "iit");
+    file.deleteOnExit();
 
-		final AnalysisEngine ae = create(IdentifyInteractions.class, "mongo", fongoErd, "wordnet", wordnetErd,
-				"filename", file);
-		execute(ae);
+    final AnalysisEngine ae =
+        create(
+            IdentifyInteractions.class, "mongo", fongoErd, "wordnet", wordnetErd, "filename", file);
+    execute(ae);
 
-		final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
-		assertFalse(lines.isEmpty());
-		assertTrue(lines.get(1).contains("went"));
-	}
-
+    final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
+    assertFalse(lines.isEmpty());
+    assertTrue(lines.get(1).contains("went"));
+  }
 }

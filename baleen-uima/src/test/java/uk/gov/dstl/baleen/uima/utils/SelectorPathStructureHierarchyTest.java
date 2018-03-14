@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
 import static org.junit.Assert.assertEquals;
@@ -36,8 +36,6 @@ public class SelectorPathStructureHierarchyTest {
     jCas = JCasSingleton.getJCasInstance();
     jCas.setDocumentText(TEXT);
   }
-
-
 
   @Test
   public void testGenerateSimple() {
@@ -151,7 +149,6 @@ public class SelectorPathStructureHierarchyTest {
     assertEquals("Section:nth-of-type(1)", path2.toDepth(1).toString());
   }
 
-
   @Test
   public void testGenerateInterupted() {
     Section section = new Section(jCas);
@@ -185,6 +182,4 @@ public class SelectorPathStructureHierarchyTest {
     SelectorPath path2 = structureHierarchy.getSelectorPath(paragraph2);
     assertEquals("Section:nth-of-type(1) > Paragraph:nth-of-type(2)", path2.toString());
   }
-
-
 }

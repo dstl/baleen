@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import java.util.ArrayList;
@@ -6,16 +6,12 @@ import java.util.Collection;
 
 import org.apache.commons.lang.StringUtils;
 
-/**
- * Base combining (and, or) evaluator.
- */
+/** Base combining (and, or) evaluator. */
 abstract class CombiningEvaluator<T> extends Evaluator<T> {
   final ArrayList<Evaluator<T>> evaluators;
   int num = 0;
 
-  /**
-   * Construct an empty combining evaluator
-   */
+  /** Construct an empty combining evaluator */
   CombiningEvaluator() {
     super();
     evaluators = new ArrayList<>();
@@ -23,7 +19,7 @@ abstract class CombiningEvaluator<T> extends Evaluator<T> {
 
   /**
    * Construct a combining evaluator over the given evaluators.
-   * 
+   *
    * @param evaluators the evaluators to combine
    */
   CombiningEvaluator(Collection<Evaluator<T>> evaluators) {
@@ -34,7 +30,7 @@ abstract class CombiningEvaluator<T> extends Evaluator<T> {
 
   /**
    * Construct a combining evaluator over the given evaluators.
-   * 
+   *
    * @param left the first evaluator to conbine
    * @param right the second evaluator to combine
    */
@@ -60,15 +56,14 @@ abstract class CombiningEvaluator<T> extends Evaluator<T> {
 
   /**
    * And combining evaluator.
-   * <p>
-   * All evaluators must pass
    *
+   * <p>All evaluators must pass
    */
   static final class And<T> extends CombiningEvaluator<T> {
-    
+
     /**
      * Construct an AND evaluator over the given evaluators.
-     * 
+     *
      * @param evaluators the evaluators to AND
      */
     And(Collection<Evaluator<T>> evaluators) {
@@ -77,7 +72,7 @@ abstract class CombiningEvaluator<T> extends Evaluator<T> {
 
     /**
      * Construct an AND evaluator over the given evaluators.
-     * 
+     *
      * @param left the first evaluator to AND
      * @param right the second evaluator to AND
      */
@@ -104,14 +99,14 @@ abstract class CombiningEvaluator<T> extends Evaluator<T> {
 
   /**
    * And combining evaluator.
-   * <p>
-   * Any of the evaluators must pass.
-   * <p>
-   * This is a short cutting orperation, so the right evaluator will not be evaluated if the left evaluator is satisfied.
    *
+   * <p>Any of the evaluators must pass.
+   *
+   * <p>This is a short cutting orperation, so the right evaluator will not be evaluated if the left
+   * evaluator is satisfied.
    */
   static final class Or<T> extends CombiningEvaluator<T> {
- 
+
     /**
      * Create a new Or evaluator. The initial evaluators are ANDed together and used as the first
      * clause of the OR.
@@ -128,10 +123,7 @@ abstract class CombiningEvaluator<T> extends Evaluator<T> {
       updateNumEvaluators();
     }
 
-    /**
-     * Create a new empty Or evaluator. 
-     *
-     */
+    /** Create a new empty Or evaluator. */
     Or() {
       super();
     }
@@ -148,7 +140,7 @@ abstract class CombiningEvaluator<T> extends Evaluator<T> {
 
     /**
      * Add an evaluator to the or clause
-     * 
+     *
      * @param e the evaluator to add
      */
     public void add(Evaluator<T> e) {

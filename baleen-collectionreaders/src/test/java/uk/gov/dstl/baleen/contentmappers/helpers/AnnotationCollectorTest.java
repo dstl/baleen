@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers.helpers;
 
 import static org.junit.Assert.assertNull;
@@ -13,18 +13,17 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class AnnotationCollectorTest {
 
-	@Test
-	public void test() throws UIMAException {
-		AnnotationCollector collector = new AnnotationCollector();
+  @Test
+  public void test() throws UIMAException {
+    AnnotationCollector collector = new AnnotationCollector();
 
-		JCas jCas = JCasSingleton.getJCasInstance();
+    JCas jCas = JCasSingleton.getJCasInstance();
 
-		assertNull(collector.getAnnotations());
+    assertNull(collector.getAnnotations());
 
-		Paragraph a = new Paragraph(jCas);
-		collector.add(a);
+    Paragraph a = new Paragraph(jCas);
+    collector.add(a);
 
-		assertTrue(collector.getAnnotations().contains(a));
-	}
-
+    assertTrue(collector.getAnnotations().contains(a));
+  }
 }

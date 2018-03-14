@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
 import static org.junit.Assert.assertEquals;
@@ -17,83 +17,87 @@ import uk.gov.dstl.baleen.resources.SharedGenderMultiplicityResource;
 import uk.gov.dstl.baleen.types.common.Person;
 
 public class AddGenderToPersonTest extends AbstractAnnotatorTest {
-	private final ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, SharedGenderMultiplicityResource.class);
-	
-	public AddGenderToPersonTest(){
-		super(AddGenderToPerson.class);
-	}
+  private final ExternalResourceDescription erd =
+      ExternalResourceFactory.createExternalResourceDescription(
+          AddGenderToPerson.KEY_GENDER_MULTIPLICITY, SharedGenderMultiplicityResource.class);
 
-	
-	@Test
-	public void testMale() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("Professor Brian Cox");
+  public AddGenderToPersonTest() {
+    super(AddGenderToPerson.class);
+  }
 
-		Person p = new Person(jCas);
-		p.setBegin(10);
-		p.setEnd(19);
-		p.addToIndexes();
+  @Test
+  public void testMale() throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("Professor Brian Cox");
 
-		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
+    Person p = new Person(jCas);
+    p.setBegin(10);
+    p.setEnd(19);
+    p.addToIndexes();
 
-		Collection<Person> select = JCasUtil.select(jCas, Person.class);
-		assertEquals(1, select.size());
+    processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
 
-		Person out = select.iterator().next();
-		assertEquals("MALE", out.getGender());
-	}
+    Collection<Person> select = JCasUtil.select(jCas, Person.class);
+    assertEquals(1, select.size());
 
-	@Test
-	public void testFemale() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("Alice Samantha");
+    Person out = select.iterator().next();
+    assertEquals("MALE", out.getGender());
+  }
 
-		Person p = new Person(jCas);
-		p.setBegin(0);
-		p.setEnd(14);
-		p.addToIndexes();
+  @Test
+  public void testFemale() throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("Alice Samantha");
 
-		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
+    Person p = new Person(jCas);
+    p.setBegin(0);
+    p.setEnd(14);
+    p.addToIndexes();
 
-		Collection<Person> select = JCasUtil.select(jCas, Person.class);
-		assertEquals(1, select.size());
+    processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
 
-		Person out = select.iterator().next();
-		assertEquals("FEMALE", out.getGender());
-	}
-	
-	@Test
-	public void testMixed() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("Alice Brian Smith");
+    Collection<Person> select = JCasUtil.select(jCas, Person.class);
+    assertEquals(1, select.size());
 
-		Person p = new Person(jCas);
-		p.setBegin(0);
-		p.setEnd(17);
-		p.addToIndexes();
+    Person out = select.iterator().next();
+    assertEquals("FEMALE", out.getGender());
+  }
 
-		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
+  @Test
+  public void testMixed() throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("Alice Brian Smith");
 
-		Collection<Person> select = JCasUtil.select(jCas, Person.class);
-		assertEquals(1, select.size());
+    Person p = new Person(jCas);
+    p.setBegin(0);
+    p.setEnd(17);
+    p.addToIndexes();
 
-		Person out = select.iterator().next();
-		assertEquals("UNKNOWN", out.getGender());
-	}
-	
-	@Test
-	public void testExisting() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("Alice Cox");
+    processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);
 
-		Person p = new Person(jCas);
-		p.setBegin(10);
-		p.setEnd(19);
-		p.setGender("MALE");
-		p.addToIndexes();
+    Collection<Person> select = JCasUtil.select(jCas, Person.class);
+    assertEquals(1, select.size());
 
-		processJCas(AddGenderToPerson.KEY_GENDER_MULTIPLICITY, erd);	//If the entity is not ignored, it will be made female.
+    Person out = select.iterator().next();
+    assertEquals("UNKNOWN", out.getGender());
+  }
 
-		Collection<Person> select = JCasUtil.select(jCas, Person.class);
-		assertEquals(1, select.size());
+  @Test
+  public void testExisting()
+      throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("Alice Cox");
 
-		Person out = select.iterator().next();
-		assertEquals("MALE", out.getGender());
-	}
+    Person p = new Person(jCas);
+    p.setBegin(10);
+    p.setEnd(19);
+    p.setGender("MALE");
+    p.addToIndexes();
+
+    processJCas(
+        AddGenderToPerson.KEY_GENDER_MULTIPLICITY,
+        erd); // If the entity is not ignored, it will be made female.
+
+    Collection<Person> select = JCasUtil.select(jCas, Person.class);
+    assertEquals(1, select.size());
+
+    Person out = select.iterator().next();
+    assertEquals("MALE", out.getGender());
+  }
 }

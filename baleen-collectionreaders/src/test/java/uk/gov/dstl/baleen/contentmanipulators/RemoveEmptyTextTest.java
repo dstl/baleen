@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmanipulators;
 
 import static org.junit.Assert.assertEquals;
@@ -13,65 +13,63 @@ import org.junit.Test;
 
 public class RemoveEmptyTextTest {
 
-	private RemoveEmptyText m;
+  private RemoveEmptyText m;
 
-	@Before
-	public void before() {
-		m = new RemoveEmptyText();
+  @Before
+  public void before() {
+    m = new RemoveEmptyText();
+  }
 
-	}
+  @Test
+  public void testAlreadyEmpty() {
 
-	@Test
-	public void testAlreadyEmpty() {
+    Document doc = Jsoup.parseBodyFragment("");
+    m.manipulate(doc);
 
-		Document doc = Jsoup.parseBodyFragment("");
-		m.manipulate(doc);
+    assertNotNull(doc.body());
+  }
 
-		assertNotNull(doc.body());
-	}
+  @Test
+  public void testNonEmpty() {
 
-	@Test
-	public void testNonEmpty() {
+    Document doc = Jsoup.parseBodyFragment("<p>Hello</p>");
+    m.manipulate(doc);
 
-		Document doc = Jsoup.parseBodyFragment("<p>Hello</p>");
-		m.manipulate(doc);
+    assertFalse(doc.body().select("p").isEmpty());
+  }
 
-		assertFalse(doc.body().select("p").isEmpty());
-	}
+  @Test
+  public void testSingleEmpty() {
 
-	@Test
-	public void testSingleEmpty() {
+    Document doc = Jsoup.parseBodyFragment("<p></p>");
+    m.manipulate(doc);
 
-		Document doc = Jsoup.parseBodyFragment("<p></p>");
-		m.manipulate(doc);
+    assertTrue(doc.body().select("p").isEmpty());
+  }
 
-		assertTrue(doc.body().select("p").isEmpty());
-	}
+  @Test
+  public void testTwoEmpty() {
 
-	@Test
-	public void testTwoEmpty() {
+    Document doc = Jsoup.parseBodyFragment("<p></p><div></div>");
+    m.manipulate(doc);
+    assertTrue(doc.body().select("*").not("body").isEmpty());
+  }
 
-		Document doc = Jsoup.parseBodyFragment("<p></p><div></div>");
-		m.manipulate(doc);
-		assertTrue(doc.body().select("*").not("body").isEmpty());
-	}
+  @Test
+  public void testMixedEmpty() {
 
-	@Test
-	public void testMixedEmpty() {
+    Document doc = Jsoup.parseBodyFragment("<p></p><div></div><p>Hello</p>");
+    m.manipulate(doc);
 
-		Document doc = Jsoup.parseBodyFragment("<p></p><div></div><p>Hello</p>");
-		m.manipulate(doc);
+    assertEquals(doc.body().select("p").size(), 1);
+  }
 
-		assertEquals(doc.body().select("p").size(), 1);
-	}
+  @Test
+  public void testHierarchyOfEmpty() {
 
-	@Test
-	public void testHierarchyOfEmpty() {
+    Document doc = Jsoup.parseBodyFragment("<div><p></p></div>");
+    m.manipulate(doc);
 
-		Document doc = Jsoup.parseBodyFragment("<div><p></p></div>");
-		m.manipulate(doc);
-
-		assertTrue(doc.body().select("*").not("body").isEmpty());
-	}
-
+    assertTrue(doc.body().select("*").not("body").isEmpty());
+  }
 }

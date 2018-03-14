@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.structural;
 
 import static org.junit.Assert.assertEquals;
@@ -28,7 +28,6 @@ public class TextBlocksTest extends AbstractAnnotatorTest {
   @Before
   public void before() {
     jCas.setDocumentText("This is a header. This is a paragraph. This is a footer.");
-    
   }
 
   private void addStructure() {
@@ -39,75 +38,80 @@ public class TextBlocksTest extends AbstractAnnotatorTest {
     final Footer footer = new Footer(jCas, 40, jCas.getDocumentText().length());
     footer.addToIndexes();
   }
-  
+
   @Test
-  public void testWithoutStructuralAnnotations() throws AnalysisEngineProcessException, ResourceInitializationException {
+  public void testWithoutStructuralAnnotations()
+      throws AnalysisEngineProcessException, ResourceInitializationException {
     processJCas();
-    
-    final List<Text> list = new ArrayList<>( JCasUtil.select(jCas, Text.class) );
+
+    final List<Text> list = new ArrayList<>(JCasUtil.select(jCas, Text.class));
     assertEquals(1, list.size());
     assertEquals(jCas.getDocumentText(), list.get(0).getCoveredText());
   }
-  
+
   @Test
-  public void testWithStructuralAnnotations() throws AnalysisEngineProcessException, ResourceInitializationException {
+  public void testWithStructuralAnnotations()
+      throws AnalysisEngineProcessException, ResourceInitializationException {
     addStructure();
 
     processJCas();
-    
-    final List<Text> list = new ArrayList<>( JCasUtil.select(jCas, Text.class) );
+
+    final List<Text> list = new ArrayList<>(JCasUtil.select(jCas, Text.class));
     assertEquals(1, list.size());
     assertEquals("This is a paragraph.", list.get(0).getCoveredText());
   }
 
   @Test
-  public void testWithCustomTypes() throws AnalysisEngineProcessException, ResourceInitializationException {
+  public void testWithCustomTypes()
+      throws AnalysisEngineProcessException, ResourceInitializationException {
     addStructure();
 
-    processJCas(TextBlocks.PARAM_TYPE_NAMES, new String[]{ "Header" });
-    final List<Text> list = new ArrayList<>( JCasUtil.select(jCas, Text.class) );
+    processJCas(TextBlocks.PARAM_TYPE_NAMES, new String[] {"Header"});
+    final List<Text> list = new ArrayList<>(JCasUtil.select(jCas, Text.class));
 
     assertEquals(1, list.size());
     assertEquals("This is a header.", list.get(0).getCoveredText());
   }
 
   @Test
-  public void testWithTwoTypes() throws AnalysisEngineProcessException, ResourceInitializationException {
+  public void testWithTwoTypes()
+      throws AnalysisEngineProcessException, ResourceInitializationException {
     addStructure();
 
-    processJCas(TextBlocks.PARAM_TYPE_NAMES, new String[]{ "Header", "Paragraph" });
-    final List<Text> list = new ArrayList<>( JCasUtil.select(jCas, Text.class) );
+    processJCas(TextBlocks.PARAM_TYPE_NAMES, new String[] {"Header", "Paragraph"});
+    final List<Text> list = new ArrayList<>(JCasUtil.select(jCas, Text.class));
 
     assertEquals(2, list.size());
     assertEquals("This is a header.", list.get(0).getCoveredText());
     assertEquals("This is a paragraph.", list.get(1).getCoveredText());
-
   }
-  
+
   @Test
-  public void testKeepBiggest() throws AnalysisEngineProcessException, ResourceInitializationException {
+  public void testKeepBiggest()
+      throws AnalysisEngineProcessException, ResourceInitializationException {
     addStructure();
-    
+
     final Quotation q = new Quotation(jCas, 29, 38);
     q.addToIndexes();
 
     processJCas(TextBlocks.PARAM_KEEP_SMALLEST, false);
-    final List<Text> list = new ArrayList<>( JCasUtil.select(jCas, Text.class) );
+    final List<Text> list = new ArrayList<>(JCasUtil.select(jCas, Text.class));
 
     assertEquals(1, list.size());
     assertEquals("This is a paragraph.", list.get(0).getCoveredText());
   }
+
   @Test
-  public void testKeepSmallest() throws AnalysisEngineProcessException, ResourceInitializationException {
+  public void testKeepSmallest()
+      throws AnalysisEngineProcessException, ResourceInitializationException {
     addStructure();
     final Quotation q = new Quotation(jCas, 28, 38);
     q.addToIndexes();
 
     processJCas(TextBlocks.PARAM_KEEP_SMALLEST, true);
-    final List<Text> list = new ArrayList<>( JCasUtil.select(jCas, Text.class) );
+    final List<Text> list = new ArrayList<>(JCasUtil.select(jCas, Text.class));
 
     assertEquals(1, list.size());
     assertEquals("paragraph.", list.get(0).getCoveredText());
   }
-
 }

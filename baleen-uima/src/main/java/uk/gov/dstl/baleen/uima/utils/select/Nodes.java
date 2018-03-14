@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import java.util.ArrayList;
@@ -13,27 +13,20 @@ import com.google.common.collect.ImmutableList;
 
 import uk.gov.dstl.baleen.uima.utils.AnnotationNode;
 
-
 /**
  * A list of {@link AnnotationNode}s, with methods that act on every node in the list.
- * <p>
- * To get an {@code nodes} object, use the {@link AnnotationNode#select(String)} method.
- * </p>
+ *
+ * <p>To get an {@code nodes} object, use the {@link AnnotationNode#select(String)} method.
  */
 public class Nodes<T> extends ArrayList<Node<T>> {
 
-  /**
-   * Generated serial version Uid
-   */
+  /** Generated serial version Uid */
   private static final long serialVersionUID = 727081737507005840L;
 
-  /**
-   * Construct empty node list
-   */
+  /** Construct empty node list */
   public Nodes() {
     super();
   }
-
 
   /**
    * Construct empty node list
@@ -60,8 +53,8 @@ public class Nodes<T> extends ArrayList<Node<T>> {
    *
    * @param attributeKey The attribute key.
    * @return The attribute value from the first matched node that has the attribute. If no nodes
-   *         were matched (isEmpty() == true), or if the no nodes have the attribute, returns empty
-   *         string.
+   *     were matched (isEmpty() == true), or if the no nodes have the attribute, returns empty
+   *     string.
    * @see #hasAttr(String)
    */
   public String attr(String attributeKey) {
@@ -107,8 +100,8 @@ public class Nodes<T> extends ArrayList<Node<T>> {
 
   /**
    * Get the combined text of all the matched nodes.
-   * <p>
-   * Note that it is possible to get repeats if the matched nodes contain both parent nodes and
+   *
+   * <p>Note that it is possible to get repeats if the matched nodes contain both parent nodes and
    * their own children, as the {@link AnnotationNode#text} method returns the combined text of a
    * parent and all its children.
    *
@@ -186,10 +179,11 @@ public class Nodes<T> extends ArrayList<Node<T>> {
 
   /**
    * Remove nodes from this list that match the {@link Selector} query.
-   * <p>
-   * E.g. {@code <Section class=logo>One</Section> <Section>Two</Section>}<br>
+   *
+   * <p>E.g. {@code <Section class=logo>One</Section> <Section>Two</Section>}<br>
    * <code>nodes divs = nodes.select("Section").not(".logo");</code><br>
    * Result: {@code [<Section>Two</Section>]}
+   *
    * <p>
    *
    * @param query the selector query whose results should be removed from these nodes
@@ -202,12 +196,12 @@ public class Nodes<T> extends ArrayList<Node<T>> {
 
   /**
    * Get the <i>nth</i> matched node as an nodes object.
-   * <p>
-   * See also {@link #get(int)} to retrieve an Node.
+   *
+   * <p>See also {@link #get(int)} to retrieve an Node.
    *
    * @param index the (zero-based) index of the node in the list to retain
    * @return nodes containing only the specified node, or, if that node did not exist, an empty
-   *         list.
+   *     list.
    */
   public Nodes<T> eq(int index) {
     return size() > index ? new Nodes<>(ImmutableList.of(get(index))) : new Nodes<>();
@@ -371,5 +365,4 @@ public class Nodes<T> extends ArrayList<Node<T>> {
     }
     return this;
   }
-
 }

@@ -1,9 +1,7 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
-/**
- * Base structural evaluator.
- */
+/** Base structural evaluator. */
 abstract class StructuralEvaluator<T> extends Evaluator<T> {
   final Evaluator<T> evaluator;
 
@@ -11,11 +9,7 @@ abstract class StructuralEvaluator<T> extends Evaluator<T> {
     this.evaluator = evaluator;
   }
 
-
-  /**
-   * Evaluator<T> matches the given root node
-   *
-   */
+  /** Evaluator<T> matches the given root node */
   static class Root<T> extends Evaluator<T> {
     @Override
     public boolean matches(Node<T> root, Node<T> node) {
@@ -23,10 +17,7 @@ abstract class StructuralEvaluator<T> extends Evaluator<T> {
     }
   }
 
-  /**
-   * Evaluator<T> matches if the given evaluator matches for the nodes of the current node
-   *
-   */
+  /** Evaluator<T> matches if the given evaluator matches for the nodes of the current node */
   static class Has<T> extends StructuralEvaluator<T> {
     public Has(Evaluator<T> evaluator) {
       super(evaluator);
@@ -49,10 +40,7 @@ abstract class StructuralEvaluator<T> extends Evaluator<T> {
     }
   }
 
-  /**
-   * Evaluator<T> matches if the given evaluator does not
-   *
-   */
+  /** Evaluator<T> matches if the given evaluator does not */
   static class Not<T> extends StructuralEvaluator<T> {
     public Not(Evaluator<T> evaluator) {
       super(evaluator);
@@ -69,10 +57,7 @@ abstract class StructuralEvaluator<T> extends Evaluator<T> {
     }
   }
 
-  /**
-   * Evaluator<T> matches if any of the nodes parents matches the given evaluator
-   *
-   */
+  /** Evaluator<T> matches if any of the nodes parents matches the given evaluator */
   static class Parent<T> extends StructuralEvaluator<T> {
     public Parent(Evaluator<T> evaluator) {
       super(evaluator);
@@ -103,10 +88,7 @@ abstract class StructuralEvaluator<T> extends Evaluator<T> {
     }
   }
 
-  /**
-   * Evaluator<T> matches if the nodes immediate parent matches the given evaluator
-   *
-   */
+  /** Evaluator<T> matches if the nodes immediate parent matches the given evaluator */
   static class ImmediateParent<T> extends StructuralEvaluator<T> {
     public ImmediateParent(Evaluator<T> evaluator) {
       super(evaluator);
@@ -128,10 +110,7 @@ abstract class StructuralEvaluator<T> extends Evaluator<T> {
     }
   }
 
-  /**
-   * Evaluator<T> matches if any of the nodes previous siblings matches the given evaluator
-   *
-   */
+  /** Evaluator<T> matches if any of the nodes previous siblings matches the given evaluator */
   static class PreviousSibling<T> extends StructuralEvaluator<T> {
     public PreviousSibling(Evaluator<T> evaluator) {
       super(evaluator);
@@ -161,10 +140,7 @@ abstract class StructuralEvaluator<T> extends Evaluator<T> {
     }
   }
 
-  /**
-   * Evaluator<T> matches if the nodes immediate previous sibling matches the given evaluator
-   *
-   */
+  /** Evaluator<T> matches if the nodes immediate previous sibling matches the given evaluator */
   static class ImmediatePreviousSibling<T> extends StructuralEvaluator<T> {
     public ImmediatePreviousSibling(Evaluator<T> evaluator) {
       super(evaluator);

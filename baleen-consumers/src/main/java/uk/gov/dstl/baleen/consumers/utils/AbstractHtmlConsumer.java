@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.utils;
 
@@ -29,9 +29,9 @@ import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
  * Creates HTML5 versions of the document, with entities annotated as spans. The original formatting
  * of the document is lost, and only the content is kept.
  *
- * Relationships are not currently supported.
+ * <p>Relationships are not currently supported.
  *
- * This is largely based off the original {@link Html5} consumer.
+ * <p>This is largely based off the original {@link Html5} consumer.
  *
  * @baleen.javadoc
  */
@@ -48,7 +48,8 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
    * files with duplicate names, or you are reading from a source that isn't file system based (e.g.
    * a database).
    *
-   * The external ID will be used by default if no Source URI is available, or it is badly formed.
+   * <p>The external ID will be used by default if no Source URI is available, or it is badly
+   * formed.
    *
    * @baleen.config false
    */
@@ -68,14 +69,17 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
    * @baleen.config
    */
   public static final String PARAM_CSS = "css";
+
   private static final String FILE_EXTENSION = ".html";
 
   @ConfigurationParameter(name = PARAM_OUTPUT_FOLDER, defaultValue = "")
   private String outputFolderString;
+
   private File outputFolder;
 
   @ConfigurationParameter(name = PARAM_USE_EXTERNAL_ID, defaultValue = "false")
   private Boolean useExternalId;
+
   @ConfigurationParameter(name = PARAM_CONTENT_HASH_AS_ID, defaultValue = "true")
   private Boolean contentHashAsId = true;
 
@@ -84,7 +88,7 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see uk.gov.dstl.baleen.uima.BaleenAnnotator#doInitialize(org.apache.uima.UimaContext)
    */
   @Override
@@ -127,7 +131,6 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
     return meta;
   }
 
-
   /**
    * Gets the file name for the jCas (from either contenthash or the original source).
    *
@@ -145,10 +148,10 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
     } else {
       try {
         final String name;
-        if(source.contains(File.separator)){
+        if (source.contains(File.separator)) {
           name = source.substring(source.lastIndexOf(File.separator) + 1);
-        }else{
-          //If it doesn't contain the file system separator, assume it is a URI
+        } else {
+          // If it doesn't contain the file system separator, assume it is a URI
           name = source.substring(source.lastIndexOf('/') + 1);
         }
 
@@ -160,14 +163,18 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
           f = new File(outputFolder, name + "." + append + FILE_EXTENSION);
         }
         if (append != 0) {
-          getMonitor().info(
-              "File with the same name already exists in {} - source file will be saved as {}",
-              outputFolder.getName(), f.getName());
+          getMonitor()
+              .info(
+                  "File with the same name already exists in {} - source file will be saved as {}",
+                  outputFolder.getName(),
+                  f.getName());
         }
       } catch (final Exception e) {
-        getMonitor().warn(
-            "An error occurred trying to use the source URI {} as a file name - the external ID will be used instead",
-            source, e);
+        getMonitor()
+            .warn(
+                "An error occurred trying to use the source URI {} as a file name - the external ID will be used instead",
+                source,
+                e);
 
         final String id = ConsumerUtils.getExternalId(da, contentHashAsId);
         f = new File(outputFolder, id + FILE_EXTENSION);
@@ -179,7 +186,7 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
 
   /*
    * (non-Javadoc)
-   * 
+   *
    * @see uk.gov.dstl.baleen.uima.BaleenAnnotator#doProcess(org.apache.uima.jcas.JCas)
    */
   @Override
@@ -206,9 +213,13 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
     appendMeta(head, "externalId", da.getHash());
 
     appendMeta(head, "document.classification", da.getDocumentClassification());
-    appendMeta(head, "document.caveats",
+    appendMeta(
+        head,
+        "document.caveats",
         String.join(",", UimaTypesUtils.toArray(da.getDocumentCaveats())));
-    appendMeta(head, "document.releasability",
+    appendMeta(
+        head,
+        "document.releasability",
         String.join(",", UimaTypesUtils.toArray(da.getDocumentReleasability())));
 
     String title = null;

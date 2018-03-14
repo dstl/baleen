@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web;
 
 import static org.junit.Assert.assertEquals;
@@ -24,86 +24,77 @@ import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
 import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
-/**
- * Integration style test for {@link BaleenWebApi}.
- *
- *
- *
- */
+/** Integration style test for {@link BaleenWebApi}. */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class BaleenWebApiTest {
 
-	@Mock
-	BaleenPipelineManager pipelineManager;
+  @Mock BaleenPipelineManager pipelineManager;
 
-	@Mock
-	BaleenManager baleenManager;
+  @Mock BaleenManager baleenManager;
 
-	@Before
-	public void before() {
-		doReturn(pipelineManager).when(baleenManager).getPipelineManager();
-		doReturn(Collections.emptyList()).when(pipelineManager).getAll();
-	}
+  @Before
+  public void before() {
+    doReturn(pipelineManager).when(baleenManager).getPipelineManager();
+    doReturn(Collections.emptyList()).when(pipelineManager).getAll();
+  }
 
-	@Test
-	public void teststartStopWithoutServer() {
-		try {
-			new BaleenWebApi(baleenManager).start();
-			fail("No exception for unconfigured web api");
-		} catch (BaleenException e) {
-			// Exception is good
-		}
+  @Test
+  public void teststartStopWithoutServer() {
+    try {
+      new BaleenWebApi(baleenManager).start();
+      fail("No exception for unconfigured web api");
+    } catch (BaleenException e) {
+      // Exception is good
+    }
 
-		try {
-			new BaleenWebApi(baleenManager).stop();
-		} catch (BaleenException e) {
-			fail("Exception on stop unconfigured web api");
+    try {
+      new BaleenWebApi(baleenManager).stop();
+    } catch (BaleenException e) {
+      fail("Exception on stop unconfigured web api");
+    }
+  }
 
-		}
+  @Test
+  public void run() throws Exception {
+    BaleenWebApi web = new BaleenWebApi(baleenManager);
+    try {
 
-	}
+      web.configure(new YamlConfiguration());
+      web.start();
 
-	@Test
-	public void run() throws Exception {
-		BaleenWebApi web = new BaleenWebApi(baleenManager);
-		try {
+      // Wait for the server to be up
+      try {
+        Thread.sleep(3000);
+      } catch (InterruptedException e) {
+        // Do nothing
+      }
 
-			web.configure(new YamlConfiguration());
-			web.start();
+      String metrics = getResponse("/metrics");
+      assertFalse(metrics.isEmpty());
 
-			// Wait for the server to be up
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				// Do nothing
-			}
+      String status = getResponse("/status");
+      assertTrue(status.contains("ok"));
 
-			String metrics = getResponse("/metrics");
-			assertFalse(metrics.isEmpty());
+      String pipelines = getResponse("/pipelines");
+      assertFalse(pipelines.isEmpty());
 
-			String status = getResponse("/status");
-			assertTrue(status.contains("ok"));
+    } finally {
 
-			String pipelines = getResponse("/pipelines");
-			assertFalse(pipelines.isEmpty());
+      web.stop();
+    }
+  }
 
-		} finally {
+  private String getResponse(String path) throws IOException {
+    int port = BaleenWebApi.getPort(BaleenWebApi.DEFAULT_PORT);
+    URL url = new URL("http://localhost:" + port + "/api/1" + path);
+    return IOUtils.toString(url.openStream());
+  }
 
-			web.stop();
-		}
-	}
-
-	private String getResponse(String path) throws IOException {
-		int port = BaleenWebApi.getPort(BaleenWebApi.DEFAULT_PORT);
-		URL url = new URL("http://localhost:" + port + "/api/1" + path);
-		return IOUtils.toString(url.openStream());
-	}
-
-	@Test
-	public void testPortFromString() {
-		assertNull(BaleenWebApi.getPortFromString("test"));
-		assertNull(BaleenWebApi.getPortFromString("-1"));
-		assertNull(BaleenWebApi.getPortFromString("123456789"));
-		assertEquals(new Integer(1234), BaleenWebApi.getPortFromString("1234"));
-	}
+  @Test
+  public void testPortFromString() {
+    assertNull(BaleenWebApi.getPortFromString("test"));
+    assertNull(BaleenWebApi.getPortFromString("-1"));
+    assertNull(BaleenWebApi.getPortFromString("123456789"));
+    assertEquals(new Integer(1234), BaleenWebApi.getPortFromString("1234"));
+  }
 }

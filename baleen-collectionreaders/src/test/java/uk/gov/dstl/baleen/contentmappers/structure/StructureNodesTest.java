@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers.structure;
 
 import static org.junit.Assert.assertEquals;
@@ -115,24 +115,27 @@ public class StructureNodesTest extends AbstractHtmlToStructureTest {
   public void traverse() throws UIMAException {
     Node<Structure> doc = createStructure("<div><p>Hello</p></div><div>There</div>");
     final StringBuilder accum = new StringBuilder();
-    doc.select("Section").traverse(new NodeVisitor<Structure>() {
-      @Override
-      public void head(Node<Structure> node, int depth) {
-        accum.append("<" + node.getTypeName() + ">");
-      }
+    doc.select("Section")
+        .traverse(
+            new NodeVisitor<Structure>() {
+              @Override
+              public void head(Node<Structure> node, int depth) {
+                accum.append("<" + node.getTypeName() + ">");
+              }
 
-      @Override
-      public void tail(Node<Structure> node, int depth) {
-        accum.append("</" + node.getTypeName() + ">");
-      }
-    });
+              @Override
+              public void tail(Node<Structure> node, int depth) {
+                accum.append("</" + node.getTypeName() + ">");
+              }
+            });
     assertEquals("<Section><Paragraph></Paragraph></Section><Section></Section>", accum.toString());
   }
 
   @Test
   public void siblings() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<div><p>1<p>2<p>3<p>4<p>5<p>6</div><div><p>7<p>8<p>9<p>10<p>11<p>12</div>");
+    Node<Structure> doc =
+        createStructure(
+            "<div><p>1<p>2<p>3<p>4<p>5<p>6</div><div><p>7<p>8<p>9<p>10<p>11<p>12</div>");
 
     Nodes<Structure> els = doc.select("Paragraph:eq(3)"); // gets p4 and p10
     assertEquals(2, els.size());
@@ -178,8 +181,9 @@ public class StructureNodesTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void eachText() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<div><p>1<p>2<p>3<p>4<p>5<p>6</div><div><p>7<p>8<p>9<p>10<p>11<p>12<p></p></div>");
+    Node<Structure> doc =
+        createStructure(
+            "<div><p>1<p>2<p>3<p>4<p>5<p>6</div><div><p>7<p>8<p>9<p>10<p>11<p>12<p></p></div>");
     List<String> divText = doc.select("Section").eachText();
     assertEquals(2, divText.size());
     assertEquals("123456", divText.get(0));
@@ -198,8 +202,9 @@ public class StructureNodesTest extends AbstractHtmlToStructureTest {
 
   @Test
   public void eachAttr() throws UIMAException {
-    Node<Structure> doc = createStructure(
-        "<div><a href='/foo'>1</a><a href='http://example.com/bar'>2</a><a href=''>3</a><a href='/foo'>4</a><a>5</a>");
+    Node<Structure> doc =
+        createStructure(
+            "<div><a href='/foo'>1</a><a href='http://example.com/bar'>2</a><a href=''>3</a><a href='/foo'>4</a><a>5</a>");
 
     List<String> hrefAttrs = doc.select("Link").eachAttr("target");
     assertEquals(3, hrefAttrs.size());
@@ -207,7 +212,6 @@ public class StructureNodesTest extends AbstractHtmlToStructureTest {
     assertEquals("http://example.com/bar", hrefAttrs.get(1));
     assertEquals("/foo", hrefAttrs.get(2));
     assertEquals(3, doc.select("Link").size());
-
   }
 
   @Test
@@ -222,5 +226,4 @@ public class StructureNodesTest extends AbstractHtmlToStructureTest {
     assertTrue(doc.eq(0).isEmpty());
     assertFalse(doc.hasAttr("class"));
   }
-
 }

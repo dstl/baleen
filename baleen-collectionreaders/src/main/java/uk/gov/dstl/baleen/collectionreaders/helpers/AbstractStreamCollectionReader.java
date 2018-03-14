@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders.helpers;
 
 import java.util.Iterator;
@@ -12,72 +12,70 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 /**
  * A collection reader that is generated as a stream.
  *
- * @param <T>
- *            the generic type
- *
+ * @param <T> the generic type
  * @baleen.javadoc
  */
-public abstract class AbstractStreamCollectionReader<T> extends AbstractIteratatorCollectionReader<T> {
+public abstract class AbstractStreamCollectionReader<T>
+    extends AbstractIteratatorCollectionReader<T> {
 
-	/**
-	 * Max number of documents to read before stopping (0 for all)
-	 *
-	 * @baleen.config max 0
-	 */
-	public static final String KEY_MAX_DOCUMENTS = "max";
-	@ConfigurationParameter(name = KEY_MAX_DOCUMENTS, defaultValue = "0")
-	private int maxDocuments;
+  /**
+   * Max number of documents to read before stopping (0 for all)
+   *
+   * @baleen.config max 0
+   */
+  public static final String KEY_MAX_DOCUMENTS = "max";
 
-	/**
-	 * Skip the first x documents
-	 *
-	 * @baleen.config skip 0
-	 */
-	public static final String KEY_SKIP_DOCUMENTS = "skip";
-	@ConfigurationParameter(name = KEY_SKIP_DOCUMENTS, defaultValue = "0")
-	private int skipDocuments;
+  @ConfigurationParameter(name = KEY_MAX_DOCUMENTS, defaultValue = "0")
+  private int maxDocuments;
 
-	protected void setSkipDocuments(int skipDocuments) {
-		this.skipDocuments = skipDocuments;
-	}
+  /**
+   * Skip the first x documents
+   *
+   * @baleen.config skip 0
+   */
+  public static final String KEY_SKIP_DOCUMENTS = "skip";
 
-	protected Integer getSkipDocuments() {
-		return skipDocuments;
-	}
+  @ConfigurationParameter(name = KEY_SKIP_DOCUMENTS, defaultValue = "0")
+  private int skipDocuments;
 
-	protected Integer getMaxDocuments() {
-		return maxDocuments;
-	}
+  protected void setSkipDocuments(int skipDocuments) {
+    this.skipDocuments = skipDocuments;
+  }
 
-	protected void setMaxDocuments(Integer maxDocuments) {
-		this.maxDocuments = maxDocuments;
-	}
+  protected Integer getSkipDocuments() {
+    return skipDocuments;
+  }
 
-	@Override
-	protected final Iterator<T> initializeIterator(UimaContext context) throws BaleenException {
+  protected Integer getMaxDocuments() {
+    return maxDocuments;
+  }
 
-		Stream<T> stream = initializeStream(context);
+  protected void setMaxDocuments(Integer maxDocuments) {
+    this.maxDocuments = maxDocuments;
+  }
 
-		if (skipDocuments > 0) {
-			stream = stream.skip(skipDocuments);
-		}
+  @Override
+  protected final Iterator<T> initializeIterator(UimaContext context) throws BaleenException {
 
-		if (maxDocuments > 0) {
-			stream = stream.limit(maxDocuments);
-		}
+    Stream<T> stream = initializeStream(context);
 
-		return stream.iterator();
-	}
+    if (skipDocuments > 0) {
+      stream = stream.skip(skipDocuments);
+    }
 
-	/**
-	 * Initialize the stream.
-	 *
-	 * @param context
-	 *            the context
-	 * @return the stream
-	 * @throws BaleenException
-	 *             the baleen exception
-	 */
-	protected abstract Stream<T> initializeStream(UimaContext context) throws BaleenException;
+    if (maxDocuments > 0) {
+      stream = stream.limit(maxDocuments);
+    }
 
+    return stream.iterator();
+  }
+
+  /**
+   * Initialize the stream.
+   *
+   * @param context the context
+   * @return the stream
+   * @throws BaleenException the baleen exception
+   */
+  protected abstract Stream<T> initializeStream(UimaContext context) throws BaleenException;
 }

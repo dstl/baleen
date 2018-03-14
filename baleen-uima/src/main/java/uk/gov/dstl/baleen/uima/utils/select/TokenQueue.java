@@ -1,12 +1,9 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import org.apache.commons.lang.Validate;
 
-/**
- * A character queue with parsing helpers.
- *
- */
+/** A character queue with parsing helpers. */
 public class TokenQueue {
 
   /** Escape character for balanced chomp */
@@ -17,7 +14,6 @@ public class TokenQueue {
 
   /** the position */
   private int pos = 0;
-
 
   /**
    * Create a new TokenQueue.
@@ -56,8 +52,6 @@ public class TokenQueue {
   public boolean matches(String seq) {
     return queue.regionMatches(true, pos, seq, 0, seq.length());
   }
-
-
 
   /**
    * Tests if the next characters match any of the sequences. Case insensitive.
@@ -127,7 +121,6 @@ public class TokenQueue {
     return !isEmpty() && Character.isLetterOrDigit(queue.charAt(pos));
   }
 
-
   /**
    * Consume one character off queue.
    *
@@ -141,8 +134,8 @@ public class TokenQueue {
    * Consumes the supplied sequence of the queue. If the queue does not start with the supplied
    * sequence, will throw an illegal state exception -- but you should be running match() against
    * that condition.
-   * <p>
-   * Case insensitive.
+   *
+   * <p>Case insensitive.
    *
    * @param seq sequence to remove from head of queue.
    */
@@ -163,7 +156,7 @@ public class TokenQueue {
    * running out.
    *
    * @param seq String to end on (and not include in return, but leave on queue). <b>Case
-   *        sensitive.</b>
+   *     sensitive.</b>
    * @return The matched data consumed from queue.
    */
   public String consumeTo(String seq) {
@@ -196,12 +189,12 @@ public class TokenQueue {
   /**
    * Pulls a string off the queue (like consumeTo), and then pulls off the matched string (but does
    * not return it).
-   * <p>
-   * If the queue runs out of characters before finding the seq, will return as much as it can (and
-   * queue will go isEmpty() == true).
+   *
+   * <p>If the queue runs out of characters before finding the seq, will return as much as it can
+   * (and queue will go isEmpty() == true).
    *
    * @param seq String to match up to, and not include in return, and to pull off queue. <b>Case
-   *        sensitive.</b>
+   *     sensitive.</b>
    * @return Data matched from queue.
    */
   public String chompTo(String seq) {
@@ -324,7 +317,6 @@ public class TokenQueue {
 
     return queue.substring(start, pos);
   }
-
 
   /**
    * Consume and return whatever is left on the queue.

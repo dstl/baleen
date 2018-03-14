@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.history.logging;
 
 import java.time.Instant;
@@ -15,124 +15,141 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 /**
  * A history implement which outputs history events to the logger.
  *
- * This history system does not allow history to be read back into the
- * application, hence the get methods return empty collections.
+ * <p>This history system does not allow history to be read back into the application, hence the get
+ * methods return empty collections.
  *
- * 
  * @baleen.javadoc
  */
 public class LoggingBaleenHistory extends AbstractBaleenHistory {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoggingBaleenHistory.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LoggingBaleenHistory.class);
 
-	private static final String DEFAULT_FORMAT = "{} [{}-{}] {}:{}";
+  private static final String DEFAULT_FORMAT = "{} [{}-{}] {}:{}";
 
-	/**
-	 * The log level to output.
-	 * Valid values are trace, debug, info, warn and error.
-	 * 
-	 * @baleen.config info
-	 */
-	public static final String PARAM_LEVEL = "history.level";
-	@ConfigurationParameter(name = PARAM_LEVEL, defaultValue = "info")
-	private String loggerLevel;
+  /**
+   * The log level to output. Valid values are trace, debug, info, warn and error.
+   *
+   * @baleen.config info
+   */
+  public static final String PARAM_LEVEL = "history.level";
 
-	/**
-	 * The name of the logger
-	 * 
-	 * @baleen.config history
-	 */
-	public static final String PARAM_NAME = "history.name";
-	@ConfigurationParameter(name = PARAM_NAME, defaultValue = "history")
-	private String loggerName;
+  @ConfigurationParameter(name = PARAM_LEVEL, defaultValue = "info")
+  private String loggerLevel;
 
-	private Logger historyLogger;
+  /**
+   * The name of the logger
+   *
+   * @baleen.config history
+   */
+  public static final String PARAM_NAME = "history.name";
 
-	/**
-	 * New instance
-	 *
-	 */
-	public LoggingBaleenHistory() {
-		//Empty constructor, do nothing
-	}
+  @ConfigurationParameter(name = PARAM_NAME, defaultValue = "history")
+  private String loggerName;
 
-	@Override
-	protected void initialize() throws BaleenException {
-		super.initialize();
+  private Logger historyLogger;
 
-		// (re)setting this way makes sure it's non-null
-		setLevel(loggerLevel);
+  /** New instance */
+  public LoggingBaleenHistory() {
+    // Empty constructor, do nothing
+  }
 
-		historyLogger = LoggerFactory.getLogger(loggerName);
+  @Override
+  protected void initialize() throws BaleenException {
+    super.initialize();
 
-		LOGGER.info("Configured a logging history with name '{}' at level '{}'", loggerName, loggerLevel);
-	}
+    // (re)setting this way makes sure it's non-null
+    setLevel(loggerLevel);
 
-	@Override
-	public void destroy() {
-		super.destroy();
-		historyLogger = null;
-	}
+    historyLogger = LoggerFactory.getLogger(loggerName);
 
-	@Override
-	public DocumentHistory getHistory(String documentId) {
-		return new LoggingDocumentHistory(this, documentId);
-	}
+    LOGGER.info(
+        "Configured a logging history with name '{}' at level '{}'", loggerName, loggerLevel);
+  }
 
-	@Override
-	public void closeHistory(String documentId) {
-		// Do nothing
-	}
+  @Override
+  public void destroy() {
+    super.destroy();
+    historyLogger = null;
+  }
 
-	/** Set the current logging level.
-	 * @param level (trace,debug,warn,error)
-	 */
-	public void setLevel(String level) {
-		this.loggerLevel = level != null ? level : "info";
-	}
+  @Override
+  public DocumentHistory getHistory(String documentId) {
+    return new LoggingDocumentHistory(this, documentId);
+  }
 
-	/** Get the current logging level
-	 * @return the level
-	 */
-	public String getLevel() {
-		return this.loggerLevel;
-	}
+  @Override
+  public void closeHistory(String documentId) {
+    // Do nothing
+  }
 
+  /**
+   * Set the current logging level.
+   *
+   * @param level (trace,debug,warn,error)
+   */
+  public void setLevel(String level) {
+    this.loggerLevel = level != null ? level : "info";
+  }
 
+  /**
+   * Get the current logging level
+   *
+   * @return the level
+   */
+  public String getLevel() {
+    return this.loggerLevel;
+  }
 
-	/**
-	 * Add the event to the specific document.
-	 *
-	 * @param documentId
-	 *            the document id
-	 * @param event
-	 *            the event to add to the document
-	 */
-	public void add(String documentId, HistoryEvent event) {
-		if (historyLogger == null) {
-			LOGGER.error("Logging history event withouth an initialised logger");
-			return;
-		}
+  /**
+   * Add the event to the specific document.
+   *
+   * @param documentId the document id
+   * @param event the event to add to the document
+   */
+  public void add(String documentId, HistoryEvent event) {
+    if (historyLogger == null) {
+      LOGGER.error("Logging history event withouth an initialised logger");
+      return;
+    }
 
-		switch (loggerLevel) {
-		case "warn":
-			historyLogger.warn(DEFAULT_FORMAT, Instant.ofEpochMilli(event.getTimestamp()), documentId, event
-					.getRecordable().getInternalId(), event.getReferrer(), event.getAction());
-			break;
-		case "error":
-			historyLogger.error(DEFAULT_FORMAT, Instant.ofEpochMilli(event.getTimestamp()), documentId, event
-					.getRecordable().getInternalId(), event.getReferrer(), event.getAction());
-			break;
-		case "trace":
-			historyLogger.trace(DEFAULT_FORMAT, Instant.ofEpochMilli(event.getTimestamp()), documentId, event
-					.getRecordable().getInternalId(), event.getReferrer(), event.getAction());
-			break;
-		case "info":
-		default:
-			historyLogger.info(DEFAULT_FORMAT, Instant.ofEpochMilli(event.getTimestamp()), documentId, event
-					.getRecordable().getInternalId(), event.getReferrer(), event.getAction());
-			break;
-		}
-	}
-
+    switch (loggerLevel) {
+      case "warn":
+        historyLogger.warn(
+            DEFAULT_FORMAT,
+            Instant.ofEpochMilli(event.getTimestamp()),
+            documentId,
+            event.getRecordable().getInternalId(),
+            event.getReferrer(),
+            event.getAction());
+        break;
+      case "error":
+        historyLogger.error(
+            DEFAULT_FORMAT,
+            Instant.ofEpochMilli(event.getTimestamp()),
+            documentId,
+            event.getRecordable().getInternalId(),
+            event.getReferrer(),
+            event.getAction());
+        break;
+      case "trace":
+        historyLogger.trace(
+            DEFAULT_FORMAT,
+            Instant.ofEpochMilli(event.getTimestamp()),
+            documentId,
+            event.getRecordable().getInternalId(),
+            event.getReferrer(),
+            event.getAction());
+        break;
+      case "info":
+      default:
+        historyLogger.info(
+            DEFAULT_FORMAT,
+            Instant.ofEpochMilli(event.getTimestamp()),
+            documentId,
+            event.getRecordable().getInternalId(),
+            event.getReferrer(),
+            event.getAction());
+        break;
+    }
+  }
 }

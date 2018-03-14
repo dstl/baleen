@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,10 +22,9 @@ import uk.gov.dstl.baleen.uima.utils.select.Node;
 
 /**
  * A node in the structure hierarchy of the document
- * <p>
- * All nodes except the root node contain a structure annotation and gives access to the parent and
- * child structure nodes.
  *
+ * <p>All nodes except the root node contain a structure annotation and gives access to the parent
+ * and child structure nodes.
  */
 public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
 
@@ -89,12 +88,14 @@ public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
 
       for (Method method : annotation.getClass().getDeclaredMethods()) {
         String name = method.getName();
-        if (name.startsWith("get") && method.getParameterTypes().length == 0
+        if (name.startsWith("get")
+            && method.getParameterTypes().length == 0
             && !nonAttributes.contains(name)) {
           String key = name.substring(3).toLowerCase();
           try {
             addAttribute(attributes, key, method.invoke(annotation));
-          } catch (IllegalAccessException | IllegalArgumentException
+          } catch (IllegalAccessException
+              | IllegalArgumentException
               | InvocationTargetException e) {
             throw new RuntimeException(e);
           }
@@ -102,7 +103,6 @@ public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
       }
     }
     return attributes;
-
   }
 
   /**
@@ -117,7 +117,6 @@ public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
       attributes.put(key, value.toString());
     }
   }
-
 
   @Override
   public String ownText() {
@@ -135,7 +134,9 @@ public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
     if (annotation instanceof Structure) {
       String classes = ((Structure) annotation).getElementClass();
       if (StringUtils.isNotBlank(classes)) {
-        return Arrays.asList(classes.split("\\s")).stream().map(String::toLowerCase)
+        return Arrays.asList(classes.split("\\s"))
+            .stream()
+            .map(String::toLowerCase)
             .collect(Collectors.toList());
       }
     }
@@ -171,7 +172,4 @@ public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
   public static int getEnd(Node<? extends Annotation> node) {
     return node.getItem() == null ? Integer.MAX_VALUE : node.getItem().getEnd();
   }
-
-
-
 }

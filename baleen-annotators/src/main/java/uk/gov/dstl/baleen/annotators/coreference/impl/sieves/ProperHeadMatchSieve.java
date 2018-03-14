@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.coreference.impl.sieves;
 
 import java.util.Arrays;
@@ -19,116 +19,131 @@ import uk.gov.dstl.baleen.annotators.coreference.impl.data.Cluster;
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.Mention;
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.MentionType;
 
-/**
- * Sieve based on exact matching of the head word.
- */
+/** Sieve based on exact matching of the head word. */
 public class ProperHeadMatchSieve extends AbstractCoreferenceSieve {
-	private static final Pattern NUMBER = Pattern.compile("-?\\d+(,\\d+)*(\\.\\d+)?[k|m|b]?", Pattern.CASE_INSENSITIVE);
+  private static final Pattern NUMBER =
+      Pattern.compile("-?\\d+(,\\d+)*(\\.\\d+)?[k|m|b]?", Pattern.CASE_INSENSITIVE);
 
-	private final Set<String> spatialModifiers = new HashSet<String>(
-			Arrays.asList("northern", "southern", "western", "eastern", "south", "east", "north", "west",
-					"central", "upper", "lower", "middle", "inner", "outer"));
+  private final Set<String> spatialModifiers =
+      new HashSet<String>(
+          Arrays.asList(
+              "northern",
+              "southern",
+              "western",
+              "eastern",
+              "south",
+              "east",
+              "north",
+              "west",
+              "central",
+              "upper",
+              "lower",
+              "middle",
+              "inner",
+              "outer"));
 
-	/**
-	 * Constructor for ProperHeadMatchSieve
-	 */
-	public ProperHeadMatchSieve(JCas jCas, List<Cluster> clusters, List<Mention> mentions) {
-		super(jCas, clusters, mentions);
-	}
+  /** Constructor for ProperHeadMatchSieve */
+  public ProperHeadMatchSieve(JCas jCas, List<Cluster> clusters, List<Mention> mentions) {
+    super(jCas, clusters, mentions);
+  }
 
-	@Override
-	public void sieve() {
-		// Note: Head must be proper nouns, but ours are by construction
-		List<Mention> mentions = getMentionsWithHead(MentionType.ENTITY, MentionType.NP);
-		
-		for (int i = 0; i < mentions.size(); i++) {
-			final Mention a = mentions.get(i);
+  @Override
+  public void sieve() {
+    // Note: Head must be proper nouns, but ours are by construction
+    List<Mention> mentions = getMentionsWithHead(MentionType.ENTITY, MentionType.NP);
 
-			String aHead = a.getHead().toLowerCase();
+    for (int i = 0; i < mentions.size(); i++) {
+      final Mention a = mentions.get(i);
 
-			for (int j = i + 1; j < mentions.size(); j++) {
-				final Mention b = mentions.get(j);
+      String aHead = a.getHead().toLowerCase();
 
-				String bHead = b.getHead().toLowerCase();
+      for (int j = i + 1; j < mentions.size(); j++) {
+        final Mention b = mentions.get(j);
 
-				if (aHead.equals(bHead) && shouldAddMentionsToCluster(a, b)){
-					addToCluster(a, b);
-				}
-			}
-		}
-	}
+        String bHead = b.getHead().toLowerCase();
 
-	private boolean hasSameModifiers(Mention a, Mention b) {
-		// TODO: The paper says location named entities, other proper nouns or other spatial
-		// modifiers but since locations should be other proper nouns we ignore that clause. We
-		// could look for Locations covered by the annotation.
+        if (aHead.equals(bHead) && shouldAddMentionsToCluster(a, b)) {
+          addToCluster(a, b);
+        }
+      }
+    }
+  }
 
-		final Set<String> aModifiers = getSpatialAndPNModifier(a);
-		final Set<String> bModifiers = getSpatialAndPNModifier(b);
+  private boolean hasSameModifiers(Mention a, Mention b) {
+    // TODO: The paper says location named entities, other proper nouns or other spatial
+    // modifiers but since locations should be other proper nouns we ignore that clause. We
+    // could look for Locations covered by the annotation.
 
-		return aModifiers.size() == bModifiers.size() && aModifiers.containsAll(bModifiers);
-	}
+    final Set<String> aModifiers = getSpatialAndPNModifier(a);
+    final Set<String> bModifiers = getSpatialAndPNModifier(b);
 
-	private Set<String> getSpatialAndPNModifier(Mention a) {
-		return a.getWords().stream()
-				.filter(w -> w.getPartOfSpeech().startsWith("NP") || spatialModifiers.contains(w.getCoveredText()))
-				.map(w -> w.getCoveredText().toLowerCase())
-				.collect(Collectors.toSet());
-	}
+    return aModifiers.size() == bModifiers.size() && aModifiers.containsAll(bModifiers);
+  }
 
-	// Asymetric
-	private List<Double> extractNumbers(String text) {
-		final List<Double> list = new LinkedList<>();
-		final Matcher matcher = NUMBER.matcher(text);
-		while (matcher.find()) {
-			final Double d = Doubles.tryParse(matcher.group().replaceAll(",", ""));
-			if (d != null) {
-				list.add(d);
-			}
-		}
-		return list;
-	}
+  private Set<String> getSpatialAndPNModifier(Mention a) {
+    return a.getWords()
+        .stream()
+        .filter(
+            w ->
+                w.getPartOfSpeech().startsWith("NP")
+                    || spatialModifiers.contains(w.getCoveredText()))
+        .map(w -> w.getCoveredText().toLowerCase())
+        .collect(Collectors.toSet());
+  }
 
-	// Asymetric
-	private boolean hasSameNumbers(Collection<Double> aNumbers, Collection<Double> bNumbers) {
+  // Asymetric
+  private List<Double> extractNumbers(String text) {
+    final List<Double> list = new LinkedList<>();
+    final Matcher matcher = NUMBER.matcher(text);
+    while (matcher.find()) {
+      final Double d = Doubles.tryParse(matcher.group().replaceAll(",", ""));
+      if (d != null) {
+        list.add(d);
+      }
+    }
+    return list;
+  }
 
-		for (final double b : bNumbers) {
-			boolean found = false;
-			for (final double a : aNumbers) {
-				// 'Fuzzy match' the numbers
-				if (Math.abs(a - b) < 0.01 * Math.max(Math.abs(a), Math.abs(a))) {
-					found = true;
-					break;
-				}
-			}
+  // Asymetric
+  private boolean hasSameNumbers(Collection<Double> aNumbers, Collection<Double> bNumbers) {
 
-			if (!found) {
-				return false;
-			}
-		}
+    for (final double b : bNumbers) {
+      boolean found = false;
+      for (final double a : aNumbers) {
+        // 'Fuzzy match' the numbers
+        if (Math.abs(a - b) < 0.01 * Math.max(Math.abs(a), Math.abs(a))) {
+          found = true;
+          break;
+        }
+      }
 
-		return true;
-	}
+      if (!found) {
+        return false;
+      }
+    }
 
-	private boolean shouldAddMentionsToCluster(Mention a, Mention b){
-		// Not i-within-i
-		if (a.overlaps(b)) {
-			return false;
-		}
+    return true;
+  }
 
-		// No modifier
-		if (!hasSameModifiers(a, b)) {
-			return false;
-		}
+  private boolean shouldAddMentionsToCluster(Mention a, Mention b) {
+    // Not i-within-i
+    if (a.overlaps(b)) {
+      return false;
+    }
 
-		// No numerical mismatches
-		final List<Double> aNumbers = extractNumbers(a.getText());
-		final List<Double> bNumbers = extractNumbers(b.getText());
+    // No modifier
+    if (!hasSameModifiers(a, b)) {
+      return false;
+    }
 
-		if (!hasSameNumbers(aNumbers, bNumbers)) {
-			return false;
-		}
+    // No numerical mismatches
+    final List<Double> aNumbers = extractNumbers(a.getText());
+    final List<Double> bNumbers = extractNumbers(b.getText());
 
-		return true;
-	}
+    if (!hasSameNumbers(aNumbers, bNumbers)) {
+      return false;
+    }
+
+    return true;
+  }
 }

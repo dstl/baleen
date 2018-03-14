@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.manager;
 
 import java.io.File;
@@ -23,266 +23,258 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /**
  * Manages the complete Baleen instance, including all components such as pipelines and web APIs.
- *
- *
- *
  */
 public class BaleenManager {
 
-	/**
-	 * A listener which is passed to {@link BaleenManager} in order to be notified when the manager
-	 * is fully initialised.
-	 */
-	public interface BaleenManagerListener {
+  /**
+   * A listener which is passed to {@link BaleenManager} in order to be notified when the manager is
+   * fully initialised.
+   */
+  public interface BaleenManagerListener {
 
-		/**
-		 * Called when the manager is full started.
-		 *
-		 * Returning from this function will cause shutdown of the Baleen manager.
-		 *
-		 * @param manager
-		 *            the initialised and started manager.
-		 */
-		void onStarted(BaleenManager manager);
-	}
+    /**
+     * Called when the manager is full started.
+     *
+     * <p>Returning from this function will cause shutdown of the Baleen manager.
+     *
+     * @param manager the initialised and started manager.
+     */
+    void onStarted(BaleenManager manager);
+  }
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(BaleenManager.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(BaleenManager.class);
 
-	private final Optional<File> configurationFile;
+  private final Optional<File> configurationFile;
 
-	private BaleenLogging logging;
+  private BaleenLogging logging;
 
-	private BaleenWebApi webApi;
+  private BaleenWebApi webApi;
 
-	private BaleenPipelineManager pipelineManager;
+  private BaleenPipelineManager pipelineManager;
 
-	private BaleenJobManager jobManager;
+  private BaleenJobManager jobManager;
 
-	private boolean exit = false;
+  private boolean exit = false;
 
-	private boolean started = true;
+  private boolean started = true;
 
-	private String yaml = "";
+  private String yaml = "";
 
-	/**
-	 * New instance, with optional configuration.
-	 *
-	 * @param configurationFile
-	 */
-	public BaleenManager(Optional<File> configurationFile) {
-		this.configurationFile = configurationFile;
-	}
+  /**
+   * New instance, with optional configuration.
+   *
+   * @param configurationFile
+   */
+  public BaleenManager(Optional<File> configurationFile) {
+    this.configurationFile = configurationFile;
+  }
 
-	/**
-	 * Initialise the sub components
-	 *
-	 * @throws Exception
-	 */
-	public synchronized void initiate() throws BaleenException {
-		LOGGER.info("Logging has not yet been configured - any messages will be outputted to the console");
-		LOGGER.info("Initiating");
-		YamlConfiguration configuration = new YamlConfiguration();
-		if (configurationFile.isPresent()) {
-			try (InputStream is = new FileInputStream(configurationFile.get())) {
-				LOGGER.info("Configuration file provided {}", configurationFile.get().getAbsolutePath());
-				yaml = IOUtils.toString(is);
-				configuration.read(yaml);
-			} catch (IOException ioe) {
-				throw new BaleenException("Unable to read configuration file", ioe);
-			}
-		} else {
-			LOGGER.info("No configuration file provided - default configuration will be used");
-		}
+  /**
+   * Initialise the sub components
+   *
+   * @throws Exception
+   */
+  public synchronized void initiate() throws BaleenException {
+    LOGGER.info(
+        "Logging has not yet been configured - any messages will be outputted to the console");
+    LOGGER.info("Initiating");
+    YamlConfiguration configuration = new YamlConfiguration();
+    if (configurationFile.isPresent()) {
+      try (InputStream is = new FileInputStream(configurationFile.get())) {
+        LOGGER.info("Configuration file provided {}", configurationFile.get().getAbsolutePath());
+        yaml = IOUtils.toString(is);
+        configuration.read(yaml);
+      } catch (IOException ioe) {
+        throw new BaleenException("Unable to read configuration file", ioe);
+      }
+    } else {
+      LOGGER.info("No configuration file provided - default configuration will be used");
+    }
 
-		LOGGER.info("Initiating metrics");
-		MetricsFactory metrics = MetricsFactory.getInstance();
-		metrics.configure(configuration);
-		metrics.start();
+    LOGGER.info("Initiating metrics");
+    MetricsFactory metrics = MetricsFactory.getInstance();
+    metrics.configure(configuration);
+    metrics.start();
 
-		LOGGER.info("Initiating logging - further messages will be outputted as per the provided configuration");
-		logging = new BaleenLogging();
-		logging.configure(configuration);
-		logging.start();
-				
-		LOGGER.info("Initiating pipeline manager");
-		pipelineManager = new BaleenPipelineManager();
-		pipelineManager.configure(configuration);
-		pipelineManager.start();
+    LOGGER.info(
+        "Initiating logging - further messages will be outputted as per the provided configuration");
+    logging = new BaleenLogging();
+    logging.configure(configuration);
+    logging.start();
 
-		LOGGER.info("Initiating job manager");
-		jobManager = new BaleenJobManager();
-		jobManager.configure(configuration);
-		jobManager.start();
-		
-		LOGGER.info("Initiating web API");
-		webApi = new BaleenWebApi(this);
-		webApi.configure(configuration);
-		webApi.start();
+    LOGGER.info("Initiating pipeline manager");
+    pipelineManager = new BaleenPipelineManager();
+    pipelineManager.configure(configuration);
+    pipelineManager.start();
 
-		started = true;
+    LOGGER.info("Initiating job manager");
+    jobManager = new BaleenJobManager();
+    jobManager.configure(configuration);
+    jobManager.start();
 
-		LOGGER.info("Initialisation complete");
-	}
+    LOGGER.info("Initiating web API");
+    webApi = new BaleenWebApi(this);
+    webApi.configure(configuration);
+    webApi.start();
 
-	/**
-	 * Shutdown the sub components.
-	 */
-	public synchronized void shutdown() {
-		if (started) {
-			LOGGER.info("Shutting down");
+    started = true;
 
-			started = false;
-			
-			List<AbstractBaleenComponent> components = Arrays.asList(pipelineManager, jobManager, webApi, logging);
-			
-			for(AbstractBaleenComponent component : components){
-				if(component != null){
-					try {
-						component.stop();
-					} catch (BaleenException e) {
-						LOGGER.error("Failed to stop "+component.getClass().getSimpleName(), e);
-					}
-				}
-			}
+    LOGGER.info("Initialisation complete");
+  }
 
-			MetricsFactory metrics = MetricsFactory.getInstance();
-			if (metrics != null) {
-				metrics.stop();
-			}
+  /** Shutdown the sub components. */
+  public synchronized void shutdown() {
+    if (started) {
+      LOGGER.info("Shutting down");
 
-			LOGGER.info("Shutdown complete");
-		}
-	}
+      started = false;
 
-	/**
-	 * Start the manager.
-	 *
-	 */
-	public void runUntilStopped() {
-		exit = false;
+      List<AbstractBaleenComponent> components =
+          Arrays.asList(pipelineManager, jobManager, webApi, logging);
 
-		run(manager -> {
-			while (!isStopping()) {
-				sleep(1000);
-			}
-		});
-	}
+      for (AbstractBaleenComponent component : components) {
+        if (component != null) {
+          try {
+            component.stop();
+          } catch (BaleenException e) {
+            LOGGER.error("Failed to stop " + component.getClass().getSimpleName(), e);
+          }
+        }
+      }
 
-	/**
-	 * Start up a Baleen instance, then run the provided runnable before shutting down.
-	 *
-	 * This is useful for full integration tests, or building simple tools.
-	 *
-	 * @param runnable
-	 */
-	public void run(BaleenManagerListener listener) {
-		exit = false;
+      MetricsFactory metrics = MetricsFactory.getInstance();
+      if (metrics != null) {
+        metrics.stop();
+      }
 
-		// Create a hook so we clean up when closed
-		Thread shutdownHook = new Thread() {
-			@Override
-			public void run() {
-				try {
-					shutdown();
-				} catch (Exception e) {
-					LOGGER.error("Shutting down in runtime error", e);
-				}
-			}
-		};
+      LOGGER.info("Shutdown complete");
+    }
+  }
 
-		Runtime.getRuntime().addShutdownHook(shutdownHook);
+  /** Start the manager. */
+  public void runUntilStopped() {
+    exit = false;
 
-		try {
-			initiate();
+    run(
+        manager -> {
+          while (!isStopping()) {
+            sleep(1000);
+          }
+        });
+  }
 
-			if (listener != null) {
-				listener.onStarted(this);
-			}
+  /**
+   * Start up a Baleen instance, then run the provided runnable before shutting down.
+   *
+   * <p>This is useful for full integration tests, or building simple tools.
+   *
+   * @param runnable
+   */
+  public void run(BaleenManagerListener listener) {
+    exit = false;
 
-			shutdown();
+    // Create a hook so we clean up when closed
+    Thread shutdownHook =
+        new Thread() {
+          @Override
+          public void run() {
+            try {
+              shutdown();
+            } catch (Exception e) {
+              LOGGER.error("Shutting down in runtime error", e);
+            }
+          }
+        };
 
-			// Remove the shutdown hook now we've shutdown ourselves
-			Runtime.getRuntime().removeShutdownHook(shutdownHook);
-		} catch (BaleenException be) {
-			// Log error, but we can't rethrow it as we're not catching that
-			// anyway in Baleen and
-			// we'll shutdown here so there's no need to do anything apart from
-			// log it
-			LOGGER.error("Error running Baleen", be);
+    Runtime.getRuntime().addShutdownHook(shutdownHook);
 
-			// Make sure we've shutdown
-			try {
-				shutdown();
-			} catch (Exception e) {
-				LOGGER.error("Error shutting down Baleen after a previous error", e);
-			}
-		}
-	}
+    try {
+      initiate();
 
-	/**
-	 * Sleep for the specified time, ignoring any exceptions that occur
-	 *
-	 * @param millis
-	 *            The number of milliseconds to sleep for
-	 */
-	public void sleep(long millis) {
-		try {
-			Thread.sleep(millis);
-		} catch (InterruptedException e) {
-			// Do nothing
-		}
-	}
+      if (listener != null) {
+        listener.onStarted(this);
+      }
 
-	/**
-	 * Stop a running instance of BaleenManager.
-	 */
-	public void stop() {
-		exit = true;
-	}
+      shutdown();
 
-	/**
-	 * Determines if the baleen manager should stop.
-	 *
-	 * @return true is the baleen manager has been asked to stop
-	 */
-	public boolean isStopping() {
-		return exit;
-	}
+      // Remove the shutdown hook now we've shutdown ourselves
+      Runtime.getRuntime().removeShutdownHook(shutdownHook);
+    } catch (BaleenException be) {
+      // Log error, but we can't rethrow it as we're not catching that
+      // anyway in Baleen and
+      // we'll shutdown here so there's no need to do anything apart from
+      // log it
+      LOGGER.error("Error running Baleen", be);
 
-	/**
-	 * Get the pipeline manager.
-	 *
-	 * @return the pipeline manager (non-null have initiate())
-	 */
-	public BaleenPipelineManager getPipelineManager() {
-		return pipelineManager;
-	}
+      // Make sure we've shutdown
+      try {
+        shutdown();
+      } catch (Exception e) {
+        LOGGER.error("Error shutting down Baleen after a previous error", e);
+      }
+    }
+  }
 
-	/**
-	 * Get the logging system.
-	 *
-	 * @return the logging instance (non-null have initiate())
-	 */
-	public BaleenLogging getLogging() {
-		return logging;
-	}
+  /**
+   * Sleep for the specified time, ignoring any exceptions that occur
+   *
+   * @param millis The number of milliseconds to sleep for
+   */
+  public void sleep(long millis) {
+    try {
+      Thread.sleep(millis);
+    } catch (InterruptedException e) {
+      // Do nothing
+    }
+  }
 
-	/**
-	 * Gets the job manager.
-	 *
-	 * @return the job manager
-	 */
-	public BaleenJobManager getJobManager() {
-		return jobManager;
-	}
+  /** Stop a running instance of BaleenManager. */
+  public void stop() {
+    exit = true;
+  }
 
-	/**
-	 * Get the YAML used to configure this instance.
-	 *
-	 * @return
-	 */
-	public synchronized String getYaml() {
-		return yaml;
-	}
+  /**
+   * Determines if the baleen manager should stop.
+   *
+   * @return true is the baleen manager has been asked to stop
+   */
+  public boolean isStopping() {
+    return exit;
+  }
 
+  /**
+   * Get the pipeline manager.
+   *
+   * @return the pipeline manager (non-null have initiate())
+   */
+  public BaleenPipelineManager getPipelineManager() {
+    return pipelineManager;
+  }
+
+  /**
+   * Get the logging system.
+   *
+   * @return the logging instance (non-null have initiate())
+   */
+  public BaleenLogging getLogging() {
+    return logging;
+  }
+
+  /**
+   * Gets the job manager.
+   *
+   * @return the job manager
+   */
+  public BaleenJobManager getJobManager() {
+    return jobManager;
+  }
+
+  /**
+   * Get the YAML used to configure this instance.
+   *
+   * @return
+   */
+  public synchronized String getYaml() {
+    return yaml;
+  }
 }

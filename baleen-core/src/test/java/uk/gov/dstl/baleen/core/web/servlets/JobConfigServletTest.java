@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.web.servlets;
 
 import static org.junit.Assert.assertEquals;
@@ -17,54 +17,47 @@ import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
 import uk.gov.dstl.baleen.testing.servlets.ServletCaller;
 
-/**
- * Tests for {@link BaleenManagerConfigServlet}.
- *
- *
- *
- */
+/** Tests for {@link BaleenManagerConfigServlet}. */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class JobConfigServletTest {
 
-	@Mock
-	BaleenJobManager manager;
+  @Mock BaleenJobManager manager;
 
-	@Test
-	public void testNoName() throws Exception {
-		ServletCaller caller = new ServletCaller();
-		caller.doGet(new JobConfigServlet(manager));
-		assertEquals(400, (int) caller.getSentError());
-	}
+  @Test
+  public void testNoName() throws Exception {
+    ServletCaller caller = new ServletCaller();
+    caller.doGet(new JobConfigServlet(manager));
+    assertEquals(400, (int) caller.getSentError());
+  }
 
-	@Test
-	public void testMissing() throws Exception {
-		doReturn(Optional.empty()).when(manager).get(anyString());
-		ServletCaller caller = new ServletCaller();
-		caller.addParameter("name", "missing");
-		caller.doGet(new JobConfigServlet(manager));
-		assertEquals(404, (int) caller.getSentError());
-	}
+  @Test
+  public void testMissing() throws Exception {
+    doReturn(Optional.empty()).when(manager).get(anyString());
+    ServletCaller caller = new ServletCaller();
+    caller.addParameter("name", "missing");
+    caller.doGet(new JobConfigServlet(manager));
+    assertEquals(404, (int) caller.getSentError());
+  }
 
-	@Test
-	public void testEmpty() throws Exception {
-		BaleenJob job = new BaleenJob("name", null, null, Collections.emptyList());
-		doReturn(Optional.of(job)).when(manager).get(anyString());
+  @Test
+  public void testEmpty() throws Exception {
+    BaleenJob job = new BaleenJob("name", null, null, Collections.emptyList());
+    doReturn(Optional.of(job)).when(manager).get(anyString());
 
-		ServletCaller caller = new ServletCaller();
-		caller.addParameter("name", "name");
-		caller.doGet(new JobConfigServlet(manager));
-		assertEquals("", caller.getResponseBody());
-	}
+    ServletCaller caller = new ServletCaller();
+    caller.addParameter("name", "name");
+    caller.doGet(new JobConfigServlet(manager));
+    assertEquals("", caller.getResponseBody());
+  }
 
-	@Test
-	public void testWithConfig() throws Exception {
-		BaleenJob job = new BaleenJob("name", "Config", null, Collections.emptyList());
-		doReturn(Optional.of(job)).when(manager).get(anyString());
+  @Test
+  public void testWithConfig() throws Exception {
+    BaleenJob job = new BaleenJob("name", "Config", null, Collections.emptyList());
+    doReturn(Optional.of(job)).when(manager).get(anyString());
 
-		ServletCaller caller = new ServletCaller();
-		caller.addParameter("name", "name");
-		caller.doGet(new JobConfigServlet(manager));
-		assertEquals("Config", caller.getResponseBody());
-	}
-
+    ServletCaller caller = new ServletCaller();
+    caller.addParameter("name", "name");
+    caller.doGet(new JobConfigServlet(manager));
+    assertEquals("Config", caller.getResponseBody());
+  }
 }

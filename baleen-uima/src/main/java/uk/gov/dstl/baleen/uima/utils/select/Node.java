@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import java.util.List;
@@ -8,15 +8,12 @@ import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.uima.utils.SelectorPart;
 
 /**
- * 
- * A node is a wrapping class to hold parent-child information to create tree structures over 
- * the wrapped items and facilitate traversal of the tree structres.
- * 
- * 
+ * A node is a wrapping class to hold parent-child information to create tree structures over the
+ * wrapped items and facilitate traversal of the tree structres.
+ *
  * @param <T> the type of item the node wraps
  */
 public interface Node<T> {
-
 
   /**
    * Get the children of the node
@@ -78,6 +75,7 @@ public interface Node<T> {
   /**
    * Get the 0 based index of the element among it's siblings. Siblings have the same type of
    * structural annotation and the same parent.
+   *
    * <p>
    *
    * @return the index
@@ -87,6 +85,7 @@ public interface Node<T> {
   /**
    * Get the 0 based index of the element among it's siblings. Siblings have the same type of
    * structural annotation and the same parent.
+   *
    * <p>
    *
    * @return the index
@@ -100,12 +99,11 @@ public interface Node<T> {
    */
   boolean hasParent();
 
-
   /**
    * Find nodes that match the {@link Selector} CSS Style query, with this node as the starting
    * context. Matched elements may include this element, or any of its children.
-   * <p>
-   * See the query syntax documentation in {@link Selector}.
+   *
+   * <p>See the query syntax documentation in {@link Selector}.
    *
    * @param query a {@link Selector} CSS-like query
    * @return nodes that match the query (empty if none match)
@@ -145,9 +143,9 @@ public interface Node<T> {
   boolean is(Evaluator<T> eval);
 
   /**
-   * Gets the next sibling node of this node. E.g., if a {@code Section} contains two
-   * {@code Paragraph}s, the {@code nextSibling} of the first {@code Paragraph} is the second
-   * {@code Paragraph}.
+   * Gets the next sibling node of this node. E.g., if a {@code Section} contains two {@code
+   * Paragraph}s, the {@code nextSibling} of the first {@code Paragraph} is the second {@code
+   * Paragraph}.
    *
    * @return the next node, or null if there is no next node
    * @see #previousSibling()
@@ -155,9 +153,9 @@ public interface Node<T> {
   Node<T> nextSibling();
 
   /**
-   * Gets the previous sibling node of this node. E.g., if a {@code Section} contains two
-   * {@code Paragraph}s, the {@code previousSibling} of the second {@code Paragraph} is the first
-   * {@code Paragraph}.
+   * Gets the previous sibling node of this node. E.g., if a {@code Section} contains two {@code
+   * Paragraph}s, the {@code previousSibling} of the second {@code Paragraph} is the first {@code
+   * Paragraph}.
    *
    * @return the previous node, or null if there is no previous node
    * @see #previousSibling()
@@ -195,7 +193,7 @@ public interface Node<T> {
 
   /**
    * Get the text contained in the node and not in the children.
-   * 
+   *
    * @return the nodes own text
    */
   String ownText();
@@ -209,8 +207,8 @@ public interface Node<T> {
 
   /**
    * Get the 'classes' of the annotation.
-   * <p>
-   * This emulates the class of HTML elements and is only available on {@link Structure}
+   *
+   * <p>This emulates the class of HTML elements and is only available on {@link Structure}
    * annotations.
    *
    * @return list of the classes (lower cased)
@@ -227,11 +225,11 @@ public interface Node<T> {
 
   /**
    * Get the 'id' of the annotation.
-   * <p>
-   * This emulates the id of HTML elements and is only available on {@link Structure} annotations.
+   *
+   * <p>This emulates the id of HTML elements and is only available on {@link Structure}
+   * annotations.
    *
    * @return list of the classes (lower cased)
    */
   String id();
-
 }

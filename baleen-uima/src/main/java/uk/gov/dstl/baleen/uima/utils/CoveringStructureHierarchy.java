@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
 import java.util.Collection;
@@ -18,9 +18,9 @@ import uk.gov.dstl.baleen.uima.utils.select.Node;
 
 /**
  * Create the Hierarchy within the document of all the Structure annotations.
- * <p>
- * The structure is built by first using the offset of the Structure annotation and then using the
- * depth.
+ *
+ * <p>The structure is built by first using the offset of the Structure annotation and then using
+ * the depth.
  */
 public class CoveringStructureHierarchy extends StructureHierarchy {
 
@@ -29,17 +29,16 @@ public class CoveringStructureHierarchy extends StructureHierarchy {
 
   /**
    * Private constructor accepting the root node.
-   * <p>
-   * Use {@link #build(JCas)} to create an instance
+   *
+   * <p>Use {@link #build(JCas)} to create an instance
    *
    * @param root the root
    */
-  private CoveringStructureHierarchy(Node<Structure> root,
-      Map<Annotation, Collection<Structure>> coveringIndex) {
+  private CoveringStructureHierarchy(
+      Node<Structure> root, Map<Annotation, Collection<Structure>> coveringIndex) {
     super(root);
     this.coveringIndex = coveringIndex;
   }
-
 
   /**
    * Get the selector path of the structure annotation covering the given annotation
@@ -56,7 +55,6 @@ public class CoveringStructureHierarchy extends StructureHierarchy {
     return new SelectorPath(node.toPath());
   }
 
-
   /**
    * Get the structure covering the given annotation
    *
@@ -67,25 +65,23 @@ public class CoveringStructureHierarchy extends StructureHierarchy {
     return coveringIndex.get(annotation).stream().max(Comparator.comparingInt(Structure::getDepth));
   }
 
-
   /**
    * Build the covering structure hierarchy for the given jCas, using only the structural classes
    * provided.
-   * <p>
-   * The structure is built by first using the offset of the Structure annotation and then using the
-   * depth.
+   *
+   * <p>The structure is built by first using the offset of the Structure annotation and then using
+   * the depth.
    *
    * @param jCas the jCas
    * @param structuralClasses the structural classes
    * @return the StructureHierachy
    */
-  public static CoveringStructureHierarchy build(JCas jCas,
-      Set<Class<? extends Structure>> structuralClasses) {
+  public static CoveringStructureHierarchy build(
+      JCas jCas, Set<Class<? extends Structure>> structuralClasses) {
     Node<Structure> root = StructureHierarchy.build(jCas, structuralClasses).getRoot();
     Map<Annotation, Collection<Structure>> covering = buildCovering(jCas, structuralClasses);
     return new CoveringStructureHierarchy(root, covering);
   }
-
 
   /**
    * Build the covering index of baleen annotations by structure annotations (lazily) filtered to
@@ -95,11 +91,10 @@ public class CoveringStructureHierarchy extends StructureHierarchy {
    * @param structuralClasses the structural classes
    * @return the covering index
    */
-  private static Map<Annotation, Collection<Structure>> buildCovering(JCas jCas,
-      Set<Class<? extends Structure>> structuralClasses) {
-    return Maps.transformValues(JCasUtil.indexCovering(jCas, Annotation.class, Structure.class),
+  private static Map<Annotation, Collection<Structure>> buildCovering(
+      JCas jCas, Set<Class<? extends Structure>> structuralClasses) {
+    return Maps.transformValues(
+        JCasUtil.indexCovering(jCas, Annotation.class, Structure.class),
         s -> StructureUtil.filterAnnotations(s, structuralClasses));
   }
-
-
 }

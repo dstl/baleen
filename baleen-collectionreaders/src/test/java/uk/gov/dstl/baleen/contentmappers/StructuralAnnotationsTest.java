@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers;
 
 import static org.junit.Assert.assertEquals;
@@ -57,7 +57,7 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class StructuralAnnotationsTest {
 
-  private final static Map<Tag, Class<?>[]> expected = Maps.newHashMap();
+  private static final Map<Tag, Class<?>[]> expected = Maps.newHashMap();
 
   static {
     addExpected("p", Paragraph.class);
@@ -75,8 +75,6 @@ public class StructuralAnnotationsTest {
     addExpected("dt", DefinitionItem.class);
     addExpected("dd", DefinitionDescription.class);
 
-
-
     // Table
 
     addExpected("table", Table.class);
@@ -91,8 +89,6 @@ public class StructuralAnnotationsTest {
     addExpected("th", TableCell.class);
     addExpected("td", TableCell.class);
 
-
-
     // Images
 
     addExpected("audio", Figure.class);
@@ -104,7 +100,6 @@ public class StructuralAnnotationsTest {
     addExpected("area", Figure.class);
     addExpected("canvas", Figure.class);
     addExpected("figure", Figure.class);
-
 
     addExpected("caption", Caption.class);
     addExpected("figcaption", Caption.class);
@@ -140,8 +135,6 @@ public class StructuralAnnotationsTest {
     addExpected("section", Section.class);
     addExpected("div", Section.class);
 
-
-
     addExpected("header", Header.class);
     addExpected("footer", Footer.class);
     addExpected("kbd", Preformatted.class);
@@ -152,13 +145,51 @@ public class StructuralAnnotationsTest {
 
     addExpected("q", Quotation.class);
 
-    addExpectedEmpty("span", "time", "meter", "dfn", "address", "abbr", "cite", "html", "head",
-        "title", "meta", "base", "style", "script", "noscript", "link", "hr", "dialog", "nav",
-        "menu", "menuitem", "param", "track", "source", "iframe", "form", "input", "textarea",
-        "button", "select", "optgroup", "option", "label", "fieldset", "legend", "datalist",
-        "keygen", "output", "ruby", "rt", "rp", "progress", "bdo", "bdi");
-
-
+    addExpectedEmpty(
+        "span",
+        "time",
+        "meter",
+        "dfn",
+        "address",
+        "abbr",
+        "cite",
+        "html",
+        "head",
+        "title",
+        "meta",
+        "base",
+        "style",
+        "script",
+        "noscript",
+        "link",
+        "hr",
+        "dialog",
+        "nav",
+        "menu",
+        "menuitem",
+        "param",
+        "track",
+        "source",
+        "iframe",
+        "form",
+        "input",
+        "textarea",
+        "button",
+        "select",
+        "optgroup",
+        "option",
+        "label",
+        "fieldset",
+        "legend",
+        "datalist",
+        "keygen",
+        "output",
+        "ruby",
+        "rt",
+        "rp",
+        "progress",
+        "bdo",
+        "bdi");
   }
 
   @Test
@@ -186,12 +217,8 @@ public class StructuralAnnotationsTest {
           assertTrue(c.isInstance(annotations.get(i)));
         }
       }
-
     }
-
   }
-
-
 
   @Test
   public void testAnchor() throws UIMAException {
@@ -328,6 +355,5 @@ public class StructuralAnnotationsTest {
 
   private static void addExpectedEmpty(final String... tagNames) {
     Arrays.stream(tagNames).forEach(s -> addExpected(s));
-
   }
 }

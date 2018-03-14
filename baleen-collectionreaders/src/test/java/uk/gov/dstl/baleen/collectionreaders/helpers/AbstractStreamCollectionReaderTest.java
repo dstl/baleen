@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders.helpers;
 
 import static org.junit.Assert.assertFalse;
@@ -18,61 +18,57 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 public class AbstractStreamCollectionReaderTest {
 
-	@Test
-	public void testSkip() throws CollectionException, IOException, ResourceInitializationException {
-		FakeStreamCollectionReader r = new FakeStreamCollectionReader();
-		r.setSkipDocuments(8);
-		r.doInitialize(null);
+  @Test
+  public void testSkip() throws CollectionException, IOException, ResourceInitializationException {
+    FakeStreamCollectionReader r = new FakeStreamCollectionReader();
+    r.setSkipDocuments(8);
+    r.doInitialize(null);
 
-		assertTrue(r.doHasNext());
-		r.doGetNext(null);
-		assertTrue(r.doHasNext());
-		r.doGetNext(null);
-		assertFalse(r.doHasNext());
+    assertTrue(r.doHasNext());
+    r.doGetNext(null);
+    assertTrue(r.doHasNext());
+    r.doGetNext(null);
+    assertFalse(r.doHasNext());
+  }
 
-	}
+  @Test
+  public void testMax() throws ResourceInitializationException, CollectionException, IOException {
+    FakeStreamCollectionReader r = new FakeStreamCollectionReader();
+    r.setMaxDocuments(2);
+    r.doInitialize(null);
 
-	@Test
-	public void testMax() throws ResourceInitializationException, CollectionException, IOException {
-		FakeStreamCollectionReader r = new FakeStreamCollectionReader();
-		r.setMaxDocuments(2);
-		r.doInitialize(null);
+    assertTrue(r.doHasNext());
+    r.doGetNext(null);
+    assertTrue(r.doHasNext());
+    r.doGetNext(null);
+    assertFalse(r.doHasNext());
+  }
 
-		assertTrue(r.doHasNext());
-		r.doGetNext(null);
-		assertTrue(r.doHasNext());
-		r.doGetNext(null);
-		assertFalse(r.doHasNext());
+  public class FakeStreamCollectionReader extends AbstractStreamCollectionReader<Integer> {
 
-	}
+    @Override
+    public void setSkipDocuments(int skipDocuments) {
+      super.setSkipDocuments(skipDocuments);
+    }
 
-	public class FakeStreamCollectionReader extends AbstractStreamCollectionReader<Integer> {
+    @Override
+    protected void setMaxDocuments(Integer max) {
+      super.setMaxDocuments(max);
+    }
 
-		@Override
-		public void setSkipDocuments(int skipDocuments) {
-			super.setSkipDocuments(skipDocuments);
-		}
+    @Override
+    protected Stream<Integer> initializeStream(UimaContext context) throws BaleenException {
+      return IntStream.range(0, 10).boxed();
+    }
 
-		@Override
-		protected void setMaxDocuments(Integer max) {
-			super.setMaxDocuments(max);
-		}
+    @Override
+    protected void apply(Integer next, JCas jCas) {
+      // Do nothing
+    }
 
-		@Override
-		protected Stream<Integer> initializeStream(UimaContext context) throws BaleenException {
-			return IntStream.range(0, 10).boxed();
-		}
-
-		@Override
-		protected void apply(Integer next, JCas jCas) {
-			// Do nothing
-		}
-
-		@Override
-		protected void doClose() throws IOException {
-			// Do nothing
-		}
-
-	}
-
+    @Override
+    protected void doClose() throws IOException {
+      // Do nothing
+    }
+  }
 }

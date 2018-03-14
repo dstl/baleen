@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.contentmappers;
 
 import static org.junit.Assert.assertNull;
@@ -23,30 +23,30 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class SemanticHtmlTest {
 
-	@Test
-	public void testMain() throws UIMAException {
-		JCas jCas = JCasSingleton.getJCasInstance();
-		SemanticHtml sa = new SemanticHtml();
+  @Test
+  public void testMain() throws UIMAException {
+    JCas jCas = JCasSingleton.getJCasInstance();
+    SemanticHtml sa = new SemanticHtml();
 
-		Map<String, Class<?>> expectedMain = new HashMap<>();
-		expectedMain.put("time", Temporal.class);
-		expectedMain.put("meter", Quantity.class);
-		expectedMain.put("dfn", Buzzword.class);
-		expectedMain.put("address", Location.class);
-		expectedMain.put("abbr", Buzzword.class);
-		expectedMain.put("cite", DocumentReference.class);
+    Map<String, Class<?>> expectedMain = new HashMap<>();
+    expectedMain.put("time", Temporal.class);
+    expectedMain.put("meter", Quantity.class);
+    expectedMain.put("dfn", Buzzword.class);
+    expectedMain.put("address", Location.class);
+    expectedMain.put("abbr", Buzzword.class);
+    expectedMain.put("cite", DocumentReference.class);
 
-		for (Map.Entry<String, Class<?>> e : expectedMain.entrySet()) {
-			Element element = new Element(Tag.valueOf(e.getKey()), "");
+    for (Map.Entry<String, Class<?>> e : expectedMain.entrySet()) {
+      Element element = new Element(Tag.valueOf(e.getKey()), "");
 
-			AnnotationCollector collector = new AnnotationCollector();
-			sa.map(jCas, element, collector);
+      AnnotationCollector collector = new AnnotationCollector();
+      sa.map(jCas, element, collector);
 
-			if (e.getValue() != null) {
-				assertTrue(e.getValue().isInstance(collector.getAnnotations().get(0)));
-			} else {
-				assertNull(collector.getAnnotations());
-			}
-		}
-	}
+      if (e.getValue() != null) {
+        assertTrue(e.getValue().isInstance(collector.getAnnotations().get(0)));
+      } else {
+        assertNull(collector.getAnnotations());
+      }
+    }
+  }
 }

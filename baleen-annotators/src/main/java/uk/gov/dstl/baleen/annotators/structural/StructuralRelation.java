@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.structural;
 
 import java.util.Set;
@@ -26,134 +26,150 @@ import uk.gov.dstl.baleen.uima.utils.select.Nodes;
 /**
  * Extract relation using the provided structural queries.
  *
- * <p>
- * The structural query supplied is run over the whole document, to identify
- * structural features containing the required annotations. Then the source and
- * target queries are applied to find the source and target within the
- * structural annotation. A relation is then created for matched elements with
- * the type information supplied.
- * <p>
- * A confidence to assign can be supplied.
+ * <p>The structural query supplied is run over the whole document, to identify structural features
+ * containing the required annotations. Then the source and target queries are applied to find the
+ * source and target within the structural annotation. A relation is then created for matched
+ * elements with the type information supplied.
+ *
+ * <p>A confidence to assign can be supplied.
  *
  * @baleen.javadoc
  */
 public class StructuralRelation extends AbstractRelationshipAnnotator {
 
-	/**
-	 * A list of structural types which will be considered during record path
-	 * analysis.
-	 * <p>
-	 * Leave blank for all types.
-	 *
-	 * @baleen.config Paragraph,TableCell,ListItem,Aside, ...
-	 */
-	public static final String PARAM_TYPE_NAMES = "types";
+  /**
+   * A list of structural types which will be considered during record path analysis.
+   *
+   * <p>Leave blank for all types.
+   *
+   * @baleen.config Paragraph,TableCell,ListItem,Aside, ...
+   */
+  public static final String PARAM_TYPE_NAMES = "types";
 
-	/** The type names. */
-	@ConfigurationParameter(name = PARAM_TYPE_NAMES, mandatory = false)
-	private String[] typeNames;
+  /** The type names. */
+  @ConfigurationParameter(name = PARAM_TYPE_NAMES, mandatory = false)
+  private String[] typeNames;
 
-	/**
-	 * The relation type to use
-	 *
-	 * @baleen.config
-	 */
-	public static final String PARAM_TYPE = "type";
-	@ConfigurationParameter(name = PARAM_TYPE, mandatory = true)
-	private String type;
+  /**
+   * The relation type to use
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_TYPE = "type";
 
-	/**
-	 * The relation subType to use
-	 *
-	 * @baleen.config
-	 */
-	public static final String PARAM_SUB_TYPE = "subType";
-	@ConfigurationParameter(name = PARAM_SUB_TYPE, defaultValue = "")
-	private String subType;
+  @ConfigurationParameter(name = PARAM_TYPE, mandatory = true)
+  private String type;
 
-	/**
-	 * The confidence to assign to the relation
-	 *
-	 * @baleen.config 1.0
-	 */
-	public static final String PARAM_CONFIDENCE = "confidence";
-	@ConfigurationParameter(name = PARAM_CONFIDENCE, defaultValue = "1.0")
-	private String confidenceString;
+  /**
+   * The relation subType to use
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_SUB_TYPE = "subType";
 
-	/**
-	 * The query to isolate the related entities
-	 *
-	 * @baleen.config
-	 */
-	public static final String PARAM_QUERY = "query";
-	@ConfigurationParameter(name = PARAM_QUERY, mandatory = true)
-	private String query;
+  @ConfigurationParameter(name = PARAM_SUB_TYPE, defaultValue = "")
+  private String subType;
 
-	/**
-	 * The source entity sub query used to find the source in the result of the
-	 * query
-	 *
-	 * @baleen.config
-	 */
-	public static final String PARAM_SOURCE_QUERY = "sourceQuery";
-	@ConfigurationParameter(name = PARAM_SOURCE_QUERY, mandatory = true)
-	private String sourceQuery;
+  /**
+   * The confidence to assign to the relation
+   *
+   * @baleen.config 1.0
+   */
+  public static final String PARAM_CONFIDENCE = "confidence";
 
-	/**
-	 * The target entity sub query used to find the source in the result of the
-	 * query
-	 *
-	 * @baleen.config
-	 */
-	public static final String PARAM_TARGET_QUERY = "targetQuery";
-	@ConfigurationParameter(name = PARAM_TARGET_QUERY, mandatory = true)
-	private String targetQuery;
+  @ConfigurationParameter(name = PARAM_CONFIDENCE, defaultValue = "1.0")
+  private String confidenceString;
 
-	// Parse the confidence config parameter into this variable to avoid issues
-	// with parameter types
-	private Float confidence;
+  /**
+   * The query to isolate the related entities
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_QUERY = "query";
 
-	/** The structural classes. */
-	protected Set<Class<? extends Structure>> structuralClasses;
+  @ConfigurationParameter(name = PARAM_QUERY, mandatory = true)
+  private String query;
 
-	/** The annotation classes. */
-	protected Set<Class<? extends Annotation>> annotationClasses;
+  /**
+   * The source entity sub query used to find the source in the result of the query
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_SOURCE_QUERY = "sourceQuery";
 
-	@Override
-	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-		super.doInitialize(aContext);
-		annotationClasses = ImmutableSet.<Class<? extends Annotation>>builder()
-				.addAll(StructureUtil.getStructureClasses(typeNames))
-				.addAll(StructureUtil.getAnnotationClasses(Entity.class)).build();
-		confidence = ConfigUtils.stringToFloat(confidenceString, 1.0f);
-	}
+  @ConfigurationParameter(name = PARAM_SOURCE_QUERY, mandatory = true)
+  private String sourceQuery;
 
-	@Override
-	protected void extract(JCas jCas) throws AnalysisEngineProcessException {
+  /**
+   * The target entity sub query used to find the source in the result of the query
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_TARGET_QUERY = "targetQuery";
 
-		Nodes<Annotation> select = AnnotationHierarchyBuilder.build(jCas, annotationClasses).select(query);
+  @ConfigurationParameter(name = PARAM_TARGET_QUERY, mandatory = true)
+  private String targetQuery;
 
-		addRelationsToIndex(select.stream().flatMap(match -> {
+  // Parse the confidence config parameter into this variable to avoid issues
+  // with parameter types
+  private Float confidence;
 
-			Nodes<Annotation> sourceAnnotation = match.select(sourceQuery);
-			Nodes<Annotation> targetAnnotation = match.select(targetQuery);
-			if (sourceAnnotation.isEmpty() || targetAnnotation.isEmpty()) {
-				return Stream.empty();
-			}
+  /** The structural classes. */
+  protected Set<Class<? extends Structure>> structuralClasses;
 
-			Entity sourceEntity = (Entity) sourceAnnotation.first().getItem();
-			Entity targetEntity = (Entity) targetAnnotation.first().getItem();
+  /** The annotation classes. */
+  protected Set<Class<? extends Annotation>> annotationClasses;
 
-			int begin = match.getItem().getBegin();
-			int end = match.getItem().getEnd();
+  @Override
+  public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+    super.doInitialize(aContext);
+    annotationClasses =
+        ImmutableSet.<Class<? extends Annotation>>builder()
+            .addAll(StructureUtil.getStructureClasses(typeNames))
+            .addAll(StructureUtil.getAnnotationClasses(Entity.class))
+            .build();
+    confidence = ConfigUtils.stringToFloat(confidenceString, 1.0f);
+  }
 
-			return Stream
-					.of(createRelation(jCas, sourceEntity, targetEntity, begin, end, type, subType, type, confidence));
-		}));
-	}
+  @Override
+  protected void extract(JCas jCas) throws AnalysisEngineProcessException {
 
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(ImmutableSet.of(Entity.class), ImmutableSet.of(Relation.class));
-	}
+    Nodes<Annotation> select =
+        AnnotationHierarchyBuilder.build(jCas, annotationClasses).select(query);
+
+    addRelationsToIndex(
+        select
+            .stream()
+            .flatMap(
+                match -> {
+                  Nodes<Annotation> sourceAnnotation = match.select(sourceQuery);
+                  Nodes<Annotation> targetAnnotation = match.select(targetQuery);
+                  if (sourceAnnotation.isEmpty() || targetAnnotation.isEmpty()) {
+                    return Stream.empty();
+                  }
+
+                  Entity sourceEntity = (Entity) sourceAnnotation.first().getItem();
+                  Entity targetEntity = (Entity) targetAnnotation.first().getItem();
+
+                  int begin = match.getItem().getBegin();
+                  int end = match.getItem().getEnd();
+
+                  return Stream.of(
+                      createRelation(
+                          jCas,
+                          sourceEntity,
+                          targetEntity,
+                          begin,
+                          end,
+                          type,
+                          subType,
+                          type,
+                          confidence));
+                }));
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(ImmutableSet.of(Entity.class), ImmutableSet.of(Relation.class));
+  }
 }

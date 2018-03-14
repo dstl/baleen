@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.resources;
 
 import java.util.Arrays;
@@ -30,7 +30,7 @@ import com.mongodb.client.MongoDatabase;
 /**
  * Fake Mongo (fongo) for unit testing.
  *
- * Match fongo.collection to the collection your annotator (other) is expecting. Provide fixture
+ * <p>Match fongo.collection to the collection your annotator (other) is expecting. Provide fixture
  * data as fongo.data for example:
  *
  * <pre>
@@ -47,60 +47,71 @@ import com.mongodb.client.MongoDatabase;
  */
 public class SharedFongoResource extends SharedMongoResource {
 
-	private static final String BALEEN = "baleen";
+  private static final String BALEEN = "baleen";
 
-	private final Fongo fongo = new Fongo("baleen_test_server");
+  private final Fongo fongo = new Fongo("baleen_test_server");
 
-	public static final String PARAM_FONGO_COLLECTION = "fongo.collection";
-	@ConfigurationParameter(name = PARAM_FONGO_COLLECTION, defaultValue = "baleen_test_collection")
-	private String fongoCollection;
+  public static final String PARAM_FONGO_COLLECTION = "fongo.collection";
 
-	public static final String PARAM_FONGO_DATA = "fongo.data";
-	@ConfigurationParameter(name = PARAM_FONGO_DATA, defaultValue = "{}")
-	private String fongoData;
+  @ConfigurationParameter(name = PARAM_FONGO_COLLECTION, defaultValue = "baleen_test_collection")
+  private String fongoCollection;
 
-	@Override
-	protected boolean doInitialize(ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
-			throws ResourceInitializationException {
-		// Work whether it's a list of DB Objects or a single
-		if ("{}".equals(fongoData) || "[]".equals(fongoData) || Strings.isNullOrEmpty(fongoData)) {
-			return true;
-		}
+  public static final String PARAM_FONGO_DATA = "fongo.data";
 
-		if (fongoData.trim().startsWith("[")) {
-			CodecRegistry codecRegistry = CodecRegistries.fromProviders(Arrays.asList(new ValueCodecProvider(), new BsonValueCodecProvider(), new DocumentCodecProvider()));
-			JsonReader reader = new JsonReader(fongoData);
-			BsonArrayCodec arrayReader = new BsonArrayCodec(codecRegistry);
-			
-			BsonArray docArray = arrayReader.decode(reader, DecoderContext.builder().build());
-			
-			for(BsonValue doc : docArray.getValues()){
-				fongo.getDatabase(BALEEN).getCollection(fongoCollection).insertOne(Document.parse(doc.asDocument().toJson()));
-			}		
-		} else if (fongoData.trim().startsWith("{")) {
-			Document data = Document.parse(fongoData);
-			fongo.getDatabase(BALEEN).getCollection(fongoCollection).insertOne(data);
-		} else {
-			getMonitor().error("Unsupported type");
-			throw new ResourceInitializationException();
-		}
+  @ConfigurationParameter(name = PARAM_FONGO_DATA, defaultValue = "{}")
+  private String fongoData;
 
-		return true;
-	}
+  @Override
+  protected boolean doInitialize(
+      ResourceSpecifier aSpecifier, Map<String, Object> aAdditionalParams)
+      throws ResourceInitializationException {
+    // Work whether it's a list of DB Objects or a single
+    if ("{}".equals(fongoData) || "[]".equals(fongoData) || Strings.isNullOrEmpty(fongoData)) {
+      return true;
+    }
 
-	@Override
-	protected MongoClient createMongoClient(ServerAddress sa, Optional<MongoCredential> credentials) {
-		// Doesn't test credentials
-		return fongo.getMongo();
-	}
+    if (fongoData.trim().startsWith("[")) {
+      CodecRegistry codecRegistry =
+          CodecRegistries.fromProviders(
+              Arrays.asList(
+                  new ValueCodecProvider(),
+                  new BsonValueCodecProvider(),
+                  new DocumentCodecProvider()));
+      JsonReader reader = new JsonReader(fongoData);
+      BsonArrayCodec arrayReader = new BsonArrayCodec(codecRegistry);
 
-	@Override
-	protected void doDestroy() {
-		// Do nothing
-	}
+      BsonArray docArray = arrayReader.decode(reader, DecoderContext.builder().build());
 
-	@Override
-	public MongoDatabase getDB() {
-		return fongo.getDatabase(BALEEN);
-	}
+      for (BsonValue doc : docArray.getValues()) {
+        fongo
+            .getDatabase(BALEEN)
+            .getCollection(fongoCollection)
+            .insertOne(Document.parse(doc.asDocument().toJson()));
+      }
+    } else if (fongoData.trim().startsWith("{")) {
+      Document data = Document.parse(fongoData);
+      fongo.getDatabase(BALEEN).getCollection(fongoCollection).insertOne(data);
+    } else {
+      getMonitor().error("Unsupported type");
+      throw new ResourceInitializationException();
+    }
+
+    return true;
+  }
+
+  @Override
+  protected MongoClient createMongoClient(ServerAddress sa, Optional<MongoCredential> credentials) {
+    // Doesn't test credentials
+    return fongo.getMongo();
+  }
+
+  @Override
+  protected void doDestroy() {
+    // Do nothing
+  }
+
+  @Override
+  public MongoDatabase getDB() {
+    return fongo.getDatabase(BALEEN);
+  }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
 import static org.junit.Assert.assertEquals;
@@ -10,25 +10,23 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.annotators.regex.SocialMediaUsername;
 import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
 
 public class SocialMediaUsernameTest extends AbstractAnnotatorTest {
 
-	public SocialMediaUsernameTest() {
-		super(SocialMediaUsername.class);
-	}
+  public SocialMediaUsernameTest() {
+    super(SocialMediaUsername.class);
+  }
 
-	@Test
-	public void test() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("Contact me on @baleen");
+  @Test
+  public void test() throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("Contact me on @baleen");
 
-		processJCas();
+    processJCas();
 
-		final Collection<CommsIdentifier> select = JCasUtil.select(jCas, CommsIdentifier.class);
-		final CommsIdentifier next = select.iterator().next();
-		assertEquals("@baleen", next.getValue());
-	}
-
+    final Collection<CommsIdentifier> select = JCasUtil.select(jCas, CommsIdentifier.class);
+    final CommsIdentifier next = select.iterator().next();
+    assertEquals("@baleen", next.getValue());
+  }
 }

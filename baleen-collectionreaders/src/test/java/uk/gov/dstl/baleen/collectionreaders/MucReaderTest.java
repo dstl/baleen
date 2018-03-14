@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
 import static org.junit.Assert.assertEquals;
@@ -23,101 +23,105 @@ import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
-public class MucReaderTest extends AbstractReaderTest{
+public class MucReaderTest extends AbstractReaderTest {
 
-	public MucReaderTest() {
-		super(MucReader.class);
-	}
+  public MucReaderTest() {
+    super(MucReader.class);
+  }
 
-	private static final String MUC = "DEV-MUC3-0001 (NOSC)\n\n" +
-			"SAN SALVADOR, 3 JAN 90 -- [REPORT] [ARMED FORCES PRESS COMMITTEE,\n" +
-			"COPREFA] [TEXT] THE ARCE BATTALION COMMAND HAS REPORTED THAT ABOUT 50\n" +
-			"PEASANTS OF VARIOUS AGES HAVE BEEN KIDNAPPED BY TERRORISTS OF THE\n" +
-			"FARABUNDO MARTI NATIONAL LIBERATION FRONT [FMLN] IN SAN MIGUEL\n" +
-			"DEPARTMENT.  ACCORDING TO THAT GARRISON, THE MASS KIDNAPPING TOOK PLACE ON\n" +
-			"30 DECEMBER IN SAN LUIS DE LA REINA.  THE SOURCE ADDED THAT THE TERRORISTS\n" +
-			"FORCED THE INDIVIDUALS, WHO WERE TAKEN TO AN UNKNOWN LOCATION, OUT OF\n" +
-			"THEIR RESIDENCES, PRESUMABLY TO INCORPORATE THEM AGAINST THEIR WILL INTO\n" +
-			"CLANDESTINE GROUPS.";
+  private static final String MUC =
+      "DEV-MUC3-0001 (NOSC)\n\n"
+          + "SAN SALVADOR, 3 JAN 90 -- [REPORT] [ARMED FORCES PRESS COMMITTEE,\n"
+          + "COPREFA] [TEXT] THE ARCE BATTALION COMMAND HAS REPORTED THAT ABOUT 50\n"
+          + "PEASANTS OF VARIOUS AGES HAVE BEEN KIDNAPPED BY TERRORISTS OF THE\n"
+          + "FARABUNDO MARTI NATIONAL LIBERATION FRONT [FMLN] IN SAN MIGUEL\n"
+          + "DEPARTMENT.  ACCORDING TO THAT GARRISON, THE MASS KIDNAPPING TOOK PLACE ON\n"
+          + "30 DECEMBER IN SAN LUIS DE LA REINA.  THE SOURCE ADDED THAT THE TERRORISTS\n"
+          + "FORCED THE INDIVIDUALS, WHO WERE TAKEN TO AN UNKNOWN LOCATION, OUT OF\n"
+          + "THEIR RESIDENCES, PRESUMABLY TO INCORPORATE THEM AGAINST THEIR WILL INTO\n"
+          + "CLANDESTINE GROUPS.";
 
-	private static Path tmpDir;	
+  private static Path tmpDir;
 
-	@BeforeClass
-	public static void beforeClass() throws IOException {
-		tmpDir = Files.createTempDirectory("muctest");
-		Files.write(tmpDir.resolve("file"), MUC.getBytes(StandardCharsets.UTF_8));
+  @BeforeClass
+  public static void beforeClass() throws IOException {
+    tmpDir = Files.createTempDirectory("muctest");
+    Files.write(tmpDir.resolve("file"), MUC.getBytes(StandardCharsets.UTF_8));
+  }
 
-	}
+  @AfterClass
+  public static void afterClass() {
+    tmpDir.toFile().delete();
+  }
 
-	@AfterClass
-	public static void afterClass() {
-		tmpDir.toFile().delete();
-	}
-	
-	@Test
-	public void testNoFiles() throws UIMAException, IOException {
-		Path emptyTmpDir = Files.createTempDirectory("muctest");
-		
-		try{
-			BaleenCollectionReader bcr = getCollectionReader(MucReader.KEY_PATH, emptyTmpDir.toAbsolutePath().toString());
-			bcr.initialize();
-			
-			fail("Expected exception not thrown");
-		}catch(ResourceInitializationException be){
-			//Do nothing, expected exception
-			assertEquals(BaleenException.class, be.getCause().getClass());
-		}
-		
-		emptyTmpDir.toFile().delete();
-	}
-	
-	@Test
-	public void testKeyFile() throws UIMAException, IOException {
-		Path keyTmpDir = Files.createTempDirectory("muctest");
-		Files.write(keyTmpDir.resolve("key-test"), MUC.getBytes(StandardCharsets.UTF_8));
-		
-		try{
-			BaleenCollectionReader bcr = getCollectionReader(MucReader.KEY_PATH, keyTmpDir.toAbsolutePath().toString());
-			bcr.initialize();
-			
-			fail("Expected exception not thrown");
-		}catch(ResourceInitializationException be){
-			//Do nothing, expected exception
-			assertEquals(BaleenException.class, be.getCause().getClass());
-		}
-		
-		keyTmpDir.toFile().delete();
-	}
-	
-	@Test
-	public void test() throws UIMAException, IOException {
-		BaleenCollectionReader bcr = getCollectionReader(MucReader.KEY_PATH, tmpDir.toAbsolutePath().toString());
-		bcr.initialize();
-		
-		assertTrue(bcr.doHasNext());
+  @Test
+  public void testNoFiles() throws UIMAException, IOException {
+    Path emptyTmpDir = Files.createTempDirectory("muctest");
 
-		bcr.getNext(jCas.getCas());
+    try {
+      BaleenCollectionReader bcr =
+          getCollectionReader(MucReader.KEY_PATH, emptyTmpDir.toAbsolutePath().toString());
+      bcr.initialize();
 
-		assertEquals("DEV-MUC3-0001 (NOSC)", getSource(jCas));
+      fail("Expected exception not thrown");
+    } catch (ResourceInitializationException be) {
+      // Do nothing, expected exception
+      assertEquals(BaleenException.class, be.getCause().getClass());
+    }
 
-		String s = "THE ARCE BATTALION COMMAND HAS REPORTED THAT ABOUT 50 " +
-				"PEASANTS OF VARIOUS AGES HAVE BEEN KIDNAPPED BY TERRORISTS OF THE " +
-				"FARABUNDO MARTI NATIONAL LIBERATION FRONT IN SAN MIGUEL " +
-				"DEPARTMENT.  ACCORDING TO THAT GARRISON, THE MASS KIDNAPPING TOOK PLACE ON " +
-				"30 DECEMBER IN SAN LUIS DE LA REINA.  THE SOURCE ADDED THAT THE TERRORISTS " +
-				"FORCED THE INDIVIDUALS, WHO WERE TAKEN TO AN UNKNOWN LOCATION, OUT OF " +
-				"THEIR RESIDENCES, PRESUMABLY TO INCORPORATE THEM AGAINST THEIR WILL INTO " +
-				"CLANDESTINE GROUPS.";
-		s = s.toLowerCase();
-		assertEquals(s, jCas.getDocumentText());
+    emptyTmpDir.toFile().delete();
+  }
 
-		assertFalse(bcr.doHasNext());
+  @Test
+  public void testKeyFile() throws UIMAException, IOException {
+    Path keyTmpDir = Files.createTempDirectory("muctest");
+    Files.write(keyTmpDir.resolve("key-test"), MUC.getBytes(StandardCharsets.UTF_8));
 
-		bcr.close();
-	}
+    try {
+      BaleenCollectionReader bcr =
+          getCollectionReader(MucReader.KEY_PATH, keyTmpDir.toAbsolutePath().toString());
+      bcr.initialize();
 
-	private String getSource(JCas jCas){
-		DocumentAnnotation doc = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
-		return doc.getSourceUri();
-	}
+      fail("Expected exception not thrown");
+    } catch (ResourceInitializationException be) {
+      // Do nothing, expected exception
+      assertEquals(BaleenException.class, be.getCause().getClass());
+    }
+
+    keyTmpDir.toFile().delete();
+  }
+
+  @Test
+  public void test() throws UIMAException, IOException {
+    BaleenCollectionReader bcr =
+        getCollectionReader(MucReader.KEY_PATH, tmpDir.toAbsolutePath().toString());
+    bcr.initialize();
+
+    assertTrue(bcr.doHasNext());
+
+    bcr.getNext(jCas.getCas());
+
+    assertEquals("DEV-MUC3-0001 (NOSC)", getSource(jCas));
+
+    String s =
+        "THE ARCE BATTALION COMMAND HAS REPORTED THAT ABOUT 50 "
+            + "PEASANTS OF VARIOUS AGES HAVE BEEN KIDNAPPED BY TERRORISTS OF THE "
+            + "FARABUNDO MARTI NATIONAL LIBERATION FRONT IN SAN MIGUEL "
+            + "DEPARTMENT.  ACCORDING TO THAT GARRISON, THE MASS KIDNAPPING TOOK PLACE ON "
+            + "30 DECEMBER IN SAN LUIS DE LA REINA.  THE SOURCE ADDED THAT THE TERRORISTS "
+            + "FORCED THE INDIVIDUALS, WHO WERE TAKEN TO AN UNKNOWN LOCATION, OUT OF "
+            + "THEIR RESIDENCES, PRESUMABLY TO INCORPORATE THEM AGAINST THEIR WILL INTO "
+            + "CLANDESTINE GROUPS.";
+    s = s.toLowerCase();
+    assertEquals(s, jCas.getDocumentText());
+
+    assertFalse(bcr.doHasNext());
+
+    bcr.close();
+  }
+
+  private String getSource(JCas jCas) {
+    DocumentAnnotation doc = (DocumentAnnotation) jCas.getDocumentAnnotationFs();
+    return doc.getSourceUri();
+  }
 }

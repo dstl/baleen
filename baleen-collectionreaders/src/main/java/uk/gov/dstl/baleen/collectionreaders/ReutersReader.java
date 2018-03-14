@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
 import java.io.ByteArrayInputStream;
@@ -25,105 +25,106 @@ import uk.gov.dstl.baleen.collectionreaders.helpers.AbstractStreamCollectionRead
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /**
- * A collection reader which loads SGM files from the Reuters21578 archive.
- * Archive must be extracted prior to use.
- * <p>
- * Available for download at http://www.daviddlewis.com/resources/testcollections/reuters21578/
+ * A collection reader which loads SGM files from the Reuters21578 archive. Archive must be
+ * extracted prior to use.
+ *
+ * <p>Available for download at http://www.daviddlewis.com/resources/testcollections/reuters21578/
  *
  * @baleen.javadoc
  */
 public class ReutersReader extends AbstractStreamCollectionReader<String> {
 
-	/**
-	 * Location of the directory containing the sgm files.
-	 *
-	 * @baleen.resource String
-	 */
-	public static final String KEY_PATH = "path";
-	@ConfigurationParameter(name = KEY_PATH, mandatory = true)
-	private String sgmPath;
+  /**
+   * Location of the directory containing the sgm files.
+   *
+   * @baleen.resource String
+   */
+  public static final String KEY_PATH = "path";
 
-	public ReutersReader() {
-		// Do nothing
-	}
+  @ConfigurationParameter(name = KEY_PATH, mandatory = true)
+  private String sgmPath;
 
-	@Override
-	protected Stream<String> initializeStream(UimaContext context) throws BaleenException {
-		final File[] files = new File(sgmPath)
-				.listFiles(f -> f.getName().endsWith(".sgm") && f.isFile());
+  public ReutersReader() {
+    // Do nothing
+  }
 
-		DocumentBuilder documentBuilder;
-		try {
-			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			documentBuilder = factory.newDocumentBuilder();
-		} catch (final Exception e) {
-			throw new BaleenException(e);
-		}
+  @Override
+  protected Stream<String> initializeStream(UimaContext context) throws BaleenException {
+    final File[] files =
+        new File(sgmPath).listFiles(f -> f.getName().endsWith(".sgm") && f.isFile());
 
-		return Arrays.stream(files)
-				.flatMap(sgmlFile -> fileToStream(sgmlFile, documentBuilder))
-				.flatMap(e -> nodeListToText(e.getElementsByTagName("BODY")))
-				.filter(s -> !s.isEmpty());
-	}
-	
-	private Stream<Element> fileToStream(File sgmlFile, DocumentBuilder documentBuilder){
-		try {
-			final byte[] bytes = Files.readAllBytes(sgmlFile.toPath());
-			final String sgml = new String(bytes, "UTF-8");
+    DocumentBuilder documentBuilder;
+    try {
+      final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      documentBuilder = factory.newDocumentBuilder();
+    } catch (final Exception e) {
+      throw new BaleenException(e);
+    }
 
-			// Remove the <!DOCTYPE lewis SYSTEM "lewis.dtd">
-			// Then add a root element
-			String xml = "<root>" + sgml.substring("<!DOCTYPE lewis SYSTEM \"lewis.dtd\">".length())
-					+ "</root>";
+    return Arrays.stream(files)
+        .flatMap(sgmlFile -> fileToStream(sgmlFile, documentBuilder))
+        .flatMap(e -> nodeListToText(e.getElementsByTagName("BODY")))
+        .filter(s -> !s.isEmpty());
+  }
 
-			// Remove the
-			xml = xml.replaceAll("&#\\d+;", "");
+  private Stream<Element> fileToStream(File sgmlFile, DocumentBuilder documentBuilder) {
+    try {
+      final byte[] bytes = Files.readAllBytes(sgmlFile.toPath());
+      final String sgml = new String(bytes, "UTF-8");
 
-			final ByteArrayInputStream input = new ByteArrayInputStream(xml.getBytes("UTF-8"));
-			final Document doc = documentBuilder.parse(input);
-			final NodeList reutersDocument = doc.getElementsByTagName("REUTERS");
-			return nodeListToElements(reutersDocument);
-		} catch (final Exception e) {
-			getMonitor().warn("Unable to process SGML file {}", sgmlFile.getAbsolutePath(), e);
-		}
+      // Remove the <!DOCTYPE lewis SYSTEM "lewis.dtd">
+      // Then add a root element
+      String xml =
+          "<root>" + sgml.substring("<!DOCTYPE lewis SYSTEM \"lewis.dtd\">".length()) + "</root>";
 
-		return Stream.<Element>empty();
-	}
+      // Remove the
+      xml = xml.replaceAll("&#\\d+;", "");
 
-	private Stream<String> nodeListToText(final NodeList list) {
-		final List<String> elements = new ArrayList<>(list.getLength());
+      final ByteArrayInputStream input = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+      final Document doc = documentBuilder.parse(input);
+      final NodeList reutersDocument = doc.getElementsByTagName("REUTERS");
+      return nodeListToElements(reutersDocument);
+    } catch (final Exception e) {
+      getMonitor().warn("Unable to process SGML file {}", sgmlFile.getAbsolutePath(), e);
+    }
 
-		for (int i = 0; i < list.getLength(); i++) {
-			final Node n = list.item(i);
-			String text = n.getTextContent();
-			text = text.replaceAll("Reuter?\\s*$", "");
-			elements.add(text.trim());
-		}
+    return Stream.<Element>empty();
+  }
 
-		return elements.stream();
-	}
+  private Stream<String> nodeListToText(final NodeList list) {
+    final List<String> elements = new ArrayList<>(list.getLength());
 
-	private Stream<Element> nodeListToElements(final NodeList list) {
-		final List<Element> elements = new ArrayList<>(list.getLength());
+    for (int i = 0; i < list.getLength(); i++) {
+      final Node n = list.item(i);
+      String text = n.getTextContent();
+      text = text.replaceAll("Reuter?\\s*$", "");
+      elements.add(text.trim());
+    }
 
-		for (int i = 0; i < list.getLength(); i++) {
-			final Node n = list.item(i);
-			if (n.getNodeType() == Element.ELEMENT_NODE) {
-				elements.add((Element) n);
-			}
-		}
+    return elements.stream();
+  }
 
-		return elements.stream();
-	}
+  private Stream<Element> nodeListToElements(final NodeList list) {
+    final List<Element> elements = new ArrayList<>(list.getLength());
 
-	@Override
-	protected void apply(String text, JCas jCas) {
-		jCas.setDocumentLanguage("en");
-		jCas.setDocumentText(text);
-	}
+    for (int i = 0; i < list.getLength(); i++) {
+      final Node n = list.item(i);
+      if (n.getNodeType() == Element.ELEMENT_NODE) {
+        elements.add((Element) n);
+      }
+    }
 
-	@Override
-	protected void doClose() throws IOException {
-		// Do nothing
-	}
+    return elements.stream();
+  }
+
+  @Override
+  protected void apply(String text, JCas jCas) {
+    jCas.setDocumentLanguage("en");
+    jCas.setDocumentText(text);
+  }
+
+  @Override
+  protected void doClose() throws IOException {
+    // Do nothing
+  }
 }

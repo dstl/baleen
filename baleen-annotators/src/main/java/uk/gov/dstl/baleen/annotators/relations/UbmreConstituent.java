@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.relations;
 
 import java.util.ArrayList;
@@ -29,30 +29,32 @@ import uk.gov.dstl.baleen.uima.grammar.ParseTreeNode;
 
 /**
  * Unsupervised (originally Biomedical) Relationship Extractor.
- * <p>
- * A relationship extraction algorithm based on constituent parsing.
- * <p>
- * Given an interaction word we look for the covering VP. Then look in the parse tree above the VP
- * for a NP+VP (ie Noun Phrase followed by our VP). If that is the case then we consider the
+ *
+ * <p>A relationship extraction algorithm based on constituent parsing.
+ *
+ * <p>Given an interaction word we look for the covering VP. Then look in the parse tree above the
+ * VP for a NP+VP (ie Noun Phrase followed by our VP). If that is the case then we consider the
  * entities covered by the NP to be related to the entities covered by the VP by the interaction
  * word.
- * <p>
- * For example John went to London. interaction words is went. VP is "went to London". NP is John.
- * Relationship is "John", "went", "London".
- * <p>
- * Formally this is defined as two conditions from the paper:
+ *
+ * <p>For example John went to London. interaction words is went. VP is "went to London". NP is
+ * John. Relationship is "John", "went", "London".
+ *
+ * <p>Formally this is defined as two conditions from the paper:
+ *
  * <ul>
- * <li>RP1: Entity1 and Entity2 have a NP+VP phrase structure. One is in covered by an NP and // the
- * other in a VP.</li>
- * <li>RP2: Interaction word A in the VP (in NP+VP)
+ *   <li>RP1: Entity1 and Entity2 have a NP+VP phrase structure. One is in covered by an NP and //
+ *       the other in a VP.
+ *   <li>RP2: Interaction word A in the VP (in NP+VP)
  * </ul>
  *
  * Our implementation approach is:
+ *
  * <ol>
- * <li>1. For each interaction word, find the immediate covering VP chunk.
- * <li>2. Look through the parents to find if any any are a NP+VP relation
- * <li>3. If any are we output all the entities within the NP and all the entities under the
- * original covering VP chunk (from 1)
+ *   <li>1. For each interaction word, find the immediate covering VP chunk.
+ *   <li>2. Look through the parents to find if any any are a NP+VP relation
+ *   <li>3. If any are we output all the entities within the NP and all the entities under the
+ *       original covering VP chunk (from 1)
  * </ol>
  *
  * Here 3 seems to be stricter than the original paper. In the original they imply that you might
@@ -61,168 +63,175 @@ import uk.gov.dstl.baleen.uima.grammar.ParseTreeNode;
  * for the whole sentence, even though the interaction word which triggered the NP+VP search was in
  * a small subclause. By focusing only on the immediate VP we include entities which at least have
  * direct relevance with the VP and hence the interaction words.
- * <p>
- * Note this requires the following annotations: Sentence, WordToken, PhraseChunk, Entity,
+ *
+ * <p>Note this requires the following annotations: Sentence, WordToken, PhraseChunk, Entity,
  * Interaction.
  *
  * @baleen.javadoc
- *
  */
 public class UbmreConstituent extends AbstractInteractionBasedSentenceRelationshipAnnotator {
 
-	/**
-	 * Limit the search to the first NP+VP structure.
-	 *
-	 * If set to false then the entire tree will be traversed looking for NP+VP matches, and thus
-	 * the number of relationships will be greated (although those relationships might be more
-	 * tenuous). If false then only the closest (lowest in the tree) NP+VP will be used.
-	 *
-	 * @baleen.config true
-	 */
-	public static final String KEY_LIMIT = "limit";
-	@ConfigurationParameter(name = KEY_LIMIT, defaultValue = "true")
-	private Boolean limitedSearch;
+  /**
+   * Limit the search to the first NP+VP structure.
+   *
+   * <p>If set to false then the entire tree will be traversed looking for NP+VP matches, and thus
+   * the number of relationships will be greated (although those relationships might be more
+   * tenuous). If false then only the closest (lowest in the tree) NP+VP will be used.
+   *
+   * @baleen.config true
+   */
+  public static final String KEY_LIMIT = "limit";
 
-	private Map<Interaction, Collection<WordToken>> interactionCoveringTokens;
+  @ConfigurationParameter(name = KEY_LIMIT, defaultValue = "true")
+  private Boolean limitedSearch;
 
-	private ParseTree parseTree;
-	@Override
-	protected void preExtract(JCas jCas) {
-		super.preExtract(jCas);
+  private Map<Interaction, Collection<WordToken>> interactionCoveringTokens;
 
-		parseTree = ParseTree.build(jCas);
+  private ParseTree parseTree;
 
-		interactionCoveringTokens = JCasUtil.indexCovering(jCas, Interaction.class,
-				WordToken.class);
+  @Override
+  protected void preExtract(JCas jCas) {
+    super.preExtract(jCas);
 
-	}
+    parseTree = ParseTree.build(jCas);
 
-	@Override
-	protected void postExtract(JCas jCas) {
-		super.postExtract(jCas);
+    interactionCoveringTokens = JCasUtil.indexCovering(jCas, Interaction.class, WordToken.class);
+  }
 
-		parseTree = null;
-	}
+  @Override
+  protected void postExtract(JCas jCas) {
+    super.postExtract(jCas);
 
-	@Override
-	protected Stream<Relation> extract(JCas jCas, Sentence sentence, Collection<Interaction> interactions,
-			Collection<Entity> entities) {
+    parseTree = null;
+  }
 
-		final Stream<Relation> phrase = extractPhrases(jCas, interactions);
+  @Override
+  protected Stream<Relation> extract(
+      JCas jCas,
+      Sentence sentence,
+      Collection<Interaction> interactions,
+      Collection<Entity> entities) {
 
-		return distinct(phrase);
-	}
+    final Stream<Relation> phrase = extractPhrases(jCas, interactions);
 
-	/**
-	 * Extract phrases.
-	 *
-	 * @param jCas
-	 *            the j cas
-	 * @param interactions
-	 *            the interactions
-	 * @param entities
-	 *            the entities
-	 * @return the stream
-	 */
-	private Stream<Relation> extractPhrases(JCas jCas, Collection<Interaction> interactions) {
-		return interactions.stream().flatMap(interaction -> extractPhrase(jCas, interaction));
-	}
+    return distinct(phrase);
+  }
 
-	private Stream<? extends Relation> extractPhrase(JCas jCas, Interaction i) {
-		// NOTE: This still links entities high up (in a great-grandparent with those below). They
-		// have little to do with those at the lower levels. See TODO comment below to address this
-		// at recall costs.
-		final Collection<WordToken> tokens = interactionCoveringTokens.get(i);
+  /**
+   * Extract phrases.
+   *
+   * @param jCas the j cas
+   * @param interactions the interactions
+   * @param entities the entities
+   * @return the stream
+   */
+  private Stream<Relation> extractPhrases(JCas jCas, Collection<Interaction> interactions) {
+    return interactions.stream().flatMap(interaction -> extractPhrase(jCas, interaction));
+  }
 
-		final Set<ParseTreeNode> nodes = tokens.stream().map(parseTree::getParent)
-				.filter(Objects::nonNull)
-				.collect(Collectors.toSet());
+  private Stream<? extends Relation> extractPhrase(JCas jCas, Interaction i) {
+    // NOTE: This still links entities high up (in a great-grandparent with those below). They
+    // have little to do with those at the lower levels. See TODO comment below to address this
+    // at recall costs.
+    final Collection<WordToken> tokens = interactionCoveringTokens.get(i);
 
-		if (nodes.isEmpty()) {
-			// Very unlikely to arrive here - it would be a word without a covering chunk!
-			return Stream.empty();
-		} else {
-			// NOTE: We only pick the first VP, but what if there are more than one?
-			// (For better quality, though less results, we should pick the best smallest VP
-			// ... which will be the first as used here (nearest parent to the word in the parse
-			// tree.
+    final Set<ParseTreeNode> nodes =
+        tokens
+            .stream()
+            .map(parseTree::getParent)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
 
-			final ParseTreeNode node = nodes.iterator().next();
+    if (nodes.isEmpty()) {
+      // Very unlikely to arrive here - it would be a word without a covering chunk!
+      return Stream.empty();
+    } else {
+      // NOTE: We only pick the first VP, but what if there are more than one?
+      // (For better quality, though less results, we should pick the best smallest VP
+      // ... which will be the first as used here (nearest parent to the word in the parse
+      // tree.
 
-			final List<Relation> relations = new ArrayList<>();
+      final ParseTreeNode node = nodes.iterator().next();
 
-			node.traverseParent((parent, child) -> {
-				final int childIndex = parent.getChildren().indexOf(child);
-				if (childIndex > 0 && isVerbPhrase(child)) {
-					final ParseTreeNode sibling = parent.getChildren().get(childIndex - 1);
+      final List<Relation> relations = new ArrayList<>();
 
-					if (isNounPhrase(sibling)) {
-						// We are in a NP+VP, with an interaction word.
-						// We add the entities covered by NP and the by the original node's children
-						addRelations(jCas, i, sibling.getChunk(), node).forEach(relations::add);
+      node.traverseParent(
+          (parent, child) -> {
+            final int childIndex = parent.getChildren().indexOf(child);
+            if (childIndex > 0 && isVerbPhrase(child)) {
+              final ParseTreeNode sibling = parent.getChildren().get(childIndex - 1);
 
-						// If limited search we stop now
-						return !limitedSearch;
-					}
-				}
+              if (isNounPhrase(sibling)) {
+                // We are in a NP+VP, with an interaction word.
+                // We add the entities covered by NP and the by the original node's children
+                addRelations(jCas, i, sibling.getChunk(), node).forEach(relations::add);
 
-				// If we didn't find it keep looking
-				return true;
-			});
+                // If limited search we stop now
+                return !limitedSearch;
+              }
+            }
 
-			return relations.stream();
-		}
-	}
+            // If we didn't find it keep looking
+            return true;
+          });
 
-	private Stream<Relation> addRelations(JCas jCas, Interaction interaction,
-			PhraseChunk nounPhrase,
-			ParseTreeNode verbNode) {
-		final List<Entity> nounEntities = JCasUtil.selectCovered(jCas, Entity.class, nounPhrase);
-		final List<Entity> verbEntities = new ArrayList<>();
+      return relations.stream();
+    }
+  }
 
-		// WE depart from the paper again, we don't want to look in NP+VP structures under our VP.
-		// This because they are self contained and and we just grab there entities 'because they
-		// are under the VP' we get all sorts of unrelated subclauses.
+  private Stream<Relation> addRelations(
+      JCas jCas, Interaction interaction, PhraseChunk nounPhrase, ParseTreeNode verbNode) {
+    final List<Entity> nounEntities = JCasUtil.selectCovered(jCas, Entity.class, nounPhrase);
+    final List<Entity> verbEntities = new ArrayList<>();
 
-		// We can't use verbNode.traverse here as it doesn't allow us to be selective about the
-		// children we want to decend into
+    // WE depart from the paper again, we don't want to look in NP+VP structures under our VP.
+    // This because they are self contained and and we just grab there entities 'because they
+    // are under the VP' we get all sorts of unrelated subclauses.
 
-		extractEntitiesFromVerbPhrase(jCas, verbEntities, verbNode);
+    // We can't use verbNode.traverse here as it doesn't allow us to be selective about the
+    // children we want to decend into
 
-		return createPairwiseRelations(jCas, interaction, nounEntities, verbEntities, 1.0f);
-	}
+    extractEntitiesFromVerbPhrase(jCas, verbEntities, verbNode);
 
-	private void extractEntitiesFromVerbPhrase(JCas jCas, List<Entity> verbEntities, ParseTreeNode node) {
+    return createPairwiseRelations(jCas, interaction, nounEntities, verbEntities, 1.0f);
+  }
 
-		List<ParseTreeNode> children = node.getChildren();
-		if (children == null || children.isEmpty()) {
-			// We are ok to pull out any entities from here
-			verbEntities.addAll(JCasUtil.selectCovered(jCas, Entity.class, node.getChunk()));
-		} else {
-			for (int i = 0; i < children.size(); i++) {
+  private void extractEntitiesFromVerbPhrase(
+      JCas jCas, List<Entity> verbEntities, ParseTreeNode node) {
 
-				// Check if we are an NP and the next is an VP
-				if (isNounPhrase(children.get(i)) && i + 1 < children.size()
-						&& isVerbPhrase(children.get(i + 1))) {
-					// Don't go into NP+VP structures
-					break;
-				}
+    List<ParseTreeNode> children = node.getChildren();
+    if (children == null || children.isEmpty()) {
+      // We are ok to pull out any entities from here
+      verbEntities.addAll(JCasUtil.selectCovered(jCas, Entity.class, node.getChunk()));
+    } else {
+      for (int i = 0; i < children.size(); i++) {
 
-				extractEntitiesFromVerbPhrase(jCas, verbEntities, children.get(i));
-			}
-		}
-	}
+        // Check if we are an NP and the next is an VP
+        if (isNounPhrase(children.get(i))
+            && i + 1 < children.size()
+            && isVerbPhrase(children.get(i + 1))) {
+          // Don't go into NP+VP structures
+          break;
+        }
 
-	private boolean isNounPhrase(ParseTreeNode node) {
-		return "NP".equals(node.getChunk().getChunkType());
-	}
+        extractEntitiesFromVerbPhrase(jCas, verbEntities, children.get(i));
+      }
+    }
+  }
 
-	private boolean isVerbPhrase(ParseTreeNode node) {
-		return "VP".equals(node.getChunk().getChunkType());
-	}
+  private boolean isNounPhrase(ParseTreeNode node) {
+    return "NP".equals(node.getChunk().getChunkType());
+  }
 
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(ImmutableSet.of(Sentence.class, WordToken.class, PhraseChunk.class, Interaction.class, Entity.class), ImmutableSet.of(Relation.class));
-	}
+  private boolean isVerbPhrase(ParseTreeNode node) {
+    return "VP".equals(node.getChunk().getChunkType());
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(
+        ImmutableSet.of(
+            Sentence.class, WordToken.class, PhraseChunk.class, Interaction.class, Entity.class),
+        ImmutableSet.of(Relation.class));
+  }
 }

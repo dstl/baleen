@@ -1,180 +1,187 @@
-//Dstl (c) Crown Copyright 2017
-//Modified by NCA (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
+// Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
-
-import com.google.common.base.Strings;
-import org.apache.uima.UimaContext;
-import org.apache.uima.fit.descriptor.ExternalResource;
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.jcas.tcas.Annotation;
-import org.apache.uima.jcas.tcas.DocumentAnnotation;
-import org.apache.uima.resource.ResourceInitializationException;
-import uk.gov.dstl.baleen.core.history.BaleenHistory;
-import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
-import uk.gov.dstl.baleen.types.metadata.Metadata;
-import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Map;
 
-/** Base implementation of a ContentExtractor.
+import org.apache.uima.UimaContext;
+import org.apache.uima.fit.descriptor.ExternalResource;
+import org.apache.uima.jcas.JCas;
+import org.apache.uima.jcas.tcas.Annotation;
+import org.apache.uima.jcas.tcas.DocumentAnnotation;
+import org.apache.uima.resource.ResourceInitializationException;
+
+import com.google.common.base.Strings;
+
+import uk.gov.dstl.baleen.core.history.BaleenHistory;
+import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
+import uk.gov.dstl.baleen.types.metadata.Metadata;
+import uk.gov.dstl.baleen.uima.utils.UimaUtils;
+
+/**
+ * Base implementation of a ContentExtractor.
  *
- * This abstract class provides the basis for content extractors. It provides metrics and support elements
- * to help development.
+ * <p>This abstract class provides the basis for content extractors. It provides metrics and support
+ * elements to help development.
  *
- * Implementors should look to override doProcessStream as per {@link IContentExtractor} processFile.
- *
- * 
- *
+ * <p>Implementors should look to override doProcessStream as per {@link IContentExtractor}
+ * processFile.
  */
 public abstract class BaleenContentExtractor implements IContentExtractor {
-	private UimaMonitor monitor;
-	private UimaSupport support;
+  private UimaMonitor monitor;
+  private UimaSupport support;
 
-	/**
-	 * Baleen History resource
-	 * 
-	 * @baleen.resource uk.gov.dstl.baleen.core.history.BaleenHistory
-	 */
-	public static final String KEY_HISTORY = PipelineBuilder.BALEEN_HISTORY;
-	@ExternalResource(key = KEY_HISTORY, mandatory = false)
-	BaleenHistory history;
+  /**
+   * Baleen History resource
+   *
+   * @baleen.resource uk.gov.dstl.baleen.core.history.BaleenHistory
+   */
+  public static final String KEY_HISTORY = PipelineBuilder.BALEEN_HISTORY;
 
-	@Override
-	public final void initialize(UimaContext context, Map<String, Object> params) throws ResourceInitializationException {
+  @ExternalResource(key = KEY_HISTORY, mandatory = false)
+  BaleenHistory history;
 
-		String pipelineName = UimaUtils.getPipelineName(context);
-		monitor = createMonitor(pipelineName);
-		support = createSupport(pipelineName, context);
-		monitor.startFunction("initialize");
+  @Override
+  public final void initialize(UimaContext context, Map<String, Object> params)
+      throws ResourceInitializationException {
 
-		doInitialize(context, params);
+    String pipelineName = UimaUtils.getPipelineName(context);
+    monitor = createMonitor(pipelineName);
+    support = createSupport(pipelineName, context);
+    monitor.startFunction("initialize");
 
-		monitor.finishFunction("initialize");
-	}
+    doInitialize(context, params);
 
-	protected UimaSupport createSupport(String pipelineName, UimaContext context) {
-		return new UimaSupport(pipelineName, this.getClass(), history, monitor, UimaUtils.isMergeDistinctEntities(context));
-	}
+    monitor.finishFunction("initialize");
+  }
 
-	protected UimaMonitor createMonitor(String pipelineName) {
-		return new UimaMonitor(pipelineName, this.getClass());
-	}
+  protected UimaSupport createSupport(String pipelineName, UimaContext context) {
+    return new UimaSupport(
+        pipelineName,
+        this.getClass(),
+        history,
+        monitor,
+        UimaUtils.isMergeDistinctEntities(context));
+  }
 
-	/**
-	 * Called when the content extractor is being initialized. Any required resources, for example, should be opened at this point.
-	 *
-	 * @param context
-	 *            UimaContext object passed by the Collection Processing Engine
-	 */
-	public abstract void doInitialize(UimaContext context, Map<String, Object> params) throws ResourceInitializationException;
+  protected UimaMonitor createMonitor(String pipelineName) {
+    return new UimaMonitor(pipelineName, this.getClass());
+  }
 
-	@Override
-	public final void processStream(InputStream stream, String source, JCas jCas) throws IOException {
-		monitor.startFunction("process");
+  /**
+   * Called when the content extractor is being initialized. Any required resources, for example,
+   * should be opened at this point.
+   *
+   * @param context UimaContext object passed by the Collection Processing Engine
+   */
+  public abstract void doInitialize(UimaContext context, Map<String, Object> params)
+      throws ResourceInitializationException;
 
-		doProcessStream(stream, source, jCas);
+  @Override
+  public final void processStream(InputStream stream, String source, JCas jCas) throws IOException {
+    monitor.startFunction("process");
 
-		monitor.finishFunction("process");
-		monitor.persistCounts();
-	}
+    doProcessStream(stream, source, jCas);
 
-	/**
-	 * Called when the content extractor is being asked to process an inputstream and extract the content.
-	 *
-	 * @param stream InputStream to process
-	 * @param jCas JCas to add content to
-	 */
-	protected abstract void doProcessStream(InputStream stream, String source, JCas jCas) throws IOException;
+    monitor.finishFunction("process");
+    monitor.persistCounts();
+  }
 
-	@Override
-	public final void destroy() {
-		monitor.startFunction("destroy");
+  /**
+   * Called when the content extractor is being asked to process an inputstream and extract the
+   * content.
+   *
+   * @param stream InputStream to process
+   * @param jCas JCas to add content to
+   */
+  protected abstract void doProcessStream(InputStream stream, String source, JCas jCas)
+      throws IOException;
 
-		doDestroy();
+  @Override
+  public final void destroy() {
+    monitor.startFunction("destroy");
 
-		monitor.finishFunction("destroy");
-	}
+    doDestroy();
 
-	/**
-	 * Called when the content extractor has finished and is closing down. Any open resources, for example, should be closed at this point.
-	 */
-	protected abstract void doDestroy();
+    monitor.finishFunction("destroy");
+  }
 
-	/**
-	 * Gets the UimaMonitor object associated with this ContentExtractor, for instance to log errors.
-	 *
-	 * @return UimaMonitor object
-	 */
-	protected UimaMonitor getMonitor() {
-		return monitor;
-	}
+  /**
+   * Called when the content extractor has finished and is closing down. Any open resources, for
+   * example, should be closed at this point.
+   */
+  protected abstract void doDestroy();
 
-	/**
-	 * Gets the UimaSupport object associated with this ContentExtractor, for instance to log errors.
-	 *
-	 * @return UimaSupport object
-	 */
-	protected UimaSupport getSupport() {
-		return support;
-	}
+  /**
+   * Gets the UimaMonitor object associated with this ContentExtractor, for instance to log errors.
+   *
+   * @return UimaMonitor object
+   */
+  protected UimaMonitor getMonitor() {
+    return monitor;
+  }
 
-	// Common Support functions for quick access
+  /**
+   * Gets the UimaSupport object associated with this ContentExtractor, for instance to log errors.
+   *
+   * @return UimaSupport object
+   */
+  protected UimaSupport getSupport() {
+    return support;
+  }
 
-	/**
-	 * Return the document annotation.
-	 *
-	 * @param jCas
-	 * @return the document annotation
-	 */
-	protected DocumentAnnotation getDocumentAnnotation(JCas jCas){
-		return getSupport().getDocumentAnnotation(jCas);
-	}
+  // Common Support functions for quick access
 
+  /**
+   * Return the document annotation.
+   *
+   * @param jCas
+   * @return the document annotation
+   */
+  protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
+    return getSupport().getDocumentAnnotation(jCas);
+  }
 
-	/**
-	 * Add an annotation to the JCas index, notifying UimaMonitor of the fact we
-	 * have done so
-	 *
-	 * @param annotations
-	 *            Annotation(s) to add
-	 */
-	protected void addToJCasIndex(Annotation... annotations) {
-		getSupport().add(annotations);
-	}
+  /**
+   * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
+   *
+   * @param annotations Annotation(s) to add
+   */
+  protected void addToJCasIndex(Annotation... annotations) {
+    getSupport().add(annotations);
+  }
 
-	/**
-	 * Add an annotation to the JCas index, notifying UimaMonitor of the fact we
-	 * have done so
-	 *
-	 * @param annotations
-	 *            Annotation(s) to add
-	 */
-	protected void addToJCasIndex(Collection<? extends Annotation> annotations) {
-		getSupport().add(annotations);
-	}
-	
-	/**
-	 * Adds a metadata annotation to the JCas
-	 * 
-	 * @param jCas The JCas object to add the annotation to
-	 * @param name The metadata key
-	 * @param value The metadata value
-	 */
-	protected Metadata addMetadata(JCas jCas, String name, String value){
-		if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(value)) {
-			Metadata md = new Metadata(jCas);
+  /**
+   * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
+   *
+   * @param annotations Annotation(s) to add
+   */
+  protected void addToJCasIndex(Collection<? extends Annotation> annotations) {
+    getSupport().add(annotations);
+  }
 
-			md.setKey(name);
-			md.setValue(value);
+  /**
+   * Adds a metadata annotation to the JCas
+   *
+   * @param jCas The JCas object to add the annotation to
+   * @param name The metadata key
+   * @param value The metadata value
+   */
+  protected Metadata addMetadata(JCas jCas, String name, String value) {
+    if (!Strings.isNullOrEmpty(name) && !Strings.isNullOrEmpty(value)) {
+      Metadata md = new Metadata(jCas);
 
-			addToJCasIndex(md);
-			
-			return md;
-		}
-		
-		return null;
-	}
+      md.setKey(name);
+      md.setValue(value);
+
+      addToJCasIndex(md);
+
+      return md;
+    }
+
+    return null;
+  }
 }

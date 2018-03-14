@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import static java.util.stream.Collectors.toList;
@@ -11,10 +11,7 @@ import org.apache.commons.lang.Validate;
 
 import uk.gov.dstl.baleen.uima.utils.SelectorPart;
 
-/**
- * Abstract node implementation
- *
- */
+/** Abstract node implementation */
 public abstract class AbstractNode<T> implements Node<T> {
 
   /** The item */
@@ -61,7 +58,6 @@ public abstract class AbstractNode<T> implements Node<T> {
     return item;
   }
 
-
   @Override
   public AbstractNode<T> getParent() {
     return parent;
@@ -77,7 +73,6 @@ public abstract class AbstractNode<T> implements Node<T> {
     }
   }
 
-
   @Override
   public String getTypeName() {
     if (item == null) {
@@ -87,15 +82,12 @@ public abstract class AbstractNode<T> implements Node<T> {
     }
   }
 
-
-
   @Override
   public List<SelectorPart> toPath() {
     LinkedList<SelectorPart> path = new LinkedList<>();
     toPath(path, Object.class);
     return path;
   }
-
 
   @Override
   public List<SelectorPart> toPath(Class<? extends T> type) {
@@ -144,12 +136,10 @@ public abstract class AbstractNode<T> implements Node<T> {
     return parent != null;
   }
 
-
   @Override
   public String toString() {
     return "<" + getTypeName() + ">" + text();
   }
-
 
   @Override
   public Nodes<T> select(String query) {
@@ -185,7 +175,6 @@ public abstract class AbstractNode<T> implements Node<T> {
     return node;
   }
 
-
   @Override
   public AbstractNode<T> nextSibling() {
     if (parent == null) {
@@ -216,7 +205,6 @@ public abstract class AbstractNode<T> implements Node<T> {
     }
   }
 
-
   @Override
   public Nodes<T> getParents() {
     Nodes<T> parents = new Nodes<>();
@@ -228,12 +216,10 @@ public abstract class AbstractNode<T> implements Node<T> {
     return parents;
   }
 
-
   @Override
   public boolean hasAttr(String attributeKey) {
     return attributes().containsKey(attributeKey.toLowerCase());
   }
-
 
   @Override
   public Nodes<T> getSiblings() {
@@ -251,11 +237,10 @@ public abstract class AbstractNode<T> implements Node<T> {
     return siblings;
   }
 
-
   /**
    * Get the index of the search node in the given list.
-   * <p>
-   * Search by identity
+   *
+   * <p>Search by identity
    *
    * @param search the node to search for
    * @param nodes the node to search in
@@ -314,5 +299,4 @@ public abstract class AbstractNode<T> implements Node<T> {
     }
     return true;
   }
-
 }

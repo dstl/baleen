@@ -1,14 +1,14 @@
-//Dstl (c) Crown Copyright 2017
-//Modified by NCA (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
+// Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.utils;
-
-import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Test;
+
 public class ReflectionUtilsTest {
-	@Test
-	public void test(){
-		assertNotNull(ReflectionUtils.getInstance());
-	}
+  @Test
+  public void test() {
+    assertNotNull(ReflectionUtils.getInstance());
+  }
 }

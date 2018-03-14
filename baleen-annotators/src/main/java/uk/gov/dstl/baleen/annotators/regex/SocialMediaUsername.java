@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
 import java.util.Collections;
@@ -18,26 +18,24 @@ import uk.gov.dstl.baleen.types.common.CommsIdentifier;
  * @baleen.javadoc
  */
 public class SocialMediaUsername extends AbstractRegexAnnotator<CommsIdentifier> {
-	// We need the \b in so we don't have emails
-	private static final String PATTERN = "\\B@[A-Za-z0-9-_]+\\b";
-	
-	/** New instance.
-	 * 
-	 */
-	public SocialMediaUsername() {
-		super(PATTERN, false, 1.0f);
-	}
-	
-	@Override
-	protected CommsIdentifier create(JCas jCas, Matcher matcher) {
-		CommsIdentifier ci = new CommsIdentifier(jCas);
-		ci.setSubType("username");
-		
-		return ci;
-	}
-	
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(Collections.emptySet(), ImmutableSet.of(CommsIdentifier.class));
-	}
+  // We need the \b in so we don't have emails
+  private static final String PATTERN = "\\B@[A-Za-z0-9-_]+\\b";
+
+  /** New instance. */
+  public SocialMediaUsername() {
+    super(PATTERN, false, 1.0f);
+  }
+
+  @Override
+  protected CommsIdentifier create(JCas jCas, Matcher matcher) {
+    CommsIdentifier ci = new CommsIdentifier(jCas);
+    ci.setSubType("username");
+
+    return ci;
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(Collections.emptySet(), ImmutableSet.of(CommsIdentifier.class));
+  }
 }

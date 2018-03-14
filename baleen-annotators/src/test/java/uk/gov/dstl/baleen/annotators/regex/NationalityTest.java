@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
 import static org.junit.Assert.assertEquals;
@@ -21,85 +21,86 @@ import uk.gov.dstl.baleen.resources.SharedCountryResource;
 import uk.gov.dstl.baleen.types.common.Nationality;
 import uk.gov.dstl.baleen.types.language.Text;
 
-/**
- * 
- */
-public class NationalityTest extends AnnotatorTestBase{
-	AnalysisEngine ae;
+/** */
+public class NationalityTest extends AnnotatorTestBase {
+  AnalysisEngine ae;
 
-	@Override
-	@Before
-	public void beforeTest() throws UIMAException{
-		super.beforeTest();
+  @Override
+  @Before
+  public void beforeTest() throws UIMAException {
+    super.beforeTest();
 
-		ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription("country", SharedCountryResource.class);
-		AnalysisEngineDescription aed = AnalysisEngineFactory.createEngineDescription(NationalityRegex.class, "country", erd);
+    ExternalResourceDescription erd =
+        ExternalResourceFactory.createExternalResourceDescription(
+            "country", SharedCountryResource.class);
+    AnalysisEngineDescription aed =
+        AnalysisEngineFactory.createEngineDescription(NationalityRegex.class, "country", erd);
 
-		ae = AnalysisEngineFactory.createEngine(aed);
-	}
+    ae = AnalysisEngineFactory.createEngine(aed);
+  }
 
-	@After
-	public void afterTest(){
-		ae.destroy();
-	}
+  @After
+  public void afterTest() {
+    ae.destroy();
+  }
 
-	@Test
-	public void test() throws Exception{
-		jCas.setDocumentText("James is a BRITISH national. Last month, he met an Irish bloke in the pub. He is friends with Bob, who is an Spanish.");
-		ae.process(jCas);
+  @Test
+  public void test() throws Exception {
+    jCas.setDocumentText(
+        "James is a BRITISH national. Last month, he met an Irish bloke in the pub. He is friends with Bob, who is an Spanish.");
+    ae.process(jCas);
 
-		assertEquals(3, JCasUtil.select(jCas, Nationality.class).size());
+    assertEquals(3, JCasUtil.select(jCas, Nationality.class).size());
 
-		Nationality british = JCasUtil.selectByIndex(jCas, Nationality.class, 0);
-		assertNotNull(british);
-		assertEquals("BRITISH", british.getCoveredText());
-		assertEquals("BRITISH", british.getValue());
-		assertEquals("GBR", british.getCountryCode());
+    Nationality british = JCasUtil.selectByIndex(jCas, Nationality.class, 0);
+    assertNotNull(british);
+    assertEquals("BRITISH", british.getCoveredText());
+    assertEquals("BRITISH", british.getValue());
+    assertEquals("GBR", british.getCountryCode());
 
-		Nationality irish = JCasUtil.selectByIndex(jCas, Nationality.class, 1);
-		assertNotNull(irish);
-		assertEquals("Irish", irish.getCoveredText());
-		assertEquals("Irish", irish.getValue());
-		assertEquals("IRL", irish.getCountryCode());
+    Nationality irish = JCasUtil.selectByIndex(jCas, Nationality.class, 1);
+    assertNotNull(irish);
+    assertEquals("Irish", irish.getCoveredText());
+    assertEquals("Irish", irish.getValue());
+    assertEquals("IRL", irish.getCountryCode());
 
-		Nationality spanish = JCasUtil.selectByIndex(jCas, Nationality.class, 2);
-		assertNotNull(spanish);
-		assertEquals("Spanish", spanish.getCoveredText());
-		assertEquals("Spanish", spanish.getValue());
-		assertEquals("ESP", spanish.getCountryCode());
-	}
+    Nationality spanish = JCasUtil.selectByIndex(jCas, Nationality.class, 2);
+    assertNotNull(spanish);
+    assertEquals("Spanish", spanish.getCoveredText());
+    assertEquals("Spanish", spanish.getValue());
+    assertEquals("ESP", spanish.getCountryCode());
+  }
 
-	@Test
-	public void test2() throws Exception{
-		jCas.setDocumentText("Derek is from Afghanistan");
-		ae.process(jCas);
+  @Test
+  public void test2() throws Exception {
+    jCas.setDocumentText("Derek is from Afghanistan");
+    ae.process(jCas);
 
+    assertEquals(0, JCasUtil.select(jCas, Nationality.class).size());
+  }
 
-		assertEquals(0, JCasUtil.select(jCas, Nationality.class).size());
-	}
+  @Test
+  public void testWithText() throws Exception {
+    jCas.setDocumentText(
+        "James is a BRITISH national. Last month, he met an Irish bloke in the pub. He is friends with Bob, who is an Spanish.");
 
-	@Test
-	public void testWithText() throws Exception{
-		jCas.setDocumentText("James is a BRITISH national. Last month, he met an Irish bloke in the pub. He is friends with Bob, who is an Spanish.");
+    new Text(jCas, 30, 75).addToIndexes();
+    new Text(jCas, 76, jCas.getDocumentText().length()).addToIndexes();
 
-		new Text(jCas, 30, 75).addToIndexes();
-		new Text(jCas, 76, jCas.getDocumentText().length()).addToIndexes();
+    ae.process(jCas);
 
-		ae.process(jCas);
+    assertEquals(2, JCasUtil.select(jCas, Nationality.class).size());
 
-		assertEquals(2, JCasUtil.select(jCas, Nationality.class).size());
+    Nationality irish = JCasUtil.selectByIndex(jCas, Nationality.class, 0);
+    assertNotNull(irish);
+    assertEquals("Irish", irish.getCoveredText());
+    assertEquals("Irish", irish.getValue());
+    assertEquals("IRL", irish.getCountryCode());
 
-
-		Nationality irish = JCasUtil.selectByIndex(jCas, Nationality.class, 0);
-		assertNotNull(irish);
-		assertEquals("Irish", irish.getCoveredText());
-		assertEquals("Irish", irish.getValue());
-		assertEquals("IRL", irish.getCountryCode());
-
-		Nationality spanish = JCasUtil.selectByIndex(jCas, Nationality.class, 1);
-		assertNotNull(spanish);
-		assertEquals("Spanish", spanish.getCoveredText());
-		assertEquals("Spanish", spanish.getValue());
-		assertEquals("ESP", spanish.getCountryCode());
-	}
+    Nationality spanish = JCasUtil.selectByIndex(jCas, Nationality.class, 1);
+    assertNotNull(spanish);
+    assertEquals("Spanish", spanish.getCoveredText());
+    assertEquals("Spanish", spanish.getValue());
+    assertEquals("ESP", spanish.getCountryCode());
+  }
 }

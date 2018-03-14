@@ -1,37 +1,37 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.schedules;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 
 /**
- * A scheduler which repeats a number of times (defined by count) with a delay between (see
- * {@link FixedDelay}.
+ * A scheduler which repeats a number of times (defined by count) with a delay between (see {@link
+ * FixedDelay}.
  */
 public class Repeat extends FixedDelay {
 
-	/**
-	 * The run of times to rerun this command.
-	 *
-	 * If set to 0 (or less) this job will never be run.
-	 *
-	 * @baleen.config 1
-	 */
-	public static final String PARAM_TIMES = "count";
-	@ConfigurationParameter(name = PARAM_TIMES, defaultValue = "1")
-	private long count;
+  /**
+   * The run of times to rerun this command.
+   *
+   * <p>If set to 0 (or less) this job will never be run.
+   *
+   * @baleen.config 1
+   */
+  public static final String PARAM_TIMES = "count";
 
-	private long runs = 0;
+  @ConfigurationParameter(name = PARAM_TIMES, defaultValue = "1")
+  private long count;
 
-	@Override
-	protected boolean await() {
+  private long runs = 0;
 
-		if (runs >= count) {
-			return false;
-		}
+  @Override
+  protected boolean await() {
 
-		runs++;
+    if (runs >= count) {
+      return false;
+    }
 
-		return delay();
-	}
+    runs++;
 
+    return delay();
+  }
 }

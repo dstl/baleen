@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.stats;
 
 import java.io.IOException;
@@ -28,48 +28,48 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 
 /**
  * Sets the document language using Language Detector library.
- * 
- * <p>Uses the Language Detector library to identify the language of the document from a random sample of N-grams.
- * If the language can't be detected, then <i>x-unspecified</i> is returned.</p>
  *
- * 
+ * <p>Uses the Language Detector library to identify the language of the document from a random
+ * sample of N-grams. If the language can't be detected, then <i>x-unspecified</i> is returned.
  */
 public class DocumentLanguage extends BaleenAnnotator {
-	private LanguageDetector languageDetector;
-	private TextObjectFactory textObjectFactory;
-	
-	@Override
-	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-		try{
-			List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
-			languageDetector = LanguageDetectorBuilder.create(NgramExtractors.standard())
-					.withProfiles(languageProfiles)
-					.build();
-			
-			textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
-		}catch(IOException ioe){
-			throw new ResourceInitializationException(ioe);
-		}
-	}
+  private LanguageDetector languageDetector;
+  private TextObjectFactory textObjectFactory;
 
-	@Override
-	public void doProcess(JCas aJCas) throws AnalysisEngineProcessException {
-		TextObject textObject = textObjectFactory.forText(aJCas.getDocumentText());
-		Optional<LdLocale> lang = languageDetector.detect(textObject);
-		
-		if(lang.isPresent()){
-			aJCas.setDocumentLanguage(lang.get().getLanguage());
-		}
-	}
+  @Override
+  public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+    try {
+      List<LanguageProfile> languageProfiles = new LanguageProfileReader().readAllBuiltIn();
+      languageDetector =
+          LanguageDetectorBuilder.create(NgramExtractors.standard())
+              .withProfiles(languageProfiles)
+              .build();
 
-	@Override
-	public void doDestroy(){
-		textObjectFactory = null;
-		languageDetector = null;
-	}
-	
-	@Override
-	public AnalysisEngineAction getAction() {
-		return new AnalysisEngineAction(Collections.emptySet(), ImmutableSet.of(DocumentAnnotation.class));
-	}
+      textObjectFactory = CommonTextObjectFactories.forDetectingOnLargeText();
+    } catch (IOException ioe) {
+      throw new ResourceInitializationException(ioe);
+    }
+  }
+
+  @Override
+  public void doProcess(JCas aJCas) throws AnalysisEngineProcessException {
+    TextObject textObject = textObjectFactory.forText(aJCas.getDocumentText());
+    Optional<LdLocale> lang = languageDetector.detect(textObject);
+
+    if (lang.isPresent()) {
+      aJCas.setDocumentLanguage(lang.get().getLanguage());
+    }
+  }
+
+  @Override
+  public void doDestroy() {
+    textObjectFactory = null;
+    languageDetector = null;
+  }
+
+  @Override
+  public AnalysisEngineAction getAction() {
+    return new AnalysisEngineAction(
+        Collections.emptySet(), ImmutableSet.of(DocumentAnnotation.class));
+  }
 }

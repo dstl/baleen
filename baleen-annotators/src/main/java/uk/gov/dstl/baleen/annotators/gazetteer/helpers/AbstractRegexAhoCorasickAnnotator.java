@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.gazetteer.helpers;
 
 import java.util.ArrayList;
@@ -24,71 +24,73 @@ import uk.gov.dstl.baleen.uima.data.TextBlock;
  * document for gazetteer matches, it uses a regular expression to find potential matches and then
  * checks to see whether they appear in the Gazetteer.
  *
- *
  * @baleen.javadoc
  */
 public abstract class AbstractRegexAhoCorasickAnnotator extends AbstractAhoCorasickAnnotator {
 
-	/**
-	 * The regular expression to check against
-	 *
-	 * @baleen.config \\b\\w*\\b
-	 */
-	public static final String PARAM_REGEX = "regex";
-	@ConfigurationParameter(name = PARAM_REGEX, defaultValue = "\\b\\w*\\b")
-	protected String regex;
+  /**
+   * The regular expression to check against
+   *
+   * @baleen.config \\b\\w*\\b
+   */
+  public static final String PARAM_REGEX = "regex";
 
-	Pattern regexPattern;
+  @ConfigurationParameter(name = PARAM_REGEX, defaultValue = "\\b\\w*\\b")
+  protected String regex;
 
-	/**
-	 * Constructor
-	 */
-	public AbstractRegexAhoCorasickAnnotator() {
-		// Do nothing
-	}
+  Pattern regexPattern;
 
-	@Override
-	public abstract IGazetteer configureGazetteer() throws BaleenException;
+  /** Constructor */
+  public AbstractRegexAhoCorasickAnnotator() {
+    // Do nothing
+  }
 
-	@Override
-	public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-		super.doInitialize(aContext);
+  @Override
+  public abstract IGazetteer configureGazetteer() throws BaleenException;
 
-		if (caseSensitive) {
-			regexPattern = Pattern.compile(regex);
-		} else {
-			regexPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-		}
-	}
+  @Override
+  public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+    super.doInitialize(aContext);
 
-	@Override
-	public void doProcessTextBlock(TextBlock block) throws AnalysisEngineProcessException {
-		Map<String, List<BaleenAnnotation>> entities = new HashMap<>();
+    if (caseSensitive) {
+      regexPattern = Pattern.compile(regex);
+    } else {
+      regexPattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+    }
+  }
 
-		Matcher m = regexPattern.matcher(block.getCoveredText());
-		while (m.find()) {
-			String csValue = caseSensitive ? m.group() : m.group().toLowerCase();
-			if (gazetteer.hasValue(csValue)) {
-				try {
-					BaleenAnnotation ent = createEntity(block, m.start(), m.end(), m.group(), csValue);
+  @Override
+  public void doProcessTextBlock(TextBlock block) throws AnalysisEngineProcessException {
+    Map<String, List<BaleenAnnotation>> entities = new HashMap<>();
 
-					List<String> aliases = new ArrayList<>(Arrays.asList(gazetteer.getAliases(csValue)));
-					aliases.add(csValue);
+    Matcher m = regexPattern.matcher(block.getCoveredText());
+    while (m.find()) {
+      String csValue = caseSensitive ? m.group() : m.group().toLowerCase();
+      if (gazetteer.hasValue(csValue)) {
+        try {
+          BaleenAnnotation ent = createEntity(block, m.start(), m.end(), m.group(), csValue);
 
-					String key = generateKey(aliases);
+          List<String> aliases = new ArrayList<>(Arrays.asList(gazetteer.getAliases(csValue)));
+          aliases.add(csValue);
 
-					List<BaleenAnnotation> groupEntities = entities.containsKey(key) ? entities.get(key)
-							: new ArrayList<>();
-					groupEntities.add(ent);
-					entities.put(key, groupEntities);
-				} catch (Exception e) {
-					getMonitor().error("Unable to create entity of type '{}' for value '{}'", entityType.getName(),
-							m.group(), e);
-					continue;
-				}
-			}
-		}
+          String key = generateKey(aliases);
 
-		createReferenceTargets(block, entities.values());
-	}
+          List<BaleenAnnotation> groupEntities =
+              entities.containsKey(key) ? entities.get(key) : new ArrayList<>();
+          groupEntities.add(ent);
+          entities.put(key, groupEntities);
+        } catch (Exception e) {
+          getMonitor()
+              .error(
+                  "Unable to create entity of type '{}' for value '{}'",
+                  entityType.getName(),
+                  m.group(),
+                  e);
+          continue;
+        }
+      }
+    }
+
+    createReferenceTargets(block, entities.values());
+  }
 }

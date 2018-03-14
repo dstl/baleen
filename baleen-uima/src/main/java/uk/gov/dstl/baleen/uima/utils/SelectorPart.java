@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
 import java.util.regex.Matcher;
@@ -6,9 +6,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-/**
- * Class to represent part of a selector (eg between the &gt; operator).
- */
+/** Class to represent part of a selector (eg between the &gt; operator). */
 public class SelectorPart {
 
   /** The Constant NTH_OF_TYPE. */
@@ -61,7 +59,6 @@ public class SelectorPart {
     this.type = type;
     this.index = index;
   }
-
 
   /**
    * Gets the type.

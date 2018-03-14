@@ -1,9 +1,7 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
-/**
- * Collects a list of elements that match the supplied criteria.
- */
+/** Collects a list of elements that match the supplied criteria. */
 public class Collector {
 
   private Collector() {}
@@ -22,10 +20,7 @@ public class Collector {
     return elements;
   }
 
-  /**
-   * An internal accumulator, implements Node visitor to evaluate the nodes
-   *
-   */
+  /** An internal accumulator, implements Node visitor to evaluate the nodes */
   private static class Accumulator<T> implements NodeVisitor<T> {
     private final Node<T> root;
     private final Nodes<T> nodes;
@@ -51,6 +46,5 @@ public class Collector {
         nodes.add(el);
       }
     }
-
   }
 }

@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.schedules;
 
 import org.apache.uima.fit.factory.CollectionReaderFactory;
@@ -9,18 +9,17 @@ import uk.gov.dstl.baleen.uima.BaleenScheduler;
 @SuppressWarnings("unchecked")
 public class AbstractSchedulerTest<T extends BaleenScheduler> {
 
-	private final Class<T> clazz;
+  private final Class<T> clazz;
 
-	public AbstractSchedulerTest(Class<T> clazz) {
-		this.clazz = clazz;
-	}
+  public AbstractSchedulerTest(Class<T> clazz) {
+    this.clazz = clazz;
+  }
 
-	public T create() throws ResourceInitializationException {
-		return (T) CollectionReaderFactory.createReader(clazz);
-	}
+  public T create() throws ResourceInitializationException {
+    return (T) CollectionReaderFactory.createReader(clazz);
+  }
 
-	public T create(Object... args) throws ResourceInitializationException {
-		return (T) CollectionReaderFactory.createReader(clazz, args);
-	}
-
+  public T create(Object... args) throws ResourceInitializationException {
+    return (T) CollectionReaderFactory.createReader(clazz, args);
+  }
 }

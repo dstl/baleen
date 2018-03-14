@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import static org.junit.Assert.assertEquals;
@@ -51,21 +51,27 @@ public class QueryParserTest {
     assertEquals("Test [a!=b]", QueryParser.parse("Test[a!=b]").toString());
     assertEquals(".class [c*=d]", QueryParser.parse(".class[c*=d]").toString());
     assertEquals(":matchesOwn(boom)", QueryParser.parse(":matchesOwn(boom)").toString());
-    assertEquals(":has(child :immediateParent(Parent))",
+    assertEquals(
+        ":has(child :immediateParent(Parent))",
         QueryParser.parse(":has(Parent > child)").toString());
-    assertEquals(":not(child :parent(Ancestor))",
-        QueryParser.parse(":not(Ancestor child)").toString());
-    assertEquals("S2 :nth-child(2) :prev(S1)",
-        QueryParser.parse("S1 + S2:nth-child(2)").toString());
-    assertEquals("S2 [level] :prev*(S1 :nth-of-type(2n+1))",
+    assertEquals(
+        ":not(child :parent(Ancestor))", QueryParser.parse(":not(Ancestor child)").toString());
+    assertEquals(
+        "S2 :nth-child(2) :prev(S1)", QueryParser.parse("S1 + S2:nth-child(2)").toString());
+    assertEquals(
+        "S2 [level] :prev*(S1 :nth-of-type(2n+1))",
         QueryParser.parse("S1:nth-of-type(odd) ~ S2[level]").toString());
-    assertEquals("S2 [att~=test] :prev*(S1 :contains(test))",
+    assertEquals(
+        "S2 [att~=test] :prev*(S1 :contains(test))",
         QueryParser.parse("S1:contains(test) ~ S2[att~=test]").toString());
-    assertEquals("S2 :only-child :parent(S1 :containsOwn(t))",
+    assertEquals(
+        "S2 :only-child :parent(S1 :containsOwn(t))",
         QueryParser.parse("S1:containsOwn(t) S2:only-child").toString());
-    assertEquals("S2 :gt(3) :parent(S1 :matches((?i)t))",
+    assertEquals(
+        "S2 :gt(3) :parent(S1 :matches((?i)t))",
         QueryParser.parse("S1:matches((?i)t) S2:gt(3)").toString());
-    assertEquals("S3 [s$=t] :immediateParent(S2 :lt(3) :parent(S1 :eq(1)))",
+    assertEquals(
+        "S3 [s$=t] :immediateParent(S2 :lt(3) :parent(S1 :eq(1)))",
         QueryParser.parse("S1:eq(1) S2:lt(3) > S3[s$=t]").toString());
   }
 

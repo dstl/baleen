@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
 import static org.junit.Assert.assertEquals;
@@ -13,61 +13,61 @@ import uk.gov.dstl.baleen.types.semantic.Location;
 
 public class CollapseLocationsTest extends AbstractAnnotatorTest {
 
-	public CollapseLocationsTest() {
-		super(CollapseLocations.class);
-	}
+  public CollapseLocationsTest() {
+    super(CollapseLocations.class);
+  }
 
-	@Test
-	public void testBorder1() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("The England-Wales   border is a lovely area.");
+  @Test
+  public void testBorder1() throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("The England-Wales   border is a lovely area.");
 
-		Location england = new Location(jCas, 4, 11);
-		Location wales = new Location(jCas, 12, 17);
+    Location england = new Location(jCas, 4, 11);
+    Location wales = new Location(jCas, 12, 17);
 
-		england.addToIndexes();
-		wales.addToIndexes();
+    england.addToIndexes();
+    wales.addToIndexes();
 
-		processJCas();
+    processJCas();
 
-		assertEquals(1, JCasUtil.select(jCas, Location.class).size());
-		
-		Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
-		assertEquals("England-Wales   border", l.getCoveredText());
-	}
-	
-	@Test
-	public void testBorder2() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("The England-Wales border is a lovely area.");
+    assertEquals(1, JCasUtil.select(jCas, Location.class).size());
 
-		Location england = new Location(jCas, 4, 11);
-		Location wales = new Location(jCas, 12, 24);
+    Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
+    assertEquals("England-Wales   border", l.getCoveredText());
+  }
 
-		england.addToIndexes();
-		wales.addToIndexes();
+  @Test
+  public void testBorder2() throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("The England-Wales border is a lovely area.");
 
-		processJCas();
+    Location england = new Location(jCas, 4, 11);
+    Location wales = new Location(jCas, 12, 24);
 
-		assertEquals(1, JCasUtil.select(jCas, Location.class).size());
-		
-		Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
-		assertEquals("England-Wales border", l.getCoveredText());
-	}
-	
-	@Test
-	public void testOf() throws AnalysisEngineProcessException, ResourceInitializationException {
-		jCas.setDocumentText("The city of Salisbury is busy on a Saturday.");
+    england.addToIndexes();
+    wales.addToIndexes();
 
-		Location theCity = new Location(jCas, 0, 8);
-		Location salisbury = new Location(jCas, 12, 21);
+    processJCas();
 
-		theCity.addToIndexes();
-		salisbury.addToIndexes();
+    assertEquals(1, JCasUtil.select(jCas, Location.class).size());
 
-		processJCas();
+    Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
+    assertEquals("England-Wales border", l.getCoveredText());
+  }
 
-		assertEquals(1, JCasUtil.select(jCas, Location.class).size());
-		
-		Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
-		assertEquals("The city of Salisbury", l.getCoveredText());
-	}
+  @Test
+  public void testOf() throws AnalysisEngineProcessException, ResourceInitializationException {
+    jCas.setDocumentText("The city of Salisbury is busy on a Saturday.");
+
+    Location theCity = new Location(jCas, 0, 8);
+    Location salisbury = new Location(jCas, 12, 21);
+
+    theCity.addToIndexes();
+    salisbury.addToIndexes();
+
+    processJCas();
+
+    assertEquals(1, JCasUtil.select(jCas, Location.class).size());
+
+    Location l = JCasUtil.selectByIndex(jCas, Location.class, 0);
+    assertEquals("The city of Salisbury", l.getCoveredText());
+  }
 }

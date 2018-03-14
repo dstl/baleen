@@ -1,4 +1,4 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils.select;
 
 import static org.junit.Assert.assertEquals;
@@ -7,9 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-/**
- * Token queue tests.
- */
+/** Token queue tests. */
 public class TokenQueueTest {
   @Test
   public void chompBalanced() {

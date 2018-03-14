@@ -1,10 +1,11 @@
-//Dstl (c) Crown Copyright 2017
+// Dstl (c) Crown Copyright 2017
 /**
  * Packages to support the CSS-style structure selector.
  *
- * This is based on JSoup by Jonathan Hedley and adapted here to work with the Structure heirarchy.
+ * <p>This is based on JSoup by Jonathan Hedley and adapted here to work with the Structure
+ * heirarchy.
  *
- * Original licence:
+ * <p>Original licence:
  *
  * <pre>
  *
@@ -30,7 +31,5 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  * </pre>
- *
- *
  */
 package uk.gov.dstl.baleen.uima.utils.select;
