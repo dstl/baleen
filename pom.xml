@@ -72,7 +72,7 @@
 		<jsonic.version>1.3.10</jsonic.version>
 		<jsoup.version>1.11.2</jsoup.version>
 		<jung.version>2.1.1</jung.version>
-		<krill.version>1.0.2</krill.version>
+		<krill.version>1.0.3</krill.version>
 		<languagedetector.version>0.6</languagedetector.version>
 		<logback.version>1.2.3</logback.version>
 		<maltparser.version>1.9.2</maltparser.version>
