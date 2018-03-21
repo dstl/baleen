@@ -158,7 +158,7 @@ public class SharedWordNetResource extends BaleenResource {
    * @return the string
    */
   private String stripPOSFromSupersense(String sense) {
-    final int index = sense.indexOf(".") + 1;
+    final int index = sense.indexOf('.') + 1;
     if (index != 0) {
       return sense.substring(index);
     } else {

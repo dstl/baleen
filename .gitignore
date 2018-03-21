@@ -3,12 +3,20 @@ bin/
 tmp/
 *.tmp
 *.bak
+*.orig
 *.swp
 *~.nib
 local.properties
 .settings/
 .loadpath
 .recommenders
+**/.DS_Store
+
+# Intellij
+.idea
+.idea/*
+*.iml
+**/*.iml
 
 # Eclipse Core
 .project
@@ -45,6 +53,7 @@ local.properties
 
 # STS (Spring Tool Suite)
 .springBeans
+classpath-data.json
 
 # Code Recommenders
 .recommenders/
@@ -54,6 +63,3 @@ target/
 
 # Baleen specific
 testing.log
-
-# IntelliJ IDEA
-*.iml

@@ -4,12 +4,12 @@ package uk.gov.dstl.baleen.uima.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static uk.gov.dstl.baleen.core.history.BaleenHistory.MERGE_DISTINCT_ENTITIES;
 
 import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
 
 public class UimaUtilsTest {
@@ -32,32 +32,30 @@ public class UimaUtilsTest {
     assertFalse(UimaUtils.isMergeDistinctEntities(UimaContextFactory.createUimaContext()));
     assertFalse(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(BaleenHistory.MERGE_DISTINCT_ENTITIES, "null")));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, "null")));
     assertFalse(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(BaleenHistory.MERGE_DISTINCT_ENTITIES, "hello")));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, "hello")));
     assertFalse(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(BaleenHistory.MERGE_DISTINCT_ENTITIES, false)));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, false)));
     assertFalse(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(
-                BaleenHistory.MERGE_DISTINCT_ENTITIES, new Boolean(false))));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, new Boolean(false))));
     assertTrue(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(
-                BaleenHistory.MERGE_DISTINCT_ENTITIES, new Boolean(true))));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, new Boolean(true))));
     assertTrue(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(BaleenHistory.MERGE_DISTINCT_ENTITIES, true)));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, true)));
 
     // Questionable if we should convert here?
     assertFalse(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(BaleenHistory.MERGE_DISTINCT_ENTITIES, "false")));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, "false")));
     assertFalse(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(BaleenHistory.MERGE_DISTINCT_ENTITIES, "true")));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, "true")));
   }
 
   @Test

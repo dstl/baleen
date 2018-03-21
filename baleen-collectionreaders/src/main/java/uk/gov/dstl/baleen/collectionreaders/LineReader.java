@@ -2,10 +2,16 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -106,10 +112,8 @@ public class LineReader extends BaleenCollectionReader {
 
   @Override
   protected void doGetNext(JCas jCas) throws IOException, CollectionException {
-    extractor.processStream(
-        new ByteArrayInputStream(line.getBytes(Charset.defaultCharset())),
-        file.getPath() + "#" + lineNumber,
-        jCas);
+    InputStream is = IOUtils.toInputStream(line, Charset.defaultCharset());
+    extractor.processStream(is, file.getPath() + "#" + lineNumber, jCas);
 
     Metadata md = new Metadata(jCas);
     md.setKey("lineNumber");

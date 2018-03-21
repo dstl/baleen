@@ -10,7 +10,6 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.uima.testing.CounterTask;
 import uk.gov.dstl.baleen.uima.testing.DummyTaskWithParams;
 
@@ -57,9 +56,7 @@ public class BaleenTaskTest extends AbstractBaleenTaskTest {
   }
 
   @Test
-  public void fullTest()
-      throws ResourceInitializationException, AnalysisEngineProcessException, BaleenException,
-          InterruptedException {
+  public void fullTest() throws Exception {
 
     wrapInJob(CounterTask.class);
     assertEquals(0, CounterTask.getExecutedCount());
@@ -69,9 +66,7 @@ public class BaleenTaskTest extends AbstractBaleenTaskTest {
   }
 
   @Test
-  public void fullTestWithTwoTasks()
-      throws ResourceInitializationException, AnalysisEngineProcessException, BaleenException,
-          InterruptedException {
+  public void fullTestWithTwoTasks() throws Exception {
 
     wrapInJob(DummyTaskWithParams.class, CounterTask.class);
     assertEquals(0, CounterTask.getExecutedCount());

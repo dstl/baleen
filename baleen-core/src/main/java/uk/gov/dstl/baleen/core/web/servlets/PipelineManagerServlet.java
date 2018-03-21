@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
+import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
 import uk.gov.dstl.baleen.core.web.security.WebPermission;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
@@ -28,8 +29,8 @@ public class PipelineManagerServlet extends AbstractApiServlet {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PipelineManagerServlet.class);
 
-  private static final String PARAM_NAME = "name";
-  private static final String PARAM_YAML = "yaml";
+  public static final String PARAM_NAME = "name";
+  public static final String PARAM_YAML = "yaml";
 
   private final transient BaleenPipelineManager manager;
 
@@ -91,13 +92,15 @@ public class PipelineManagerServlet extends AbstractApiServlet {
   protected void post(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     String servletPath = req.getRequestURI();
-    while (servletPath.endsWith("/"))
+    while (servletPath.endsWith("/")) {
       servletPath = servletPath.substring(0, servletPath.length() - 1);
+    }
 
     String[] parts = servletPath.split("/");
     String action = "";
-    if (parts.length > 4) // 	<>/<api>/<1>/<pipelines> are first four splits
-    action = parts[parts.length - 1];
+    if (parts.length > 4) { // <>/<api>/<1>/<pipelines> are first four splits
+      action = parts[parts.length - 1];
+    }
 
     if (action.trim().isEmpty()) {
       // Create pipeline
@@ -113,7 +116,9 @@ public class PipelineManagerServlet extends AbstractApiServlet {
       for (String name : names) {
         Optional<BaleenPipeline> t = manager.get(name);
 
-        if (!t.isPresent()) continue;
+        if (!t.isPresent()) {
+          continue;
+        }
 
         BaleenPipeline bop = t.get();
 
@@ -155,10 +160,11 @@ public class PipelineManagerServlet extends AbstractApiServlet {
 
     BaleenPipeline t;
     try {
-      t = manager.create(name, yaml);
+      t = manager.create(name, new YamlPiplineConfiguration(yaml));
     } catch (BaleenException e) {
       LOGGER.error("Unable to create", e);
-      respondWithError(resp, HttpStatus.BAD_REQUEST_400, "Creation of pipeline from yaml failed");
+      respondWithError(
+          resp, HttpStatus.BAD_REQUEST_400, "Creation of pipeline(s) from yaml failed");
       return;
     }
 

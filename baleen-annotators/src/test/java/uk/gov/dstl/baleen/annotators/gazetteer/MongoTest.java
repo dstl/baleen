@@ -11,10 +11,12 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.cas.StringArray;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.bson.Document;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.mongodb.util.JSON;
 
 import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
@@ -43,17 +45,22 @@ public class MongoTest extends AbstractAnnotatorTest {
           new Document(VALUE, new String[] {"sydney (australia"})
               .append("tags", Arrays.asList("broken_regex")));
 
-  private final ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
-          MONGO,
-          SharedFongoResource.class,
-          FONGO_COLLECTION,
-          MONGO_COLL,
-          FONGO_DATA,
-          JSON.serialize(GAZ_DATA));
+  private static ExternalResourceDescription erd;
 
   public MongoTest() {
     super(Mongo.class);
+  }
+
+  @BeforeClass
+  public static void setup() throws JsonProcessingException {
+    erd =
+        ExternalResourceFactory.createExternalResourceDescription(
+            MONGO,
+            SharedFongoResource.class,
+            FONGO_COLLECTION,
+            MONGO_COLL,
+            FONGO_DATA,
+            new ObjectMapper().writeValueAsString(GAZ_DATA));
   }
 
   @Test

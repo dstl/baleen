@@ -48,6 +48,7 @@ import uk.gov.dstl.baleen.uima.IContentExtractor;
  * @baleen.javadoc
  */
 public class FolderReader extends BaleenCollectionReader {
+
   /**
    * A list of folders to watch
    *
@@ -276,62 +277,73 @@ public class FolderReader extends BaleenCollectionReader {
     if (event.kind() == OVERFLOW) {
       getMonitor().warn("OVERFLOW event received - some files may be missing from the queue");
     } else if (event.kind() == ENTRY_DELETE) {
-      getMonitor()
-          .debug(
-              "ENTRY_DELETE event received - file '{}' will be removed from queue",
-              pathEvent.context());
-
-      try {
-        Path dir = watchKeys.get(key);
-        if (dir != null) {
-          Path resolved = dir.resolve(pathEvent.context());
-          queue.remove(resolved);
-        } else {
-          getMonitor()
-              .warn(
-                  "WatchKey not found - file '{}' will not be removed from the queue",
-                  pathEvent.context());
-        }
-      } catch (Exception ioe) {
-        getMonitor()
-            .warn(
-                "An error occurred - file '{}' will not be removed from the queue",
-                pathEvent.context(),
-                ioe);
-      }
-
-      queue.remove(pathEvent.context());
+      removeFileFromQueue(key, pathEvent);
     } else {
+      addFileToQueue(key, event, pathEvent);
       getMonitor()
-          .debug(
-              event.kind().name() + " event received - file '{}' will be added to the queue",
+          .warn(
+              "WatchKey not found - file '{}' will not be removed from the queue",
               pathEvent.context());
-      try {
-        Path dir = watchKeys.get(key);
-        if (dir != null) {
-          Path resolved = dir.resolve(pathEvent.context());
-          if (resolved.toFile().isDirectory()) {
-            if (recursive) {
-              addFilesFromDir(resolved.toFile());
-              registerDirectory(resolved);
-            }
-          } else {
-            addFile(resolved);
+    }
+  }
+
+  private void addFileToQueue(WatchKey key, WatchEvent<?> event, WatchEvent<Path> pathEvent) {
+    getMonitor()
+        .debug(
+            event.kind().name() + " event received - file '{}' will be added to the queue",
+            pathEvent.context());
+    try {
+      Path dir = watchKeys.get(key);
+      if (dir != null) {
+        Path resolved = dir.resolve(pathEvent.context());
+        if (resolved.toFile().isDirectory()) {
+          if (recursive) {
+            addFilesFromDir(resolved.toFile());
+            registerDirectory(resolved);
           }
         } else {
-          getMonitor()
-              .warn(
-                  "WatchKey not found - file '{}' will not be added to the queue",
-                  pathEvent.context());
+          addFile(resolved);
         }
-      } catch (Exception ioe) {
+      } else {
         getMonitor()
             .warn(
-                "An error occurred - file '{}' will not be added to the queue",
-                pathEvent.context(),
-                ioe);
+                "WatchKey not found - file '{}' will not be added to the queue",
+                pathEvent.context());
       }
+    } catch (Exception ioe) {
+      getMonitor()
+          .warn(
+              "An error occurred - file '{}' will not be added to the queue",
+              pathEvent.context(),
+              ioe);
     }
+  }
+
+  private void removeFileFromQueue(WatchKey key, WatchEvent<Path> pathEvent) {
+    getMonitor()
+        .debug(
+            "ENTRY_DELETE event received - file '{}' will be removed from queue",
+            pathEvent.context());
+    try {
+      Path dir = watchKeys.get(key);
+      if (dir != null) {
+        Path resolved = dir.resolve(pathEvent.context());
+        queue.remove(resolved);
+      } else {
+        getMonitor()
+            .warn(
+                "WatchKey not found - file '{}' will not be removed from the queue",
+                pathEvent.context());
+      }
+    } catch (Exception ioe) {
+      getMonitor()
+          .warn(
+              "An error occurred - file '{}' will not be removed from the queue",
+              pathEvent.context(),
+              ioe);
+    }
+
+    queue.remove(pathEvent.context());
   }
 
   private void addFile(Path path) {

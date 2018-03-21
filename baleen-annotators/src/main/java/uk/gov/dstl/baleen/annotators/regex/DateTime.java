@@ -23,6 +23,7 @@ import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.BaleenTextAwareAnnotator;
 import uk.gov.dstl.baleen.uima.data.TextBlock;
+import uk.gov.dstl.baleen.uima.utils.TemporalUtils;
 
 /**
  * Annotate date time strings as Temporal entities. The following examples show the types of date
@@ -245,9 +246,9 @@ public class DateTime extends BaleenTextAwareAnnotator {
     Temporal dt = block.newAnnotation(Temporal.class, charBegin, charEnd);
     dt.setConfidence(1.0);
 
-    dt.setPrecision("EXACT");
-    dt.setScope("SINGLE");
-    dt.setTemporalType("DATETIME");
+    dt.setPrecision(TemporalUtils.PRECISION_EXACT);
+    dt.setScope(TemporalUtils.SCOPE_SINGLE);
+    dt.setTemporalType(TemporalUtils.TYPE_DATETIME);
 
     dt.setTimestampStart(zdt.toEpochSecond());
     dt.setTimestampStop(zdt.plusSeconds(1).toEpochSecond());
@@ -265,9 +266,9 @@ public class DateTime extends BaleenTextAwareAnnotator {
 
     dt.setConfidence(1.0);
 
-    dt.setPrecision("EXACT");
-    dt.setScope("SINGLE");
-    dt.setTemporalType("DATETIME");
+    dt.setPrecision(TemporalUtils.PRECISION_EXACT);
+    dt.setScope(TemporalUtils.SCOPE_SINGLE);
+    dt.setTemporalType(TemporalUtils.TYPE_DATETIME);
 
     dt.setTimestampStart(zdtStart.toEpochSecond());
     dt.setTimestampStop(zdtEnd.toEpochSecond());

@@ -28,7 +28,7 @@ import com.codahale.metrics.logback.InstrumentedAppender;
 
 import uk.gov.dstl.baleen.core.logging.builders.BaleenConsoleLoggerBuilder;
 import uk.gov.dstl.baleen.core.logging.builders.EvictingQueueAppender;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.testing.logging.InMemoryLoggingBuilder;
 
@@ -72,7 +72,7 @@ public class BaleenLoggingTest {
   @Test
   public void config() throws Exception {
     YamlConfiguration configuration =
-        YamlConfiguration.readFromResource(BaleenLoggingTest.class, "dummyConfig.yaml");
+        new YamlConfiguration(BaleenLoggingTest.class, "dummyConfig.yaml");
 
     BaleenLogging logging = new BaleenLogging();
     logging.configure(configuration);

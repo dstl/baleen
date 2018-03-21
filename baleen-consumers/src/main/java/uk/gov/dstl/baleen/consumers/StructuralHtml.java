@@ -329,6 +329,7 @@ public class StructuralHtml extends AbstractHtmlConsumer {
    * @param s the structure annotation
    * @return the element
    */
+  @SuppressWarnings("squid:S3776" /* High CC but actually a simple method */)
   private Element createTag(final Structure s) {
     Element e;
 

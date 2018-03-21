@@ -60,29 +60,10 @@ public class EntityInitials extends BaleenAnnotator {
         if (isInitials(e.getCoveredText(), m.group(1))) {
           // Find all instances of entity, including initial instance
           Pattern p = Pattern.compile("\\b" + m.group(1) + "\\b");
-          Matcher mInitial =
-              p.matcher(subsequentText); // Initials should only appear after it's been defined
+          Matcher mInitial = p.matcher(subsequentText); // Initials should only appear after it's
+          // been defined
           while (mInitial.find()) {
-            List<? extends Entity> existing =
-                JCasUtil.selectCovered(
-                    jCas, e.getClass(), offset + mInitial.start(), offset + mInitial.end());
-            if (existing.isEmpty()) {
-              Entity eInitials2 = null;
-              try {
-                eInitials2 = e.getClass().getConstructor(JCas.class).newInstance(jCas);
-                eInitials2.setBegin(offset + mInitial.start());
-                eInitials2.setEnd(offset + mInitial.end());
-
-                // TODO: Should we copy properties across too?
-
-                addedEntities.add(eInitials2);
-              } catch (Exception ex) {
-                getMonitor()
-                    .error("Unable to create new entity of class {}", e.getClass().getName(), ex);
-              }
-            } else {
-              existingEntities.addAll(existing);
-            }
+            processInitialMatch(jCas, e, addedEntities, existingEntities, offset, mInitial);
           }
 
           // Add entities to JCas and merge references
@@ -97,9 +78,39 @@ public class EntityInitials extends BaleenAnnotator {
     }
   }
 
+  private void processInitialMatch(
+      JCas jCas,
+      Entity e,
+      List<Entity> addedEntities,
+      List<Entity> existingEntities,
+      Integer offset,
+      Matcher mInitial) {
+    List<? extends Entity> existing =
+        JCasUtil.selectCovered(
+            jCas, e.getClass(), offset + mInitial.start(), offset + mInitial.end());
+    if (existing.isEmpty()) {
+      Entity eInitials2 = null;
+      try {
+        eInitials2 = e.getClass().getConstructor(JCas.class).newInstance(jCas);
+        eInitials2.setBegin(offset + mInitial.start());
+        eInitials2.setEnd(offset + mInitial.end());
+
+        // TODO: Should we copy properties across too?
+
+        addedEntities.add(eInitials2);
+      } catch (Exception ex) {
+        getMonitor().error("Unable to create new entity of class {}", e.getClass().getName(), ex);
+      }
+    } else {
+      existingEntities.addAll(existing);
+    }
+  }
+
   /** Returns true if candidateInitials is a valid set of initials for text. */
   private boolean isInitials(String text, String candidateInitials) {
-    if (!candidateInitials.toUpperCase().equals(candidateInitials)) return false;
+    if (!candidateInitials.equalsIgnoreCase(candidateInitials)) {
+      return false;
+    }
 
     StringJoiner sj = new StringJoiner(".*", ".*", ".*");
     for (int i = 0; i < candidateInitials.length(); i++) {
@@ -160,9 +171,8 @@ public class EntityInitials extends BaleenAnnotator {
   private ReferenceTarget setReferenceTarget(JCas jCas, Entity e, List<ReferenceTarget> rts) {
     ReferenceTarget rt;
 
-    if (rts.size() == 1
-        && e.getReferent()
-            == null) { // Entity doesn't have RT, but one of the subsequent initials does
+    if (rts.size() == 1 && e.getReferent() == null) { // Entity doesn't have RT, but one of the
+      // subsequent initials does
       rt = rts.get(0);
       e.setReferent(rt);
     } else if (e.getReferent() != null) { // Entity has RT

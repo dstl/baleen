@@ -90,4 +90,17 @@ public final class AnnotationUtils {
 
     return left <= between.getBegin() && between.getEnd() <= right;
   }
+
+  /**
+   * Checks if an annotation is covering another annotation.
+   *
+   * <p>Overlapping annotations are not considered covered.
+   *
+   * @param covering the annotation covering
+   * @param covered the annotation covered
+   * @return true, if is in covering
+   */
+  public static boolean isCovering(final Annotation covering, final Annotation covered) {
+    return covering.getBegin() <= covered.getBegin() && covering.getEnd() >= covered.getEnd();
+  }
 }

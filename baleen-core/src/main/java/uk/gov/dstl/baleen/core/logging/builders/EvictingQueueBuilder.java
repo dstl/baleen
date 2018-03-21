@@ -28,7 +28,7 @@ public class EvictingQueueBuilder extends AbstractBaleenLoggerBuilder {
    */
   public EvictingQueueBuilder(String pattern, List<Filter<ILoggingEvent>> filters, int maxSize) {
     super(NAME, pattern, filters);
-    this.appender = new EvictingQueueAppender<ILoggingEvent>(maxSize);
+    appender = new EvictingQueueAppender<>(maxSize);
   }
 
   /**

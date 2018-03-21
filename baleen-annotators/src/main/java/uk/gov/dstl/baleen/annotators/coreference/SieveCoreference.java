@@ -1,11 +1,9 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.coreference;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -163,7 +161,7 @@ public class SieveCoreference extends BaleenAnnotator {
   public static final String PARAM_STOPLIST = "stoplist";
 
   @ConfigurationParameter(name = PARAM_STOPLIST, defaultValue = "DEFAULT")
-  protected String stoplist;
+  private String stoplist;
 
   /**
    * Perform only a single pass (of the provided index)
@@ -201,14 +199,7 @@ public class SieveCoreference extends BaleenAnnotator {
   @Override
   public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
     super.doInitialize(aContext);
-
-    try {
-      stopwords =
-          stopwordResource.getStopwords(SharedStopwordResource.StopwordList.valueOf(stoplist));
-    } catch (IOException ioe) {
-      getMonitor().error("Unable to load stopwords", ioe);
-      throw new ResourceInitializationException(ioe);
-    }
+    stopwords = stopwordResource.getStopwords(stoplist);
   }
 
   @Override
@@ -254,7 +245,7 @@ public class SieveCoreference extends BaleenAnnotator {
             Nationality.class,
             Person.class,
             Organisation.class),
-        Collections.emptySet());
+        ImmutableSet.of(ReferenceTarget.class));
   }
 
   private void enhanceMention(List<Mention> mentions) {

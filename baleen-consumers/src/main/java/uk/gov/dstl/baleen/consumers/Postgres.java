@@ -163,16 +163,18 @@ public class Postgres extends BaleenConsumer {
 
   /** Check that Postgres has at least version 2 of PostGIS installed */
   private void checkVersion() throws ResourceInitializationException {
-    try (Statement s = postgresResource.getConnection().createStatement();
-        ResultSet rs = s.executeQuery("SELECT PostGIS_Lib_Version() AS version")) {
-      rs.next();
-      String version = rs.getString("version");
+    try (Statement s = postgresResource.getConnection().createStatement()) {
+      try (ResultSet rs = s.executeQuery("SELECT PostGIS_Lib_Version() AS version")) {
 
-      String[] versionParts = version.split("\\.");
-      Integer majorVersion = Integer.parseInt(versionParts[0]);
+        rs.next();
+        String version = rs.getString("version");
 
-      if (majorVersion < 2) {
-        throw new BaleenException("Unsupported PostGIS Version");
+        String[] versionParts = version.split("\\.");
+        Integer majorVersion = Integer.parseInt(versionParts[0]);
+
+        if (majorVersion < 2) {
+          throw new BaleenException("Unsupported PostGIS Version");
+        }
       }
     } catch (SQLException | NumberFormatException | NullPointerException e) {
       getMonitor().error("Unable to retrieve PostGIS version");
@@ -399,8 +401,12 @@ public class Postgres extends BaleenConsumer {
    */
   public static Class<? extends Entity> getSuperclass(
       Class<? extends Entity> c1, Class<? extends Entity> c2) {
-    if (c1 == null) return c2;
-    if (c2 == null) return c1;
+    if (c1 == null) {
+      return c2;
+    }
+    if (c2 == null) {
+      return c1;
+    }
 
     if (c2.isAssignableFrom(c1)) {
       return c2;
@@ -433,12 +439,11 @@ public class Postgres extends BaleenConsumer {
   }
 
   private Integer getKey(Statement s) throws SQLException {
-    try (ResultSet generatedKeys = s.getGeneratedKeys(); ) {
+    try (ResultSet generatedKeys = s.getGeneratedKeys()) {
       if (generatedKeys.next()) {
         return generatedKeys.getInt(1);
-      } else {
-        return null;
       }
     }
+    return null;
   }
 }

@@ -20,6 +20,7 @@ import uk.gov.dstl.baleen.annotators.language.OpenNLP;
 import uk.gov.dstl.baleen.annotators.language.OpenNLPParser;
 import uk.gov.dstl.baleen.annotators.language.WordNetLemmatizer;
 import uk.gov.dstl.baleen.annotators.testing.AbstractMultiAnnotatorTest;
+import uk.gov.dstl.baleen.annotators.testing.Annotations;
 import uk.gov.dstl.baleen.resources.SharedOpenNLPModel;
 import uk.gov.dstl.baleen.resources.SharedWordNetResource;
 import uk.gov.dstl.baleen.types.common.Person;
@@ -78,21 +79,17 @@ public class UbmreDependencyRelationshipTest extends AbstractMultiAnnotatorTest 
 
   @Test
   public void test() throws AnalysisEngineProcessException, ResourceInitializationException {
-    // From the above pipeline we'll have WordToken, Setence and Depedency
+    // From the above pipeline we'll have WordToken, Sentence and Dependency
     // We still need Entity and Interaction
 
     String text = "Jon and Chris will visit London on Monday where they hope to see Big Ben.";
     jCas.setDocumentText(text);
 
-    Person jon = new Person(jCas);
-    jon.setBegin(0);
-    jon.setEnd(3);
-    jon.addToIndexes();
-
-    Person chris = new Person(jCas);
-    chris.setBegin(8);
-    chris.setEnd(13);
-    chris.addToIndexes();
+    Person jon = Annotations.createPerson(jCas, 0, 3, "Jon");
+    Person chris = Annotations.createPerson(jCas, 8, 13, "Chris");
+    Location london = Annotations.createLocation(jCas, 25, 31, "London", "");
+    Temporal monday = Annotations.createTemporal(jCas, 35, 41, "Monday");
+    Annotations.createLocation(jCas, 65, 72, "Big Ben", "");
 
     Interaction visit = new Interaction(jCas);
     visit.setBegin(19);
@@ -100,21 +97,6 @@ public class UbmreDependencyRelationshipTest extends AbstractMultiAnnotatorTest 
     visit.setRelationshipType("visit");
     visit.setValue("visit");
     visit.addToIndexes();
-
-    Location london = new Location(jCas);
-    london.setBegin(25);
-    london.setEnd(31);
-    london.addToIndexes();
-
-    Location bigben = new Location(jCas);
-    bigben.setBegin(text.indexOf("Big Ben"));
-    bigben.setEnd(bigben.getBegin() + "Big Ben".length());
-    bigben.addToIndexes();
-
-    Temporal monday = new Temporal(jCas);
-    monday.setBegin(35);
-    monday.setEnd(41);
-    monday.addToIndexes();
 
     processJCas();
 

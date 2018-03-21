@@ -14,8 +14,8 @@ import org.apache.uima.resource.ExternalResourceDescription;
 import org.bson.Document;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.mongodb.util.JSON;
 
 import uk.gov.dstl.baleen.annotators.testing.AnnotatorTestBase;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
@@ -41,6 +41,8 @@ public class MongoRegexTest extends AnnotatorTestBase {
               .append("geoJson", "Property_Test"),
           new Document(VALUE, new String[] {"madrid"}));
 
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
   @Test
   public void test() throws Exception {
     ExternalResourceDescription erd =
@@ -50,7 +52,7 @@ public class MongoRegexTest extends AnnotatorTestBase {
             FONGO_COLLECTION,
             MONGO_COLL,
             FONGO_DATA,
-            JSON.serialize(GAZ_DATA));
+            objectMapper.writeValueAsString(GAZ_DATA));
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
             MongoRegex.class,
@@ -85,7 +87,7 @@ public class MongoRegexTest extends AnnotatorTestBase {
             FONGO_COLLECTION,
             MONGO_COLL,
             FONGO_DATA,
-            JSON.serialize(GAZ_DATA));
+            objectMapper.writeValueAsString(GAZ_DATA));
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
             MongoRegex.class,
@@ -122,7 +124,7 @@ public class MongoRegexTest extends AnnotatorTestBase {
             FONGO_COLLECTION,
             MONGO_COLL,
             FONGO_DATA,
-            JSON.serialize(GAZ_DATA));
+            objectMapper.writeValueAsString(GAZ_DATA));
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
             MongoRegex.class,

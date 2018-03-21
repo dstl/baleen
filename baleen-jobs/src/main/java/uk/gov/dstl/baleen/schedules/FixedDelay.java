@@ -45,6 +45,7 @@ public class FixedDelay extends BaleenScheduler {
       return true;
     } catch (final InterruptedException e) {
       getMonitor().warn("Interrupted, stopping the scheduler");
+      Thread.currentThread().interrupt();
       return false;
     }
   }

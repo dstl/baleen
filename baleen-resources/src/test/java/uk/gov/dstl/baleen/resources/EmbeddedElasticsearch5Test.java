@@ -13,18 +13,12 @@ public class EmbeddedElasticsearch5Test {
 
   @Test
   public void test() throws Exception {
-    EmbeddedElasticsearch5 es = new EmbeddedElasticsearch5("target/elasticsearch", "test-cluster");
-
-    InputStream in = new URL("http://localhost:9200/_cluster/health").openStream();
-
-    try {
-      String response = IOUtils.toString(in, "UTF-8");
-      assertTrue(response.contains("\"cluster_name\":\"test-cluster\""));
-      assertTrue(response.contains("\"status\":\"green\""));
-    } finally {
-      IOUtils.closeQuietly(in);
+    try (EmbeddedElasticsearch5 es = new EmbeddedElasticsearch5()) {
+      try (InputStream in = new URL(es.getHttpUrl() + "/_cluster/health").openStream()) {
+        String response = IOUtils.toString(in, "UTF-8");
+        assertTrue(response.contains("\"cluster_name\":\"test-cluster\""));
+        assertTrue(response.contains("\"status\":\"green\""));
+      }
     }
-
-    es.close();
   }
 }

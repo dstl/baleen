@@ -17,6 +17,7 @@ import uk.gov.dstl.baleen.annotators.helpers.DateTimeUtils;
 import uk.gov.dstl.baleen.annotators.regex.helpers.AbstractRegexAnnotator;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.uima.utils.TemporalUtils;
 
 /**
  * Annotate DTG (Date Time Groups) within a document using regular expressions
@@ -66,9 +67,9 @@ public class Dtg extends AbstractRegexAnnotator<Temporal> {
 
     Temporal dtg = new Temporal(jCas);
 
-    dtg.setPrecision("EXACT");
-    dtg.setScope("SINGLE");
-    dtg.setTemporalType("DATETIME");
+    dtg.setPrecision(TemporalUtils.PRECISION_EXACT);
+    dtg.setScope(TemporalUtils.SCOPE_SINGLE);
+    dtg.setTemporalType(TemporalUtils.TYPE_DATETIME);
 
     dtg.setTimestampStart(timestamp);
     dtg.setTimestampStop(timestamp + 60);

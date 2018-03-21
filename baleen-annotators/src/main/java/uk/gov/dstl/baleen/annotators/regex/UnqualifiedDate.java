@@ -12,6 +12,7 @@ import com.google.common.collect.ImmutableSet;
 import uk.gov.dstl.baleen.annotators.regex.helpers.AbstractRegexAnnotator;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.uima.utils.TemporalUtils;
 
 /**
  * Extracts unqualified dates from text and annotates them as Temporal entities. We take an
@@ -75,9 +76,9 @@ public class UnqualifiedDate extends AbstractRegexAnnotator<Temporal> {
     Temporal t = new Temporal(jCas);
 
     t.setConfidence(1.0);
-    t.setPrecision("UNQUALIFIED");
-    t.setScope("SINGLE");
-    t.setTemporalType("DATE");
+    t.setPrecision(TemporalUtils.PRESISION_UNQUALIFIED);
+    t.setScope(TemporalUtils.SCOPE_SINGLE);
+    t.setTemporalType(TemporalUtils.TYPE_DATE);
 
     return t;
   }

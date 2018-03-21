@@ -1,6 +1,9 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
+import static java.util.stream.Collectors.toList;
+import static uk.gov.dstl.baleen.uima.utils.UimaTypesUtils.toList;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -36,7 +39,7 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.uima.BaleenConsumer;
-import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
+import uk.gov.dstl.baleen.uima.utils.ReferentUtils;
 
 /**
  * Output processed CAS object into MongoDB.
@@ -114,6 +117,7 @@ import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
  * @baleen.javadoc
  */
 public class Mongo extends BaleenConsumer {
+
   /**
    * Connection to Mongo
    *
@@ -121,7 +125,7 @@ public class Mongo extends BaleenConsumer {
    */
   public static final String KEY_MONGO = "mongo";
 
-  @ExternalResource(key = KEY_MONGO)
+  @ExternalResource(key = SharedMongoResource.RESOURCE_KEY)
   private SharedMongoResource mongoResource;
 
   /**
@@ -214,6 +218,7 @@ public class Mongo extends BaleenConsumer {
   public static final String FIELD_PUBLISHEDIDS_TYPE = "type";
   public static final String FIELD_METADATA = "metadata";
   public static final String FIELD_CONTENT = "content";
+  public static final String FIELD_LINKING = "linking";
 
   private final IEntityConverterFields fields = new DefaultFields();
 
@@ -250,11 +255,11 @@ public class Mongo extends BaleenConsumer {
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
     String documentId = getUniqueId(jCas);
+    deleteAnyExistingContent(documentId);
+    saveNewContent(jCas, documentId);
+  }
 
-    // Delete any existing content in the database
-    deleteAllContent(documentId);
-
-    // Save
+  private void saveNewContent(JCas jCas, String documentId) {
     try {
       saveDocument(documentId, jCas);
     } catch (MongoException | BsonSerializationException e) {
@@ -286,7 +291,7 @@ public class Mongo extends BaleenConsumer {
     }
   }
 
-  private void deleteAllContent(String documentId) {
+  private void deleteAnyExistingContent(String documentId) {
     entitiesCollection.deleteMany(new Document(FIELD_DOCUMENT_ID, documentId));
     relationsCollection.deleteMany(new Document(FIELD_DOCUMENT_ID, documentId));
     documentsCollection.deleteMany(new Document(fields.getExternalId(), documentId));
@@ -294,33 +299,32 @@ public class Mongo extends BaleenConsumer {
 
   private void saveDocument(String documentId, JCas jCas) {
     Document doc = new Document();
-    // document level
+
     DocumentAnnotation da = getDocumentAnnotation(jCas);
 
-    doc.append(
-        FIELD_DOCUMENT,
-        new Document()
-            .append(FIELD_DOCUMENT_TYPE, da.getDocType())
-            .append(FIELD_DOCUMENT_SOURCE, da.getSourceUri())
-            .append(FIELD_DOCUMENT_LANGUAGE, da.getLanguage())
-            .append(FIELD_DOCUMENT_TIMESTAMP, new Date(da.getTimestamp()))
-            .append(FIELD_DOCUMENT_CLASSIFICATION, da.getDocumentClassification())
-            .append(FIELD_DOCUMENT_CAVEATS, UimaTypesUtils.toList(da.getDocumentCaveats()))
-            .append(
-                FIELD_DOCUMENT_RELEASABILITY,
-                UimaTypesUtils.toList(da.getDocumentReleasability())));
+    doc.append(fields.getExternalId(), documentId)
+        .append(
+            FIELD_DOCUMENT,
+            new Document()
+                .append(FIELD_DOCUMENT_TYPE, da.getDocType())
+                .append(FIELD_DOCUMENT_SOURCE, da.getSourceUri())
+                .append(FIELD_DOCUMENT_LANGUAGE, da.getLanguage())
+                .append(FIELD_DOCUMENT_TIMESTAMP, new Date(da.getTimestamp()))
+                .append(FIELD_DOCUMENT_CLASSIFICATION, da.getDocumentClassification())
+                .append(FIELD_DOCUMENT_CAVEATS, toList(da.getDocumentCaveats()))
+                .append(FIELD_DOCUMENT_RELEASABILITY, toList(da.getDocumentReleasability())));
 
-    // Published Ids
-    List<Document> publishedIds = new ArrayList<>();
-    for (PublishedId pid : JCasUtil.select(jCas, PublishedId.class)) {
-      publishedIds.add(
-          new Document(FIELD_PUBLISHEDIDS_TYPE, pid.getPublishedIdType())
-              .append(FIELD_PUBLISHEDIDS_ID, pid.getValue()));
+    addPublishedIds(jCas, doc);
+    addMetadata(jCas, doc);
+
+    if (outputContent) {
+      doc.append(FIELD_CONTENT, jCas.getDocumentText());
     }
-    doc.append(FIELD_PUBLISHEDIDS, publishedIds);
 
-    // Meta data
+    documentsCollection.insertOne(doc);
+  }
 
+  private void addMetadata(JCas jCas, Document doc) {
     Multimap<String, Object> meta = MultimapBuilder.linkedHashKeys().linkedListValues().build();
     for (Metadata metadata : JCasUtil.select(jCas, Metadata.class)) {
       String key = metadata.getKey();
@@ -330,16 +334,16 @@ public class Mongo extends BaleenConsumer {
       meta.put(key, metadata.getValue());
     }
     doc.append(FIELD_METADATA, meta.asMap());
+  }
 
-    // Add content is requried
-
-    if (outputContent) {
-      doc.append(FIELD_CONTENT, jCas.getDocumentText());
+  private void addPublishedIds(JCas jCas, Document doc) {
+    List<Document> publishedIds = new ArrayList<>();
+    for (PublishedId pid : JCasUtil.select(jCas, PublishedId.class)) {
+      publishedIds.add(
+          new Document(FIELD_PUBLISHEDIDS_TYPE, pid.getPublishedIdType())
+              .append(FIELD_PUBLISHEDIDS_ID, pid.getValue()));
     }
-
-    // Save
-    doc.append(fields.getExternalId(), documentId);
-    documentsCollection.insertOne(doc);
+    doc.append(FIELD_PUBLISHEDIDS, publishedIds);
   }
 
   private void saveEntities(String documentId, JCas jCas) {
@@ -351,19 +355,8 @@ public class Mongo extends BaleenConsumer {
             stopFeatures,
             fields);
 
-    // Compile all the reference targets together
-
     Multimap<ReferenceTarget, Entity> targetted =
-        MultimapBuilder.hashKeys().linkedListValues().build();
-    for (Entity entity : JCasUtil.select(jCas, Entity.class)) {
-
-      if (entity.getReferent() != null) {
-        targetted.put(entity.getReferent(), entity);
-      } else {
-        // Create a fake reference target
-        targetted.put(new ReferenceTarget(jCas), entity);
-      }
-    }
+        ReferentUtils.createReferentMap(jCas, Entity.class, false);
 
     List<Document> ents =
         targetted
@@ -372,20 +365,18 @@ public class Mongo extends BaleenConsumer {
             .stream()
             .map(
                 e -> {
-                  Document doc = new Document();
-                  doc.append(FIELD_DOCUMENT_ID, documentId);
-                  doc.append(
-                      FIELD_ENTITIES,
-                      e.getValue()
-                          .stream()
-                          .map(ent -> converter.convertEntity(ent))
-                          .collect(Collectors.toList()));
-
-                  return doc;
+                  return new Document()
+                      .append(FIELD_DOCUMENT_ID, documentId)
+                      .append(fields.getExternalId(), ConsumerUtils.getExternalId(e.getValue()))
+                      .append(
+                          FIELD_ENTITIES,
+                          e.getValue().stream().map(converter::convertEntity).collect(toList()));
                 })
             .collect(Collectors.toList());
 
-    if (!ents.isEmpty()) entitiesCollection.insertMany(ents);
+    if (!ents.isEmpty()) {
+      entitiesCollection.insertMany(ents);
+    }
   }
 
   private void saveRelations(String documentId, JCas jCas) {
@@ -400,12 +391,13 @@ public class Mongo extends BaleenConsumer {
     List<Document> rels =
         JCasUtil.select(jCas, Relation.class)
             .stream()
-            .map(
-                r ->
-                    new Document(converter.convertRelation(r))
-                        .append(FIELD_DOCUMENT_ID, documentId))
-            .collect(Collectors.toList());
+            .map(converter::convertRelation)
+            .map(Document::new)
+            .peek(d -> d.append(FIELD_DOCUMENT_ID, documentId))
+            .collect(toList());
 
-    if (!rels.isEmpty()) relationsCollection.insertMany(rels);
+    if (!rels.isEmpty()) {
+      relationsCollection.insertMany(rels);
+    }
   }
 }

@@ -56,12 +56,15 @@ public class MetricServletTest {
   @Test
   public void testFiltering() throws Exception {
 
+    registry.counter("three:path");
+
     ServletCaller caller = new ServletCaller();
-    caller.addParameter(MetricsServlet.PARAM_FILTER, "one:*");
+    caller.addParameter(MetricsServlet.PARAM_FILTER, "one:*", "three:*");
     caller.doGet(new MetricsServlet(registry));
 
     assertTrue(caller.getResponseBody().contains("one:"));
     assertFalse(caller.getResponseBody().contains("two:"));
+    assertTrue(caller.getResponseBody().contains("three:"));
   }
 
   @Test

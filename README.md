@@ -18,7 +18,7 @@ Baleen includes an in-built server, which hosts full documentation and guides on
 To get started, you will need to launch this server and read this documentation.
 To launch the server, run the following command.
 
-> java -jar baleen-2.5.0-SNAPSHOT.jar
+> java -jar baleen-2.6.0-SNAPSHOT.jar
 
 Once running, the server can be accessed at [http://localhost:6413](http://localhost:6413).
 
@@ -43,7 +43,7 @@ The develop with Baleen, we suggest you use:
 
 Baleen requires Java 8 or later.
 
-## What's coming in Baleen 2.5
+## What's coming in Baleen 2.6
 Baleen 2.5.0-SNAPSHOT contains the following new functionality and components:
 * New components
   * Annotators: CVE (Common Vulnerabilities and Exposures), Epoch Time, IPv6, Lenient URL

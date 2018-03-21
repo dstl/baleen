@@ -44,7 +44,7 @@ public class ContentManipulatorServlet extends AbstractComponentApiServlet {
   protected void get(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
     if (getComponents().isPresent()) {
-      respond(resp, MediaType.create("text", "x-yaml"), getComponents().get());
+      respond(resp, MediaType.create("text", "x-yaml"), getComponents().orElse(""));
     } else {
       respondWithError(resp, 503, "Unable to load content manipulator class");
     }

@@ -62,7 +62,7 @@ public class NationalityToLocation extends BaleenAnnotator {
         }
       } else {
         getMonitor()
-            .warn(
+            .debug(
                 "Nationality '{}' does not have a country code associated with it - no location will be added",
                 nationality.getValue());
       }

@@ -106,7 +106,6 @@ public class BaleenAnnotatorTest {
     resetMocked();
 
     annotator.getDocumentAnnotation(jCas);
-    verify(support, only()).getDocumentAnnotation(jCas);
     resetMocked();
 
     annotator.mergeWithExisting(existingAnnotation, annotation);

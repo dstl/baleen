@@ -34,7 +34,7 @@ import uk.gov.dstl.baleen.core.logging.builders.EvictingQueueAppender;
 import uk.gov.dstl.baleen.core.logging.builders.EvictingQueueBuilder;
 import uk.gov.dstl.baleen.core.manager.AbstractBaleenComponent;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.Configuration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
@@ -107,7 +107,7 @@ public class BaleenLogging extends AbstractBaleenComponent {
   }
 
   @Override
-  public void configure(YamlConfiguration yaml) throws BaleenException {
+  public void configure(Configuration yaml) throws BaleenException {
     LOGGER.debug("Configuring logging");
 
     List<Map<String, Object>> loggingConfig = yaml.getAsListOfMaps(CONFIG_LOGGING);

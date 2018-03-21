@@ -129,11 +129,9 @@ public class MongoDocumentHistory extends AbstractDocumentHistory<MongoHistory> 
     Document entities = (Document) doc.get(ENTITIES);
 
     List<HistoryEvent> history = Lists.newLinkedList();
-    for (String entityId : entities.keySet()) {
-      if (entities.get(entityId) != null && entities.get(entityId) instanceof List) {
-
-        List<?> list = (List<?>) entities.get(entityId);
-        convertForEntity(history, entityId, list);
+    for (Entry<String, Object> entry : entities.entrySet()) {
+      if (entry.getValue() instanceof List) {
+        convertForEntity(history, entry.getKey(), (List<?>) entry.getValue());
       }
     }
     return history;

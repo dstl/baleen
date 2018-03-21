@@ -61,7 +61,10 @@ import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
  */
 public class StructuralAnnotations implements ContentMapper {
 
+  private static final String CLASS = "class";
+
   @Override
+  @SuppressWarnings({"squid:S128", "squid:S1479"} /* fall through intended */)
   public void map(final JCas jCas, final Element element, final AnnotationCollector collector) {
 
     Structure s = null;
@@ -331,7 +334,7 @@ public class StructuralAnnotations implements ContentMapper {
     }
 
     if (s != null) {
-      if (element.hasAttr("class")) {
+      if (element.hasAttr(CLASS)) {
         s.setElementClass(element.className());
       }
       if (element.hasAttr("id")) {
@@ -387,7 +390,7 @@ public class StructuralAnnotations implements ContentMapper {
   }
 
   private Page createFromArticle(final JCas jCas, final Element element) {
-    final String clazz = element.attr("class");
+    final String clazz = element.attr(CLASS);
     switch (clazz.toLowerCase()) {
       case "sheet":
         return new Sheet(jCas);
@@ -408,7 +411,7 @@ public class StructuralAnnotations implements ContentMapper {
    * @return the Style
    */
   private Document createFromMain(final JCas jCas, final Element element) {
-    final String clazz = element.attr("class");
+    final String clazz = element.attr(CLASS);
     switch (clazz.toLowerCase()) {
       case "spreadsheet":
         return new SpreadSheet(jCas);

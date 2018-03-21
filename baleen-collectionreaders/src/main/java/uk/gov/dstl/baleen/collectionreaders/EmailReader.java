@@ -2,15 +2,40 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.StringJoiner;
 
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.Authenticator;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Header;
+import javax.mail.Message;
 import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.MethodNotSupportedException;
+import javax.mail.Multipart;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Part;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Store;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
@@ -168,8 +193,6 @@ public class EmailReader extends BaleenCollectionReader {
 
   private Long lastCheck = 0L;
 
-  private Authenticator authenticator;
-  private Session session;
   private Store store;
   private Folder inboxFolder;
 
@@ -189,7 +212,7 @@ public class EmailReader extends BaleenCollectionReader {
     }
     extractor.initialize(context, getConfigParameters(context));
 
-    authenticator =
+    Authenticator authenticator =
         new Authenticator() {
           @Override
           protected PasswordAuthentication getPasswordAuthentication() {
@@ -203,7 +226,7 @@ public class EmailReader extends BaleenCollectionReader {
     prop.put("mail." + protocol + ".port", port);
     prop.put("mail.user", user);
 
-    session = Session.getInstance(prop, authenticator);
+    Session session = Session.getInstance(prop, authenticator);
     try {
       store = session.getStore();
     } catch (NoSuchProviderException e) {
@@ -324,7 +347,9 @@ public class EmailReader extends BaleenCollectionReader {
   private String joinStrings(String... strings) {
     StringJoiner sj = new StringJoiner("_");
     for (String s : strings) {
-      if (s != null) sj.add(s);
+      if (s != null) {
+        sj.add(s);
+      }
     }
 
     return sj.toString();
@@ -337,10 +362,8 @@ public class EmailReader extends BaleenCollectionReader {
     String subject = msg.getSubject();
     String sender = getAddress(msg.getFrom()[0]);
 
-    extractor.processStream(
-        new ByteArrayInputStream(content.getBytes(Charset.defaultCharset())),
-        "mailto:" + sender + "#" + subject,
-        jCas);
+    InputStream is = IOUtils.toInputStream(content, Charset.defaultCharset());
+    extractor.processStream(is, "mailto:" + sender + "#" + subject, jCas);
 
     addMetadata(jCas, "sender", sender);
     addMetadata(jCas, "subject", subject);
@@ -348,9 +371,8 @@ public class EmailReader extends BaleenCollectionReader {
     addAddressesMetadata(msg.getRecipients(RecipientType.TO), jCas, "toRecipient");
     addAddressesMetadata(msg.getRecipients(RecipientType.CC), jCas, "ccRecipient");
 
-    for (String attachment :
-        getAttachments(
-            msg)) { // We don't use the attachments list here, because we want to add the list of
+    for (String attachment : getAttachments(msg)) { // We don't use the attachments list here,
+      // because we want to add the list of
       // attachments to the metadata regardless of whether we've saved them or not
       addMetadata(jCas, "attachment", attachment);
     }
@@ -360,7 +382,6 @@ public class EmailReader extends BaleenCollectionReader {
       }
     }
 
-    @SuppressWarnings("unchecked")
     Enumeration<Header> headers = msg.getAllHeaders();
     while (headers.hasMoreElements()) {
       Header header = headers.nextElement();
@@ -376,9 +397,8 @@ public class EmailReader extends BaleenCollectionReader {
       }
 
       try {
-        alreadyProcessed.remove(
-            generateUniqueId(
-                msg)); // We can save memory by removing messages we've deleted on the server
+        alreadyProcessed.remove(generateUniqueId(msg)); // We can save memory by removing messages
+        // we've deleted on the server
       } catch (MessagingException me) {
         getMonitor().warn("Unable to re-generate unique ID for message to remove from memory", me);
       }
@@ -492,8 +512,7 @@ public class EmailReader extends BaleenCollectionReader {
                   destFile.getName());
         }
 
-        // Save the file to disk
-        writeFileToDisk(destFile, part.getInputStream());
+        writeFileToDisk(destFile, part);
 
         attachmentLocations.add(destFile);
       }
@@ -502,35 +521,18 @@ public class EmailReader extends BaleenCollectionReader {
     return attachmentLocations;
   }
 
-  private void writeFileToDisk(File destFile, InputStream inputStream) throws IOException {
-    FileOutputStream output = null;
-    try {
-      output = new FileOutputStream(destFile);
+  private void writeFileToDisk(File destFile, Part part) throws IOException, MessagingException {
+    try (FileOutputStream output = new FileOutputStream(destFile);
+        InputStream input = part.getInputStream()) {
 
       byte[] buffer = new byte[4096];
       int byteRead;
 
-      while ((byteRead = inputStream.read(buffer)) != -1) {
+      while ((byteRead = input.read(buffer)) != -1) {
         output.write(buffer, 0, byteRead);
       }
     } catch (IOException ex) {
       throw new IOException("Unable to save attachment", ex);
-    } finally {
-      if (inputStream != null) {
-        try {
-          inputStream.close();
-        } catch (Exception e) {
-          getMonitor().debug("Unable to close InputStream, or already closed", e);
-        }
-      }
-
-      if (output != null) {
-        try {
-          output.close();
-        } catch (Exception e) {
-          getMonitor().debug("Unable to close FileOutputStream, or already closed", e);
-        }
-      }
     }
   }
 
@@ -559,7 +561,9 @@ public class EmailReader extends BaleenCollectionReader {
       inboxFolder.expunge();
     } catch (MethodNotSupportedException mnse) {
       getMonitor()
-          .debug("Expunge method not supported (e.g. POP3) - closing and reopening folder", mnse);
+          .debug(
+              "Expunge method not supported (e.g. POP3) - closing and reopening folder - {}",
+              mnse.getMessage());
 
       inboxFolder.close(true);
       reopenConnection();

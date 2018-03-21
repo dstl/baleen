@@ -79,13 +79,13 @@ public class InteractionDefinition {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
+    final int PRIME = 31;
     int result = 1;
-    result = prime * result + (source == null ? 0 : source.hashCode());
-    result = prime * result + (subType == null ? 0 : subType.hashCode());
-    result = prime * result + (target == null ? 0 : target.hashCode());
-    result = prime * result + (type == null ? 0 : type.hashCode());
-    result = prime * result + (word == null ? 0 : word.hashCode());
+    result = PRIME * result + (source == null ? 0 : source.hashCode());
+    result = PRIME * result + (subType == null ? 0 : subType.hashCode());
+    result = PRIME * result + (target == null ? 0 : target.hashCode());
+    result = PRIME * result + (type == null ? 0 : type.hashCode());
+    result = PRIME * result + (word == null ? 0 : word.hashCode());
     return result;
   }
 
@@ -100,7 +100,7 @@ public class InteractionDefinition {
     if (getClass() != obj.getClass()) {
       return false;
     }
-    final InteractionDefinition other = (InteractionDefinition) obj;
+    InteractionDefinition other = (InteractionDefinition) obj;
     if (source == null) {
       if (other.source != null) {
         return false;

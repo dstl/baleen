@@ -59,12 +59,12 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
   @ConfigurationParameter(name = PARAM_CONTENT_HASH_AS_ID, defaultValue = "true")
   boolean contentHashAsId = true;
 
+  private static final String FORMAT = "format";
   private static final String ES_PROPERTIES = "properties";
   private static final String ES_TYPE = "type";
   private static final String ES_TYPE_KEYWORD = "keyword";
   private static final String ES_TYPE_TEXT = "text";
   private static final String ES_TYPE_INTEGER = "integer";
-  private static final String ES_TYPE_LONG = "long";
   private static final String ES_TYPE_DOUBLE = "double";
   private static final String ES_TYPE_GEOSHAPE = "geo_shape";
   private static final String ES_TYPE_DATE = "date";
@@ -111,7 +111,7 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
         .endObject()
         .startObject("dateAccessed")
         .field(ES_TYPE, ES_TYPE_DATE)
-        .field("format", "epoch_millis")
+        .field(FORMAT, "epoch_millis")
         .endObject()
         .startObject("metadata")
         .field(ES_TYPE, ES_TYPE_NESTED)
@@ -144,11 +144,11 @@ public abstract class AbstractElasticsearchConsumer extends BaleenConsumer {
         .endObject()
         .startObject("timestampStart")
         .field(ES_TYPE, ES_TYPE_DATE)
-        .field("format", "epoch_second")
+        .field(FORMAT, "epoch_second")
         .endObject()
         .startObject("timestampStop")
         .field(ES_TYPE, ES_TYPE_DATE)
-        .field("format", "epoch_second")
+        .field(FORMAT, "epoch_second")
         .endObject()
         .endObject()
         .endObject()

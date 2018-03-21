@@ -79,4 +79,9 @@ public class Edge {
   public boolean isFrom(WordToken token) {
     return token.equals(from);
   }
+
+  @Override
+  public String toString() {
+    return to.getCoveredText() + " - " + from.getCoveredText();
+  }
 }

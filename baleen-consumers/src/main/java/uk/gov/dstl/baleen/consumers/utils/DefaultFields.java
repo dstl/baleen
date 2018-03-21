@@ -47,4 +47,9 @@ public class DefaultFields implements IEntityConverterFields {
   public String getHistoryTimestamp() {
     return "timestamp";
   }
+
+  @Override
+  public String getType() {
+    return "type";
+  }
 }

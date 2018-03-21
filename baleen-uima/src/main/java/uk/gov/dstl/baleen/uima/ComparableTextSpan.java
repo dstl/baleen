@@ -40,20 +40,22 @@ public class ComparableTextSpan implements Comparable<ComparableTextSpan> {
 
   @Override
   public int compareTo(ComparableTextSpan s) {
-    if (s.start > this.start) {
+    if (s.start > start) {
       return -1;
-    } else if (s.start < this.start) {
+    } else if (s.start < start) {
       return 1;
-    } else if (s.end > this.end) {
+    } else if (s.end > end) {
       return -1;
-    } else if (s.end < this.end) {
+    } else if (s.end < end) {
       return 1;
-    } else if (value == null && s.value == null) {
-      return 0;
-    } else if (value != null && s.value == null) {
+    } else if (value == null) {
+      if (s.value == null) {
+        return 0;
+      } else {
+        return -1;
+      }
+    } else if (s.value == null) {
       return 1;
-    } else if (value == null && s.value != null) {
-      return -1;
     } else {
       return value.compareTo(s.value);
     }
@@ -99,25 +101,39 @@ public class ComparableTextSpan implements Comparable<ComparableTextSpan> {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
+    final int PRIME = 31;
     int result = 1;
-    result = prime * result + end;
-    result = prime * result + start;
-    result = prime * result + ((value == null) ? 0 : value.hashCode());
+    result = PRIME * result + end;
+    result = PRIME * result + start;
+    result = PRIME * result + (value == null ? 0 : value.hashCode());
     return result;
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (this == obj) return true;
-    if (obj == null) return false;
-    if (getClass() != obj.getClass()) return false;
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
     ComparableTextSpan other = (ComparableTextSpan) obj;
-    if (end != other.end) return false;
-    if (start != other.start) return false;
+    if (end != other.end) {
+      return false;
+    }
+    if (start != other.start) {
+      return false;
+    }
     if (value == null) {
-      if (other.value != null) return false;
-    } else if (!value.equals(other.value)) return false;
+      if (other.value != null) {
+        return false;
+      }
+    } else if (!value.equals(other.value)) {
+      return false;
+    }
     return true;
   }
 

@@ -3,11 +3,14 @@ package uk.gov.dstl.baleen.core.web.servlets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
+import uk.gov.dstl.baleen.core.pipelines.PipelineConfiguration;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.testing.DummyCollectionReader;
@@ -29,12 +33,14 @@ import uk.gov.dstl.baleen.testing.servlets.ServletCaller;
 /** Tests for {@link PipelineManagerServlet}. */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class PipelineManagerServletTest {
+
   private static final String ROOT = "/api/1/pipelines";
   private static final String PAUSE = ROOT + "/pause";
   private static final String UNPAUSE = ROOT + "/unpause";
 
   private static final String REAL = "real";
-  private static final String NAME = "name";
+  private static final String NAME = PipelineManagerServlet.PARAM_NAME;
+  private static final String YAML = PipelineManagerServlet.PARAM_YAML;
   private static final String MISSING = "missing";
 
   @Mock BaleenPipelineManager pipelineManager;
@@ -43,12 +49,14 @@ public class PipelineManagerServletTest {
 
   @Mock BaleenPipeline mockPipeline;
 
+  @Mock PipelineConfiguration pipelineConfiguration;
+
   @Before
   public void before() {
     realPipeline =
         new BaleenPipeline(
             REAL,
-            "",
+            pipelineConfiguration,
             new NoOpOrderer(),
             new DummyCollectionReader(),
             Collections.emptyList(),
@@ -124,13 +132,14 @@ public class PipelineManagerServletTest {
   @Test
   public void testPostForCreate() throws Exception {
     String yaml = "yaml";
+    when(pipelineManager.create(eq("new"), anyPiplieConfiguration())).thenReturn(realPipeline);
     ServletCaller caller = new ServletCaller();
     caller.setRequestUri(ROOT);
     caller.addParameter(NAME, "new");
-    caller.addParameter("yaml", yaml);
+    caller.addParameter(YAML, yaml);
     caller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(200, caller.getResponseStatus().intValue());
-    verify(pipelineManager).create("new", yaml);
+    verify(pipelineManager).create(eq("new"), anyPiplieConfiguration());
   }
 
   @Test
@@ -139,10 +148,10 @@ public class PipelineManagerServletTest {
     ServletCaller caller = new ServletCaller();
     caller.setRequestUri(ROOT);
     caller.addParameter(NAME, REAL);
-    caller.addParameter("yaml", yaml);
+    caller.addParameter(YAML, yaml);
     caller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(400, caller.getSentError().intValue());
-    verify(pipelineManager, never()).create(REAL, yaml);
+    verify(pipelineManager, never()).create(REAL, pipelineConfiguration);
   }
 
   @Test
@@ -150,44 +159,46 @@ public class PipelineManagerServletTest {
     String yaml = "yaml";
     ServletCaller missingNameCaller = new ServletCaller();
     missingNameCaller.setRequestUri(ROOT);
-    missingNameCaller.addParameter("yaml", yaml);
+    missingNameCaller.addParameter(YAML, yaml);
     missingNameCaller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(400, missingNameCaller.getSentError().intValue());
-    verify(pipelineManager, never()).create(anyString(), anyString());
+    verify(pipelineManager, never()).create(anyString(), anyPiplieConfiguration());
 
     ServletCaller missingYamlCaller = new ServletCaller();
     missingYamlCaller.setRequestUri(ROOT);
     missingYamlCaller.addParameter(NAME, NAME);
     missingYamlCaller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(400, missingYamlCaller.getSentError().intValue());
-    verify(pipelineManager, never()).create(anyString(), anyString());
+    verify(pipelineManager, never()).create(anyString(), anyPiplieConfiguration());
 
     ServletCaller emptyYamlCaller = new ServletCaller();
     emptyYamlCaller.setRequestUri(ROOT);
     emptyYamlCaller.addParameter(NAME, NAME);
-    emptyYamlCaller.addParameter("yaml", "");
+    emptyYamlCaller.addParameter(YAML, "");
     emptyYamlCaller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(400, missingYamlCaller.getSentError().intValue());
-    verify(pipelineManager, never()).create(anyString(), anyString());
+    verify(pipelineManager, never()).create(anyString(), anyPiplieConfiguration());
 
     ServletCaller emptyNameCaller = new ServletCaller();
     emptyNameCaller.setRequestUri(ROOT);
     emptyNameCaller.addParameter(NAME, NAME);
-    emptyNameCaller.addParameter("yaml", "");
+    emptyNameCaller.addParameter(YAML, "");
     emptyNameCaller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(400, emptyNameCaller.getSentError().intValue());
-    verify(pipelineManager, never()).create(anyString(), anyString());
+    verify(pipelineManager, never()).create(anyString(), anyPiplieConfiguration());
   }
 
   @Test
   public void testPostCreationFailure() throws Exception {
-    doThrow(BaleenException.class).when(pipelineManager).create(anyString(), anyString());
+    doThrow(BaleenException.class)
+        .when(pipelineManager)
+        .create(anyString(), anyPiplieConfiguration());
 
     String yaml = "yaml";
     ServletCaller caller = new ServletCaller();
     caller.setRequestUri(ROOT);
     caller.addParameter(NAME, yaml);
-    caller.addParameter("yaml", yaml);
+    caller.addParameter(YAML, yaml);
     caller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(400, caller.getSentError().intValue());
   }
@@ -240,5 +251,9 @@ public class PipelineManagerServletTest {
     emptyCaller.addParameter(NAME, new String[] {});
     emptyCaller.doDelete(new PipelineManagerServlet(pipelineManager));
     assertEquals(400, caller.getSentError().intValue());
+  }
+
+  private PipelineConfiguration anyPiplieConfiguration() {
+    return any(PipelineConfiguration.class);
   }
 }

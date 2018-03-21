@@ -10,6 +10,7 @@ import static org.mockito.Mockito.doReturn;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Collections;
 
 import org.apache.commons.io.IOUtils;
@@ -21,7 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /** Integration style test for {@link BaleenWebApi}. */
@@ -87,7 +88,7 @@ public class BaleenWebApiTest {
   private String getResponse(String path) throws IOException {
     int port = BaleenWebApi.getPort(BaleenWebApi.DEFAULT_PORT);
     URL url = new URL("http://localhost:" + port + "/api/1" + path);
-    return IOUtils.toString(url.openStream());
+    return IOUtils.toString(url.openStream(), Charset.defaultCharset());
   }
 
   @Test

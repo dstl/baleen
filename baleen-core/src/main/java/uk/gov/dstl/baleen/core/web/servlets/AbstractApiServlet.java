@@ -42,7 +42,7 @@ public abstract class AbstractApiServlet extends HttpServlet {
   public AbstractApiServlet(Logger logger, Metrics metrics) {
     this.logger = logger;
     this.metrics = metrics;
-    this.mapper = new ObjectMapper();
+    mapper = new ObjectMapper();
     mapper.enable(SerializationFeature.INDENT_OUTPUT);
   }
 
@@ -166,6 +166,8 @@ public abstract class AbstractApiServlet extends HttpServlet {
     Context context = getTimer(req).time();
     try {
       get(req, resp);
+    } catch (ServletException | IOException e) {
+      logger.warn("get error", e);
     } finally {
       context.close();
     }
@@ -179,6 +181,8 @@ public abstract class AbstractApiServlet extends HttpServlet {
     Context context = getTimer(req).time();
     try {
       post(req, resp);
+    } catch (ServletException | IOException e) {
+      logger.warn("post error", e);
     } finally {
       context.close();
     }
@@ -192,6 +196,8 @@ public abstract class AbstractApiServlet extends HttpServlet {
     Context context = getTimer(req).time();
     try {
       put(req, resp);
+    } catch (ServletException | IOException e) {
+      logger.warn("put error", e);
     } finally {
       context.close();
     }
@@ -205,6 +211,8 @@ public abstract class AbstractApiServlet extends HttpServlet {
     Context context = getTimer(req).time();
     try {
       delete(req, resp);
+    } catch (ServletException | IOException e) {
+      logger.warn("delete error", e);
     } finally {
       context.close();
     }

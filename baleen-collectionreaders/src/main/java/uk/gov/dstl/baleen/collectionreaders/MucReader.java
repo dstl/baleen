@@ -21,6 +21,7 @@ import com.google.common.base.Splitter;
 import uk.gov.dstl.baleen.collectionreaders.helpers.AbstractStreamCollectionReader;
 import uk.gov.dstl.baleen.collectionreaders.helpers.MucEntry;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.uima.UimaSupport;
 
 /**
  * Reads the MUC-3 and MUC-4 datasets.
@@ -119,7 +120,7 @@ public class MucReader extends AbstractStreamCollectionReader<MucEntry> {
     jCas.setDocumentLanguage("en");
     jCas.setDocumentText(entry.getText());
 
-    getSupport().getDocumentAnnotation(jCas).setSourceUri(entry.getId());
+    UimaSupport.getDocumentAnnotation(jCas).setSourceUri(entry.getId());
   }
 
   @Override

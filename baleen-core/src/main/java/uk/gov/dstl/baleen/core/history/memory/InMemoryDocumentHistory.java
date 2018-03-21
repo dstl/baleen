@@ -23,7 +23,7 @@ public class InMemoryDocumentHistory extends AbstractDocumentHistory<BaleenHisto
 
   private static final Logger LOGGER = LoggerFactory.getLogger(InMemoryBaleenHistory.class);
 
-  private BlockingDeque<HistoryEvent> events = new LinkedBlockingDeque<HistoryEvent>();
+  private BlockingDeque<HistoryEvent> events = new LinkedBlockingDeque<>();
 
   /**
    * New instance, should only be used by {@link BaleenHistory} implementation.

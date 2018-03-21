@@ -1,6 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.apache.uima.UIMAException;
@@ -14,11 +15,12 @@ import org.junit.Before;
 
 import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
+import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 @SuppressWarnings("unchecked")
-public class AbstractBaleenTaskTest {
+public abstract class AbstractBaleenTaskTest {
 
   private BaleenJobManager jobManager;
   private JCas jCas;
@@ -63,15 +65,16 @@ public class AbstractBaleenTaskTest {
     return params.toString();
   }
 
-  protected BaleenJob wrapInJob(Class<? extends BaleenTask>... taskClasses) throws BaleenException {
+  protected BaleenJob wrapInJob(Class<? extends BaleenTask>... taskClasses)
+      throws BaleenException, IOException {
     String yaml = getYaml(taskClasses);
-    return (BaleenJob) jobManager.create("testjob", yaml);
+    return (BaleenJob) jobManager.create("testjob", new YamlPiplineConfiguration(yaml));
   }
 
   protected BaleenJob wrapInJob(Class<? extends BaleenTask> taskClass, Map<String, String> params)
-      throws BaleenException {
+      throws BaleenException, IOException {
     String yaml = getYaml(taskClass, params);
-    return (BaleenJob) jobManager.create("testjob", yaml);
+    return (BaleenJob) jobManager.create("testjob", new YamlPiplineConfiguration(yaml));
   }
 
   protected JobSettings execute(AnalysisEngine... analysisEngines)

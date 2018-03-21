@@ -42,12 +42,17 @@ public class IdentityUtils {
    *     algorithm
    */
   public static String hashStrings(String... strings) throws BaleenException {
+    if (strings == null) {
+      return "";
+    }
 
     StringBuilder hash = new StringBuilder();
 
     StringBuilder concat = new StringBuilder();
     for (String s : strings) {
-      if (s != null) concat.append(s);
+      if (s != null) {
+        concat.append(s);
+      }
     }
 
     try {

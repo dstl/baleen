@@ -76,7 +76,13 @@ public class CsvCoreferenceConsumerTest extends AbstractAnnotatorTest {
     l.setValue("London");
     l.addToIndexes();
 
-    processJCas("filename", file.getAbsolutePath(), Coreference.KEY_STOPWORDS, stopwordsDesc);
+    processJCas(
+        "filename",
+        file.getAbsolutePath(),
+        Coreference.KEY_STOPWORDS,
+        stopwordsDesc,
+        Coreference.SEPARATOR_CHAR,
+        "\t");
 
     final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
 

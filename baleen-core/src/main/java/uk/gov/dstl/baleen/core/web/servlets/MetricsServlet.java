@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.core.web.servlets;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,11 +86,11 @@ public class MetricsServlet extends AbstractApiServlet {
   @Override
   protected void get(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException, IOException {
-    String filter =
-        req.getParameter(PARAM_FILTER); // If more than one is provided, just use the first
+
+    String[] filters = req.getParameterValues(PARAM_FILTER);
 
     Map<String, Metric> metrics;
-    if (filter == null) {
+    if (filters == null || filters.length == 0) {
       metrics = registry.getMetrics();
     } else {
       metrics =
@@ -97,8 +98,16 @@ public class MetricsServlet extends AbstractApiServlet {
               .getMetrics()
               .entrySet()
               .stream()
-              .filter(e -> filterMetric(e.getKey(), filter))
-              .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+              .filter(
+                  e -> {
+                    for (String s : filters) {
+                      if (filterMetric(e.getKey(), s)) {
+                        return true;
+                      }
+                    }
+                    return false;
+                  })
+              .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
     respondWithJson(resp, metrics);

@@ -3,6 +3,7 @@ package uk.gov.dstl.baleen.uima;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -133,13 +134,13 @@ public class UimaMonitor {
    * function and not every time we add an entity.
    */
   public void persistCounts() {
-    for (String type : entityAddedCounts.keySet()) {
-      metrics.getCounter(type + "-added").inc(entityAddedCounts.get(type));
+    for (Entry<String, Long> entry : entityAddedCounts.entrySet()) {
+      metrics.getCounter(entry.getKey() + "-added").inc(entry.getValue());
     }
     entityAddedCounts.clear();
 
-    for (String type : entityRemovedCounts.keySet()) {
-      metrics.getCounter(type + "-removed").inc(entityRemovedCounts.get(type));
+    for (Entry<String, Long> entry : entityRemovedCounts.entrySet()) {
+      metrics.getCounter(entry.getKey() + "-removed").inc(entry.getValue());
     }
     entityRemovedCounts.clear();
   }

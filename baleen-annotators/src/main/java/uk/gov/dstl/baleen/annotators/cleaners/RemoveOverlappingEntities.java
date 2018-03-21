@@ -2,7 +2,12 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UimaContext;

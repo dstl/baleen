@@ -33,6 +33,7 @@ public class FixedDelayTest extends AbstractSchedulerTest<FixedDelay> {
   }
 
   @Test
+  @SuppressWarnings("squid:S2925" /* sleep required for test */)
   public void testDelay()
       throws CollectionException, IOException, ResourceInitializationException,
           InterruptedException {

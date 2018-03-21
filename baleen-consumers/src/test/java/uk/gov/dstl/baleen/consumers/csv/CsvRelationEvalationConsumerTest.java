@@ -30,7 +30,7 @@ public class CsvRelationEvalationConsumerTest extends AbstractAnnotatorTest {
   }
 
   @Test
-  public void test()
+  public void testTsv()
       throws AnalysisEngineProcessException, ResourceInitializationException, IOException {
 
     final File file = File.createTempFile("test", "relations");
@@ -66,7 +66,13 @@ public class CsvRelationEvalationConsumerTest extends AbstractAnnotatorTest {
     r.setTarget(l);
     r.addToIndexes();
 
-    processJCas("filename", file.getAbsolutePath());
+    processJCas(
+        "filename",
+        file.getAbsolutePath(),
+        CsvRelation.SEPARATOR_CHAR,
+        "\t",
+        CsvRelation.QUOTE_CHAR,
+        "");
 
     final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
 
@@ -116,7 +122,13 @@ public class CsvRelationEvalationConsumerTest extends AbstractAnnotatorTest {
     r.setTarget(l);
     r.addToIndexes();
 
-    processJCas("filename", file.getAbsolutePath());
+    processJCas(
+        "filename",
+        file.getAbsolutePath(),
+        CsvRelation.QUOTE_CHAR,
+        "",
+        CsvRelation.SEPARATOR_CHAR,
+        "\t");
 
     final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
 
@@ -130,6 +142,61 @@ public class CsvRelationEvalationConsumerTest extends AbstractAnnotatorTest {
     assertTrue(lines.get(1).contains("\tLondon\t"));
     assertTrue(lines.get(1).contains("\tMOVEMENT\t"));
     assertTrue(lines.get(1).contains("\twent\t"));
+
+    file.delete();
+  }
+
+  @Test
+  public void testCsv()
+      throws AnalysisEngineProcessException, ResourceInitializationException, IOException {
+
+    final File file = File.createTempFile("test", "relations");
+    file.deleteOnExit();
+
+    final String text = "John went to London.";
+    jCas.setDocumentText(text);
+
+    final Sentence s = new Sentence(jCas);
+    s.setBegin(0);
+    s.setEnd(text.length());
+    s.addToIndexes();
+
+    final Person p = new Person(jCas);
+    p.setBegin(text.indexOf("John"));
+    p.setEnd(p.getBegin() + "John".length());
+    p.setValue("John");
+    p.addToIndexes();
+
+    final Location l = new Location(jCas);
+    l.setBegin(text.indexOf("London"));
+    l.setEnd(l.getBegin() + "London".length());
+    l.setValue("London");
+    l.addToIndexes();
+
+    final Relation r = new Relation(jCas);
+    r.setBegin(text.indexOf("went"));
+    r.setEnd(r.getBegin() + "went".length());
+    r.setValue("went");
+    r.setRelationshipType("MOVEMENT");
+    r.setRelationSubType("went");
+    r.setSource(p);
+    r.setTarget(l);
+    r.addToIndexes();
+
+    processJCas("filename", file.getAbsolutePath());
+
+    final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
+
+    assertEquals(2, lines.size());
+
+    // Header
+    assertTrue(lines.get(0).contains("source"));
+    // Relation
+    assertTrue(lines.get(1).contains(",\"John went to London.\","));
+    assertTrue(lines.get(1).contains(",\"John\","));
+    assertTrue(lines.get(1).contains(",\"London\","));
+    assertTrue(lines.get(1).contains(",\"MOVEMENT\","));
+    assertTrue(lines.get(1).contains(",\"went\","));
 
     file.delete();
   }

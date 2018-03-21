@@ -45,7 +45,13 @@ public class CsvInteractionWriter implements InteractionWriter {
     // Create the parent dirs
     new File(csvFilename).getAbsoluteFile().getParentFile().mkdirs();
 
-    writer = new CSVWriter(new FileWriter(csvFilename, false));
+    writer =
+        new CSVWriter(
+            new FileWriter(csvFilename, false),
+            CSVWriter.DEFAULT_SEPARATOR,
+            CSVWriter.NO_QUOTE_CHARACTER,
+            CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+            CSVWriter.DEFAULT_LINE_END);
 
     // Print the header
     writer.writeNext(

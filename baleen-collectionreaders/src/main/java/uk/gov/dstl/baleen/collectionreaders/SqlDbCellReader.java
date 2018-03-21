@@ -174,7 +174,9 @@ public class SqlDbCellReader extends BaleenCollectionReader {
     try (ResultSet rsTables = conn.prepareStatement(tablesSql).executeQuery()) {
       while (rsTables.next()) {
         String tableName = rsTables.getString(1);
-        if (inArray(tableName, ignoreTables)) continue;
+        if (inArray(tableName, ignoreTables)) {
+          continue;
+        }
 
         tables.add(tableName);
       }
@@ -216,8 +218,11 @@ public class SqlDbCellReader extends BaleenCollectionReader {
     return !currRow.isEmpty();
   }
 
+  @SuppressWarnings("squid:S2095")
   private boolean getNextTable() throws SQLException {
-    if (tables.isEmpty()) return false;
+    if (tables.isEmpty()) {
+      return false;
+    }
 
     columns.clear();
 
@@ -228,7 +233,9 @@ public class SqlDbCellReader extends BaleenCollectionReader {
         conn.prepareStatement(columnsSql.replaceAll("\\?", currTable)).executeQuery()) {
       while (rsColumns.next()) {
         String columnName = rsColumns.getString(1);
-        if (inArray(currTable + "." + columnName, ignoreColumns)) continue;
+        if (inArray(currTable + "." + columnName, ignoreColumns)) {
+          continue;
+        }
 
         columns.add(columnName);
       }
@@ -279,7 +286,9 @@ public class SqlDbCellReader extends BaleenCollectionReader {
 
   private static boolean inArray(String needle, String[] haystack) {
     for (String h : haystack) {
-      if (needle.equalsIgnoreCase(h)) return true;
+      if (needle.equalsIgnoreCase(h)) {
+        return true;
+      }
     }
 
     return false;

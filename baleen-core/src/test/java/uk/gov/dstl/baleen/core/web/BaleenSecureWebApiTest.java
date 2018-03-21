@@ -14,7 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 
 /** Tests for {@link BaleenWebApi} which apply authentication to the system. */
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -53,7 +53,7 @@ public class BaleenSecureWebApiTest {
     try {
 
       YamlConfiguration yamlConfiguration =
-          YamlConfiguration.readFromResource(BaleenSecureWebApiTest.class, "secure.yaml");
+          new YamlConfiguration(BaleenSecureWebApiTest.class, "secure.yaml");
 
       web.configure(yamlConfiguration);
       web.start();

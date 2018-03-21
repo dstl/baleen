@@ -1,7 +1,6 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.misc.helpers;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -11,6 +10,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 import uk.gov.dstl.baleen.types.language.Sentence;
@@ -30,7 +30,7 @@ public abstract class AbstractRootWordAnnotator<T extends Entity> extends Baleen
   protected static final Set<Class<? extends Annotation>> requiredInputs =
       ImmutableSet.of(Sentence.class, WordToken.class);
 
-  public static final List<String> STOPWORDS = Arrays.asList("and", "or");
+  public static final List<String> STOPWORDS = ImmutableList.of("and", "or");
 
   @Override
   protected void doProcessTextBlock(TextBlock textBlock) throws AnalysisEngineProcessException {
@@ -69,7 +69,9 @@ public abstract class AbstractRootWordAnnotator<T extends Entity> extends Baleen
         addToJCasIndex(e);
         wtPrevDesc = null;
       } else if (isDescriptiveWord(word)) {
-        if (wtPrevDesc == null) wtPrevDesc = wt;
+        if (wtPrevDesc == null) {
+          wtPrevDesc = wt;
+        }
       } else if (!isStopWord(word)) {
         wtPrevDesc = null;
       }

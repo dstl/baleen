@@ -58,9 +58,6 @@ public abstract class AbstractBaleenTaglet implements Taglet {
     return toString(tags);
   }
 
-  @Override
-  public abstract String toString(Tag[] tags);
-
   /** Return a list of fields for this class and all it's superclasses */
   protected static List<FieldDoc> getFields(ClassDoc classDoc) {
     List<FieldDoc> ret = new ArrayList<>();

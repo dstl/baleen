@@ -11,6 +11,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 
+import uk.gov.dstl.baleen.types.BaleenAnnotation;
 import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.uima.utils.select.ItemHierarchy;
 import uk.gov.dstl.baleen.uima.utils.select.Node;
@@ -52,7 +53,8 @@ public class AnnotationHierarchyBuilder {
   protected static <T extends Annotation> Node<T> buildRoot(
       JCas jCas, Set<Class<? extends T>> annotationTypes) {
     return build(
-        StructureUtil.filterAnnotations(JCasUtil.select(jCas, Annotation.class), annotationTypes));
+        TypeUtils.filterAnnotations(
+            JCasUtil.select(jCas, BaleenAnnotation.class), annotationTypes));
   }
 
   /**

@@ -22,7 +22,7 @@ public class ExtractReferenceTargets extends AbstractCoreferenceSieve {
   @Override
   public void sieve() {
 
-    Map<Long, Cluster> map = new HashMap<Long, Cluster>();
+    Map<Long, Cluster> map = new HashMap<>();
 
     getMentions()
         .stream()

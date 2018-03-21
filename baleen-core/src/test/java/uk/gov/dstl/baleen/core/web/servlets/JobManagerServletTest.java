@@ -3,11 +3,14 @@ package uk.gov.dstl.baleen.core.web.servlets;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +24,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
+import uk.gov.dstl.baleen.core.pipelines.PipelineConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.schedules.Other;
 import uk.gov.dstl.baleen.testing.servlets.ServletCaller;
@@ -42,9 +46,11 @@ public class JobManagerServletTest {
 
   @Mock BaleenJob mockJob;
 
+  @Mock PipelineConfiguration pipelineConfiguration;
+
   @Before
   public void before() {
-    realJob = new BaleenJob(REAL, "", new Other(), Collections.emptyList());
+    realJob = new BaleenJob(REAL, pipelineConfiguration, new Other(), Collections.emptyList());
 
     doReturn(true).when(jobManager).has(REAL);
 
@@ -56,6 +62,10 @@ public class JobManagerServletTest {
     doReturn(Optional.of(mockJob)).when(jobManager).get("mock");
     doReturn("pipeline-name").when(mockJob).getName();
     doReturn(false).when(mockJob).isPaused();
+  }
+
+  private PipelineConfiguration anyPipelineConfiguration() {
+    return any(PipelineConfiguration.class);
   }
 
   @Test
@@ -116,13 +126,14 @@ public class JobManagerServletTest {
   @Test
   public void testPostForCreate() throws Exception {
     String yaml = "yaml";
+    when(jobManager.create(eq("new"), anyPipelineConfiguration())).thenReturn(realJob);
     ServletCaller caller = new ServletCaller();
     caller.setRequestUri(ROOT);
     caller.addParameter(NAME, "new");
     caller.addParameter("yaml", yaml);
     caller.doPost(new JobManagerServlet(jobManager));
     assertEquals(200, caller.getResponseStatus().intValue());
-    verify(jobManager).create("new", yaml);
+    verify(jobManager).create(eq("new"), anyPipelineConfiguration());
   }
 
   @Test
@@ -134,7 +145,7 @@ public class JobManagerServletTest {
     caller.addParameter("yaml", yaml);
     caller.doPost(new JobManagerServlet(jobManager));
     assertEquals(400, caller.getSentError().intValue());
-    verify(jobManager, never()).create(REAL, yaml);
+    verify(jobManager, never()).create(eq(REAL), anyPipelineConfiguration());
   }
 
   @Test
@@ -145,14 +156,14 @@ public class JobManagerServletTest {
     missingNameCaller.addParameter("yaml", yaml);
     missingNameCaller.doPost(new JobManagerServlet(jobManager));
     assertEquals(400, missingNameCaller.getSentError().intValue());
-    verify(jobManager, never()).create(anyString(), anyString());
+    verify(jobManager, never()).create(anyString(), anyPipelineConfiguration());
 
     ServletCaller missingYamlCaller = new ServletCaller();
     missingYamlCaller.setRequestUri(ROOT);
     missingYamlCaller.addParameter(NAME, NAME);
     missingYamlCaller.doPost(new JobManagerServlet(jobManager));
     assertEquals(400, missingYamlCaller.getSentError().intValue());
-    verify(jobManager, never()).create(anyString(), anyString());
+    verify(jobManager, never()).create(anyString(), anyPipelineConfiguration());
 
     ServletCaller emptyYamlCaller = new ServletCaller();
     emptyYamlCaller.setRequestUri(ROOT);
@@ -160,7 +171,7 @@ public class JobManagerServletTest {
     emptyYamlCaller.addParameter("yaml", "");
     emptyYamlCaller.doPost(new JobManagerServlet(jobManager));
     assertEquals(400, missingYamlCaller.getSentError().intValue());
-    verify(jobManager, never()).create(anyString(), anyString());
+    verify(jobManager, never()).create(anyString(), anyPipelineConfiguration());
 
     ServletCaller emptyNameCaller = new ServletCaller();
     emptyNameCaller.setRequestUri(ROOT);
@@ -168,12 +179,12 @@ public class JobManagerServletTest {
     emptyNameCaller.addParameter("yaml", "");
     emptyNameCaller.doPost(new JobManagerServlet(jobManager));
     assertEquals(400, emptyNameCaller.getSentError().intValue());
-    verify(jobManager, never()).create(anyString(), anyString());
+    verify(jobManager, never()).create(anyString(), anyPipelineConfiguration());
   }
 
   @Test
   public void testPostCreationFailure() throws Exception {
-    doThrow(BaleenException.class).when(jobManager).create(anyString(), anyString());
+    doThrow(BaleenException.class).when(jobManager).create(anyString(), anyPipelineConfiguration());
 
     String yaml = "yaml";
     ServletCaller caller = new ServletCaller();

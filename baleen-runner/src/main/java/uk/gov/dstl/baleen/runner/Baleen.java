@@ -2,13 +2,31 @@
 package uk.gov.dstl.baleen.runner;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
-import uk.gov.dstl.baleen.core.manager.BaleenManager.BaleenManagerListener;
+import uk.gov.dstl.baleen.core.utils.yaml.IncludedYaml;
+import uk.gov.dstl.baleen.core.utils.yaml.MergedYaml;
+import uk.gov.dstl.baleen.core.utils.yaml.Yaml;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlFile;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlMap;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlString;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
 /**
@@ -27,10 +45,8 @@ import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
  */
 public class Baleen {
   private static final Logger LOGGER = LoggerFactory.getLogger(Baleen.class);
-  private static final String USAGE =
-      "Usage: baleen  [configuration.yaml]"
-          + "Options%n"
-          + "\t--dry-run\t\tConfigure, start, then immediately stop. Useful for testing configuration noting some documents may be processed.";
+  private static final String PIPELINE = "pipeline";
+  private static final String JOB = "job";
 
   protected Baleen() {
     // Singleton
@@ -43,51 +59,97 @@ public class Baleen {
    * @param args The command line arguments
    */
   protected void runCLI(String[] args) {
-    String param = "";
-    if (args != null && args.length > 0) {
-      param = args[0];
-    }
 
-    if ("--help".equals(param) || "-h".equals(param)) {
-      System.out.println(USAGE);
+    Options options = new Options();
+    options.addOption("h", "help", false, "Print this message.");
+    options.addOption(
+        "d",
+        "dry-run",
+        false,
+        "Configure, start, then immediately stop. Useful for testing configuration noting some documents may be processed.");
+    options.addOption("p", PIPELINE, true, "Run the pipline specified in the given file.");
+    options.addOption("j", JOB, true, "Run the job specified in the given file.");
+
+    boolean dryRun = false;
+    Yaml yaml = null;
+    try {
+      CommandLineParser parser = new DefaultParser();
+      CommandLine line = parser.parse(options, args);
+
+      if (line.hasOption("help")) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("baleen.jar [OPTIONS] [CONFIGURATION_FILE]", options);
+        return;
+      }
+
+      if (line.hasOption("dry-run")) {
+        dryRun = true;
+      }
+
+      yaml = createYaml(line);
+
+      LOGGER.debug("Baleen Configuration:\n {}", yaml);
+    } catch (ParseException | InvalidParameterException | IllegalArgumentException exp) {
+      LOGGER.error("Parsing failed.  Reason: " + exp.getMessage());
       return;
     }
 
-    boolean dryRun = false;
-    if ("--dry-run".equals(param)) {
-      dryRun = true;
-    }
-
     LOGGER.info("Baleen starting");
-    // Look for our configuration file as the first parameter of the command
-    // line
-    Optional<File> configurationFile = Optional.empty();
+
     try {
-      configurationFile = getConfigurationFile(param);
-    } catch (InvalidParameterException ipe) {
+      BaleenManager baleen = new BaleenManager(new YamlConfiguration(yaml));
+      if (dryRun) {
+        baleen.run(manager -> LOGGER.info("Dry run mode: closing immediately"));
+      } else {
+        baleen.runUntilStopped();
+      }
+    } catch (IOException e) {
       LOGGER.error(
-          "Couldn't get Baleen configuration - default configuration will be used: {}",
-          ipe.getMessage(),
-          ipe);
-    }
-
-    LOGGER.info("Baleen about to run");
-
-    BaleenManager baleen = new BaleenManager(configurationFile);
-    if (dryRun) {
-      baleen.run(
-          new BaleenManagerListener() {
-
-            @Override
-            public void onStarted(BaleenManager manager) {
-              LOGGER.info("Dry run mode: closing immediately");
-            }
-          });
-    } else {
-      baleen.runUntilStopped();
+          "Couldn't load Baleen configuration - default configuration will be used: {}",
+          e.getMessage(),
+          e);
     }
 
     LOGGER.info("Baleen has finished");
+  }
+
+  private Yaml createYaml(CommandLine line) throws InvalidParameterException {
+    List<String> argList = line.getArgList();
+    if (argList.size() > 1) {
+      throw new IllegalArgumentException("Reason: Too many arguments");
+    }
+
+    List<Yaml> yamls = new ArrayList<>();
+    if (argList.size() == 1) {
+      Optional<File> configurationFile = getConfigurationFile(argList.get(0));
+      if (configurationFile.isPresent()) {
+        yamls.add(new IncludedYaml(new YamlFile(configurationFile.get())));
+      }
+    }
+
+    if (line.hasOption(PIPELINE)) {
+      yamls.add(
+          new YamlMap(
+              "pipelines",
+              ImmutableList.of(
+                  ImmutableMap.of(
+                      "name", "from-command-line", "file", line.getOptionValue(PIPELINE)))));
+    }
+    if (line.hasOption(JOB)) {
+      yamls.add(
+          new YamlMap(
+              "jobs",
+              ImmutableList.of(
+                  ImmutableMap.of("name", "from-command-line", "file", line.getOptionValue(JOB)))));
+    }
+
+    if (yamls.isEmpty()) {
+      return new YamlString("");
+    } else if (yamls.size() == 1) {
+      return yamls.get(0);
+    } else {
+      return new MergedYaml(yamls);
+    }
   }
 
   /**

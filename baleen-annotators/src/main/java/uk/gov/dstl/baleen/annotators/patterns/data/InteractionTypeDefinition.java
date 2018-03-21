@@ -50,11 +50,11 @@ public class InteractionTypeDefinition {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
+    final int PRIME = 31;
     int result = 1;
-    result = prime * result + (pos == null ? 0 : pos.hashCode());
-    result = prime * result + (subType == null ? 0 : subType.hashCode());
-    result = prime * result + (type == null ? 0 : type.hashCode());
+    result = PRIME * result + (pos == null ? 0 : pos.hashCode());
+    result = PRIME * result + (subType == null ? 0 : subType.hashCode());
+    result = PRIME * result + (type == null ? 0 : type.hashCode());
     return result;
   }
 

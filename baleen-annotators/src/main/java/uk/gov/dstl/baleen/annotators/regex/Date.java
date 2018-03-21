@@ -22,6 +22,7 @@ import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.BaleenTextAwareAnnotator;
 import uk.gov.dstl.baleen.uima.data.TextBlock;
+import uk.gov.dstl.baleen.uima.utils.TemporalUtils;
 
 /**
  * Annotate dates and date ranges as Temporal entities. The following examples show the types of
@@ -63,17 +64,13 @@ public class Date extends BaleenTextAwareAnnotator {
   @ConfigurationParameter(name = PARAM_AMERICAN_FORMAT, defaultValue = "false")
   private boolean americanDates;
 
+  // Non-capturing as we don't use this information
   private static final String DAYS =
-      "(?:(?:Mon|Monday|Tue|Tues|Tuesday|Wed|Wednesday|Thu|Thurs|Thursday|Fri|Friday|Sat|Saturday|Sun|Sunday)\\s+)?"; // Non-capturing as we don't use this information
+      "(?:(?:Mon|Monday|Tue|Tues|Tuesday|Wed|Wednesday|Thu|Thurs|Thursday|Fri|Friday|Sat|Saturday|Sun|Sunday)\\s+)?";
   private static final String MONTHS =
       "(Jan(\\.|uary)?|Feb(\\.|ruary)?|Mar(\\.|ch)?|Apr(\\.|il)?|May|Jun(\\.|e)?|Jul(\\.|y)?|Aug(\\.|ust)?|Sep(\\.|t(\\.|ember)?)?|Oct(\\.|ober)?|Nov(\\.|ember)?|Dec(\\.|ember)?)";
   private static final String DATES = "([1-9]|[12][0-9]|3[01])\\s*";
   private static final String DATE_SUFFIXES = "(st|nd|rd|th)";
-
-  private static final String EXACT = "EXACT";
-  private static final String RANGE = "RANGE";
-  private static final String SINGLE = "SINGLE";
-  private static final String DATE_TYPE = "DATE";
 
   private static final String INVALID_DATE_FOUND = "Invalid date found";
 
@@ -159,10 +156,14 @@ public class Date extends BaleenTextAwareAnnotator {
       Year y = DateTimeUtils.asYear(m.group(28));
 
       String m1 = m.group(1);
-      if (m1.endsWith(".")) m1 = m1.substring(0, m1.length() - 1);
+      if (m1.endsWith(".")) {
+        m1 = m1.substring(0, m1.length() - 1);
+      }
 
       String m2 = m.group(15);
-      if (m2.endsWith(".")) m2 = m2.substring(0, m2.length() - 1);
+      if (m2.endsWith(".")) {
+        m2 = m2.substring(0, m2.length() - 1);
+      }
 
       YearMonth ym1 = y.atMonth(DateTimeUtils.asMonth(m1));
       YearMonth ym2 = y.atMonth(DateTimeUtils.asMonth(m2));
@@ -186,10 +187,14 @@ public class Date extends BaleenTextAwareAnnotator {
       }
 
       String m1 = m.group(1);
-      if (m1.endsWith(".")) m1 = m1.substring(0, m1.length() - 1);
+      if (m1.endsWith(".")) {
+        m1 = m1.substring(0, m1.length() - 1);
+      }
 
       String m2 = m.group(16);
-      if (m2.endsWith(".")) m2 = m2.substring(0, m2.length() - 1);
+      if (m2.endsWith(".")) {
+        m2 = m2.substring(0, m2.length() - 1);
+      }
 
       Year y1 = DateTimeUtils.asYear(m.group(14));
       YearMonth ym1 = y1.atMonth(DateTimeUtils.asMonth(m1));
@@ -242,7 +247,9 @@ public class Date extends BaleenTextAwareAnnotator {
       Year y = DateTimeUtils.asYear(m.group(19));
 
       String month = m.group(6);
-      if (month.endsWith(".")) month = month.substring(0, month.length() - 1);
+      if (month.endsWith(".")) {
+        month = month.substring(0, month.length() - 1);
+      }
 
       YearMonth ym = y.atMonth(DateTimeUtils.asMonth(month));
 
@@ -256,7 +263,7 @@ public class Date extends BaleenTextAwareAnnotator {
         continue;
       }
 
-      if (("and".equalsIgnoreCase(m.group(3)) && !betweenPrefix(text, m.start()))
+      if ("and".equalsIgnoreCase(m.group(3)) && !betweenPrefix(text, m.start())
           || "/".equals(m.group(3))
           || "\\".equals(m.group(3))) {
         if (ld2.equals(ld1.plusDays(1))) {
@@ -267,11 +274,12 @@ public class Date extends BaleenTextAwareAnnotator {
           createDate(block, m.start(4), m.end(), ld2);
 
           Temporal t = createDate(block, m.start(), m.end(), ld1);
-          if (t != null)
+          if (t != null) {
             t.setValue(
                 text.substring(m.start(), m.start(3)).trim()
                     + " "
                     + text.substring(m.start(6), m.end()).trim());
+          }
         }
       } else {
         // Create time range
@@ -309,10 +317,14 @@ public class Date extends BaleenTextAwareAnnotator {
       }
 
       String m1 = m.group(3);
-      if (m1.endsWith(".")) m1 = m1.substring(0, m1.length() - 1);
+      if (m1.endsWith(".")) {
+        m1 = m1.substring(0, m1.length() - 1);
+      }
 
       String m2 = m.group(19);
-      if (m2.endsWith(".")) m2 = m2.substring(0, m2.length() - 1);
+      if (m2.endsWith(".")) {
+        m2 = m2.substring(0, m2.length() - 1);
+      }
 
       Year y = DateTimeUtils.asYear(m.group(32));
       YearMonth ym1 = y.atMonth(DateTimeUtils.asMonth(m1));
@@ -361,10 +373,14 @@ public class Date extends BaleenTextAwareAnnotator {
       }
 
       String m1 = m.group(3);
-      if (m1.endsWith(".")) m1 = m1.substring(0, m1.length() - 1);
+      if (m1.endsWith(".")) {
+        m1 = m1.substring(0, m1.length() - 1);
+      }
 
       String m2 = m.group(20);
-      if (m2.endsWith(".")) m2 = m2.substring(0, m2.length() - 1);
+      if (m2.endsWith(".")) {
+        m2 = m2.substring(0, m2.length() - 1);
+      }
 
       Year y1 = DateTimeUtils.asYear(m.group(16));
       YearMonth ym1 = y1.atMonth(DateTimeUtils.asMonth(m1));
@@ -536,7 +552,9 @@ public class Date extends BaleenTextAwareAnnotator {
       Year y = DateTimeUtils.asYear(m.group(16));
       String month = m.group(3);
 
-      if (month.endsWith(".")) month = month.substring(0, month.length() - 1);
+      if (month.endsWith(".")) {
+        month = month.substring(0, month.length() - 1);
+      }
 
       YearMonth ym = y.atMonth(DateTimeUtils.asMonth(month));
 
@@ -635,7 +653,9 @@ public class Date extends BaleenTextAwareAnnotator {
   }
 
   private static boolean dateSeparatorSuffix(String text, Integer matchEnd) {
-    if (matchEnd >= text.length()) return false;
+    if (matchEnd >= text.length()) {
+      return false;
+    }
 
     String nextChar = text.substring(matchEnd, matchEnd + 1);
     return "-".equals(nextChar) || "/".equals(nextChar) || "\\".equals(nextChar);
@@ -646,7 +666,9 @@ public class Date extends BaleenTextAwareAnnotator {
     Year y = DateTimeUtils.asYear(m.group(yearGroup));
 
     String month = m.group(monthGroup);
-    if (month.endsWith(".")) month = month.substring(0, month.length() - 1);
+    if (month.endsWith(".")) {
+      month = month.substring(0, month.length() - 1);
+    }
 
     YearMonth ym = y.atMonth(DateTimeUtils.asMonth(month));
 
@@ -665,9 +687,9 @@ public class Date extends BaleenTextAwareAnnotator {
     Temporal date = block.newAnnotation(Temporal.class, charBegin, charEnd);
     date.setConfidence(1.0);
 
-    date.setPrecision(EXACT);
-    date.setScope(SINGLE);
-    date.setTemporalType(DATE_TYPE);
+    date.setPrecision(TemporalUtils.PRECISION_EXACT);
+    date.setScope(TemporalUtils.SCOPE_SINGLE);
+    date.setTemporalType(TemporalUtils.TYPE_DATE);
 
     return date;
   }
@@ -676,9 +698,9 @@ public class Date extends BaleenTextAwareAnnotator {
     Temporal date = block.newAnnotation(Temporal.class, charBegin, charEnd);
     date.setConfidence(1.0);
 
-    date.setPrecision(EXACT);
-    date.setScope(RANGE);
-    date.setTemporalType(DATE_TYPE);
+    date.setPrecision(TemporalUtils.PRECISION_EXACT);
+    date.setScope(TemporalUtils.SCOPE_RANGE);
+    date.setTemporalType(TemporalUtils.TYPE_DATETIME);
 
     return date;
   }

@@ -84,14 +84,14 @@ public class ActiveMQReader extends BaleenCollectionReader {
   @Override
   protected void doInitialize(final UimaContext context) throws ResourceInitializationException {
     try {
-      this.extractor = getContentExtractor(contentExtractor);
+      extractor = getContentExtractor(contentExtractor);
     } catch (final InvalidParameterException ipe) {
       throw new ResourceInitializationException(ipe);
     }
-    this.extractor.initialize(context, getConfigParameters(context));
+    extractor.initialize(context, getConfigParameters(context));
 
     try {
-      this.consumer = activeMQ.createConsumer(endpoint, messageSelector);
+      consumer = activeMQ.createConsumer(endpoint, messageSelector);
     } catch (final JMSException e) {
       throw new ResourceInitializationException(e);
     }
@@ -102,15 +102,15 @@ public class ActiveMQReader extends BaleenCollectionReader {
     final String source = String.join(".", activeMQ.getResourceName(), endpoint);
 
     try {
-      final Message msg = this.consumer.receive();
+      final Message msg = consumer.receive();
       if (msg instanceof TextMessage) {
         final String text = ((TextMessage) msg).getText();
-        this.extractor.processStream(
+        extractor.processStream(
             new ByteArrayInputStream(text.getBytes(Charset.defaultCharset())), source, jCas);
       } else {
         throw new IOException(
             String.format(
-                "Unexpected message type for message with id %1 from source %2",
+                "Unexpected message type for message with id %s from source %s",
                 msg.getJMSMessageID(), source));
       }
     } catch (final JMSException e) {
@@ -121,7 +121,7 @@ public class ActiveMQReader extends BaleenCollectionReader {
   @Override
   protected void doClose() throws IOException {
     try {
-      this.consumer.close();
+      consumer.close();
     } catch (final JMSException e) {
       throw new IOException(e);
     }

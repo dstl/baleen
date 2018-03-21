@@ -72,8 +72,8 @@ public class PronounResolutionSieve extends AbstractCoreferenceSieve {
 
   private boolean validateMentions(Mention a, Mention b) {
     // We are coreferencing pronouns only, so a OR b must be a pronoun, but not both
-    if (!((a.getType() == MentionType.PRONOUN && b.getType() != MentionType.PRONOUN)
-        || (a.getType() != MentionType.PRONOUN && b.getType() == MentionType.PRONOUN))) {
+    if (!(a.getType() == MentionType.PRONOUN && b.getType() != MentionType.PRONOUN
+        || a.getType() != MentionType.PRONOUN && b.getType() == MentionType.PRONOUN)) {
       return false;
     }
 
@@ -83,11 +83,7 @@ public class PronounResolutionSieve extends AbstractCoreferenceSieve {
     }
 
     // Are the attributes compatible (gender=gender, etc)
-    if (!a.isAttributeCompatible(b)) {
-      return false;
-    }
-
-    return true;
+    return a.isAttributeCompatible(b);
   }
 
   private void resolvePronoun(Mention a, Mention b, Multimap<Mention, Mention> potential) {
@@ -146,7 +142,7 @@ public class PronounResolutionSieve extends AbstractCoreferenceSieve {
 
     final Collection<Mention> matched;
     if (potentialMatches.size() > 1) {
-      List<Mention> list = new ArrayList<Mention>(potentialMatches);
+      List<Mention> list = new ArrayList<>(potentialMatches);
       Collections.sort(
           list,
           (a, b) -> {

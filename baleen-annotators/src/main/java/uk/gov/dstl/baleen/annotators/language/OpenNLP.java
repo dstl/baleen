@@ -3,9 +3,7 @@
 package uk.gov.dstl.baleen.annotators.language;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -94,49 +92,48 @@ public class OpenNLP extends BaleenTextAwareAnnotator {
   private ChunkerME phraseChunker;
 
   private final Set<String> prepositions =
-      new HashSet<String>(
-          Arrays.asList(
-              "about",
-              "above",
-              "across",
-              "against",
-              "amid",
-              "around",
-              "at",
-              "atop",
-              "behind",
-              "below",
-              "beneath",
-              "beside",
-              "between",
-              "beyond",
-              "by",
-              "for",
-              "from",
-              "down",
-              "in",
-              "including",
-              "inside",
-              "into",
-              "mid",
-              "near",
-              "of",
-              "off",
-              "on",
-              "onto",
-              "opposite",
-              "out",
-              "outside",
-              "over",
-              "round",
-              "through",
-              "throughout",
-              "to",
-              "under",
-              "underneath",
-              "with",
-              "within",
-              "without"));
+      ImmutableSet.of(
+          "about",
+          "above",
+          "across",
+          "against",
+          "amid",
+          "around",
+          "at",
+          "atop",
+          "behind",
+          "below",
+          "beneath",
+          "beside",
+          "between",
+          "beyond",
+          "by",
+          "for",
+          "from",
+          "down",
+          "in",
+          "including",
+          "inside",
+          "into",
+          "mid",
+          "near",
+          "of",
+          "off",
+          "on",
+          "onto",
+          "opposite",
+          "out",
+          "outside",
+          "over",
+          "round",
+          "through",
+          "throughout",
+          "to",
+          "under",
+          "underneath",
+          "with",
+          "within",
+          "without");
 
   @Override
   public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
@@ -255,7 +252,7 @@ public class OpenNLP extends BaleenTextAwareAnnotator {
 
   /** Add phrase chunks and POS tags to a sentence */
   private void addSentencePhraseChunk(List<WordToken> tokenList, TextBlock block) {
-    List<PhraseChunk> sentPhraseChunks = new ArrayList<PhraseChunk>();
+    List<PhraseChunk> sentPhraseChunks = new ArrayList<>();
 
     String[] tokens = new String[tokenList.size()];
     String[] posTags = new String[tokenList.size()];
@@ -276,7 +273,7 @@ public class OpenNLP extends BaleenTextAwareAnnotator {
       chunk.setEnd(tokenList.get(element.getEnd() - 1).getEnd());
       chunk.setChunkType(element.getType());
 
-      chunk = addPhraseWordsAndHead(chunk, block);
+      addPhraseWordsAndHead(chunk, block);
       addToJCasIndex(chunk);
 
       sentPhraseChunks.add(chunk);
@@ -284,8 +281,8 @@ public class OpenNLP extends BaleenTextAwareAnnotator {
   }
 
   /** Add constituent words and the head word to a PhraseChunk */
-  private PhraseChunk addPhraseWordsAndHead(PhraseChunk chunk, TextBlock block) {
-    List<WordToken> constituentWords = new ArrayList<WordToken>();
+  private void addPhraseWordsAndHead(PhraseChunk chunk, TextBlock block) {
+    List<WordToken> constituentWords = new ArrayList<>();
     for (WordToken word : JCasUtil.selectCovered(block.getJCas(), WordToken.class, chunk)) {
       constituentWords.add(word);
     }
@@ -309,8 +306,6 @@ public class OpenNLP extends BaleenTextAwareAnnotator {
     }
 
     chunk.setHeadWord(constituentWords.get(headWordId));
-
-    return chunk;
   }
 
   private static boolean isUpperCase(String s) {

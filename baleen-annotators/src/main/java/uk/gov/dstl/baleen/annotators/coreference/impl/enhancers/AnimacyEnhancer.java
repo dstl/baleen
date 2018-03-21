@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.annotators.coreference.impl.enhancers;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.Animacy;
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.Mention;
@@ -94,9 +95,9 @@ public class AnimacyEnhancer implements MentionEnhancer {
           PRONOUN_MAP.getOrDefault(mention.getText().toLowerCase(), Animacy.UNKNOWN));
     } else if (mention.getType() == MentionType.ENTITY) {
       final Class<? extends Base> entityClazz = mention.getAnnotation().getClass();
-      for (final Class<? extends Base> clazz : SEMANTIC_MAP.keySet()) {
-        if (clazz.isAssignableFrom(entityClazz)) {
-          mention.setAnimacy(SEMANTIC_MAP.get(clazz));
+      for (final Entry<Class<? extends Base>, Animacy> entry : SEMANTIC_MAP.entrySet()) {
+        if (entry.getKey().isAssignableFrom(entityClazz)) {
+          mention.setAnimacy(entry.getValue());
           return;
         }
       }

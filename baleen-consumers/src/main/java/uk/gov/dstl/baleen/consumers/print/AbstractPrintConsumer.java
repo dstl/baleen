@@ -92,7 +92,7 @@ public abstract class AbstractPrintConsumer<T extends Base> extends BaleenConsum
    * @param array the array
    */
   protected void writeLine(StringBuilder sb, FSArray array) {
-    writeLine(sb, asString(array, Annotation.class, fs -> fs.getCoveredText(), ";"));
+    writeLine(sb, asString(array, Annotation.class, Annotation::getCoveredText, ";"));
   }
 
   /**
@@ -152,7 +152,7 @@ public abstract class AbstractPrintConsumer<T extends Base> extends BaleenConsum
    * @param array the array
    */
   protected void writeLine(StringBuilder sb, String prefix, FSArray array) {
-    writeLine(sb, prefix, asString(array, Annotation.class, fs -> fs.getCoveredText(), ";"));
+    writeLine(sb, prefix, asString(array, Annotation.class, Annotation::getCoveredText, ";"));
   }
 
   /**

@@ -45,9 +45,6 @@ public class SharedElasticsearchResource extends BaleenResource {
   @ConfigurationParameter(name = PARAM_PORT, defaultValue = "9300")
   private String esPortString;
 
-  // Parse the port config parameter into this variable to avoid issues with parameter types
-  private int esPort;
-
   /**
    * The name of the cluster to connect to
    *
@@ -64,7 +61,7 @@ public class SharedElasticsearchResource extends BaleenResource {
   protected boolean doInitialize(ResourceSpecifier specifier, Map<String, Object> additionalParams)
       throws ResourceInitializationException {
 
-    esPort = ConfigUtils.stringToInteger(esPortString, 9300);
+    int esPort = ConfigUtils.stringToInteger(esPortString, 9300);
 
     // Use the transport client
     Settings.Builder settings = Settings.builder();

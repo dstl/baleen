@@ -1,9 +1,8 @@
 // Dstl (c) Crown Copyright 2017
-package uk.gov.dstl.baleen.core.utils;
+package uk.gov.dstl.baleen.core.utils.yaml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -29,14 +28,13 @@ public class YamlConfigurationTest {
 
   @Before
   public void setup() throws IOException {
-    config =
-        YamlConfiguration.readFromResource(YamlConfigurationTest.class, YAMLCONFIGURATION_YAML);
+    config = new YamlConfiguration(YamlConfigurationTest.class, YAMLCONFIGURATION_YAML);
   }
 
   @Test
   public void testNonExistentFile() {
     try {
-      YamlConfiguration.readFromFile(new File("missing.yaml"));
+      new YamlConfiguration(new File("missing.yaml"));
     } catch (IOException ioe) {
       return;
     }
@@ -46,17 +44,11 @@ public class YamlConfigurationTest {
 
   @Test
   public void testReadString() throws IOException {
-    YamlConfiguration yc = new YamlConfiguration();
-    yc.read("example:\n  color: red\n  count: 7\n  list:\n  - a\n  - b\n  - c");
+    YamlConfiguration yc =
+        new YamlConfiguration("example:\n  color: red\n  count: 7\n  list:\n  - a\n  - b\n  - c");
     assertTrue(yc.getAsList("example.list").containsAll(Arrays.asList("a", "b", "c")));
     assertEquals("red", yc.get("example.color").get());
     assertEquals(7, yc.get("example.count").get());
-  }
-
-  @Test
-  public void testGetRoot() {
-    assertNotNull(config.getRoot());
-    assertEquals(4, config.getRoot().size());
   }
 
   @Test
@@ -89,10 +81,10 @@ public class YamlConfigurationTest {
   }
 
   @Test
-  public void testCleanTabs() {
+  public void testCleanTabs() throws IOException {
     assertEquals(
-        "        Hello\tWorld!\n    This\tis\ta\ttest...\n1.. 2..  3..   4..    \n",
-        YamlConfiguration.cleanTabs(
-            "\t\tHello\tWorld!\n\tThis\tis\ta\ttest...\n1.. 2..  3..   4..    "));
+        "test: \"Hello\\tWorld!\"\n" + "testing:\n" + "- 1.. 2..  3..   4..\n",
+        new YamlConfiguration("\t\ttest: Hello\tWorld!\n\t\ttesting:\n\t\t- 1.. 2..  3..   4..   ")
+            .toString());
   }
 }

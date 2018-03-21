@@ -44,7 +44,7 @@ public class ElasticsearchDocumentHistory extends AbstractDocumentHistory<Elasti
   public ElasticsearchDocumentHistory(
       ElasticsearchHistory history, String documentId, BlockingDeque<HistoryEvent> events) {
     super(history, documentId);
-    this.events = events != null ? events : new LinkedBlockingDeque<HistoryEvent>();
+    this.events = events != null ? events : new LinkedBlockingDeque<>();
   }
 
   @Override

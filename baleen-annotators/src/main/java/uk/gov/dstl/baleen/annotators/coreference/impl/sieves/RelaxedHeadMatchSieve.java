@@ -25,7 +25,7 @@ public class RelaxedHeadMatchSieve extends AbstractCoreferenceSieve {
   public RelaxedHeadMatchSieve(
       JCas jCas, List<Cluster> clusters, List<Mention> mentions, Collection<String> stopwords) {
     super(jCas, clusters, mentions);
-    this.stopwordsPattern = StopwordUtils.buildStopwordPattern(stopwords, false);
+    stopwordsPattern = StopwordUtils.buildStopwordPattern(stopwords, false);
   }
 
   @Override
@@ -74,7 +74,9 @@ public class RelaxedHeadMatchSieve extends AbstractCoreferenceSieve {
     final String aText = a.getText();
     final String bHead = b.getHead();
 
-    if (!hasHead(b)) return false;
+    if (!hasHead(b)) {
+      return false;
+    }
 
     // Not i-within-i
     if (a.overlaps(b)) {
@@ -92,10 +94,6 @@ public class RelaxedHeadMatchSieve extends AbstractCoreferenceSieve {
     }
 
     // Do we contain the head word?
-    if (!aText.contains(bHead)) {
-      return false;
-    }
-
-    return true;
+    return aText.contains(bHead);
   }
 }

@@ -112,7 +112,6 @@ public class BaleenContentExtractorTest {
     resetMocked();
 
     annotator.getDocumentAnnotation(jCas);
-    verify(support, only()).getDocumentAnnotation(jCas);
     resetMocked();
   }
 

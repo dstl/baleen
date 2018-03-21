@@ -52,9 +52,6 @@ public class CleanTemporal extends BaleenAnnotator {
   @ConfigurationParameter(name = PARAM_YEARS, defaultValue = "50")
   private String yearsString;
 
-  // Parse the years config parameter into this variable to avoid issues with parameter types
-  private int years;
-
   /**
    * Remove entities with a timestamp set to 0L.
    *
@@ -70,7 +67,7 @@ public class CleanTemporal extends BaleenAnnotator {
 
   @Override
   public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-    years = ConfigUtils.stringToInteger(yearsString, 50);
+    int years = ConfigUtils.stringToInteger(yearsString, 50);
     start = LocalDateTime.now().minusYears(years);
     end = LocalDateTime.now().plusYears(years);
   }
@@ -82,7 +79,8 @@ public class CleanTemporal extends BaleenAnnotator {
 
     for (Temporal t : tempora) {
       if (zeroTimestamp(t)
-          || (isMoney(t.getValue()) || isMoney(t.getCoveredText()))
+          || isMoney(t.getValue())
+          || isMoney(t.getCoveredText())
           || isOutsideRange(t)) {
         toRemove.add(t);
         continue;
@@ -97,17 +95,18 @@ public class CleanTemporal extends BaleenAnnotator {
   }
 
   private boolean isOutsideRange(Temporal t) {
-    if (t.getTimestampStart() != 0L && t.getTimestampStart() < start.toEpochSecond(ZoneOffset.UTC))
+    if (t.getTimestampStart() != 0L
+        && t.getTimestampStart() < start.toEpochSecond(ZoneOffset.UTC)) {
       return true;
+    }
 
-    if (t.getTimestampStop() != 0L && t.getTimestampStop() > end.toEpochSecond(ZoneOffset.UTC))
-      return true;
-
-    return false;
+    return t.getTimestampStop() != 0L && t.getTimestampStop() > end.toEpochSecond(ZoneOffset.UTC);
   }
 
   private boolean isMoney(String text) {
-    if (Strings.isNullOrEmpty(text)) return false;
+    if (Strings.isNullOrEmpty(text)) {
+      return false;
+    }
 
     return text.startsWith("£") || text.startsWith("$") || text.startsWith("€");
   }

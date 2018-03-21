@@ -22,6 +22,7 @@ public class BlacklistTest extends AnnotatorTestBase {
   private static final String NOVEMBER2 = "NOVEMBER";
   private static final String LONDON = "London";
   private static final String NOVEMBER = "November";
+  private static final String UNITED_KINGDOM = "United Kingdom";
 
   @Test
   public void test() throws Exception {
@@ -32,7 +33,7 @@ public class BlacklistTest extends AnnotatorTestBase {
 
     rneAE.process(jCas);
 
-    assertCorrect(1, 0, 0);
+    assertCorrect(1, 0, 1);
 
     rneAE.destroy();
   }
@@ -45,6 +46,24 @@ public class BlacklistTest extends AnnotatorTestBase {
             Blacklist.PARAM_BLACKLIST,
             new String[] {NOVEMBER2, LONDON},
             Blacklist.PARAM_CASE_SENSITIVE,
+            true);
+    createDocument(jCas);
+
+    rneAE.process(jCas);
+
+    assertCorrect(1, 1, 1);
+
+    rneAE.destroy();
+  }
+
+  @Test
+  public void testBlacklistEntityValue() throws Exception {
+    AnalysisEngine rneAE =
+        AnalysisEngineFactory.createEngine(
+            Blacklist.class,
+            Blacklist.PARAM_BLACKLIST,
+            new String[] {LONDON, UNITED_KINGDOM},
+            Blacklist.PARAM_CHECK_ENTITY_VALUE,
             true);
     createDocument(jCas);
 
@@ -68,7 +87,7 @@ public class BlacklistTest extends AnnotatorTestBase {
 
     rneAE.process(jCas);
 
-    assertCorrect(1, 1, 0);
+    assertCorrect(1, 1, 1);
 
     rneAE.destroy();
   }
@@ -117,7 +136,7 @@ public class BlacklistTest extends AnnotatorTestBase {
 
   private void createDocument(JCas jCas) {
     jCas.reset();
-    jCas.setDocumentText("Simon was born in November 1980 in London");
+    jCas.setDocumentText("Simon was born in November 1980 in London, UK");
 
     Person p = new Person(jCas);
     p.setValue("Simon");
@@ -137,9 +156,16 @@ public class BlacklistTest extends AnnotatorTestBase {
     l.setEnd(41);
     l.addToIndexes();
 
+    // entity value different to covering text "UK"
+    Location l2 = new Location(jCas);
+    l2.setValue(UNITED_KINGDOM);
+    l2.setBegin(43);
+    l2.setEnd(45);
+    l2.addToIndexes();
+
     assertEquals(1, JCasUtil.select(jCas, Person.class).size());
     assertEquals(1, JCasUtil.select(jCas, Temporal.class).size());
-    assertEquals(1, JCasUtil.select(jCas, Location.class).size());
+    assertEquals(2, JCasUtil.select(jCas, Location.class).size());
   }
 
   private void assertCorrect(int people, int datetypes, int locations) {

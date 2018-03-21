@@ -32,7 +32,7 @@ public class SimpleInteractionRelationshipTest extends AbstractAnnotatorTest {
 
     final Sentence s = new Sentence(jCas);
     s.setBegin(0);
-    s.setEnd(jCas.size());
+    s.setEnd(jCas.getDocumentText().length());
     s.addToIndexes();
 
     final Person person = Annotations.createPerson(jCas, 0, 3, "Jon");

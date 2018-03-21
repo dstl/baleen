@@ -29,6 +29,7 @@ import uk.gov.dstl.baleen.types.semantic.Relation;
  *   <li>targetText
  *   <li>sourceType
  *   <li>targetType
+ *   <li>confidence
  * </ul>
  *
  * @baleen.javadoc
@@ -50,7 +51,8 @@ public class CsvRelation extends AbstractCsvConsumer {
         "sourceText",
         "targetText",
         "sourceType",
-        "targetType");
+        "targetType",
+        "confidence");
   }
 
   @Override
@@ -66,7 +68,9 @@ public class CsvRelation extends AbstractCsvConsumer {
             r -> {
               String sentence = "";
               final Collection<Sentence> sentences = coveringSentence.get(r);
-              if (!sentences.isEmpty()) sentence = sentences.iterator().next().getCoveredText();
+              if (!sentences.isEmpty()) {
+                sentence = sentences.iterator().next().getCoveredText();
+              }
 
               return new String[] {
                 source,
@@ -78,7 +82,8 @@ public class CsvRelation extends AbstractCsvConsumer {
                 normalize(r.getSource().getCoveredText()),
                 normalize(r.getTarget().getCoveredText()),
                 r.getSource().getType().getShortName(),
-                r.getTarget().getType().getShortName()
+                r.getTarget().getType().getShortName(),
+                Double.toString(r.getConfidence())
               };
             })
         .forEach(this::write);

@@ -30,6 +30,10 @@ import uk.gov.dstl.baleen.uima.BaleenResource;
  * @baleen.javadoc
  */
 public class SharedMongoResource extends BaleenResource {
+
+  /** default key for accessing the mongo resource */
+  public static final String RESOURCE_KEY = "mongo";
+
   private MongoClient m;
   private MongoDatabase db;
 

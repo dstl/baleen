@@ -8,6 +8,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 
 import uk.gov.dstl.baleen.types.metadata.Metadata;
+import uk.gov.dstl.baleen.uima.utils.JCasMetadata;
 
 /**
  * Settings for jobs.
@@ -22,6 +23,7 @@ import uk.gov.dstl.baleen.types.metadata.Metadata;
 public class JobSettings {
 
   private final JCas jCas;
+  private final JCasMetadata metadata;
 
   /**
    * Instantiates a new job settings.
@@ -30,19 +32,7 @@ public class JobSettings {
    */
   public JobSettings(final JCas jCas) {
     this.jCas = jCas;
-  }
-
-  /**
-   * Gets the metadata value.
-   *
-   * @param key the key
-   * @return the metadata
-   */
-  private Optional<Metadata> getMetadata(final String key) {
-    return JCasUtil.select(jCas, Metadata.class)
-        .stream()
-        .filter(m -> m.getKey().equals(key))
-        .findFirst();
+    metadata = new JCasMetadata(jCas);
   }
 
   /**
@@ -53,7 +43,7 @@ public class JobSettings {
    * @return the string value
    */
   public String get(final String key, final String defaultValue) {
-    return get(key).orElse(defaultValue);
+    return metadata.find(key).orElse(defaultValue);
   }
 
   /**
@@ -63,7 +53,7 @@ public class JobSettings {
    * @return the optional of the value
    */
   public Optional<String> get(final String key) {
-    return getMetadata(key).map(Metadata::getValue);
+    return metadata.find(key);
   }
 
   /**
@@ -81,12 +71,12 @@ public class JobSettings {
     }
 
     // Do we have any existing metadata this this key?
-    final Optional<Metadata> metadata = getMetadata(key);
+    final Optional<Metadata> mdFound = metadata.findMetadata(key);
 
     // If so, update or else create
     Metadata md;
-    if (metadata.isPresent()) {
-      md = metadata.get();
+    if (mdFound.isPresent()) {
+      md = mdFound.get();
       md.setValue(value);
     } else {
       md = new Metadata(jCas);
@@ -104,9 +94,9 @@ public class JobSettings {
    * @param key the key
    */
   public void remove(final String key) {
-    final Optional<Metadata> metadata = getMetadata(key);
-    if (metadata.isPresent()) {
-      metadata.get().removeFromIndexes();
+    final Optional<Metadata> md = metadata.findMetadata(key);
+    if (md.isPresent()) {
+      md.get().removeFromIndexes();
     }
   }
 
@@ -116,6 +106,6 @@ public class JobSettings {
    * @return the stream
    */
   public Stream<String> keys() {
-    return JCasUtil.select(jCas, Metadata.class).stream().map(m -> m.getKey());
+    return JCasUtil.select(jCas, Metadata.class).stream().map(Metadata::getKey);
   }
 }

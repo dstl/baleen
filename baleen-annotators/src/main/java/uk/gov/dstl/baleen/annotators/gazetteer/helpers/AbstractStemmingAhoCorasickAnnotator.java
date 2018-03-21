@@ -51,7 +51,7 @@ public abstract class AbstractStemmingAhoCorasickAnnotator extends AbstractAhoCo
 
   protected Stemmer stemmer;
 
-  private static Pattern WORD_PATTERN = Pattern.compile("[a-z']+");
+  private static final Pattern WORD_PATTERN = Pattern.compile("[a-z']+");
   private final Map<String, String> stemmedToKey = new HashMap<>();
 
   @Override

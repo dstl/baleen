@@ -10,23 +10,47 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.annotators.patterns.data.RelationWrapper;
+import uk.gov.dstl.baleen.core.utils.ConfigUtils;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 import uk.gov.dstl.baleen.uima.utils.ComparableEntitySpanUtils;
 
 /**
- * A base class for relationship extractors which use interaction words as a trigger.
+ * A base class for relationship extractors.
  *
  * <p>Implementations should override {@link #extract(JCas) extract}, and potentially {@link
  * #preExtract(JCas) preExtract} and {@link #postExtract(JCas) postExtract}, which both allow for
  * creation and clean up of objects related to extraction.
  */
 public abstract class AbstractRelationshipAnnotator extends BaleenAnnotator {
+
+  /**
+   * The confidence to assign to the relation
+   *
+   * @baleen.config 1.0
+   */
+  public static final String PARAM_CONFIDENCE = "confidence";
+
+  @ConfigurationParameter(name = PARAM_CONFIDENCE, defaultValue = "0.1")
+  private String confidenceString;
+
+  // Parse the confidence config parameter into this variable to avoid issues
+  // with parameter types
+  protected Float confidence;
+
+  @Override
+  public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
+    super.doInitialize(aContext);
+    confidence = ConfigUtils.stringToFloat(confidenceString, 0.1f);
+  }
 
   @Override
   protected final void doProcess(final JCas jCas) throws AnalysisEngineProcessException {
@@ -99,6 +123,8 @@ public abstract class AbstractRelationshipAnnotator extends BaleenAnnotator {
   /**
    * Creates the relation.
    *
+   * <p>Note this does not add the relations to the jCas index. This allows them to be discarded.
+   *
    * @param jCas the jcas
    * @param source the source the source entity
    * @param target the target the target entity
@@ -119,7 +145,7 @@ public abstract class AbstractRelationshipAnnotator extends BaleenAnnotator {
       String type,
       String subType,
       String value,
-      Float confidence) {
+      Float assignedConfidence) {
     final Relation r = new Relation(jCas);
     r.setBegin(begin);
     r.setEnd(end);
@@ -128,8 +154,39 @@ public abstract class AbstractRelationshipAnnotator extends BaleenAnnotator {
     r.setSource(source);
     r.setTarget(target);
     r.setValue(value);
-    r.setConfidence(confidence);
+    if (assignedConfidence == null) {
+      r.setConfidence(confidence);
+    } else {
+      r.setConfidence(assignedConfidence);
+    }
     return r;
+  }
+
+  /**
+   * Creates the relation.
+   *
+   * <p>(With default confidence value.)
+   *
+   * @param jCas the jcas
+   * @param source the source the source entity
+   * @param target the target the target entity
+   * @param begin the begin of the relation
+   * @param end the end of the relation
+   * @param type the type of the relation
+   * @param subType the sub type of the relation
+   * @param value the value of the relation
+   * @return the relation
+   */
+  protected Relation createRelation(
+      final JCas jCas,
+      final Entity source,
+      final Entity target,
+      int begin,
+      int end,
+      String type,
+      String subType,
+      String value) {
+    return createRelation(jCas, source, target, begin, end, type, subType, value, null);
   }
 
   /**

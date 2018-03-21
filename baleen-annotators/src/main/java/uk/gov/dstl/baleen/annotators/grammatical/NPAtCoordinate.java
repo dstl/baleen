@@ -35,46 +35,52 @@ public class NPAtCoordinate extends BaleenAnnotator {
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
     for (Coordinate coord : JCasUtil.select(jCas, Coordinate.class)) {
-      Integer substringStartAt = Math.max(0, coord.getBegin() - 4);
-      Integer substringStartIsAt = Math.max(0, coord.getBegin() - 7);
+      processCoordinate(jCas, coord);
+    }
+  }
 
-      String precedingTextAt = jCas.getDocumentText().substring(substringStartAt, coord.getBegin());
-      String precedingTextIsAt =
-          jCas.getDocumentText().substring(substringStartIsAt, coord.getBegin());
+  private void processCoordinate(JCas jCas, Coordinate coord) {
+    Integer substringStartAt = Math.max(0, coord.getBegin() - 4);
+    Integer substringStartIsAt = Math.max(0, coord.getBegin() - 7);
 
-      final int substringStart;
-      if (IS_AT.matcher(precedingTextIsAt).matches()) {
-        substringStart = substringStartIsAt;
-      } else if (AT.matcher(precedingTextAt).matches()) {
-        substringStart = substringStartAt;
-      } else {
-        substringStart = -1;
+    String precedingTextAt = jCas.getDocumentText().substring(substringStartAt, coord.getBegin());
+    String precedingTextIsAt =
+        jCas.getDocumentText().substring(substringStartIsAt, coord.getBegin());
+
+    final int substringStart;
+    if (IS_AT.matcher(precedingTextIsAt).matches()) {
+      substringStart = substringStartIsAt;
+    } else if (AT.matcher(precedingTextAt).matches()) {
+      substringStart = substringStartAt;
+    } else {
+      substringStart = -1;
+    }
+
+    if (substringStart >= 0) {
+      // Get NP or Location at this location
+      boolean locFound = false;
+
+      for (Location l :
+          JCasUtil.select(jCas, Location.class)
+              .stream()
+              .filter(l -> substringStart == l.getEnd())
+              .collect(Collectors.toList())) {
+        locFound = true;
+        setReferent(jCas, l, coord);
       }
 
-      if (substringStart >= 0) {
-        // Get NP or Location at this location
-        boolean locFound = false;
+      if (locFound) {
+        return;
+      }
 
-        for (Location l :
-            JCasUtil.select(jCas, Location.class)
-                .stream()
-                .filter(l -> substringStart == l.getEnd())
-                .collect(Collectors.toList())) {
-          locFound = true;
-          setReferent(jCas, l, coord);
-        }
-
-        if (locFound) continue;
-
-        // Get NP and create a Location
-        for (PhraseChunk pc :
-            JCasUtil.select(jCas, PhraseChunk.class)
-                .stream()
-                .filter(pc -> "NP".equalsIgnoreCase(pc.getChunkType()))
-                .filter(pc -> substringStart == pc.getEnd())
-                .collect(Collectors.toList())) {
-          createNewLocation(jCas, pc, coord);
-        }
+      // Get NP and create a Location
+      for (PhraseChunk pc :
+          JCasUtil.select(jCas, PhraseChunk.class)
+              .stream()
+              .filter(pc -> "NP".equalsIgnoreCase(pc.getChunkType()))
+              .filter(pc -> substringStart == pc.getEnd())
+              .collect(Collectors.toList())) {
+        createNewLocation(jCas, pc, coord);
       }
     }
   }

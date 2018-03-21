@@ -240,9 +240,9 @@ public class Mention {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
+    final int PRIME = 31;
     int result = 1;
-    result = prime * result + (annotation == null ? 0 : annotation.hashCode());
+    result = PRIME * result + (annotation == null ? 0 : annotation.hashCode());
     return result;
   }
 

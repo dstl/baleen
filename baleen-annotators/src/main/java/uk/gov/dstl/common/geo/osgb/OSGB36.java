@@ -1,7 +1,9 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.common.geo.osgb;
 
-import static uk.gov.dstl.common.geo.osgb.CartesianConversion.*;
+import static uk.gov.dstl.common.geo.osgb.CartesianConversion.fromLatLon;
+import static uk.gov.dstl.common.geo.osgb.CartesianConversion.helmertTransformation;
+import static uk.gov.dstl.common.geo.osgb.CartesianConversion.toLatLon;
 
 /**
  * <b>Convert between OSGB36 and WGS84 coordinate systems</b>

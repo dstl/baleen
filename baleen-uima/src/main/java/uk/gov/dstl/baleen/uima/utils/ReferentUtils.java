@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -46,17 +47,45 @@ public class ReferentUtils {
    * @return the multimap
    */
   public static <T extends Base> Multimap<ReferenceTarget, T> createReferentMap(
-      JCas jCas, Class<T> clazz) {
-    final Collection<T> potentialReferences = JCasUtil.select(jCas, clazz);
+      final JCas jCas, final Class<T> clazz) {
+    return createReferentMap(jCas, clazz, true);
+  }
 
+  /**
+   * Creates the referent map - map of referent target to entities.
+   *
+   * @param <T> the generic type
+   * @param jCas the j cas
+   * @param clazz the clazz
+   * @param filterEmptyReference true to filter empty references, false to add a stand in reference
+   * @return the multimap
+   */
+  public static <T extends Base> Multimap<ReferenceTarget, T> createReferentMap(
+      final JCas jCas, final Class<T> clazz, final boolean filterEmptyReference) {
+    final Collection<T> potentialReferences = JCasUtil.select(jCas, clazz);
+    return createReferentMap(jCas, potentialReferences, filterEmptyReference);
+  }
+
+  /**
+   * Creates the referent map - map of referent target to mentions.
+   *
+   * @param <T> the generic type
+   * @param jCas the j cas
+   * @param mentions the mentions to map
+   * @param filterEmptyReference true to filter empty references, false to add a stand in reference
+   * @return the multimap
+   */
+  public static <T extends Base> Multimap<ReferenceTarget, T> createReferentMap(
+      final JCas jCas, final Collection<T> mentions, final boolean filterEmptyReference) {
     final Multimap<ReferenceTarget, T> targets = HashMultimap.create();
 
-    potentialReferences
+    mentions
         .stream()
-        .filter(p -> p.getReferent() != null)
+        .filter(p -> !filterEmptyReference || p.getReferent() != null)
         .forEach(
             e -> {
-              final ReferenceTarget referent = e.getReferent();
+              final ReferenceTarget referent =
+                  Optional.ofNullable(e.getReferent()).orElse(new ReferenceTarget(jCas));
               targets.put(referent, e);
             });
 
@@ -109,7 +138,7 @@ public class ReferentUtils {
 
   /**
    * Gets the all the annotation type and all the other annotations which have a referent target
-   * which is the referent target for an annotation of this type..
+   * which is the referent target for an annotation of this type.
    *
    * @param <T> the generic type
    * @param jCas the j cas
@@ -117,6 +146,7 @@ public class ReferentUtils {
    * @param referentMap the referent map
    * @return the all and referents
    */
+  @SuppressWarnings("unlikely-arg-type")
   public static <T extends Base> List<Base> getAllAndReferents(
       JCas jCas, Class<T> clazz, Map<ReferenceTarget, T> referentMap) {
     final List<Base> list = new ArrayList<>();
@@ -141,7 +171,8 @@ public class ReferentUtils {
    * @param referentMap the referent map
    * @return the stream
    */
-  public static Stream<Base> streamReferent(JCas jCas, Map<ReferenceTarget, ?> referentMap) {
+  public static <T extends Base> Stream<Base> streamReferent(
+      JCas jCas, Map<ReferenceTarget, T> referentMap) {
     return JCasUtil.select(jCas, Base.class)
         .stream()
         // Filter out anything we can't reference
@@ -149,7 +180,7 @@ public class ReferentUtils {
   }
 
   /**
-   * Gets the longest annotation (longest by coveed text size).
+   * Gets the longest annotation (longest by covered text size).
    *
    * @param <T> the generic type
    * @param list the list
@@ -169,11 +200,11 @@ public class ReferentUtils {
    * @return the t
    */
   public static <T> T singleViaCompare(Collection<T> list, Comparator<T> compare) {
-    return list.stream().reduce((a, b) -> compare.compare(a, b) < 0 ? b : a).get();
+    return list.stream().reduce((a, b) -> compare.compare(a, b) < 0 ? b : a).orElse(null);
   }
 
   /**
-   * Replace the mentins with the principal coreferent entity (if there is one).
+   * Replace the mentions with the principal coreferent entity (if there is one).
    *
    * @param entities the entities
    * @param referentMap the referent map

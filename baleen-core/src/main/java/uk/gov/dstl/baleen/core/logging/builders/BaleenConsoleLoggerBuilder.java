@@ -72,7 +72,7 @@ public class BaleenConsoleLoggerBuilder extends AbstractBaleenLoggerBuilder {
   @Override
   protected Appender<ILoggingEvent> createAppender(
       LoggerContext context, Encoder<ILoggingEvent> encoder) {
-    ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<ILoggingEvent>();
+    ConsoleAppender<ILoggingEvent> appender = new ConsoleAppender<>();
     appender.setEncoder(encoder);
     return appender;
   }

@@ -2,7 +2,13 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UimaContext;
@@ -67,7 +73,7 @@ public class RemoveNestedEntities extends AbstractNestedEntities<Entity> {
 
   @Override
   protected Collection<List<Entity>> compileEntities(JCas jCas) {
-    Map<String, List<Entity>> annotations = new HashMap<String, List<Entity>>();
+    Map<String, List<Entity>> annotations = new HashMap<>();
 
     FSIterator<Annotation> iter = jCas.getAnnotationIndex(Entity.type).iterator();
     while (iter.hasNext()) {
@@ -75,11 +81,7 @@ public class RemoveNestedEntities extends AbstractNestedEntities<Entity> {
       String type = e.getType().getName();
 
       if (!excluded.contains(type)) {
-        List<Entity> typeAnnotations = annotations.get(type);
-        if (typeAnnotations == null) {
-          typeAnnotations = new ArrayList<Entity>();
-          annotations.put(type, typeAnnotations);
-        }
+        List<Entity> typeAnnotations = annotations.computeIfAbsent(type, k -> new ArrayList<>());
         typeAnnotations.add(e);
       }
     }

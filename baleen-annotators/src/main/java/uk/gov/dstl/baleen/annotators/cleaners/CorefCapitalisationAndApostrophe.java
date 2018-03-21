@@ -48,20 +48,11 @@ public class CorefCapitalisationAndApostrophe extends BaleenAnnotator {
 
   @Override
   public void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-    Map<String, List<Entity>> groups = new HashMap<>();
-    Collection<Entity> entities = JCasUtil.select(jCas, Entity.class);
+    Map<String, List<Entity>> groups = processEntities(jCas);
+    processGroups(jCas, groups);
+  }
 
-    for (Entity entity : entities) {
-      String value = getEntityValue(entity);
-      value = normalizeValue(value);
-
-      String key = entity.getType().getName().toUpperCase() + "::" + value;
-      List<Entity> groupEntities = groups.containsKey(key) ? groups.get(key) : new ArrayList<>();
-
-      groupEntities.add(entity);
-      groups.put(key, groupEntities);
-    }
-
+  private void processGroups(JCas jCas, Map<String, List<Entity>> groups) {
     for (List<Entity> group : groups.values()) {
       if (group.size() <= 1) {
         continue;
@@ -77,7 +68,7 @@ public class CorefCapitalisationAndApostrophe extends BaleenAnnotator {
       ReferenceTarget rt = selectAppropriateReferenceTarget(jCas, rts);
       if (rt == null) {
         getMonitor()
-            .info(
+            .debug(
                 "Unable to coreference capitalised entities '{}' as they have different existing referents",
                 getEntityValue(group.get(0)));
       } else {
@@ -88,11 +79,24 @@ public class CorefCapitalisationAndApostrophe extends BaleenAnnotator {
     }
   }
 
-  private String getEntityValue(Entity e) {
-    if (e == null) {
-      return null;
-    }
+  private Map<String, List<Entity>> processEntities(JCas jCas) {
+    Map<String, List<Entity>> groups = new HashMap<>();
+    Collection<Entity> entities = JCasUtil.select(jCas, Entity.class);
 
+    for (Entity entity : entities) {
+      String value = getEntityValue(entity);
+      value = normalizeValue(value);
+
+      String key = entity.getType().getName().toUpperCase() + "::" + value;
+      List<Entity> groupEntities = groups.containsKey(key) ? groups.get(key) : new ArrayList<>();
+
+      groupEntities.add(entity);
+      groups.put(key, groupEntities);
+    }
+    return groups;
+  }
+
+  private String getEntityValue(Entity e) {
     String val = e.getValue();
     if (Strings.isNullOrEmpty(val)) {
       val = e.getCoveredText();

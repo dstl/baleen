@@ -9,4 +9,5 @@ package uk.gov.dstl.baleen.annotators.structural;
  *
  * @baleen.javadoc
  */
+@SuppressWarnings("squid:S00115") // Suppress duplicate class name warnings
 public class TextBlocks extends uk.gov.dstl.baleen.common.structure.TextBlocks {}

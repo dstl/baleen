@@ -2,6 +2,10 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
+import static uk.gov.dstl.baleen.resources.SharedElasticsearchRestResource.PARAM_URL;
+
+import java.io.IOException;
+
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -16,13 +20,15 @@ public class ElasticsearchRestTest extends ElasticsearchTestBase {
   private static final String ELASTICSEARCH = "elasticsearchRest";
 
   @Before
-  public void setup() throws UIMAException {
+  public void setup() throws UIMAException, IOException {
+
     ExternalResourceDescription erd =
         ExternalResourceFactory.createExternalResourceDescription(
             ELASTICSEARCH,
             SharedElasticsearchRestResource.class,
-            "elasticsearchrest.url",
-            "http://localhost:9200");
+            PARAM_URL,
+            elasticsearch.getHttpUrl());
+
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
             ElasticsearchRest.class,

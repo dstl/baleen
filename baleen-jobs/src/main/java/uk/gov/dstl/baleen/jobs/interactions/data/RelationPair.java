@@ -52,10 +52,10 @@ public class RelationPair {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
+    final int PRIME = 31;
     int result = 1;
-    result = prime * result + (source == null ? 0 : source.hashCode());
-    result = prime * result + (target == null ? 0 : target.hashCode());
+    result = PRIME * result + (source == null ? 0 : source.hashCode());
+    result = PRIME * result + (target == null ? 0 : target.hashCode());
     return result;
   }
 

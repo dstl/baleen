@@ -17,8 +17,8 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.bson.Document;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
-import com.mongodb.util.JSON;
 
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.uima.AbstractBaleenTaskTest;
@@ -28,6 +28,8 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
   private static final List<Document> DATA =
       Lists.newArrayList(
           new Document("fake", "doc1"), new Document("fake", "doc2"), new Document("fake", "doc3"));
+
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Test
   public void testNewFile()
@@ -40,7 +42,7 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
             SharedFongoResource.PARAM_FONGO_COLLECTION,
             "documents",
             SharedFongoResource.PARAM_FONGO_DATA,
-            JSON.serialize(DATA));
+            objectMapper.writeValueAsString(DATA));
 
     File tempFile = File.createTempFile("test", "mongostats");
     tempFile.delete();
@@ -75,7 +77,7 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
             SharedFongoResource.PARAM_FONGO_COLLECTION,
             "documents",
             SharedFongoResource.PARAM_FONGO_DATA,
-            JSON.serialize(DATA));
+            objectMapper.writeValueAsString(DATA));
 
     File tempFile = File.createTempFile("test", "mongostats");
     try {
@@ -109,7 +111,7 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
             SharedFongoResource.PARAM_FONGO_COLLECTION,
             "documents",
             SharedFongoResource.PARAM_FONGO_DATA,
-            JSON.serialize(DATA));
+            objectMapper.writeValueAsString(DATA));
 
     File tempFile = File.createTempFile("test", "mongostats-existing");
     try (FileWriter fileWriter = new FileWriter(tempFile)) {

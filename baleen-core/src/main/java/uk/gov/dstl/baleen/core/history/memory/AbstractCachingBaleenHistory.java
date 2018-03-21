@@ -55,9 +55,6 @@ public abstract class AbstractCachingBaleenHistory<H extends DocumentHistory>
   @ConfigurationParameter(name = PARAM_TIMEOUT, defaultValue = "86400")
   private String cacheTimeoutString;
 
-  // Parse the cacheTimeout config parameter into this variable to avoid issues with parameter types
-  private long cacheTimeout;
-
   /**
    * The number of documents that can be kept in memory at the same time.
    *
@@ -74,7 +71,7 @@ public abstract class AbstractCachingBaleenHistory<H extends DocumentHistory>
   protected void initialize() throws BaleenException {
     super.initialize();
 
-    cacheTimeout = ConfigUtils.stringToLong(cacheTimeoutString, 86400L);
+    long cacheTimeout = ConfigUtils.stringToLong(cacheTimeoutString, 86400L);
 
     cachedHistories =
         CacheBuilder.newBuilder()

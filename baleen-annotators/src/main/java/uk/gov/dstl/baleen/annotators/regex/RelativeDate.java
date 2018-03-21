@@ -1,6 +1,10 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
+import static uk.gov.dstl.baleen.uima.utils.TemporalUtils.PRECISION_RELATIVE;
+import static uk.gov.dstl.baleen.uima.utils.TemporalUtils.SCOPE_SINGLE;
+import static uk.gov.dstl.baleen.uima.utils.TemporalUtils.TYPE_DATE;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
@@ -95,10 +99,6 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
       "(Mon|Monday|Tue|Tues|Tuesday|Wed|Wednesday|Thu|Thurs|Thursday|Fri|Friday|Sat|Saturday|Sun|Sunday)";
   private static final String MONTHS =
       "(January|Jan|February|Feb|March|Mar|April|Apr|May|June|Jun|July|Jul|August|Aug|September|Sept|Sep|October|Oct|November|Nov|December|Dec)";
-
-  private static final String RELATIVE = "RELATIVE";
-  private static final String SINGLE = "SINGLE";
-  private static final String DATE = "DATE";
 
   LocalDate relativeTo = null;
 
@@ -346,9 +346,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && dayOffset != null) {
       if (dayOffset > 0) {
@@ -371,9 +371,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && dayOffset != null) {
       LocalDate d = relativeTo.plusDays(dayOffset);
@@ -391,9 +391,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && weekOffset != null) {
       if (weekOffset > 0) {
@@ -420,9 +420,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && weekOffset != null) {
       LocalDate startOfWeek = relativeTo.plusWeeks(weekOffset);
@@ -446,9 +446,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && weekOffset != null) {
       LocalDate dayOfWeek = relativeTo.plusWeeks(weekOffset);
@@ -474,9 +474,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && monthOffset != null) {
       if (monthOffset > 0) {
@@ -503,9 +503,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && monthOffset != null) {
       YearMonth ym = YearMonth.from(relativeTo).plusMonths(monthOffset);
@@ -523,9 +523,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && yearOffset != null) {
       if (yearOffset > 0) {
@@ -552,9 +552,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && yearOffset != null) {
       Year y = Year.from(relativeTo).plusYears(yearOffset);
@@ -572,9 +572,9 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
     block.setBeginAndEnd(t, charBegin, charEnd);
 
     t.setConfidence(1.0);
-    t.setPrecision(RELATIVE);
-    t.setScope(SINGLE);
-    t.setTemporalType(DATE);
+    t.setPrecision(PRECISION_RELATIVE);
+    t.setScope(SCOPE_SINGLE);
+    t.setTemporalType(TYPE_DATE);
 
     if (relativeTo != null && yearOffset != null) {
       Year y = Year.from(relativeTo).plusYears(yearOffset);

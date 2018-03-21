@@ -259,6 +259,6 @@ public class IdentifyInteractions extends BaleenTask {
                       }
                     }));
 
-    interactionWriters.forEach(w -> w.destroy());
+    interactionWriters.forEach(InteractionWriter::destroy);
   }
 }

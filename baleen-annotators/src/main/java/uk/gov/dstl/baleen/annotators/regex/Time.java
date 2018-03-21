@@ -16,6 +16,7 @@ import com.google.common.collect.ImmutableSet;
 import uk.gov.dstl.baleen.annotators.regex.helpers.AbstractRegexAnnotator;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
+import uk.gov.dstl.baleen.uima.utils.TemporalUtils;
 
 /**
  * Annotate times within a document using regular expressions
@@ -81,9 +82,9 @@ public class Time extends AbstractRegexAnnotator<Temporal> {
 
     Temporal dtg = new Temporal(jCas);
 
-    dtg.setPrecision("UNQUALIFIED");
-    dtg.setScope("SINGLE");
-    dtg.setTemporalType("TIME");
+    dtg.setPrecision(TemporalUtils.PRESISION_UNQUALIFIED);
+    dtg.setScope(TemporalUtils.SCOPE_SINGLE);
+    dtg.setTemporalType(TemporalUtils.TYPE_TIME);
 
     return dtg;
   }

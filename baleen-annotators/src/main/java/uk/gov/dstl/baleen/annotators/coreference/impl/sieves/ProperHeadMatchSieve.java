@@ -1,9 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.coreference.impl.sieves;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.apache.uima.jcas.JCas;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Doubles;
 
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.Cluster;
@@ -25,22 +24,21 @@ public class ProperHeadMatchSieve extends AbstractCoreferenceSieve {
       Pattern.compile("-?\\d+(,\\d+)*(\\.\\d+)?[k|m|b]?", Pattern.CASE_INSENSITIVE);
 
   private final Set<String> spatialModifiers =
-      new HashSet<String>(
-          Arrays.asList(
-              "northern",
-              "southern",
-              "western",
-              "eastern",
-              "south",
-              "east",
-              "north",
-              "west",
-              "central",
-              "upper",
-              "lower",
-              "middle",
-              "inner",
-              "outer"));
+      ImmutableSet.of(
+          "northern",
+          "southern",
+          "western",
+          "eastern",
+          "south",
+          "east",
+          "north",
+          "west",
+          "central",
+          "upper",
+          "lower",
+          "middle",
+          "inner",
+          "outer");
 
   /** Constructor for ProperHeadMatchSieve */
   public ProperHeadMatchSieve(JCas jCas, List<Cluster> clusters, List<Mention> mentions) {
@@ -140,10 +138,6 @@ public class ProperHeadMatchSieve extends AbstractCoreferenceSieve {
     final List<Double> aNumbers = extractNumbers(a.getText());
     final List<Double> bNumbers = extractNumbers(b.getText());
 
-    if (!hasSameNumbers(aNumbers, bNumbers)) {
-      return false;
-    }
-
-    return true;
+    return hasSameNumbers(aNumbers, bNumbers);
   }
 }

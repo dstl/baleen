@@ -1,23 +1,28 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.jobs;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.collection.CollectionReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
+
+import com.google.common.collect.ImmutableSet;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
+import uk.gov.dstl.baleen.core.pipelines.PipelineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
 import uk.gov.dstl.baleen.core.pipelines.orderers.IPipelineOrderer;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
 
 /**
  * This class provides functionality to convert a Baleen YAML job configuration file into a {@link
@@ -44,52 +49,72 @@ import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
  * The job pipeline will always run the tasks in the order specified.
  */
 public class JobBuilder extends PipelineBuilder {
+
   private static final Logger LOGGER = LoggerFactory.getLogger(JobBuilder.class);
+
+  private static final String SCHEDULE = "schedule";
+  private static final String TASKS = "tasks";
 
   /**
    * Construct a JobBuilder from the name and YAML
    *
    * @param name Pipeline name
    * @param yaml Pipeline YAML
+   * @throws IOException if unable to read config
+   * @deprecated Use {@link JobBuilder#JobBuilder(String, PipelineConfiguration)}
    */
-  public JobBuilder(String name, String yaml) {
-    super(name, yaml);
+  @Deprecated
+  public JobBuilder(String name, String yaml) throws IOException {
+    this(name, new YamlPiplineConfiguration(yaml));
   }
 
-  @SuppressWarnings("unchecked")
+  /**
+   * Construct a JobBuilder from the name and YAML
+   *
+   * @param name Pipeline name
+   * @param config Pipeline configurationL
+   */
+  public JobBuilder(String name, PipelineConfiguration config) {
+    super(name, config);
+  }
+
   @Override
+  @SuppressWarnings("unchecked")
   protected void readConfiguration() {
     LOGGER.debug("Reading configuration");
-    Yaml y = new Yaml();
-    String cleanYaml = YamlConfiguration.cleanTabs(yaml);
-    globalConfig = (Map<String, Object>) y.load(cleanYaml);
 
-    // Overwrite any specified orderer - jobs are always run sequentially
-    globalConfig.put("orderer", NoOpOrderer.class.getName());
+    pipelineOrderer = NoOpOrderer.class.getName();
 
-    if (globalConfig.containsKey("schedule")) {
-      Object s = globalConfig.remove("schedule");
+    Optional<Object> optional = yaml.get(SCHEDULE);
+    if (optional.isPresent()) {
+      Object s = optional.get();
       if (s instanceof String) {
         collectionReaderConfig = new HashMap<>();
-        collectionReaderConfig.put("class", s);
+        collectionReaderConfig.put(CLASS, s);
       } else {
         collectionReaderConfig = (Map<String, Object>) s;
       }
     } else {
       collectionReaderConfig = new HashMap<>();
-      collectionReaderConfig.put("class", BaleenDefaults.DEFAULT_SCHEDULER);
+      collectionReaderConfig.put(CLASS, BaleenDefaults.DEFAULT_SCHEDULER);
     }
 
-    annotatorsConfig = (List<Object>) globalConfig.remove("tasks");
+    annotatorsConfig = yaml.getAsList(TASKS);
     consumersConfig = Collections.emptyList();
 
+    globalConfig = yaml.flatten(getLocalKeys());
     globalConfig.put(PIPELINE_NAME, name);
+  }
+
+  @Override
+  protected Set<String> getLocalKeys() {
+    return ImmutableSet.of(ORDERER_KEY, TASKS, ANNOTATORS_KEY, CONSUMERS_KEY);
   }
 
   @Override
   protected BaleenPipeline toPipeline(
       String name,
-      String yaml,
+      PipelineConfiguration yaml,
       IPipelineOrderer orderer,
       CollectionReader collectionReader,
       List<AnalysisEngine> annotators,

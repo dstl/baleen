@@ -2,7 +2,7 @@
 package uk.gov.dstl.baleen.core.web.servlets;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.Collections;
@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
+import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.testing.servlets.ServletCaller;
 
@@ -45,7 +46,7 @@ public class PipelineConfigServletTest {
     BaleenPipeline pipeline =
         new BaleenPipeline(
             "name",
-            null,
+            new YamlPiplineConfiguration(),
             new NoOpOrderer(),
             null,
             Collections.emptyList(),
@@ -63,7 +64,7 @@ public class PipelineConfigServletTest {
     BaleenPipeline pipeline =
         new BaleenPipeline(
             "name",
-            "Config",
+            new YamlPiplineConfiguration("Config"),
             new NoOpOrderer(),
             null,
             Collections.emptyList(),

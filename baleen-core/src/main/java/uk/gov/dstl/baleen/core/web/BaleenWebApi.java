@@ -6,7 +6,12 @@ import java.io.File;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.Servlet;
@@ -14,6 +19,7 @@ import javax.servlet.Servlet;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -36,12 +42,32 @@ import com.google.common.primitives.Ints;
 import uk.gov.dstl.baleen.core.manager.AbstractBaleenComponent;
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.Configuration;
 import uk.gov.dstl.baleen.core.web.security.WebAuthConfig;
 import uk.gov.dstl.baleen.core.web.security.WebAuthConfig.AuthType;
 import uk.gov.dstl.baleen.core.web.security.WebPermission;
 import uk.gov.dstl.baleen.core.web.security.WebUser;
-import uk.gov.dstl.baleen.core.web.servlets.*;
+import uk.gov.dstl.baleen.core.web.servlets.AbstractApiServlet;
+import uk.gov.dstl.baleen.core.web.servlets.AnnotatorsServlet;
+import uk.gov.dstl.baleen.core.web.servlets.BaleenManagerConfigServlet;
+import uk.gov.dstl.baleen.core.web.servlets.BaleenManagerServlet;
+import uk.gov.dstl.baleen.core.web.servlets.CollectionReadersServlet;
+import uk.gov.dstl.baleen.core.web.servlets.ConsumersServlet;
+import uk.gov.dstl.baleen.core.web.servlets.ContentExtractorsServlet;
+import uk.gov.dstl.baleen.core.web.servlets.ContentManipulatorServlet;
+import uk.gov.dstl.baleen.core.web.servlets.ContentMapperServlet;
+import uk.gov.dstl.baleen.core.web.servlets.DefaultsServlet;
+import uk.gov.dstl.baleen.core.web.servlets.JobConfigServlet;
+import uk.gov.dstl.baleen.core.web.servlets.JobManagerServlet;
+import uk.gov.dstl.baleen.core.web.servlets.LoggingServlet;
+import uk.gov.dstl.baleen.core.web.servlets.MetricsServlet;
+import uk.gov.dstl.baleen.core.web.servlets.OrderersServlet;
+import uk.gov.dstl.baleen.core.web.servlets.PipelineConfigServlet;
+import uk.gov.dstl.baleen.core.web.servlets.PipelineManagerServlet;
+import uk.gov.dstl.baleen.core.web.servlets.SchedulesServlet;
+import uk.gov.dstl.baleen.core.web.servlets.StatusServlet;
+import uk.gov.dstl.baleen.core.web.servlets.TasksServlet;
+import uk.gov.dstl.baleen.core.web.servlets.TypesServlet;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
@@ -112,7 +138,9 @@ public class BaleenWebApi extends AbstractBaleenComponent {
   public static final String CONFIG_HOST = CONFIG_BASE + "host";
   public static final String CONFIG_WEB_ROOT = CONFIG_BASE + "root";
 
+  @SuppressWarnings("squid:S1313" /* This is a default, the host is configurable */)
   public static final String DEFAULT_HOST = "0.0.0.0";
+
   public static final int DEFAULT_PORT = 6413;
 
   private static final String ENV_BALEEN_WEB_PORT = "baleen.web.port";
@@ -121,8 +149,8 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 
   private ServletContextHandler servletContextHandler;
 
-  private final List<ConstraintMapping> constraintMappings = new LinkedList<ConstraintMapping>();
-  private final Map<String, Constraint> constraints = new HashMap<String, Constraint>();
+  private final List<ConstraintMapping> constraintMappings = new LinkedList<>();
+  private final Map<String, Constraint> constraints = new HashMap<>();
 
   private final BaleenManager baleenManager;
 
@@ -133,7 +161,7 @@ public class BaleenWebApi extends AbstractBaleenComponent {
   }
 
   @Override
-  public void configure(YamlConfiguration configuration) throws BaleenException {
+  public void configure(Configuration configuration) throws BaleenException {
     String host = configuration.get(CONFIG_HOST, DEFAULT_HOST);
     int port = configuration.get(CONFIG_PORT, DEFAULT_PORT);
     String webRoot = (String) configuration.get(CONFIG_WEB_ROOT).orElse(null);
@@ -191,11 +219,11 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 
     LOGGER.debug("Configuring WebApi on {}:{}", host, port);
 
-    if (this.server != null) {
+    if (server != null) {
       stop();
     }
 
-    this.server = new Server(InetSocketAddress.createUnresolved(host, port));
+    server = new Server(InetSocketAddress.createUnresolved(host, port));
 
     final HandlerList handlers = new HandlerList();
 
@@ -314,7 +342,11 @@ public class BaleenWebApi extends AbstractBaleenComponent {
       resourceHandler.setDirectoriesListed(false);
       resourceHandler.setResourceBase(getClass().getResource("/web").toExternalForm());
 
-      handlers.addHandler(resourceHandler);
+      ContextHandler rootContextHandler = new ContextHandler();
+      rootContextHandler.setContextPath("/");
+
+      rootContextHandler.setHandler(resourceHandler);
+      handlers.addHandler(rootContextHandler);
     }
   }
 
@@ -381,8 +413,7 @@ public class BaleenWebApi extends AbstractBaleenComponent {
         name = name.substring(0, name.length() - 4) + "-javadoc.jar";
         javadocJar = new File(currentJar.getParent(), name);
         if (!javadocJar.exists()) {
-          LOGGER.debug(
-              "Unable to locate Javadoc JAR '" + name + "' - Javadoc will not be available");
+          LOGGER.debug("Unable to locate Javadoc JAR '{}' - Javadoc will not be available", name);
           javadocJar = null;
         }
       } else {
@@ -450,10 +481,12 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 
       HashLoginService loginService = new HashLoginService(authConfig.getName());
 
+      UserStore userStore = new UserStore();
       for (WebUser user : authConfig.getUsers()) {
         Credential credential = Credential.getCredential(user.getPassword());
-        loginService.putUser(user.getUsername(), credential, user.getRolesAsArray());
+        userStore.addUser(user.getUsername(), credential, user.getRolesAsArray());
       }
+      loginService.setUserStore(userStore);
       server.addBean(loginService);
 
       ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
@@ -484,7 +517,7 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 
   @Override
   public void start() throws BaleenException {
-    if (this.server != null) {
+    if (server != null) {
       LOGGER.debug("Starting server");
       try {
         server.start();
@@ -517,6 +550,6 @@ public class BaleenWebApi extends AbstractBaleenComponent {
    * @param args ignored - command line arguments.
    */
   public static void main(String[] args) {
-    new BaleenManager(Optional.empty()).runUntilStopped();
+    new BaleenManager().runUntilStopped();
   }
 }
