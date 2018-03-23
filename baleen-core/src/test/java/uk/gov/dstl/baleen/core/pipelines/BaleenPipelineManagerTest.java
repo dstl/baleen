@@ -50,12 +50,41 @@ public class BaleenPipelineManagerTest {
   }
 
   @Test
+  public void testWithMultiplicityPipline() throws Exception {
+    BaleenPipelineManager manager = new BaleenPipelineManager();
+    try {
+      YamlConfiguration config = new YamlConfiguration(getClass(), "multiplicity.yaml");
+      manager.configure(config);
+      assertEquals(4, manager.getAll().size());
+      assertTrue(manager.get("multi-1").isPresent());
+      assertTrue(manager.get("multi-2").isPresent());
+      assertTrue(manager.get("multi-3").isPresent());
+      assertTrue(manager.get("multi-4").isPresent());
+    } finally {
+      manager.stop();
+    }
+  }
+
+  @Test
   public void testRemoveSinglePipline() throws Exception {
     BaleenPipelineManager manager = new BaleenPipelineManager();
     try {
       YamlConfiguration config = new YamlConfiguration(getClass(), "single.yaml");
       manager.configure(config);
       manager.remove("single");
+      assertEquals(0, manager.getAll().size());
+    } finally {
+      manager.stop();
+    }
+  }
+
+  @Test
+  public void testWithRemoveAllPiplines() throws Exception {
+    BaleenPipelineManager manager = new BaleenPipelineManager();
+    try {
+      YamlConfiguration config = new YamlConfiguration(getClass(), "multiplicity.yaml");
+      manager.configure(config);
+      manager.removeAll("multi");
       assertEquals(0, manager.getAll().size());
     } finally {
       manager.stop();

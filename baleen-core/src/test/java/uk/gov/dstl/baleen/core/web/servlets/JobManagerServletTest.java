@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.core.web.servlets;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -21,6 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import com.google.common.collect.ImmutableList;
 
 import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
@@ -126,14 +129,15 @@ public class JobManagerServletTest {
   @Test
   public void testPostForCreate() throws Exception {
     String yaml = "yaml";
-    when(jobManager.create(eq("new"), anyPipelineConfiguration())).thenReturn(realJob);
+    when(jobManager.create(eq("new"), anyPipelineConfiguration(), eq(1)))
+        .thenReturn(ImmutableList.of(realJob));
     ServletCaller caller = new ServletCaller();
     caller.setRequestUri(ROOT);
     caller.addParameter(NAME, "new");
     caller.addParameter("yaml", yaml);
     caller.doPost(new JobManagerServlet(jobManager));
     assertEquals(200, caller.getResponseStatus().intValue());
-    verify(jobManager).create(eq("new"), anyPipelineConfiguration());
+    verify(jobManager).create(eq("new"), anyPipelineConfiguration(), eq(1));
   }
 
   @Test
@@ -184,7 +188,9 @@ public class JobManagerServletTest {
 
   @Test
   public void testPostCreationFailure() throws Exception {
-    doThrow(BaleenException.class).when(jobManager).create(anyString(), anyPipelineConfiguration());
+    doThrow(BaleenException.class)
+        .when(jobManager)
+        .create(anyString(), anyPipelineConfiguration(), anyInt());
 
     String yaml = "yaml";
     ServletCaller caller = new ServletCaller();

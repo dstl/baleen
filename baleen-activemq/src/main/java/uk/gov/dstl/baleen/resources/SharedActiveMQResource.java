@@ -35,6 +35,9 @@ import uk.gov.dstl.baleen.uima.BaleenResource;
  */
 public class SharedActiveMQResource extends BaleenResource {
 
+  /** default key for access to the activeMQ resource */
+  public static final String RESOURCE_KEY = "mqResource";
+
   public static final String DEFAULT_PROTOCOL = "tcp";
   public static final String DEFAULT_HOST = "localhost";
   public static final String DEFAULT_PORT_STRING = "61616";
@@ -82,16 +85,6 @@ public class SharedActiveMQResource extends BaleenResource {
 
   @ConfigurationParameter(name = PARAM_BROKERARGS, defaultValue = DEFAULT_BROKER_ARGS)
   private String activeMQBrokerArgs;
-
-  /**
-   * The ActiveMQ endpoint to connect to (e.g. queue:foo.bar)
-   *
-   * @baleen.config baleen
-   */
-  public static final String PARAM_DB = "activemq.topic";
-
-  @ConfigurationParameter(name = PARAM_DB, defaultValue = DEFAULT_TOPIC)
-  private String activeMQTopic;
 
   /**
    * The username to use for authentication. If left blank, then authentication will not be used.

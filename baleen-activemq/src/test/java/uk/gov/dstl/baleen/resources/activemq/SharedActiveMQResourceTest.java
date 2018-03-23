@@ -1,5 +1,5 @@
-// Dstl (c) Crown Copyright 2017
-package uk.gov.dstl.baleen.resources;
+// Copyright (c) Committed Software 2018, opensource@committed.io
+package uk.gov.dstl.baleen.resources.activemq;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,10 +19,12 @@ import org.junit.Test;
 
 import com.google.common.collect.Maps;
 
-public class SharedActiveMQResourceTest {
-  SharedActiveMQResource samr;
+import uk.gov.dstl.baleen.resources.SharedActiveMQResource;
 
-  private static String HOST_VALUE = "localhost";
+public class SharedActiveMQResourceTest {
+
+  private SharedActiveMQResource samr;
+
   private static String PROTOCOL_VALUE = "vm";
   private static String BROKERARGS_VALUE = "broker.persistent=false";
 
@@ -34,7 +36,6 @@ public class SharedActiveMQResourceTest {
     final Parameter[] configParams =
         new Parameter[] {
           new Parameter_impl(SharedActiveMQResource.PARAM_PROTOCOL, PROTOCOL_VALUE),
-          new Parameter_impl(SharedActiveMQResource.PARAM_HOST, HOST_VALUE),
           new Parameter_impl(SharedActiveMQResource.PARAM_BROKERARGS, BROKERARGS_VALUE)
         };
     samrSpecifier.setParameters(configParams);
