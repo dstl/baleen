@@ -40,6 +40,10 @@ public class FileGazetteer extends AbstractMultiMapGazetteer<Integer> {
       file = new File("gazetteer.txt");
     }
 
+    if (config.containsKey(CONFIG_TERM_SEPARATOR)) {
+      termSeparator = config.get(CONFIG_TERM_SEPARATOR).toString();
+    }
+
     if (!file.exists() || !file.canRead()) {
       throw new InvalidParameterException("Unable to read file " + file.getPath());
     }
@@ -61,6 +65,7 @@ public class FileGazetteer extends AbstractMultiMapGazetteer<Integer> {
     String[] content;
     try {
       content = SharedFileResource.readFileLines(file);
+      System.out.println(content[1]);
     } catch (IOException e) {
       throw new BaleenException(e);
     }
