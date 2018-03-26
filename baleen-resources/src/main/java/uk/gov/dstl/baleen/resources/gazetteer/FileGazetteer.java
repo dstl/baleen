@@ -65,7 +65,6 @@ public class FileGazetteer extends AbstractMultiMapGazetteer<Integer> {
     String[] content;
     try {
       content = SharedFileResource.readFileLines(file);
-      System.out.println(content[1]);
     } catch (IOException e) {
       throw new BaleenException(e);
     }
