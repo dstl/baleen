@@ -16,6 +16,9 @@ import uk.gov.dstl.baleen.types.Base;
  *
  * @generated
  */
+// ***************************************************************************************
+// WARNING Edited generated class to add Recordable interface, be careful on regeneration.
+// ***************************************************************************************
 public class Entity extends Base implements Recordable {
   @SuppressWarnings("hiding")
   public static final int typeIndexID = JCasRegistry.register(Entity.class);
@@ -116,6 +119,42 @@ public class Entity extends Base implements Recordable {
     if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_value == null)
       jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
     jcasType.ll_cas.ll_setStringValue(addr, ((Entity_Type) jcasType).casFeatCode_value, v);
+  }
+
+  // *--------------*
+  // * Feature: referent
+
+  /**
+   * getter for referent - gets Can be used to link a corefence to an entity to another (presuambly
+   * more definitive) mention of the same entity elsewhere in the text.
+   *
+   * @generated
+   * @return value of the feature
+   */
+  @Override
+  public ReferenceTarget getReferent() {
+    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_referent == null) {
+      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
+    }
+    return (ReferenceTarget)
+        jcasType.ll_cas.ll_getFSForRef(
+            jcasType.ll_cas.ll_getRefValue(addr, ((Entity_Type) jcasType).casFeatCode_referent));
+  }
+
+  /**
+   * setter for referent - sets Can be used to link a corefence to an entity to another (presuambly
+   * more definitive) mention of the same entity elsewhere in the text.
+   *
+   * @generated
+   * @param v value to set into the feature
+   */
+  @Override
+  public void setReferent(ReferenceTarget v) {
+    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_referent == null) {
+      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
+    }
+    jcasType.ll_cas.ll_setRefValue(
+        addr, ((Entity_Type) jcasType).casFeatCode_referent, jcasType.ll_cas.ll_getFSRef(v));
   }
 
   // *--------------*

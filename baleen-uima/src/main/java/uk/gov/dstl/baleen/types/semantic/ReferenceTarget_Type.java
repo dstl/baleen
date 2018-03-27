@@ -2,10 +2,9 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.types.semantic;
 
-import org.apache.uima.cas.FeatureStructure;
+import org.apache.uima.cas.Feature;
 import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.FSGenerator;
+import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
@@ -21,30 +20,6 @@ import uk.gov.dstl.baleen.types.BaleenAnnotation_Type;
  * @generated
  */
 public class ReferenceTarget_Type extends BaleenAnnotation_Type {
-  /**
-   * @generated
-   * @return the generator for this type
-   */
-  @Override
-  protected FSGenerator getFSGenerator() {
-    return fsGenerator;
-  }
-  /** @generated */
-  private final FSGenerator fsGenerator =
-      new FSGenerator() {
-        public FeatureStructure createFS(int addr, CASImpl cas) {
-          if (ReferenceTarget_Type.this.useExistingInstance) {
-            // Return eq fs instance if already created
-            FeatureStructure fs = ReferenceTarget_Type.this.jcas.getJfsFromCaddr(addr);
-            if (null == fs) {
-              fs = new ReferenceTarget(addr, ReferenceTarget_Type.this);
-              ReferenceTarget_Type.this.jcas.putJfsFromCaddr(addr, fs);
-              return fs;
-            }
-            return fs;
-          } else return new ReferenceTarget(addr, ReferenceTarget_Type.this);
-        }
-      };
   /** @generated */
   @SuppressWarnings("hiding")
   public static final int typeIndexID = ReferenceTarget.typeIndexID;
@@ -56,6 +31,31 @@ public class ReferenceTarget_Type extends BaleenAnnotation_Type {
   public static final boolean featOkTst =
       JCasRegistry.getFeatOkTst("uk.gov.dstl.baleen.types.semantic.ReferenceTarget");
 
+  /** @generated */
+  final Feature casFeat_linking;
+  /** @generated */
+  final int casFeatCode_linking;
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value
+   */
+  public String getLinking(int addr) {
+    if (featOkTst && casFeat_linking == null)
+      jcas.throwFeatMissing("linking", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget");
+    return ll_cas.ll_getStringValue(addr, casFeatCode_linking);
+  }
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set
+   */
+  public void setLinking(int addr, String v) {
+    if (featOkTst && casFeat_linking == null)
+      jcas.throwFeatMissing("linking", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget");
+    ll_cas.ll_setStringValue(addr, casFeatCode_linking, v);
+  }
+
   /**
    * initialize variables to correspond with Cas Type and Features
    *
@@ -66,5 +66,11 @@ public class ReferenceTarget_Type extends BaleenAnnotation_Type {
   public ReferenceTarget_Type(JCas jcas, Type casType) {
     super(jcas, casType);
     casImpl.getFSClassRegistry().addGeneratorForType((TypeImpl) this.casType, getFSGenerator());
+
+    casFeat_linking = jcas.getRequiredFeatureDE(casType, "linking", "uima.cas.String", featOkTst);
+    casFeatCode_linking =
+        (null == casFeat_linking)
+            ? JCas.INVALID_FEATURE_CODE
+            : ((FeatureImpl) casFeat_linking).getCode();
   }
 }

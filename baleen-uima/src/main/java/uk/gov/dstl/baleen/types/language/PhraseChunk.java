@@ -126,7 +126,7 @@ public class PhraseChunk extends Base {
   // * Feature: constituentWords
 
   /**
-   * getter for constituentWords - gets Word tokens which comprose the constituent.
+   * getter for constituentWords - gets Word tokens which comprise the constituent.
    *
    * @generated
    * @return value of the feature
@@ -143,7 +143,7 @@ public class PhraseChunk extends Base {
   }
 
   /**
-   * setter for constituentWords - sets Word tokens which comprose the constituent.
+   * setter for constituentWords - sets Word tokens which comprise the constituent.
    *
    * @generated
    * @param v value to set into the feature
@@ -160,7 +160,7 @@ public class PhraseChunk extends Base {
   }
 
   /**
-   * indexed getter for constituentWords - gets an indexed value - Word tokens which comprose the
+   * indexed getter for constituentWords - gets an indexed value - Word tokens which comprise the
    * constituent.
    *
    * @generated
@@ -185,7 +185,7 @@ public class PhraseChunk extends Base {
   }
 
   /**
-   * indexed setter for constituentWords - sets an indexed value - Word tokens which comprose the
+   * indexed setter for constituentWords - sets an indexed value - Word tokens which comprise the
    * constituent.
    *
    * @generated

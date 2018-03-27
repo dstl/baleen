@@ -3,10 +3,7 @@
 package uk.gov.dstl.baleen.types;
 
 import org.apache.uima.cas.Feature;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
@@ -19,30 +16,6 @@ import org.apache.uima.jcas.JCasRegistry;
  * @generated
  */
 public class Base_Type extends BaleenAnnotation_Type {
-  /**
-   * @generated
-   * @return the generator for this type
-   */
-  @Override
-  protected FSGenerator getFSGenerator() {
-    return fsGenerator;
-  }
-  /** @generated */
-  private final FSGenerator fsGenerator =
-      new FSGenerator() {
-        public FeatureStructure createFS(int addr, CASImpl cas) {
-          if (Base_Type.this.useExistingInstance) {
-            // Return eq fs instance if already created
-            FeatureStructure fs = Base_Type.this.jcas.getJfsFromCaddr(addr);
-            if (null == fs) {
-              fs = new Base(addr, Base_Type.this);
-              Base_Type.this.jcas.putJfsFromCaddr(addr, fs);
-              return fs;
-            }
-            return fs;
-          } else return new Base(addr, Base_Type.this);
-        }
-      };
   /** @generated */
   @SuppressWarnings("hiding")
   public static final int typeIndexID = Base.typeIndexID;

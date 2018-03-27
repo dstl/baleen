@@ -13,7 +13,7 @@ This XML file classified as UK OFFICIAL.</description>
   <types>
     <typeDescription>
       <name>uk.gov.dstl.baleen.types.geo.Coordinate</name>
-      <description>A well-formed coordinate value - MGRS or WGS84 DD or DMS cooridate system - explictly defined in source document.</description>
+      <description>A well-formed coordinate value - MGRS or WGS84 DD or DMS coordinate system - explicitly defined in source document.</description>
       <supertypeName>uk.gov.dstl.baleen.types.semantic.Location</supertypeName>
       <features>
         <featureDescription>

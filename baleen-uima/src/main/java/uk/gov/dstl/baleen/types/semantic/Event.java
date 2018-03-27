@@ -19,6 +19,9 @@ import uk.gov.dstl.baleen.types.language.WordToken;
  *
  * @generated
  */
+// ***************************************************************************************
+// WARNING Edited generated class to add Recordable interface, be careful on regeneration.
+// ***************************************************************************************
 public class Event extends Base implements Recordable {
   /**
    * @generated

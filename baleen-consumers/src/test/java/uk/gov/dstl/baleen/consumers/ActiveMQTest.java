@@ -52,9 +52,12 @@ public class ActiveMQTest extends ConsumerTestBase {
     // Configuration values
     Object[] configArr =
         new String[] {
-          SharedActiveMQResource.PARAM_PROTOCOL, PROTOCOL_VALUE,
-          SharedActiveMQResource.PARAM_HOST, HOST_VALUE,
-          SharedActiveMQResource.PARAM_BROKERARGS, BROKERARGS_VALUE
+          SharedActiveMQResource.PARAM_PROTOCOL,
+          PROTOCOL_VALUE,
+          SharedActiveMQResource.PARAM_HOST,
+          HOST_VALUE,
+          SharedActiveMQResource.PARAM_BROKERARGS,
+          BROKERARGS_VALUE
         };
 
     // Create descriptors
@@ -110,14 +113,7 @@ public class ActiveMQTest extends ConsumerTestBase {
     assertNotNull(msg);
     TextMessage txtMsg = (TextMessage) msg;
     assertEquals(
-        "{\"entities\":["
-            + "{\"gender\":null,\"isNormalised\":false,\"confidence\":0.0,\"externalId\":\"6296367351eed432f0a2f3c3c2e867de8bb9c5812a7eac2921134d34200b459e\",\"end\":5,\"subType\":null,\"title\":null,\"type\":\"Person\",\"begin\":0,\"value\":\"James\"},"
-            + "{\"geoJson\":{\"type\":\"Point\",\"coordinates\":[-0.1,51.5]},\"isNormalised\":false,\"confidence\":0.0,\"externalId\":\"8f4008b559740384ca92fce87a51c64dbd9276dbe9426c93880d94640781980c\",\"end\":20,\"subType\":null,\"type\":\"Location\",\"begin\":14,\"value\":\"London\"},"
-            + "{\"temporalType\":null,\"isNormalised\":false,\"confidence\":1.0,\"precision\":null,\"externalId\":\"c04e32ec85d053a1c985886a5381e1af85daec38ee73b354af7485217181d2ab\",\"type\":\"Temporal\",\"timestampStop\":0,\"timestampStart\":0,\"scope\":null,\"end\":42,\"subType\":null,\"begin\":24,\"value\":\"19th February 2015\"},"
-            + "{\"isNormalised\":false,\"confidence\":0.0,\"externalId\":\"cb9440e3ec0eb12474ec0e61e20a94aab34fa1347e8c65def15cc9045f1c9454\",\"end\":83,\"subType\":\"email\",\"type\":\"CommsIdentifier\",\"begin\":66,\"value\":\"james@example.com\"}"
-            + "],\"externalId\":\"0b7e0fc074fb2da8394f3370a9c02919cbb24a88e50908cdba03f8b56e26ce58\",\"language\":\"x-unspecified\",\"dateAccessed\":0,"
-            + "\"relations\":[{\"relationshipType\":\"visited\",\"confidence\":0.0,\"externalId\":\"ac30c60f186922345007705da74dc7832b1819b48c7287cb7806862425c7fbd7\",\"end\":20,\"source\":\"6296367351eed432f0a2f3c3c2e867de8bb9c5812a7eac2921134d34200b459e\",\"type\":\"Relation\",\"begin\":0,\"value\":\"James went to London\",\"relationSubType\":null,\"target\":\"8f4008b559740384ca92fce87a51c64dbd9276dbe9426c93880d94640781980c\"}],"
-            + "\"content\":\"James went to London on 19th February 2015. His e-mail address is james@example.com\"}",
+        "{\"entities\":[{\"gender\":null,\"isNormalised\":false,\"confidence\":0.0,\"externalId\":\"6296367351eed432f0a2f3c3c2e867de8bb9c5812a7eac2921134d34200b459e\",\"end\":5,\"subType\":null,\"title\":null,\"type\":\"Person\",\"begin\":0,\"value\":\"James\"},{\"geoJson\":{\"type\":\"Point\",\"coordinates\":[-0.1,51.5]},\"isNormalised\":false,\"confidence\":0.0,\"externalId\":\"8f4008b559740384ca92fce87a51c64dbd9276dbe9426c93880d94640781980c\",\"end\":20,\"subType\":null,\"type\":\"Location\",\"begin\":14,\"value\":\"London\"},{\"temporalType\":null,\"isNormalised\":false,\"confidence\":1.0,\"precision\":null,\"externalId\":\"c04e32ec85d053a1c985886a5381e1af85daec38ee73b354af7485217181d2ab\",\"type\":\"Temporal\",\"timestampStop\":0,\"timestampStart\":0,\"scope\":null,\"end\":42,\"subType\":null,\"begin\":24,\"value\":\"19th February 2015\"},{\"isNormalised\":false,\"confidence\":0.0,\"externalId\":\"cb9440e3ec0eb12474ec0e61e20a94aab34fa1347e8c65def15cc9045f1c9454\",\"end\":83,\"subType\":\"email\",\"type\":\"CommsIdentifier\",\"begin\":66,\"value\":\"james@example.com\"}],\"externalId\":\"0b7e0fc074fb2da8394f3370a9c02919cbb24a88e50908cdba03f8b56e26ce58\",\"language\":\"x-unspecified\",\"dateAccessed\":0,\"relations\":[{\"relationshipType\":\"visited\",\"dependencyDistance\":0,\"wordDistance\":0,\"confidence\":0.0,\"sentenceDistance\":0,\"externalId\":\"740289690b8a173e1ca1e1421cb4fc272911da3a72f941a369cd9ff19e575b2b\",\"source\":\"6296367351eed432f0a2f3c3c2e867de8bb9c5812a7eac2921134d34200b459e\",\"type\":\"Relation\",\"relationSubType\":null,\"target\":\"8f4008b559740384ca92fce87a51c64dbd9276dbe9426c93880d94640781980c\",\"end\":20,\"begin\":0,\"value\":\"James went to London\"}],\"content\":\"James went to London on 19th February 2015. His e-mail address is james@example.com\"}",
         txtMsg.getText());
 
     // Check there are no more messages on the queue

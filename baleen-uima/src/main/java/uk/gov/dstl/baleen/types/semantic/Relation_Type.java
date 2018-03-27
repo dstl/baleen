@@ -3,10 +3,7 @@
 package uk.gov.dstl.baleen.types.semantic;
 
 import org.apache.uima.cas.Feature;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
@@ -16,35 +13,11 @@ import uk.gov.dstl.baleen.types.Base_Type;
 
 /**
  * Records a relationship between named entities, explicitly mentioned within the source document.
- * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
+ * Updated by JCasGen Tue Mar 27 09:06:46 BST 2018
  *
  * @generated
  */
 public class Relation_Type extends Base_Type {
-  /**
-   * @generated
-   * @return the generator for this type
-   */
-  @Override
-  protected FSGenerator getFSGenerator() {
-    return fsGenerator;
-  }
-  /** @generated */
-  private final FSGenerator fsGenerator =
-      new FSGenerator() {
-        public FeatureStructure createFS(int addr, CASImpl cas) {
-          if (Relation_Type.this.useExistingInstance) {
-            // Return eq fs instance if already created
-            FeatureStructure fs = Relation_Type.this.jcas.getJfsFromCaddr(addr);
-            if (null == fs) {
-              fs = new Relation(addr, Relation_Type.this);
-              Relation_Type.this.jcas.putJfsFromCaddr(addr, fs);
-              return fs;
-            }
-            return fs;
-          } else return new Relation(addr, Relation_Type.this);
-        }
-      };
   /** @generated */
   @SuppressWarnings("hiding")
   public static final int typeIndexID = Relation.typeIndexID;
@@ -181,6 +154,81 @@ public class Relation_Type extends Base_Type {
     ll_cas.ll_setStringValue(addr, casFeatCode_relationSubType, v);
   }
 
+  /** @generated */
+  final Feature casFeat_sentenceDistance;
+  /** @generated */
+  final int casFeatCode_sentenceDistance;
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value
+   */
+  public int getSentenceDistance(int addr) {
+    if (featOkTst && casFeat_sentenceDistance == null)
+      jcas.throwFeatMissing("sentenceDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    return ll_cas.ll_getIntValue(addr, casFeatCode_sentenceDistance);
+  }
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set
+   */
+  public void setSentenceDistance(int addr, int v) {
+    if (featOkTst && casFeat_sentenceDistance == null)
+      jcas.throwFeatMissing("sentenceDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    ll_cas.ll_setIntValue(addr, casFeatCode_sentenceDistance, v);
+  }
+
+  /** @generated */
+  final Feature casFeat_wordDistance;
+  /** @generated */
+  final int casFeatCode_wordDistance;
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value
+   */
+  public int getWordDistance(int addr) {
+    if (featOkTst && casFeat_wordDistance == null)
+      jcas.throwFeatMissing("wordDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    return ll_cas.ll_getIntValue(addr, casFeatCode_wordDistance);
+  }
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set
+   */
+  public void setWordDistance(int addr, int v) {
+    if (featOkTst && casFeat_wordDistance == null)
+      jcas.throwFeatMissing("wordDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    ll_cas.ll_setIntValue(addr, casFeatCode_wordDistance, v);
+  }
+
+  /** @generated */
+  final Feature casFeat_dependencyDistance;
+  /** @generated */
+  final int casFeatCode_dependencyDistance;
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @return the feature value
+   */
+  public int getDependencyDistance(int addr) {
+    if (featOkTst && casFeat_dependencyDistance == null)
+      jcas.throwFeatMissing("dependencyDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    return ll_cas.ll_getIntValue(addr, casFeatCode_dependencyDistance);
+  }
+  /**
+   * @generated
+   * @param addr low level Feature Structure reference
+   * @param v value to set
+   */
+  public void setDependencyDistance(int addr, int v) {
+    if (featOkTst && casFeat_dependencyDistance == null)
+      jcas.throwFeatMissing("dependencyDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    ll_cas.ll_setIntValue(addr, casFeatCode_dependencyDistance, v);
+  }
+
   /**
    * initialize variables to correspond with Cas Type and Features
    *
@@ -227,5 +275,26 @@ public class Relation_Type extends Base_Type {
         (null == casFeat_relationSubType)
             ? JCas.INVALID_FEATURE_CODE
             : ((FeatureImpl) casFeat_relationSubType).getCode();
+
+    casFeat_sentenceDistance =
+        jcas.getRequiredFeatureDE(casType, "sentenceDistance", "uima.cas.Integer", featOkTst);
+    casFeatCode_sentenceDistance =
+        (null == casFeat_sentenceDistance)
+            ? JCas.INVALID_FEATURE_CODE
+            : ((FeatureImpl) casFeat_sentenceDistance).getCode();
+
+    casFeat_wordDistance =
+        jcas.getRequiredFeatureDE(casType, "wordDistance", "uima.cas.Integer", featOkTst);
+    casFeatCode_wordDistance =
+        (null == casFeat_wordDistance)
+            ? JCas.INVALID_FEATURE_CODE
+            : ((FeatureImpl) casFeat_wordDistance).getCode();
+
+    casFeat_dependencyDistance =
+        jcas.getRequiredFeatureDE(casType, "dependencyDistance", "uima.cas.Integer", featOkTst);
+    casFeatCode_dependencyDistance =
+        (null == casFeat_dependencyDistance)
+            ? JCas.INVALID_FEATURE_CODE
+            : ((FeatureImpl) casFeat_dependencyDistance).getCode();
   }
 }

@@ -41,6 +41,7 @@ import uk.gov.dstl.baleen.core.history.HistoryEvents;
 import uk.gov.dstl.baleen.core.history.memory.InMemoryBaleenHistory;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
+import uk.gov.dstl.baleen.types.BaleenAnnotation;
 import uk.gov.dstl.baleen.types.common.Buzzword;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
 import uk.gov.dstl.baleen.types.common.Person;
@@ -268,9 +269,10 @@ public class MongoTest extends ConsumerTestBase {
     jCas.setDocumentText(
         "James went to London on 19th February 2015. His e-mail address is james@example.com");
 
-    Annotations.createPerson(jCas, 0, 5, PERSON);
-    Annotations.createLocation(
-        jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
+    Person p = Annotations.createPerson(jCas, 0, 5, PERSON);
+    Location l =
+        Annotations.createLocation(
+            jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
     Temporal dt = Annotations.createTemporal(jCas, 24, 42, DATE);
     dt.setConfidence(1.0);
 
@@ -300,7 +302,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document a = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON)).first();
     Document person = ((List<Document>) a.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(11, person.size());
+    assertEquals(getExpectedSize(p), person.size());
     assertEquals(0, person.get(BEGIN));
     assertEquals(5, person.get(END));
     assertEquals(0.0, person.get(CONFIDENCE));
@@ -309,7 +311,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document b = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON)).first();
     Document location = ((List<Document>) b.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(10, location.size());
+    assertEquals(getExpectedSize(l), location.size());
     assertEquals(14, location.get(BEGIN));
     assertEquals(20, location.get(END));
     assertEquals(0.0, location.get(CONFIDENCE));
@@ -323,7 +325,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document c = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, DATE)).first();
     Document date = ((List<Document>) c.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(14, date.size());
+    assertEquals(getExpectedSize(dt), date.size());
     assertEquals(24, date.get(BEGIN));
     assertEquals(42, date.get(END));
     assertEquals(1.0, date.get(CONFIDENCE));
@@ -332,7 +334,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document d = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, EMAIL)).first();
     Document email = ((List<Document>) d.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(9, email.size());
+    assertEquals(getExpectedSize(ci), email.size());
     assertEquals(66, email.get(BEGIN));
     assertEquals(83, email.get(END));
     assertEquals(0.0, email.get(CONFIDENCE));
@@ -342,7 +344,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document e = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, WENT)).first();
     Document went = ((List<Document>) e.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(10, went.size());
+    assertEquals(getExpectedSize(bw), went.size());
     assertEquals(6, went.get(BEGIN));
     assertEquals(10, went.get(END));
     assertEquals(0.0, went.get(CONFIDENCE));
@@ -440,7 +442,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document a = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, PERSON)).first();
     Document person = ((List<Document>) a.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(11, person.size());
+    assertEquals(getExpectedSize(p), person.size());
     assertEquals(0, person.get(BEGIN));
     assertEquals(5, person.get(END));
     assertEquals(0.0, person.get(CONFIDENCE));
@@ -449,7 +451,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document b = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON)).first();
     Document location = ((List<Document>) b.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(10, location.size());
+    assertEquals(getExpectedSize(l), location.size());
     assertEquals(14, location.get(BEGIN));
     assertEquals(20, location.get(END));
     assertEquals(0.0, location.get(CONFIDENCE));
@@ -463,7 +465,7 @@ public class MongoTest extends ConsumerTestBase {
 
     Document c = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, DATE)).first();
     Document date = ((List<Document>) c.get(Mongo.FIELD_ENTITIES)).get(0);
-    assertEquals(14, date.size());
+    assertEquals(getExpectedSize(dt), date.size());
     assertEquals(24, date.get(BEGIN));
     assertEquals(42, date.get(END));
     assertEquals(1.0, date.get(CONFIDENCE));
@@ -471,7 +473,7 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(DATE, date.get(VALUE));
 
     Document relation = relations.find().first();
-    assertEquals(13, relation.size());
+    assertEquals(getExpectedSize(r), relation.size());
     assertEquals(0, relation.get(BEGIN));
     assertEquals(20, relation.get(END));
     assertEquals(0.7, relation.get(CONFIDENCE));
@@ -479,5 +481,14 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(location.get(fields.getExternalId()), relation.get("target"));
     assertEquals("AT", relation.get("relationshipType"));
     assertEquals("James went to London", relation.get(VALUE));
+  }
+
+  private int getExpectedSize(BaleenAnnotation r) {
+    if (r instanceof Relation) {
+      // Number of Features - sofa - internalId + _id + externalId + type + history
+      return r.getType().getFeatures().size() - 2 + 4;
+    }
+    // Number of Features - sofa - internalId - referent + externalId + type + history
+    return r.getType().getFeatures().size() - 3 + 3;
   }
 }

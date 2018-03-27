@@ -132,7 +132,7 @@ public class TemplateRecordDefinition extends Base {
 
   /**
    * getter for repeat - gets Declare that this record is repeatable in the document. For example, a
-   * repeating record spaning a row of a table would create a record for each row in the table.
+   * repeating record spanning a row of a table would create a record for each row in the table.
    *
    * @generated
    * @return value of the feature
@@ -148,7 +148,7 @@ public class TemplateRecordDefinition extends Base {
 
   /**
    * setter for repeat - sets Declare that this record is repeatable in the document. For example, a
-   * repeating record spaning a row of a table would create a record for each row in the table.
+   * repeating record spanning a row of a table would create a record for each row in the table.
    *
    * @generated
    * @param v value to set into the feature

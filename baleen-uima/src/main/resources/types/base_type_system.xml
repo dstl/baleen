@@ -11,6 +11,13 @@ This XML file classified as UK OFFICIAL.</description>
       <name>uk.gov.dstl.baleen.types.semantic.ReferenceTarget</name>
       <description>A target type for the referent property, such that entities pointing to the same target are assumed to be coreferences. The target can therefore be thought of as a super-entity, though it has no properties or value of it's own. The span of this entity is taken to be the scope in which this reference target is valid.</description>
       <supertypeName>uk.gov.dstl.baleen.types.BaleenAnnotation</supertypeName>
+    <features>
+        <featureDescription>
+          <name>linking</name>
+          <description>A property to define an external linking that may describe this group of mentions. For example, a set of mentions of a person could be linked to a database entry or webpage for the person.</description>
+          <rangeTypeName>uima.cas.String</rangeTypeName>
+        </featureDescription>
+      </features>
     </typeDescription>
     <typeDescription>
       <name>uk.gov.dstl.baleen.types.Base</name>
