@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>uk.gov.dstl.baleen</groupId>
+    <artifactId>baleen</artifactId>
+    <version>2.6.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>baleen-odin</artifactId>
+  <name>Baleen Odin</name>
+
+  <properties>
+    <odin.version>7.1.0</odin.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-annotators</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.clulab</groupId>
+      <artifactId>processors-main_2.12</artifactId>
+      <version>${odin.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>edu.washington.cs.knowitall.nlptools</groupId>
+          <artifactId>nlptools-stem-morpha_2.10</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.typesafe.akka</groupId>
+          <artifactId>akka-actor_2.12</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.typesafe.akka</groupId>
+          <artifactId>akka-remote_2.12</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.typesafe.akka</groupId>
+          <artifactId>akka-slf4j_2.12</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.clulab</groupId>
+      <artifactId>processors-odin_2.12</artifactId>
+      <version>${odin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.clulab</groupId>
+      <artifactId>processors-modelsmain_2.12</artifactId>
+      <version>${odin.version}</version>
+    </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-uima</artifactId>
+      <version>${baleen.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-annotators</artifactId>
+      <version>${baleen.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

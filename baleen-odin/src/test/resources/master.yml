@@ -1,0 +1,32 @@
+taxonomy:
+- Noun
+- Purchase
+
+rules:
+
+- name: noun
+  label: Noun
+  priority: 1
+  type: token
+  unit: "tag"
+  pattern: |
+    [tag=/NN/]
+
+
+- name: went
+  label: Event
+  priority: 2
+  pattern: |
+    trigger = [tag=/VBD/]
+    agent: Person = /nsubj/
+    location: Location = nmod
+    time: Temporal? = nmod
+    
+- name: purchased
+  label: [Event, Purchase]
+  priority: 2
+  pattern: |
+    trigger = [tag=/^VB/ & word=/purch/]
+    location: Location = /nmod/
+    time: Temporal = /nmod/
+    thing: Noun = /nsubj/  

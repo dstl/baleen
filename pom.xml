@@ -259,5 +259,6 @@
     <module>baleen-javadoc</module>
     <module>baleen-jobs</module>
     <module>baleen-orderers</module>
+    <module>baleen-odin</module>
   </modules>
 </project>
