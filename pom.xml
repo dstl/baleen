@@ -70,6 +70,7 @@
     <jackson.version>2.9.4</jackson.version>
     <javamail.version>1.6.1</javamail.version>
     <javassist.version>3.20.0-GA</javassist.version>
+    <jena.version>3.6.0</jena.version>
     <jest.version>2.4.0</jest.version>
     <jetty.version>9.4.7.v20170914</jetty.version>
     <jmustache.version>1.14</jmustache.version>
@@ -259,5 +260,6 @@
     <module>baleen-javadoc</module>
     <module>baleen-jobs</module>
     <module>baleen-orderers</module>
+    <module>baleen-entity-linking</module>
   </modules>
 </project>
