@@ -90,6 +90,7 @@
     <reflections.version>0.9.11</reflections.version>
     <slf4j.version>1.7.25</slf4j.version>
     <snakeyaml.version>1.19</snakeyaml.version>
+    <trove4j.version>3.0.3</trove4j.version>
     <uimafit.version>2.4.0</uimafit.version>
 
 
