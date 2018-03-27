@@ -48,6 +48,7 @@ import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Location;
+import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
@@ -270,8 +271,9 @@ public class MongoTest extends ConsumerTestBase {
         "James went to London on 19th February 2015. His e-mail address is james@example.com");
 
     Person p = Annotations.createPerson(jCas, 0, 5, PERSON);
-    Location l = Annotations.createLocation(
-        jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
+    Location l =
+        Annotations.createLocation(
+            jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
 
     Temporal dt = Annotations.createTemporal(jCas, 24, 42, DATE);
     dt.setConfidence(1.0);
@@ -358,10 +360,12 @@ public class MongoTest extends ConsumerTestBase {
   @Test
   public void testReferenceTargets() throws AnalysisEngineProcessException {
     jCas.setDocumentText("Bill went to London. William came back.");
+    String link = "http://test";
 
     Person p = Annotations.createPerson(jCas, 0, 4, "Bill");
     Person q = Annotations.createPerson(jCas, 21, 28, NAME_2);
-    Annotations.createReferenceTarget(jCas, p, q);
+    ReferenceTarget referenceTarget = Annotations.createReferenceTarget(jCas, p, q);
+    referenceTarget.setLinking(link);
 
     ae.process(jCas);
     assertEquals(1, documents.count());
@@ -371,6 +375,7 @@ public class MongoTest extends ConsumerTestBase {
 
     assertEquals(2, ((List<Object>) a.get(Mongo.FIELD_ENTITIES)).size());
     assertEquals(2, ((List<Object>) a.get(Mongo.FIELD_ENTITIES)).size());
+    assertEquals(link, a.getString(Mongo.FIELD_LINKING));
     assertEquals(
         ConsumerUtils.getExternalId(ImmutableList.of(p, q)), a.getString(fields.getExternalId()));
   }

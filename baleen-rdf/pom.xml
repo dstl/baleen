@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>uk.gov.dstl.baleen</groupId>
+    <artifactId>baleen</artifactId>
+    <version>2.6.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>baleen-rdf</artifactId>
+  <name>Baleen RDF</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-graph</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <!-- Graph drivers -->
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-core</artifactId>
+      <version>${jena.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-arq</artifactId>
+      <version>${jena.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-rdfconnection</artifactId>
+      <version>${jena.version}</version>
+    </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-uima</artifactId>
+      <version>${baleen.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-annotators</artifactId>
+      <version>${baleen.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-graph</artifactId>
+      <version>${baleen.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.jena</groupId>
+      <artifactId>jena-fuseki-embedded</artifactId>
+      <version>${jena.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
