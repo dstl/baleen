@@ -13,8 +13,8 @@ import uk.gov.dstl.baleen.transports.components.AbstractTransportCollectionReade
 /**
  * This class provides an in memory implementation of an {@link AbstractTransportCollectionReader}.
  *
- * <p>This implementation can only be used for transport within a single Baleen instance and is
- * primarily designed for testing and development.
+ * <p>This implementation can only be used for transport within a single Baleen instance and for
+ * testing and development.
  *
  * @baleen.javadoc
  */

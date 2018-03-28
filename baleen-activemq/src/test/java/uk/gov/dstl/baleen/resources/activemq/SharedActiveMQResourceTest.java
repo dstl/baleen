@@ -1,4 +1,4 @@
-// Copyright (c) Committed Software 2018, opensource@committed.io
+// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.resources.activemq;
 
 import static org.junit.Assert.assertEquals;
