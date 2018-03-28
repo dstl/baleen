@@ -30,7 +30,9 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
 
   @Override
   public String toString(Tag[] tags) {
-    if (tags.length == 0) return null;
+    if (tags.length == 0) {
+      return null;
+    }
 
     ClassDoc classDoc = (ClassDoc) tags[0].holder();
 
@@ -100,7 +102,7 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
 
     String row = wrapWithTag("tr", name + desc + values, null);
 
-    return new AbstractMap.SimpleEntry<String, String>(field.constantValue().toString(), row);
+    return new AbstractMap.SimpleEntry<>(field.constantValue().toString(), row);
   }
 
   private static List<String> createResourceItem(FieldDoc field) {

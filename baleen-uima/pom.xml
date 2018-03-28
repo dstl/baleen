@@ -1,39 +1,40 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<name>Baleen UIMA</name>
-	<description>UIMA type system and related classes for Baleen</description>
-	<parent>
-		<groupId>uk.gov.dstl.baleen</groupId>
-		<artifactId>baleen</artifactId>
-		<version>2.5.0-SNAPSHOT</version>
-	</parent>
-	<artifactId>baleen-uima</artifactId>
-	<dependencies>
-		<dependency>
-			<groupId>uk.gov.dstl.baleen</groupId>
-			<artifactId>baleen-core</artifactId>
-			<version>${baleen.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.googlecode.concurrent-trees</groupId>
-			<artifactId>concurrent-trees</artifactId>
-			<version>${concurrenttrees.version}</version>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven-jar-plugin.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <name>Baleen UIMA</name>
+  <description>UIMA type system and related classes for Baleen</description>
+  <parent>
+    <groupId>uk.gov.dstl.baleen</groupId>
+    <artifactId>baleen</artifactId>
+    <version>2.6.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>baleen-uima</artifactId>
+  <dependencies>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-core</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.concurrent-trees</groupId>
+      <artifactId>concurrent-trees</artifactId>
+      <version>${concurrenttrees.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${maven-jar-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

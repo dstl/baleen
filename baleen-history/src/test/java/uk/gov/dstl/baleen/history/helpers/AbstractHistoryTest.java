@@ -16,7 +16,7 @@ import uk.gov.dstl.baleen.core.history.Recordable;
 import uk.gov.dstl.baleen.core.history.RecordableHistoryEvent;
 import uk.gov.dstl.baleen.core.history.impl.RecordableImpl;
 
-public class AbstractHistoryTest {
+public abstract class AbstractHistoryTest {
 
   private static final String TEST_EVENT_TYPE = "testing";
   private Recordable rA = new RecordableImpl(1, "a", 0, 1, "trA");

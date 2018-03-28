@@ -7,10 +7,20 @@ import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.james.mime4j.dom.*;
+import org.apache.james.mime4j.dom.BinaryBody;
+import org.apache.james.mime4j.dom.Body;
+import org.apache.james.mime4j.dom.Entity;
+import org.apache.james.mime4j.dom.Message;
+import org.apache.james.mime4j.dom.Multipart;
+import org.apache.james.mime4j.dom.SingleBody;
+import org.apache.james.mime4j.dom.TextBody;
 import org.apache.james.mime4j.mboxiterator.CharBufferWrapper;
 import org.apache.james.mime4j.mboxiterator.MboxIterator;
 import org.apache.james.mime4j.message.DefaultMessageBuilder;
@@ -30,6 +40,7 @@ import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
+import uk.gov.dstl.baleen.uima.UimaSupport;
 
 /**
  * Read messages from an MBOX file, treating messages as plain text and using a content extractor to
@@ -144,7 +155,9 @@ public class MboxReader extends BaleenCollectionReader {
     messageBuilder.setMimeEntityConfig(config);
 
     // Build list of extensions to ignore
-    for (String s : ignoreExtensions) ignoreExtensionsList.add(s.trim().toLowerCase());
+    for (String s : ignoreExtensions) {
+      ignoreExtensionsList.add(s.trim().toLowerCase());
+    }
   }
 
   @Override
@@ -228,7 +241,7 @@ public class MboxReader extends BaleenCollectionReader {
       }
 
       // Set up document annotation - this is done by the content extractor in other cases
-      DocumentAnnotation doc = getSupport().getDocumentAnnotation(jCas);
+      DocumentAnnotation doc = UimaSupport.getDocumentAnnotation(jCas);
       doc.setSourceUri(sourceUri);
       doc.setTimestamp(System.currentTimeMillis());
     } else if (body instanceof BinaryBody) {

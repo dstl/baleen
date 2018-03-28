@@ -70,7 +70,8 @@ public class CsvEventEvalationConsumerTest extends AbstractAnnotatorTest {
     r.setArguments(1, "Big Ben");
     r.addToIndexes();
 
-    processJCas("filename", file.getAbsolutePath());
+    processJCas(
+        "filename", file.getAbsolutePath(), CsvEvent.SEPARATOR_CHAR, "\t", CsvEvent.QUOTE_CHAR, "");
 
     final List<String> lines = Files.readLines(file, StandardCharsets.UTF_8);
 

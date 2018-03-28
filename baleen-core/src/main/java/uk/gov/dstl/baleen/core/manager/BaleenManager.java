@@ -3,13 +3,11 @@ package uk.gov.dstl.baleen.core.manager;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +15,9 @@ import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
 import uk.gov.dstl.baleen.core.logging.BaleenLogging;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.Configuration;
+import uk.gov.dstl.baleen.core.utils.EmptyConfiguration;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 import uk.gov.dstl.baleen.core.web.BaleenWebApi;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
@@ -44,7 +44,7 @@ public class BaleenManager {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BaleenManager.class);
 
-  private final Optional<File> configurationFile;
+  private final Configuration configuration;
 
   private BaleenLogging logging;
 
@@ -64,9 +64,24 @@ public class BaleenManager {
    * New instance, with optional configuration.
    *
    * @param configurationFile
+   * @throws BaleenException if there is an error reading the configuration
    */
-  public BaleenManager(Optional<File> configurationFile) {
-    this.configurationFile = configurationFile;
+  public BaleenManager(Optional<File> configurationFile) throws BaleenException {
+    this(createConfigurtion(configurationFile));
+  }
+
+  /** New instance. */
+  public BaleenManager() {
+    this(new EmptyConfiguration());
+  }
+
+  /**
+   * New instance, with configuration.
+   *
+   * @param configuration
+   */
+  public BaleenManager(Configuration configuration) {
+    this.configuration = configuration;
   }
 
   /**
@@ -78,18 +93,6 @@ public class BaleenManager {
     LOGGER.info(
         "Logging has not yet been configured - any messages will be outputted to the console");
     LOGGER.info("Initiating");
-    YamlConfiguration configuration = new YamlConfiguration();
-    if (configurationFile.isPresent()) {
-      try (InputStream is = new FileInputStream(configurationFile.get())) {
-        LOGGER.info("Configuration file provided {}", configurationFile.get().getAbsolutePath());
-        yaml = IOUtils.toString(is);
-        configuration.read(yaml);
-      } catch (IOException ioe) {
-        throw new BaleenException("Unable to read configuration file", ioe);
-      }
-    } else {
-      LOGGER.info("No configuration file provided - default configuration will be used");
-    }
 
     LOGGER.info("Initiating metrics");
     MetricsFactory metrics = MetricsFactory.getInstance();
@@ -120,6 +123,25 @@ public class BaleenManager {
     started = true;
 
     LOGGER.info("Initialisation complete");
+  }
+
+  private static YamlConfiguration createConfigurtion(Optional<File> configurationFile)
+      throws BaleenException {
+    if (configurationFile.isPresent()) {
+      try (InputStream is = new FileInputStream(configurationFile.get())) {
+        LOGGER.info("Configuration file provided {}", configurationFile.get().getAbsolutePath());
+        return new YamlConfiguration(configurationFile.get());
+      } catch (Exception ioe) {
+        throw new BaleenException("Unable to read configuration file", ioe);
+      }
+    } else {
+      LOGGER.info("No configuration file provided - default configuration will be used");
+    }
+    try {
+      return new YamlConfiguration();
+    } catch (Exception e) {
+      throw new BaleenException("Unable to read configuration file", e);
+    }
   }
 
   /** Shutdown the sub components. */
@@ -224,7 +246,8 @@ public class BaleenManager {
     try {
       Thread.sleep(millis);
     } catch (InterruptedException e) {
-      // Do nothing
+      LOGGER.debug("Thead interupted exception while sleeping", e);
+      Thread.currentThread().interrupt();
     }
   }
 

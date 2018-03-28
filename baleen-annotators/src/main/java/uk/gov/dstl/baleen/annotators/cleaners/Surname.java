@@ -33,7 +33,9 @@ public class Surname extends BaleenAnnotator {
 
     for (Person p : JCasUtil.select(jCas, Person.class)) {
       String name = p.getCoveredText();
-      if (!name.contains(" ")) continue;
+      if (!name.contains(" ")) {
+        continue;
+      }
 
       String[] nameParts = name.split(" ");
       String surname = nameParts[nameParts.length - 1].toLowerCase();
@@ -42,10 +44,14 @@ public class Surname extends BaleenAnnotator {
         // Existing surname, so ensure existing entity is removed so we don't do coreference
         // Unless the ReferenceTarget is the same, in which case no need to do anything
         Person pers = surnames.get(surname);
-        if (pers == null) continue;
+        if (pers == null) {
+          continue;
+        }
 
         ReferenceTarget rt = pers.getReferent();
-        if (rt == null || !rt.equals(p.getReferent())) surnames.put(surname, null);
+        if (rt == null || !rt.equals(p.getReferent())) {
+          surnames.put(surname, null);
+        }
       } else {
         // New surname
         surnames.put(surname, p);
@@ -62,7 +68,9 @@ public class Surname extends BaleenAnnotator {
         Pattern.compile("\\b" + Pattern.quote(surname) + "\\b", Pattern.CASE_INSENSITIVE);
     Matcher m = pSurname.matcher(jCas.getDocumentText());
     while (m.find()) {
-      if (!JCasUtil.selectCovering(jCas, Person.class, m.start(), m.end()).isEmpty()) continue;
+      if (!JCasUtil.selectCovering(jCas, Person.class, m.start(), m.end()).isEmpty()) {
+        continue;
+      }
 
       Person p = new Person(jCas, m.start(), m.end());
 

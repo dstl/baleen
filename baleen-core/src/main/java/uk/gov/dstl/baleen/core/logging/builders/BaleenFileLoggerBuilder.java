@@ -99,7 +99,7 @@ public class BaleenFileLoggerBuilder extends AbstractBaleenLoggerBuilder {
   }
 
   private FileSize getMaxFileSize() {
-    return FileSize.valueOf(maxSize.get() + "kb");
+    return FileSize.valueOf(maxSize.orElse(0) + "kb");
   }
 
   /**
@@ -117,7 +117,7 @@ public class BaleenFileLoggerBuilder extends AbstractBaleenLoggerBuilder {
     if (!isRolling()) {
       // If the logging isn't configured to roll - i.e. we're not producing daily log files and
       // there is no maximum size set
-      FileAppender<ILoggingEvent> appender = new FileAppender<ILoggingEvent>();
+      FileAppender<ILoggingEvent> appender = new FileAppender<>();
       appender.setFile(file);
       appender.setEncoder(encoder);
       return appender;

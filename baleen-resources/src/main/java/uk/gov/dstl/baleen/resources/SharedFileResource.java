@@ -46,9 +46,8 @@ public class SharedFileResource extends BaleenResource {
   public static String[] readFileLines(File file) throws IOException {
     List<String> lines = new LinkedList<>();
     try (Stream<String> stream = Files.lines(file.toPath())) {
-      stream.map(l -> l.replaceAll("\r\n", "\n")).forEach(l -> lines.add(StringUtils.strip(l)));
+      stream.forEach(l -> lines.add(StringUtils.strip(l.replaceAll("\r\n", "\n"))));
     }
-
     while (StringUtils.strip(lines.get(0)).isEmpty()) {
       lines.remove(0);
     }

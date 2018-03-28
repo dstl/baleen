@@ -65,7 +65,7 @@ public class UimaSupport {
       boolean mergeDistinctEntities) {
     this.pipelineName = pipelineName;
     this.history = history != null ? history : NoopBaleenHistory.getInstance();
-    this.referrer = UimaUtils.makePipelineSpecificName(pipelineName, clazz);
+    referrer = UimaUtils.makePipelineSpecificName(pipelineName, clazz);
     this.monitor = monitor;
     this.mergeDistinctEntities = mergeDistinctEntities;
   }
@@ -253,7 +253,7 @@ public class UimaSupport {
 
       return true;
     } else {
-      monitor.info(
+      monitor.debug(
           "Not merging objects {} and {} as they have different referents",
           targetEntity.getInternalId(),
           entity.getInternalId());
@@ -334,7 +334,7 @@ public class UimaSupport {
    * @param jCas
    * @return the document annotation
    */
-  public DocumentAnnotation getDocumentAnnotation(JCas jCas) {
+  public static DocumentAnnotation getDocumentAnnotation(JCas jCas) {
     return (DocumentAnnotation) jCas.getDocumentAnnotationFs();
   }
 

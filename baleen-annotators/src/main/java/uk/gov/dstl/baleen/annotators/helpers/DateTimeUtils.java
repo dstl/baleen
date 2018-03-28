@@ -23,8 +23,8 @@ public class DateTimeUtils {
   private static final Map<String, Month> MONTHMAP;
 
   static {
-    Map<String, DayOfWeek> dMap = new HashMap<String, DayOfWeek>();
-    Map<String, Month> mMap = new HashMap<String, Month>();
+    Map<String, DayOfWeek> dMap = new HashMap<>();
+    Map<String, Month> mMap = new HashMap<>();
 
     dMap.put("mon", DayOfWeek.MONDAY);
     dMap.put("mo", DayOfWeek.MONDAY);
@@ -117,7 +117,9 @@ public class DateTimeUtils {
   public static DayOfWeek asDay(String day) {
 
     DayOfWeek dayOfWeek = DAYMAP.get(day.toLowerCase());
-    if (dayOfWeek == null) LOGGER.warn("Couldn't parse month {}", day);
+    if (dayOfWeek == null) {
+      LOGGER.warn("Couldn't parse month {}", day);
+    }
     return dayOfWeek;
   }
 
@@ -130,7 +132,9 @@ public class DateTimeUtils {
   public static Month asMonth(String month) {
 
     Month aMonth = MONTHMAP.get(month.toLowerCase());
-    if (aMonth == null) LOGGER.warn("Couldn't parse month {}", month);
+    if (aMonth == null) {
+      LOGGER.warn("Couldn't parse month {}", month);
+    }
     return aMonth;
   }
 
@@ -144,7 +148,9 @@ public class DateTimeUtils {
   public static Year asYear(String s) {
     String year = s.replaceAll("[^\\d]", "");
 
-    if (year.isEmpty()) return null;
+    if (year.isEmpty()) {
+      return null;
+    }
 
     Year y;
     if (year.length() == 2) {
@@ -174,7 +180,9 @@ public class DateTimeUtils {
 
   /** Does the date have the correct suffix (i.e. if the date is 23, the suffix should be rd) */
   public static boolean suffixCorrect(Integer date, String suffix) {
-    if (Strings.isNullOrEmpty(suffix)) return true;
+    if (Strings.isNullOrEmpty(suffix)) {
+      return true;
+    }
 
     String correctSuffix = "th";
 

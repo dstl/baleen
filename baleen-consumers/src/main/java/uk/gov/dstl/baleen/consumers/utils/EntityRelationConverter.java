@@ -221,7 +221,7 @@ public class EntityRelationConverter {
 
   private void convertHistory(
       Map<String, Object> map, Collection<HistoryEvent> events, long entityInternalId) {
-    List<Object> list = new LinkedList<Object>();
+    List<Object> list = new LinkedList<>();
     saveEvents(list, events, entityInternalId);
     putIfExists(map, fields.getHistory(), list);
   }
@@ -234,7 +234,7 @@ public class EntityRelationConverter {
   }
 
   private void saveEvent(List<Object> list, HistoryEvent event, long entityInternalId) {
-    Map<String, Object> e = new LinkedHashMap<String, Object>();
+    Map<String, Object> e = new LinkedHashMap<>();
 
     if (event.getRecordable().getInternalId() != entityInternalId) {
       // Only save the internal id as a reference to entities which aren't this one.
@@ -252,16 +252,18 @@ public class EntityRelationConverter {
         && event.getParameters() != null
         && event.getParameters(HistoryEvents.PARAM_MERGED_ID).isPresent()) {
       Optional<String> mergedId = event.getParameters(HistoryEvents.PARAM_MERGED_ID);
-      Integer id = Ints.tryParse(mergedId.get());
-      if (id != null) {
-        Collection<HistoryEvent> mergedEvents = documentHistory.getHistory(id);
-        if (mergedEvents != null) {
-          saveEvents(list, mergedEvents, entityInternalId);
+      if (mergedId.isPresent()) {
+        Integer id = Ints.tryParse(mergedId.get());
+        if (id != null) {
+          Collection<HistoryEvent> mergedEvents = documentHistory.getHistory(id);
+          if (mergedEvents != null) {
+            saveEvents(list, mergedEvents, entityInternalId);
+          } else {
+            getMonitor().warn("Null history for {}", id);
+          }
         } else {
-          getMonitor().warn("Null history for {}", id);
+          getMonitor().warn("No merge id for merge history of {}", event.getRecordable());
         }
-      } else {
-        getMonitor().warn("No merge id for merge history of {}", event.getRecordable());
       }
     }
   }

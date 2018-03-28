@@ -3,7 +3,7 @@ package uk.gov.dstl.baleen.uima.utils;
 
 import org.apache.uima.UimaContext;
 
-import uk.gov.dstl.baleen.core.history.BaleenHistory;
+import uk.gov.dstl.baleen.core.history.BaleenHistoryConstants;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
 
 /** Helper functions for UIMA. */
@@ -38,7 +38,7 @@ public class UimaUtils {
    * @return true if we should, false otherwise
    */
   public static boolean isMergeDistinctEntities(UimaContext context) {
-    Object value = context.getConfigParameterValue(BaleenHistory.MERGE_DISTINCT_ENTITIES);
+    Object value = context.getConfigParameterValue(BaleenHistoryConstants.MERGE_DISTINCT_ENTITIES);
     if (value == null || !(value instanceof Boolean)) {
       return false;
     } else {

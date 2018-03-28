@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
-import com.codahale.metrics.Metric;
-import com.codahale.metrics.MetricFilter;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.ScheduledReporter;
 import com.codahale.metrics.Timer;
@@ -24,7 +22,7 @@ import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
 
 import uk.gov.dstl.baleen.core.manager.BaleenComponent;
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.Configuration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 
@@ -85,7 +83,7 @@ public class MetricsFactory implements BaleenComponent {
   private static final MetricsFactory INSTANCE = new MetricsFactory();
 
   private final MetricRegistry metricRegistry;
-  private List<ConfiguredReporter> reporters = new LinkedList<ConfiguredReporter>();
+  private List<ConfiguredReporter> reporters = new LinkedList<>();
 
   private Map<String, PipelineMetrics> pipelineMetrics = new HashMap<>();
 
@@ -191,7 +189,7 @@ public class MetricsFactory implements BaleenComponent {
    * @throws BaleenException
    */
   @Override
-  public void configure(YamlConfiguration configuration) throws BaleenException {
+  public void configure(Configuration configuration) throws BaleenException {
     LOGGER.debug("Configuring metrics");
 
     stop();
@@ -377,14 +375,7 @@ public class MetricsFactory implements BaleenComponent {
 
   /** Remove all metrics from the registry */
   public void removeAll() {
-    getRegistry()
-        .removeMatching(
-            new MetricFilter() {
-              @Override
-              public boolean matches(String arg0, Metric arg1) {
-                return true;
-              }
-            });
+    getRegistry().removeMatching((a, b) -> true);
   }
 
   /** Force send metrics to the reporters (out of scheduled time) */

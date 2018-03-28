@@ -55,7 +55,7 @@ public class EvictingQueueAppender<E extends ILoggingEvent> extends AppenderBase
    * @return
    */
   public List<RecentLog> getAll() {
-    return new ArrayList<RecentLog>(events);
+    return new ArrayList<>(events);
   }
 
   /**

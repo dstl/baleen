@@ -16,7 +16,7 @@ import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
  *
  * <p>Similar in nature to {@link AnnotatorTestBase} but assumes testing a single annotator.
  */
-public class AbstractAnnotatorTest extends AnnotatorTestBase {
+public abstract class AbstractAnnotatorTest extends AnnotatorTestBase {
 
   private Class<? extends BaleenAnnotator> annotatorClass;
 
@@ -86,6 +86,7 @@ public class AbstractAnnotatorTest extends AnnotatorTestBase {
    *
    * @return documentation annotation
    */
+  @Override
   protected DocumentAnnotation getDocumentAnnotation() {
     return getDocumentAnnotation(jCas);
   }
@@ -96,6 +97,7 @@ public class AbstractAnnotatorTest extends AnnotatorTestBase {
    * @param jCas
    * @return documentation annotation
    */
+  @Override
   protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
     return (DocumentAnnotation) jCas.getDocumentAnnotationFs();
   }

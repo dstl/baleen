@@ -13,6 +13,7 @@ import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.uima.BaleenContentExtractor;
+import uk.gov.dstl.baleen.uima.UimaSupport;
 
 /**
  * Provides a basis for content extractors, implementing common functionality.
@@ -24,7 +25,7 @@ public abstract class AbstractContentExtractor extends BaleenContentExtractor {
 
   @Override
   public void doProcessStream(InputStream stream, String source, JCas jCas) throws IOException {
-    DocumentAnnotation doc = getSupport().getDocumentAnnotation(jCas);
+    DocumentAnnotation doc = UimaSupport.getDocumentAnnotation(jCas);
     doc.setSourceUri(source);
     doc.setTimestamp(System.currentTimeMillis());
 

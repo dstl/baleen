@@ -313,8 +313,7 @@ public class UimaSupportTest {
 
   @Test
   public void testGetDocumentAnnotation() {
-    UimaSupport support = new UimaSupport(PIPELINE, UimaSupportTest.class, history, monitor, false);
-    assertNotNull(support.getDocumentAnnotation(jCas));
+    assertNotNull(UimaSupport.getDocumentAnnotation(jCas));
   }
 
   @Test

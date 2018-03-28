@@ -91,7 +91,7 @@ public abstract class AbstractBaleenLoggerBuilder implements BaleenLoggerBuilder
     appender.setContext(context);
 
     if (filters != null) {
-      filters.forEach(f -> appender.addFilter(f));
+      filters.forEach(appender::addFilter);
     }
 
     return appender;

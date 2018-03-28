@@ -75,7 +75,7 @@ public class NaiveMergeRelations extends BaleenAnnotator {
    * @return true, if is same
    */
   private boolean isSame(final Relation a, final Relation b) {
-    boolean sameSourceTarget = false;
+    boolean sameSourceTarget;
     if (isSame(a.getSource(), b.getSource()) && isSame(a.getTarget(), b.getTarget())) {
       sameSourceTarget = true;
     } else if (symmetric
@@ -83,6 +83,8 @@ public class NaiveMergeRelations extends BaleenAnnotator {
         && isSame(a.getTarget(), b.getSource())) {
       // Symmetric, so source and target could be switched
       sameSourceTarget = true;
+    } else {
+      sameSourceTarget = false;
     }
 
     return sameSourceTarget

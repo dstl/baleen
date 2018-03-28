@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.uima.resource.Resource;
 import org.bson.Document;
@@ -84,9 +85,8 @@ public class MongoGazetteer extends AbstractMultiMapGazetteer<ObjectId> {
 
     Map<String, Object> ret = new HashMap<>();
 
-    for (String mongoKey : doc.keySet()) {
-      Object val = doc.get(mongoKey);
-      ret.put(mongoKey, val);
+    for (Entry<String, Object> mongoEntry : doc.entrySet()) {
+      ret.put(mongoEntry.getKey(), mongoEntry.getValue());
     }
 
     return ret;

@@ -53,16 +53,16 @@ public class RelationWrapper {
         return false;
       } else if (relation.getTarget() != or.getTarget()) {
         return false;
+      } else {
+        return true;
       }
-
-      return true;
     }
   }
 
   private boolean stringEquals(String a, String b) {
     if (a == null && b == null) {
       return true;
-    } else if ((a == null && b != null) || (a != null && b == null)) {
+    } else if (a == null || b == null) {
       return false;
     }
 

@@ -20,7 +20,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import uk.gov.dstl.baleen.core.manager.BaleenManager;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 import uk.gov.dstl.baleen.core.web.BaleenWebApi;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
@@ -30,7 +30,8 @@ public class WebApiTestServer {
     // Do nothing
   }
 
-  public static void runServer(BaleenManager manager, Runnable run) throws BaleenException {
+  public static void runServer(BaleenManager manager, Runnable run)
+      throws BaleenException, IOException {
 
     BaleenWebApi web = new BaleenWebApi(manager);
     try {

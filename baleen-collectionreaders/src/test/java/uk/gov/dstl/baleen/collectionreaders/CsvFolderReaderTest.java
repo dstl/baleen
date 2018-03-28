@@ -1,7 +1,9 @@
 // NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
@@ -28,10 +31,23 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
   private static final String TEST1_FILE = "test1.csv";
   private static final String DIR = "baleen-test";
 
+  private static Long TIMEOUT = 1000L;
+
   private File inputDir;
 
   public CsvFolderReaderTest() {
     super(CsvFolderReader.class);
+  }
+
+  @BeforeClass
+  public static void beforeClass() {
+    // If we're testing on a Mac, then we need to set the time out higher,
+    // as currently the WatchService on a Mac uses polling rather than a
+    // native implementation and therefore we need to ensure we wait longer
+    // than the poll interval
+    if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {
+      TIMEOUT = 15000L;
+    }
   }
 
   @Before
@@ -76,7 +92,7 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
     assertEquals("1", meta1.get("id"));
     assertEquals("2017-10-11 14:58:00", meta1.get("date"));
     assertEquals("Y", meta1.get("evaluated"));
-    assertEquals(p1.toString(), getSource(jCas));
+    assertEquals(p1.toRealPath().toString(), getSource(jCas));
 
     jCas.reset();
 
@@ -91,7 +107,7 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
     assertEquals("2", meta2.get("id"));
     assertEquals("2017-10-11 14:58:18", meta2.get("date"));
     assertEquals("N", meta2.get("evaluated"));
-    assertEquals(p1.toString(), getSource(jCas));
+    assertEquals(p1.toRealPath().toString(), getSource(jCas));
 
     jCas.reset();
 
@@ -105,7 +121,7 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
     Path p2 = new File(inputDir, TEST2_FILE).toPath();
 
     Files.write(p2, lines2);
-    Thread.sleep(1000);
+    Thread.sleep(TIMEOUT);
 
     // Document 2, Row 1
     assertTrue(bcr.doHasNext());
@@ -118,7 +134,7 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
     assertEquals("1", meta3.get("id"));
     assertEquals("2017-10-12 15:13:23", meta3.get("date"));
     assertEquals("N", meta3.get("validated"));
-    assertEquals(p2.toString(), getSource(jCas));
+    assertEquals(p2.toRealPath().toString(), getSource(jCas));
 
     jCas.reset();
 

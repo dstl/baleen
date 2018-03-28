@@ -37,7 +37,7 @@ public class WebAuthConfig {
   public WebAuthConfig(AuthType type, String name) {
     this.type = type;
     this.name = name;
-    this.users = new LinkedList<WebUser>();
+    users = new LinkedList<>();
   }
 
   /**

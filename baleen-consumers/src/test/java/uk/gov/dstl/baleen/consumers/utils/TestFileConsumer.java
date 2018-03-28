@@ -3,6 +3,7 @@ package uk.gov.dstl.baleen.consumers.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -17,7 +18,7 @@ public class TestFileConsumer extends AbstractBaleenFileConsumer {
   @Override
   protected void writeToFile(JCas jCas, File file) throws BaleenException {
     try {
-      FileUtils.writeStringToFile(file, jCas.getDocumentText());
+      FileUtils.writeStringToFile(file, jCas.getDocumentText(), Charset.defaultCharset());
     } catch (IOException ioe) {
       throw new BaleenException(ioe);
     }

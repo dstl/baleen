@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +43,7 @@ public class BaleenManagerServletTest {
   @Test
   public void testIntegration() {
 
-    new BaleenManager(Optional.empty())
+    new BaleenManager()
         .run(
             new BaleenManagerListener() {
               @Override

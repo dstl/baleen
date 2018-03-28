@@ -94,7 +94,7 @@ public class EnhanceInteractions extends BaleenTask {
                     // We don't want any small words, they are too commons
                     .filter(s -> s.length() > 2)
                     // We don't want any phrases
-                    .filter(s -> s.indexOf(" ") == -1)
+                    .filter(s -> s.indexOf(' ') == -1)
                     .collect(Collectors.toSet());
 
             // Add in whatever the user provided
@@ -136,7 +136,7 @@ public class EnhanceInteractions extends BaleenTask {
       return Stream.of(word.getLemma());
     }
 
-    Set<String> set = new HashSet<String>();
+    Set<String> set = new HashSet<>();
     set.add(word.getLemma());
     for (Synset synset : indexWord.getSenses()) {
       for (net.sf.extjwnl.data.Word w : synset.getWords()) {

@@ -7,7 +7,7 @@ import org.apache.uima.resource.ResourceInitializationException;
 import uk.gov.dstl.baleen.uima.BaleenScheduler;
 
 @SuppressWarnings("unchecked")
-public class AbstractSchedulerTest<T extends BaleenScheduler> {
+public abstract class AbstractSchedulerTest<T extends BaleenScheduler> {
 
   private final Class<T> clazz;
 

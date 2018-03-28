@@ -79,11 +79,11 @@ public class SentenceEnhancer {
 
     // Create a sentence count
 
-    final List<Sentence> sentences = new ArrayList<Sentence>(JCasUtil.select(jCas, Sentence.class));
+    final List<Sentence> sentences = new ArrayList<>(JCasUtil.select(jCas, Sentence.class));
     final Map<Sentence, Integer> sentenceIndex =
         IntStream.range(0, sentences.size())
             .boxed()
-            .collect(Collectors.toMap(i -> sentences.get(i), i -> i));
+            .collect(Collectors.toMap(sentences::get, i -> i));
 
     // Map mentions to sentence index
 

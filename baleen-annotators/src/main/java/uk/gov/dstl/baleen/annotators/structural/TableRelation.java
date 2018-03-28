@@ -19,10 +19,10 @@ import org.apache.uima.resource.ResourceInitializationException;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 
-import uk.gov.dstl.baleen.annotators.relations.helpers.AbstractRelationshipAnnotator;
+import uk.gov.dstl.baleen.annotators.relations.helpers.AbstractTypedRelationshipAnnotator;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
-import uk.gov.dstl.baleen.core.utils.ConfigUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
+import uk.gov.dstl.baleen.exceptions.BaleenRuntimeException;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.types.structure.TableCell;
@@ -39,7 +39,7 @@ import uk.gov.dstl.baleen.uima.utils.TypeUtils;
  *
  * @baleen.javadoc
  */
-public class TableRelation extends AbstractRelationshipAnnotator {
+public class TableRelation extends AbstractTypedRelationshipAnnotator {
 
   /**
    * Is the regular expression case sensitive?
@@ -97,40 +97,6 @@ public class TableRelation extends AbstractRelationshipAnnotator {
   )
   private String targetType;
 
-  /**
-   * The relation type to use
-   *
-   * @baleen.config
-   */
-  public static final String PARAM_TYPE = "type";
-
-  @ConfigurationParameter(name = PARAM_TYPE, mandatory = true)
-  private String type;
-
-  /**
-   * The relation subType to use
-   *
-   * @baleen.config
-   */
-  public static final String PARAM_SUB_TYPE = "subType";
-
-  @ConfigurationParameter(name = PARAM_SUB_TYPE, defaultValue = "")
-  private String subType;
-
-  /**
-   * The confidence to assign to the relation
-   *
-   * @baleen.config 1.0
-   */
-  public static final String PARAM_CONFIDENCE = "confidence";
-
-  @ConfigurationParameter(name = PARAM_CONFIDENCE, defaultValue = "1.0")
-  private String confidenceString;
-
-  // Parse the confidence config parameter into this variable to avoid issues
-  // with parameter types
-  private Float confidence;
-
   private Constructor<? extends Entity> sourceConstructor = null;
   private Constructor<? extends Entity> targetConstructor = null;
   private Pattern source;
@@ -138,7 +104,7 @@ public class TableRelation extends AbstractRelationshipAnnotator {
 
   @Override
   public void doInitialize(final UimaContext aContext) throws ResourceInitializationException {
-    confidence = ConfigUtils.stringToFloat(confidenceString, 1.0f);
+    super.doInitialize(aContext);
 
     try {
 
@@ -185,8 +151,7 @@ public class TableRelation extends AbstractRelationshipAnnotator {
               int begin = Math.min(sourceCell.getBegin(), targetCell.getBegin());
               int end = Math.max(sourceCell.getEnd(), targetCell.getEnd());
 
-              return createRelation(
-                  jCas, sourceEntity, targetEntity, begin, end, type, subType, type, confidence);
+              return createRelation(jCas, sourceEntity, targetEntity, begin, end, null);
             }));
   }
 
@@ -210,7 +175,7 @@ public class TableRelation extends AbstractRelationshipAnnotator {
           | IllegalAccessException
           | IllegalArgumentException
           | InvocationTargetException e) {
-        throw new RuntimeException("Can not create entity type " + type.getName(), e);
+        throw new BaleenRuntimeException("Can not create entity type " + type.getName(), e);
       }
     }
   }

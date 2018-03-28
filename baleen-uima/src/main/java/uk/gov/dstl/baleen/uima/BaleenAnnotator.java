@@ -84,12 +84,14 @@ public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
 
   @Override
   public void process(JCas aJCas) throws AnalysisEngineProcessException {
+    monitor.trace("Starting: " + getClass().getSimpleName());
     monitor.startFunction("process");
 
     doProcess(aJCas);
 
     monitor.finishFunction("process");
     monitor.persistCounts();
+    monitor.trace("Finished: " + getClass().getSimpleName());
   }
 
   /**
@@ -229,7 +231,7 @@ public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
    * @return the document annotation
    */
   protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
-    return getSupport().getDocumentAnnotation(jCas);
+    return UimaSupport.getDocumentAnnotation(jCas);
   }
 
   /**

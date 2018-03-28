@@ -1,0 +1,8 @@
+collectionreader:
+  class: uk.gov.dstl.baleen.testing.RandomStringCollectionReader
+
+annotators:
+  - include: nested.yaml
+
+consumers:
+  - class: uk.gov.dstl.baleen.testing.DummyConsumer

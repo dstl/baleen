@@ -5,7 +5,6 @@ package uk.gov.dstl.baleen.uima.utils;
 import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,17 +13,12 @@ import org.apache.uima.resource.ResourceInitializationException;
 
 import com.google.common.collect.ImmutableSet;
 
-import uk.gov.dstl.baleen.core.utils.BuilderUtils;
 import uk.gov.dstl.baleen.core.utils.ReflectionUtils;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
 import uk.gov.dstl.baleen.types.structure.Structure;
 
 /** Utility for working with {@link Structure} */
 public class StructureUtil {
-
-  /** The Constant DEFAULT STRUCTURAL PACKAGE. */
-  private static final String DEFAULT_STRUCTURAL_PACKAGE = Structure.class.getPackage().getName();
 
   /** The Constant DEFAULT BALEEN ANNOTATION PACKAGE. */
   private static final String DEFAULT_ANNOTATION_PACKAGE =
@@ -44,7 +38,7 @@ public class StructureUtil {
   public static Set<Class<? extends Structure>> getStructureClasses()
       throws ResourceInitializationException {
 
-    return getStructureClasses(null);
+    return getStructureClasses((String[]) null);
   }
 
   /**
@@ -54,23 +48,9 @@ public class StructureUtil {
    * @return the structure classes
    * @throws ResourceInitializationException
    */
-  public static Set<Class<? extends Structure>> getStructureClasses(String[] typeNames)
+  public static Set<Class<? extends Structure>> getStructureClasses(String... typeNames)
       throws ResourceInitializationException {
-
-    Set<Class<? extends Structure>> structuralClasses = new HashSet<>();
-    if (typeNames == null || typeNames.length == 0) {
-      structuralClasses = ReflectionUtils.getSubTypes(DEFAULT_STRUCTURAL_PACKAGE, Structure.class);
-    } else {
-      for (final String typeName : typeNames) {
-        try {
-          structuralClasses.add(
-              BuilderUtils.getClassFromString(typeName, DEFAULT_STRUCTURAL_PACKAGE));
-        } catch (final InvalidParameterException e) {
-          throw new ResourceInitializationException(e);
-        }
-      }
-    }
-    return structuralClasses;
+    return TypeUtils.getTypeClasses(Structure.class, typeNames);
   }
 
   /**
@@ -81,7 +61,7 @@ public class StructureUtil {
    * @throws ResourceInitializationException
    */
   public static Set<Class<? extends BaleenAnnotation>> getAnnotationClasses(
-      Class<? extends BaleenAnnotation> annotationType) throws ResourceInitializationException {
+      Class<? extends BaleenAnnotation> annotationType) {
     return ImmutableSet.copyOf(
         ReflectionUtils.getSubTypes(DEFAULT_ANNOTATION_PACKAGE, annotationType));
   }
@@ -93,7 +73,7 @@ public class StructureUtil {
    * @param annotationTypes the set of annotation classes to keep
    * @return the filtered list of the annotations
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings({"unchecked", "squid:S2175"})
   public static <T> List<T> filterAnnotations(
       Collection<? extends Annotation> collection, Set<Class<? extends T>> annotationTypes) {
     return (List<T>)

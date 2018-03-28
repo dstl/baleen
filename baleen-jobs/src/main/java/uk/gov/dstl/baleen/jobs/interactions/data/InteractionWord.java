@@ -61,10 +61,10 @@ public class InteractionWord {
 
   @Override
   public int hashCode() {
-    final int prime = 31;
+    final int PRIME = 31;
     int result = 1;
-    result = prime * result + (pairs == null ? 0 : pairs.hashCode());
-    result = prime * result + (word == null ? 0 : word.hashCode());
+    result = PRIME * result + (pairs == null ? 0 : pairs.hashCode());
+    result = PRIME * result + (word == null ? 0 : word.hashCode());
     return result;
   }
 

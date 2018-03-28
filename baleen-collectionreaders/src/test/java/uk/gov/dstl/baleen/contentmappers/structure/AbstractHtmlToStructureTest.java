@@ -18,7 +18,7 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 import uk.gov.dstl.baleen.uima.utils.StructureHierarchy;
 import uk.gov.dstl.baleen.uima.utils.select.Node;
 
-public class AbstractHtmlToStructureTest {
+public abstract class AbstractHtmlToStructureTest {
 
   private static final Set<Class<? extends Structure>> structuralClasses =
       ReflectionUtils.getSubTypes(Structure.class.getPackage().getName(), Structure.class);

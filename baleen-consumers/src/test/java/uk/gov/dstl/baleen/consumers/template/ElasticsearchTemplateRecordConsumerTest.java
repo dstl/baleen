@@ -3,12 +3,9 @@
 package uk.gov.dstl.baleen.consumers.template;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.dstl.baleen.resources.SharedElasticsearchRestResource.PARAM_URL;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,17 +15,11 @@ import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.resource.ExternalResourceDescription;
-import org.apache.uima.resource.ResourceInitializationException;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.node.NodeValidationException;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,14 +33,10 @@ import uk.gov.dstl.baleen.resources.SharedElasticsearchRestResource;
 
 public class ElasticsearchTemplateRecordConsumerTest extends AbstractTemplateRecordConsumerTest {
 
-  private static final String ELASTICSEARCH = "elasticsearchRest";
+  private static final String RESOURCE_KEY = "elasticsearchRest";
   private static final String BALEEN_INDEX = "baleen_record_index";
 
-  private Path tmpDir;
-
-  private EmbeddedElasticsearch5 es5;
-  private Client client;
-
+  private EmbeddedElasticsearch5 elasticsearch;
   private AnalysisEngine analysisEngine;
 
   public ElasticsearchTemplateRecordConsumerTest() {
@@ -57,39 +44,19 @@ public class ElasticsearchTemplateRecordConsumerTest extends AbstractTemplateRec
   }
 
   @Before
-  public void beforeElasticsearchRecordConsumerTest() throws ResourceInitializationException {
-    // Initialise a local instance of Elasticsearch
-    try {
-      tmpDir = Files.createTempDirectory("elasticsearch");
-    } catch (IOException ioe) {
-      throw new ResourceInitializationException(ioe);
-    }
+  public void beforeElasticsearchRecordConsumerTest() throws Exception {
 
-    try {
-      es5 = new EmbeddedElasticsearch5(tmpDir.toString(), "test-cluster");
-    } catch (NodeValidationException nve) {
-      throw new ResourceInitializationException(nve);
-    }
+    elasticsearch = new EmbeddedElasticsearch5();
 
-    Settings settings = Settings.builder().put("cluster.name", "test-cluster").build();
-    try {
-      client =
-          new PreBuiltTransportClient(settings)
-              .addTransportAddress(
-                  new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
-    } catch (UnknownHostException uhe) {
-      throw new ResourceInitializationException(uhe);
-    }
-
-    // Configure
     ExternalResourceDescription erd =
         ExternalResourceFactory.createExternalResourceDescription(
-            ELASTICSEARCH,
+            RESOURCE_KEY,
             SharedElasticsearchRestResource.class,
-            "elasticsearchrest.url",
-            "http://localhost:9200");
-    analysisEngine = getAnalysisEngine(ELASTICSEARCH, erd);
-    client.admin().indices().refresh(new RefreshRequest("baleen_record_index")).actionGet();
+            PARAM_URL,
+            elasticsearch.getHttpUrl());
+
+    analysisEngine = getAnalysisEngine(RESOURCE_KEY, erd);
+    elasticsearch.client().admin().indices().refresh(new RefreshRequest(BALEEN_INDEX)).actionGet();
   }
 
   @Test
@@ -106,7 +73,11 @@ public class ElasticsearchTemplateRecordConsumerTest extends AbstractTemplateRec
     process();
 
     SearchHits hits =
-        client.search(new SearchRequest().indices("baleen_record_index")).actionGet().getHits();
+        elasticsearch
+            .client()
+            .search(new SearchRequest().indices(BALEEN_INDEX))
+            .actionGet()
+            .getHits();
     assertEquals(3, hits.getTotalHits());
 
     ObjectMapper mapper = new ObjectMapper();
@@ -124,26 +95,22 @@ public class ElasticsearchTemplateRecordConsumerTest extends AbstractTemplateRec
 
   private void process() throws AnalysisEngineProcessException {
     analysisEngine.process(jCas);
-    client.admin().indices().refresh(new RefreshRequest("baleen_record_index")).actionGet();
+    elasticsearch.client().admin().indices().refresh(new RefreshRequest(BALEEN_INDEX)).actionGet();
   }
 
   private Long getCount() {
-    SearchResponse sr = client.prepareSearch(BALEEN_INDEX).setSize(0).execute().actionGet();
+    SearchResponse sr =
+        elasticsearch.client().prepareSearch(BALEEN_INDEX).setSize(0).execute().actionGet();
     return sr.getHits().getTotalHits();
   }
 
   @After
   public void afterElasticsearchRecordConsumerTest() {
     analysisEngine.destroy();
-
-    client.close();
-
     try {
-      es5.close();
+      elasticsearch.close();
     } catch (IOException ioe) {
       // Do nothing
     }
-
-    tmpDir.toFile().delete();
   }
 }

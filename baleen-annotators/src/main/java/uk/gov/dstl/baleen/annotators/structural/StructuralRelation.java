@@ -13,14 +13,14 @@ import org.apache.uima.resource.ResourceInitializationException;
 
 import com.google.common.collect.ImmutableSet;
 
-import uk.gov.dstl.baleen.annotators.relations.helpers.AbstractRelationshipAnnotator;
+import uk.gov.dstl.baleen.annotators.relations.helpers.AbstractTypedRelationshipAnnotator;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
-import uk.gov.dstl.baleen.core.utils.ConfigUtils;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.uima.utils.AnnotationHierarchyBuilder;
 import uk.gov.dstl.baleen.uima.utils.StructureUtil;
+import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 import uk.gov.dstl.baleen.uima.utils.select.Nodes;
 
 /**
@@ -35,7 +35,7 @@ import uk.gov.dstl.baleen.uima.utils.select.Nodes;
  *
  * @baleen.javadoc
  */
-public class StructuralRelation extends AbstractRelationshipAnnotator {
+public class StructuralRelation extends AbstractTypedRelationshipAnnotator {
 
   /**
    * A list of structural types which will be considered during record path analysis.
@@ -49,36 +49,6 @@ public class StructuralRelation extends AbstractRelationshipAnnotator {
   /** The type names. */
   @ConfigurationParameter(name = PARAM_TYPE_NAMES, mandatory = false)
   private String[] typeNames;
-
-  /**
-   * The relation type to use
-   *
-   * @baleen.config
-   */
-  public static final String PARAM_TYPE = "type";
-
-  @ConfigurationParameter(name = PARAM_TYPE, mandatory = true)
-  private String type;
-
-  /**
-   * The relation subType to use
-   *
-   * @baleen.config
-   */
-  public static final String PARAM_SUB_TYPE = "subType";
-
-  @ConfigurationParameter(name = PARAM_SUB_TYPE, defaultValue = "")
-  private String subType;
-
-  /**
-   * The confidence to assign to the relation
-   *
-   * @baleen.config 1.0
-   */
-  public static final String PARAM_CONFIDENCE = "confidence";
-
-  @ConfigurationParameter(name = PARAM_CONFIDENCE, defaultValue = "1.0")
-  private String confidenceString;
 
   /**
    * The query to isolate the related entities
@@ -110,10 +80,6 @@ public class StructuralRelation extends AbstractRelationshipAnnotator {
   @ConfigurationParameter(name = PARAM_TARGET_QUERY, mandatory = true)
   private String targetQuery;
 
-  // Parse the confidence config parameter into this variable to avoid issues
-  // with parameter types
-  private Float confidence;
-
   /** The structural classes. */
   protected Set<Class<? extends Structure>> structuralClasses;
 
@@ -126,9 +92,8 @@ public class StructuralRelation extends AbstractRelationshipAnnotator {
     annotationClasses =
         ImmutableSet.<Class<? extends Annotation>>builder()
             .addAll(StructureUtil.getStructureClasses(typeNames))
-            .addAll(StructureUtil.getAnnotationClasses(Entity.class))
+            .addAll(TypeUtils.getAnnotationClasses(Entity.class))
             .build();
-    confidence = ConfigUtils.stringToFloat(confidenceString, 1.0f);
   }
 
   @Override

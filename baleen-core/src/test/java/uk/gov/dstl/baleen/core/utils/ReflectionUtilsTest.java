@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class ReflectionUtilsTest {
   @Test
-  public void test() {
+  public void testCanGetInstance() {
     assertNotNull(ReflectionUtils.getInstance());
   }
 }

@@ -93,7 +93,7 @@ public class SharedGenderMultiplicityResource extends BaleenResource {
         .filter(s -> s.contains("\t"))
         // TODO; Currently ignore any of the numerical stuff its too tedious to work with
         .filter(s -> !s.contains("#"))
-        .forEach(s -> loadFromGenderRow(s));
+        .forEach(this::loadFromGenderRow);
 
     return super.doInitialize(specifier, additionalParams);
   }

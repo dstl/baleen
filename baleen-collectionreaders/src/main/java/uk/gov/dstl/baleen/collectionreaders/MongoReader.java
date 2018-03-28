@@ -2,12 +2,14 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -132,18 +134,17 @@ public class MongoReader extends BaleenCollectionReader {
     }
 
     String content = (String) document.get(contentField);
-    extractor.processStream(
-        new ByteArrayInputStream(content.getBytes(Charset.defaultCharset())),
-        mongo.getMongoURI() + "." + collection + "#" + id,
-        jCas);
 
-    for (String key : document.keySet()) {
+    InputStream is = IOUtils.toInputStream(content, Charset.defaultCharset());
+
+    extractor.processStream(is, mongo.getMongoURI() + "." + collection + "#" + id, jCas);
+
+    for (Entry<String, Object> entry : document.entrySet()) {
+      String key = entry.getKey();
       if (contentField.equals(key) || idField.equals(key)) {
         continue;
       } else {
-        Object obj = document.get(key);
-
-        processMongoMetadataField(jCas, key, obj);
+        processMongoMetadataField(jCas, key, entry.getValue());
       }
     }
 
@@ -153,7 +154,9 @@ public class MongoReader extends BaleenCollectionReader {
   }
 
   private void processMongoMetadataField(JCas jCas, String key, Object obj) {
-    if (obj == null) return;
+    if (obj == null) {
+      return;
+    }
 
     if (obj instanceof List) {
       List<?> list = (List<?>) obj;

@@ -2,7 +2,7 @@
 package uk.gov.dstl.baleen.core.web.servlets;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 
 import java.util.Collections;
@@ -15,6 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
+import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
 import uk.gov.dstl.baleen.testing.servlets.ServletCaller;
 
 /** Tests for {@link BaleenManagerConfigServlet}. */
@@ -41,7 +42,8 @@ public class JobConfigServletTest {
 
   @Test
   public void testEmpty() throws Exception {
-    BaleenJob job = new BaleenJob("name", null, null, Collections.emptyList());
+    BaleenJob job =
+        new BaleenJob("name", new YamlPiplineConfiguration(), null, Collections.emptyList());
     doReturn(Optional.of(job)).when(manager).get(anyString());
 
     ServletCaller caller = new ServletCaller();

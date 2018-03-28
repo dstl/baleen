@@ -61,7 +61,7 @@ public class CleanPunctuation extends BaleenAnnotator {
 
   private void cleanCoveredText(Entity e) {
     int begin = e.getBegin();
-    int end = e.getEnd();
+    int end;
 
     // Remove punctuation from the coverText
 
@@ -69,7 +69,7 @@ public class CleanPunctuation extends BaleenAnnotator {
     String startStripped = removeStartPunctuation(coverText);
     String bothStripped = removeEndPunctuation(startStripped);
 
-    begin = begin + (coverText.length() - startStripped.length());
+    begin = begin + coverText.length() - startStripped.length();
     end = begin + bothStripped.length();
 
     // Remove excessive brackets

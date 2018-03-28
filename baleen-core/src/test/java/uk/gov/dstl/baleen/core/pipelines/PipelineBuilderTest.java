@@ -23,12 +23,12 @@ public class PipelineBuilderTest {
   public void testValid() throws Exception {
     String yaml = Files.asCharSource(getFile("pipelineConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
     BaleenPipeline pipeline = pb.createNewPipeline();
 
     assertEquals("Test Pipeline", pipeline.getName());
-    assertEquals(yaml, pipeline.originalYaml());
-    assertEquals(yaml.replaceAll("\r\n", "\n"), pipeline.orderedYaml().trim());
+    assertEquals(yaml, pipeline.originalConfig());
+    assertEquals(yaml.replaceAll("\r\n", "\n"), pipeline.orderedConfig().trim());
 
     CollectionReader cr = pipeline.collectionReader();
     assertEquals("uk.gov.dstl.baleen.testing.DummyCollectionReader", cr.getMetaData().getName());
@@ -81,11 +81,11 @@ public class PipelineBuilderTest {
   public void testResources() throws Exception {
     String yaml = Files.asCharSource(getFile("resourceConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
     BaleenPipeline pipeline = pb.createNewPipeline();
 
     assertEquals("Test Pipeline", pipeline.getName());
-    assertEquals(yaml, pipeline.originalYaml());
+    assertEquals(yaml, pipeline.originalConfig());
 
     // Will throw an exception if the resource wasn't initialized
   }
@@ -95,7 +95,7 @@ public class PipelineBuilderTest {
     String yaml =
         Files.asCharSource(getFile("errorNotFoundConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
     BaleenPipeline pipeline = pb.createNewPipeline();
 
     CollectionReader cr = pipeline.collectionReader();
@@ -110,7 +110,7 @@ public class PipelineBuilderTest {
     String yaml =
         Files.asCharSource(getFile("errorNoClassConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
     BaleenPipeline pipeline = pb.createNewPipeline();
 
     CollectionReader cr = pipeline.collectionReader();
@@ -125,7 +125,7 @@ public class PipelineBuilderTest {
     String yaml =
         Files.asCharSource(getFile("errorNoCRConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
 
     try {
       pb.createNewPipeline();
@@ -141,7 +141,7 @@ public class PipelineBuilderTest {
     String yaml =
         Files.asCharSource(getFile("errorNotFoundCRConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", yaml);
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
 
     try {
       pb.createNewPipeline();

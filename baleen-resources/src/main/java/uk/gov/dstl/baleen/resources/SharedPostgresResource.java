@@ -102,7 +102,7 @@ public class SharedPostgresResource extends BaleenResource {
         connection = DriverManager.getConnection(getJdbcString());
       }
 
-      if (connection == null) {
+      if (!connection.isValid(1000)) {
         throw new BaleenException("Couldn't establish PostgreSQL connection");
       }
     } catch (SQLException | BaleenException e) {

@@ -2,16 +2,14 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.history.elasticsearch;
 
+import static uk.gov.dstl.baleen.resources.SharedElasticsearchResource.PARAM_CLUSTER;
+import static uk.gov.dstl.baleen.resources.SharedElasticsearchResource.PARAM_PORT;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
 
 import org.apache.uima.resource.Parameter;
-import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.impl.CustomResourceSpecifier_impl;
 import org.apache.uima.resource.impl.Parameter_impl;
-import org.elasticsearch.node.NodeValidationException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,36 +22,26 @@ import uk.gov.dstl.baleen.resources.SharedElasticsearchResource;
 
 public class ElasticsearchHistoryTest extends AbstractHistoryTest {
 
-  private Path tmpDir;
-  private EmbeddedElasticsearch5 es5;
+  private EmbeddedElasticsearch5 elasticsearch;
 
-  protected SharedElasticsearchResource es;
-  protected ElasticsearchHistory history;
-
-  private static final String CLUSTER = "test-cluster";
+  private SharedElasticsearchResource elasticsearchResource;
+  private ElasticsearchHistory history;
 
   @Before
-  public void setUp() throws ResourceInitializationException {
-    try {
-      tmpDir = Files.createTempDirectory("elasticsearch");
-    } catch (IOException ioe) {
-      throw new ResourceInitializationException(ioe);
-    }
+  public void setUp() throws Exception {
+    elasticsearch = new EmbeddedElasticsearch5();
+    elasticsearchResource = new SharedElasticsearchResource();
 
-    try {
-      es5 = new EmbeddedElasticsearch5(tmpDir.toString(), CLUSTER);
-    } catch (NodeValidationException nve) {
-      throw new ResourceInitializationException(nve);
-    }
-
-    es = new SharedElasticsearchResource();
     CustomResourceSpecifier_impl esSpecifier = new CustomResourceSpecifier_impl();
     esSpecifier.setParameters(
-        new Parameter[] {new Parameter_impl("elasticsearch.cluster", CLUSTER)});
-    Map<String, Object> config = Maps.newHashMap();
-    es.initialize(esSpecifier, config);
+        new Parameter[] {
+          new Parameter_impl(PARAM_CLUSTER, elasticsearch.getClusterName()),
+          new Parameter_impl(PARAM_PORT, Integer.toString(elasticsearch.getTransportPort()))
+        });
 
-    history = new ElasticsearchHistory(es);
+    elasticsearchResource.initialize(esSpecifier, Maps.newHashMap());
+
+    history = new ElasticsearchHistory(elasticsearchResource);
     history.initialize(new CustomResourceSpecifier_impl(), Maps.newHashMap());
   }
 
@@ -62,11 +50,11 @@ public class ElasticsearchHistoryTest extends AbstractHistoryTest {
     history.destroy();
 
     try {
-      es5.close();
+      elasticsearch.close();
     } catch (IOException ioe) {
       // Do nothing
     }
-    es5 = null;
+    elasticsearch = null;
   }
 
   @Test

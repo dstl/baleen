@@ -12,7 +12,7 @@ import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 /** Abstract class for testing collection readers */
-public class AbstractReaderTest {
+public abstract class AbstractReaderTest {
   protected JCas jCas;
   private Class<? extends BaleenCollectionReader> readerClass;
 

@@ -3,6 +3,8 @@
 package uk.gov.dstl.baleen.consumers;
 
 import static org.junit.Assert.assertEquals;
+import static uk.gov.dstl.baleen.resources.SharedElasticsearchResource.PARAM_CLUSTER;
+import static uk.gov.dstl.baleen.resources.SharedElasticsearchResource.PARAM_PORT;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,7 +15,6 @@ import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.resource.ExternalResourceDescription;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,21 +24,24 @@ import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 
 public class ElasticsearchTest extends ElasticsearchTestBase {
-  private static final String ELASTICSEARCH = "elasticsearch";
+  private static final String RESOURCE_KEY = "elasticsearch";
 
   @Before
   public void setup() throws UIMAException {
     ExternalResourceDescription erd =
         ExternalResourceFactory.createExternalResourceDescription(
-            ELASTICSEARCH,
+            RESOURCE_KEY,
             SharedElasticsearchResource.class,
-            SharedElasticsearchResource.PARAM_CLUSTER,
-            CLUSTER);
+            PARAM_PORT,
+            Integer.toString(elasticsearch.getTransportPort()),
+            PARAM_CLUSTER,
+            elasticsearch.getClusterName());
+
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
             Elasticsearch.class,
             TypeSystemSingleton.getTypeSystemDescriptionInstance(),
-            ELASTICSEARCH,
+            RESOURCE_KEY,
             erd);
 
     ae = AnalysisEngineFactory.createEngine(aed);
@@ -73,8 +77,7 @@ public class ElasticsearchTest extends ElasticsearchTestBase {
       ae.process(jCas);
     }
 
-    // Call refresh to force ES to write buffer
-    client.admin().indices().refresh(new RefreshRequest("baleen_index")).actionGet();
+    elasticsearch.flush(BALEEN_INDEX);
 
     assertEquals(new Long(countryCodes.size()), getCount());
 

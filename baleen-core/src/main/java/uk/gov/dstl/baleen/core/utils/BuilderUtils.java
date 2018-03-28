@@ -130,7 +130,7 @@ public final class BuilderUtils {
       return new Object[] {};
     }
 
-    List<Object> s = new LinkedList<Object>();
+    List<Object> s = new LinkedList<>();
     for (Object o : collection) {
       Object converted = convertToParameterValue(o);
       if (converted instanceof Object[]) {

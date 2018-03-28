@@ -109,86 +109,8 @@ public class TemplateRecordConfigurationCreatingConsumer extends BaleenConsumer 
 
     for (TemplateRecordDefinition recordDefinition : recordDefinitions) {
 
-      String name = recordDefinition.getName();
-      if (recordConfigurations.containsKey(name)) {
-        throw new AnalysisEngineProcessException(
-            new IllegalArgumentException("Record name not unique: " + name));
-      }
-
-      Optional<Structure> startStructure =
-          JCasUtil.selectCovering(
-                  jCas, Structure.class, recordDefinition.getBegin(), recordDefinition.getBegin())
-              .stream()
-              .max(Comparator.comparingInt(Structure::getDepth));
-      Optional<Structure> coveringStructure =
-          structureHierarchy.getCoveringStructure(recordDefinition);
-      Optional<Structure> endStructure =
-          JCasUtil.selectCovering(
-                  jCas, Structure.class, recordDefinition.getEnd(), recordDefinition.getEnd())
-              .stream()
-              .max(Comparator.comparingInt(Structure::getDepth));
-
-      if (!startStructure.isPresent() || !endStructure.isPresent()) {
-        getMonitor()
-            .warn(
-                "Could not find start or end structure elements for record definition {} - giving up",
-                name);
-        continue;
-      }
-
-      List<TemplateFieldDefinition> definitions =
-          JCasUtil.selectCovered(TemplateFieldDefinition.class, recordDefinition);
-      fieldDefinitions.removeAll(definitions);
-
-      List<TemplateFieldConfiguration> fields = makeFields(structureHierarchy, definitions);
-
-      Optional<Structure> preceding = structureHierarchy.getPrevious(startStructure.get());
-      Optional<Structure> following = structureHierarchy.getNext(endStructure.get());
-
-      List<Structure> coveredStructures =
-          JCasUtil.selectBetween(
-              Structure.class, getPreceding(jCas, preceding), getFollowing(jCas, following));
-
-      String precedingPath =
-          preceding.isPresent()
-              ? structureHierarchy.getSelectorPath(preceding.get()).toString()
-              : "";
-
-      String followingPath =
-          following.isPresent()
-              ? structureHierarchy.getSelectorPath(following.get()).toString()
-              : "";
-
-      if (recordDefinition.getRepeat()) {
-        int depth =
-            Math.max(
-                preceding.map(Structure::getDepth).orElse(0),
-                following.map(Structure::getDepth).orElse(0));
-        List<String> coveredPaths =
-            generateCoveredPaths(structureHierarchy, coveredStructures, depth);
-
-        String minimalRepeat = null;
-        if (coveringStructure.isPresent() && coveredStructures.contains(coveringStructure.get())) {
-          Structure repeatingUnit = coveringStructure.get();
-          minimalRepeat = structureHierarchy.getSelectorPath(repeatingUnit).toString();
-        }
-
-        recordConfigurations.put(
-            name,
-            new TemplateRecordConfiguration(
-                name,
-                precedingPath,
-                coveredPaths,
-                minimalRepeat,
-                followingPath,
-                fields,
-                recordDefinition.getBegin()));
-      } else {
-        recordConfigurations.put(
-            name,
-            new TemplateRecordConfiguration(
-                name, precedingPath, followingPath, fields, recordDefinition.getBegin()));
-      }
+      processRecordDefinition(
+          jCas, structureHierarchy, fieldDefinitions, recordConfigurations, recordDefinition);
     }
 
     List<TemplateRecordConfiguration> configurations =
@@ -202,7 +124,112 @@ public class TemplateRecordConfigurationCreatingConsumer extends BaleenConsumer 
       }
     }
 
-    String documentSourceName = SourceUtils.getDocumentSourceBaseName(jCas, getSupport());
+    String documentSourceName = SourceUtils.getDocumentSourceBaseName(jCas);
+    try (Writer w = createOutputWriter(documentSourceName)) {
+
+      Collections.sort(configurations, Comparator.comparing(TemplateRecordConfiguration::getOrder));
+      objectMapper.writeValue(w, configurations);
+    } catch (IOException e) {
+      throw new AnalysisEngineProcessException(e);
+    }
+  }
+
+  private void processRecordDefinition(
+      JCas jCas,
+      CoveringStructureHierarchy structureHierarchy,
+      Collection<TemplateFieldDefinition> fieldDefinitions,
+      Map<String, TemplateRecordConfiguration> recordConfigurations,
+      TemplateRecordDefinition recordDefinition)
+      throws AnalysisEngineProcessException {
+    String name = recordDefinition.getName();
+    if (recordConfigurations.containsKey(name)) {
+      throw new AnalysisEngineProcessException(
+          new IllegalArgumentException("Record name not unique: " + name));
+    }
+
+    Optional<Structure> startStructure =
+        JCasUtil.selectCovering(
+                jCas, Structure.class, recordDefinition.getBegin(), recordDefinition.getBegin())
+            .stream()
+            .max(Comparator.comparingInt(Structure::getDepth));
+    Optional<Structure> coveringStructure =
+        structureHierarchy.getCoveringStructure(recordDefinition);
+    Optional<Structure> endStructure =
+        JCasUtil.selectCovering(
+                jCas, Structure.class, recordDefinition.getEnd(), recordDefinition.getEnd())
+            .stream()
+            .max(Comparator.comparingInt(Structure::getDepth));
+
+    if (!startStructure.isPresent() || !endStructure.isPresent()) {
+      getMonitor()
+          .warn(
+              "Could not find start or end structure elements for record definition {} - giving up",
+              name);
+      return;
+    }
+
+    List<TemplateFieldDefinition> definitions =
+        JCasUtil.selectCovered(TemplateFieldDefinition.class, recordDefinition);
+    fieldDefinitions.removeAll(definitions);
+
+    List<TemplateFieldConfiguration> fields = makeFields(structureHierarchy, definitions);
+
+    Optional<Structure> preceding = structureHierarchy.getPrevious(startStructure.get());
+    Optional<Structure> following = structureHierarchy.getNext(endStructure.get());
+
+    List<Structure> coveredStructures =
+        JCasUtil.selectBetween(
+            Structure.class, getPreceding(jCas, preceding), getFollowing(jCas, following));
+
+    String precedingPath =
+        preceding.isPresent() ? structureHierarchy.getSelectorPath(preceding.get()).toString() : "";
+
+    String followingPath =
+        following.isPresent() ? structureHierarchy.getSelectorPath(following.get()).toString() : "";
+
+    if (recordDefinition.getRepeat()) {
+      int depth =
+          Math.max(
+              preceding.map(Structure::getDepth).orElse(0),
+              following.map(Structure::getDepth).orElse(0));
+      List<String> coveredPaths =
+          generateCoveredPaths(structureHierarchy, coveredStructures, depth);
+
+      String minimalRepeat = null;
+      if (coveringStructure.isPresent() && coveredStructures.contains(coveringStructure.get())) {
+        Structure repeatingUnit = coveringStructure.get();
+        minimalRepeat = structureHierarchy.getSelectorPath(repeatingUnit).toString();
+      }
+
+      recordConfigurations.put(
+          name,
+          new TemplateRecordConfiguration(
+              name,
+              precedingPath,
+              coveredPaths,
+              minimalRepeat,
+              followingPath,
+              fields,
+              recordDefinition.getBegin()));
+    } else {
+      recordConfigurations.put(
+          name,
+          new TemplateRecordConfiguration(
+              name, precedingPath, followingPath, fields, recordDefinition.getBegin()));
+    }
+
+    List<TemplateRecordConfiguration> configurations =
+        new ArrayList<>(recordConfigurations.values());
+
+    if (!fieldDefinitions.isEmpty()) {
+      for (TemplateFieldDefinition field : fieldDefinitions) {
+        configurations.add(
+            new TemplateRecordConfiguration(
+                makeFields(structureHierarchy, ImmutableList.of(field)), field.getBegin()));
+      }
+    }
+
+    String documentSourceName = SourceUtils.getDocumentSourceBaseName(jCas);
     try (Writer w = createOutputWriter(documentSourceName)) {
 
       Collections.sort(configurations, Comparator.comparing(TemplateRecordConfiguration::getOrder));

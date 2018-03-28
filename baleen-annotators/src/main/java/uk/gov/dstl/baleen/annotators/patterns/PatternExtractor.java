@@ -1,7 +1,6 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.patterns;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -100,14 +99,7 @@ public class PatternExtractor extends BaleenAnnotator {
   @Override
   public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
     super.doInitialize(aContext);
-
-    try {
-      stopwords =
-          stopwordResource.getStopwords(SharedStopwordResource.StopwordList.valueOf(stoplist));
-    } catch (IOException ioe) {
-      getMonitor().error("Unable to load stopwords", ioe);
-      throw new ResourceInitializationException(ioe);
-    }
+    stopwords = stopwordResource.getStopwords(stoplist);
   }
 
   @Override

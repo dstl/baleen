@@ -95,13 +95,13 @@ public abstract class AbstractCoreferenceSieve implements CoreferenceSieve {
 
     final Cluster cluster =
         a.stream()
-            .map(x -> x.getAnyCluster())
+            .map(Mention::getAnyCluster)
             .filter(Objects::nonNull)
             .findAny()
             .orElseGet(
                 () ->
                     b.stream()
-                        .map(x -> x.getAnyCluster())
+                        .map(Mention::getAnyCluster)
                         .filter(Objects::nonNull)
                         .findAny()
                         .orElseGet(

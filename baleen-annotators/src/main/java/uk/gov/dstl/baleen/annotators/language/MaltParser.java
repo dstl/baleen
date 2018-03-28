@@ -58,6 +58,8 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * @baleen.javadoc
  */
 public class MaltParser extends BaleenAnnotator {
+
+  public static final String ROOT = "ROOT";
   private static final String INTJ = "INTJ";
   private static final String PRON = "PRON";
   private static final String PART = "PART";
@@ -149,39 +151,48 @@ public class MaltParser extends BaleenAnnotator {
       final String[] tokens = new String[wordTokens.size()];
 
       int i = 0;
-      for (final WordToken wt : wordTokens) {
-        final String pos = wt.getPartOfSpeech();
-        final String lemma = getLemma(wt);
-        final String tag = udTags ? convertPennToUniversal(pos) : pos;
-        tokens[i] =
-            String.format("%d\t%s\t%s\t%s\t%s\t_", i + 1, wt.getCoveredText(), lemma, tag, pos);
-        i++;
-      }
+      processWordTokens(wordTokens, tokens, i);
 
       try {
         final ConcurrentDependencyGraph graph = model.parse(tokens);
-        for (int j = 0; j < graph.nDependencyNodes(); j++) {
-          final ConcurrentDependencyNode node = graph.getDependencyNode(j);
-
-          if (node.hasHead()) {
-            final Dependency dep = new Dependency(jCas);
-            if (node.getHeadIndex() != 0) {
-              dep.setGovernor(wordTokens.get(node.getHeadIndex() - 1));
-              final String label = node.getLabel(7);
-              dep.setDependencyType(label);
-            } else {
-              dep.setGovernor(wordTokens.get(node.getIndex() - 1));
-              dep.setDependencyType("ROOT");
-            }
-            dep.setDependent(wordTokens.get(node.getIndex() - 1));
-            dep.setBegin(dep.getDependent().getBegin());
-            dep.setEnd(dep.getDependent().getEnd());
-            addToJCasIndex(dep);
-          }
-        }
+        processDependencyNodes(jCas, wordTokens, graph);
 
       } catch (final Exception e) {
         throw new AnalysisEngineProcessException(e);
+      }
+    }
+  }
+
+  private void processWordTokens(List<WordToken> wordTokens, String[] tokens, int i) {
+    for (final WordToken wt : wordTokens) {
+      final String pos = wt.getPartOfSpeech();
+      final String lemma = getLemma(wt);
+      final String tag = udTags ? convertPennToUniversal(pos) : pos;
+      tokens[i] =
+          String.format("%d\t%s\t%s\t%s\t%s\t_", i + 1, wt.getCoveredText(), lemma, tag, pos);
+      i++;
+    }
+  }
+
+  private void processDependencyNodes(
+      JCas jCas, List<WordToken> wordTokens, ConcurrentDependencyGraph graph) {
+    for (int j = 0; j < graph.nDependencyNodes(); j++) {
+      final ConcurrentDependencyNode node = graph.getDependencyNode(j);
+
+      if (node.hasHead()) {
+        final Dependency dep = new Dependency(jCas);
+        if (node.getHeadIndex() != 0) {
+          dep.setGovernor(wordTokens.get(node.getHeadIndex() - 1));
+          final String label = node.getLabel(7);
+          dep.setDependencyType(label);
+        } else {
+          dep.setGovernor(wordTokens.get(node.getIndex() - 1));
+          dep.setDependencyType(ROOT);
+        }
+        dep.setDependent(wordTokens.get(node.getIndex() - 1));
+        dep.setBegin(dep.getDependent().getBegin());
+        dep.setEnd(dep.getDependent().getEnd());
+        addToJCasIndex(dep);
       }
     }
   }

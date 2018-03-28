@@ -5,7 +5,13 @@ package uk.gov.dstl.baleen.core.web.servlets;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +37,6 @@ import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 public class AbstractComponentApiServlet extends AbstractApiServlet {
   private static final long serialVersionUID = 1L;
 
-  private transient Optional<String> components = null;
-
   private final Class<?> clazz;
 
   private final String componentClass;
@@ -42,6 +46,8 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
   private final transient List<String> excludePackage;
 
   private final transient List<String> excludeClass;
+
+  private final transient Optional<String> components;
 
   /**
    * Constructor
@@ -66,9 +72,10 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
     this.excludePackage = excludePackage;
 
     this.clazz = clazz;
+    components = calculateComponents();
   }
 
-  private void calculateComponents() {
+  private Optional<String> calculateComponents() {
     Class<?> componentClazz = null;
     try {
       componentClazz = Class.forName(componentClass);
@@ -89,7 +96,7 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
     }
 
     if (componentClazz == null) {
-      components = Optional.empty();
+      return Optional.empty();
     } else {
       List<String> componentsList =
           classesToFilteredList(
@@ -103,7 +110,7 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
         componentBuilder.append("- " + s + "\n");
       }
 
-      components = Optional.of(componentBuilder.toString());
+      return Optional.of(componentBuilder.toString());
     }
   }
 
@@ -198,7 +205,7 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
         respondWithError(resp, 503, "Unable to load annotator class");
         return;
       }
-      respond(resp, MediaType.create("text", "x-yaml"), getComponents().get());
+      respond(resp, MediaType.create("text", "x-yaml"), getComponents().orElse(""));
     } else {
       try {
         Class<?> component = getClassFromString(path, componentPackage);
@@ -218,6 +225,7 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
    * name as it is provided
    *
    * @param className The name of the class
+   * @param type The type that the class should extend
    * @param defaultPackage The package to look in if the className isn't a fully qualified name
    * @return The class specified
    */
@@ -313,9 +321,6 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
   }
 
   protected Optional<String> getComponents() {
-    if (components == null) {
-      calculateComponents();
-    }
     return components;
   }
 }

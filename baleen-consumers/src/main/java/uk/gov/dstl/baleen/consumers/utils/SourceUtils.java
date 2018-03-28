@@ -8,7 +8,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 
-import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 import uk.gov.dstl.baleen.uima.UimaSupport;
 
 /** Helper for dealing with sourceUrl. */
@@ -68,13 +67,11 @@ public class SourceUtils {
    * for path '/some/directory/SomeFile.txt' this method will return 'SomeFile'.
    *
    * @param jCas the {@link JCas} from which to get the document annotation.
-   * @param support an appropriately initialised {@link UimaSupport} instance (typically obtained
-   *     through {@link BaleenAnnotator#getSupport()}).
    * @return the filename
    * @throws IllegalArgumentException if there is an error parsing the document source URI.
    */
-  public static String getDocumentSourceBaseName(final JCas jCas, final UimaSupport support) {
-    DocumentAnnotation documentAnnotation = support.getDocumentAnnotation(jCas);
+  public static String getDocumentSourceBaseName(final JCas jCas) {
+    DocumentAnnotation documentAnnotation = UimaSupport.getDocumentAnnotation(jCas);
     String sourceUri = documentAnnotation.getSourceUri();
     return FilenameUtils.getName(sourceUri);
   }

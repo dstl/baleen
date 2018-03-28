@@ -52,7 +52,7 @@ public class ParseTree {
       List<ParseTreeNode> roots,
       Map<PhraseChunk, ParseTreeNode> chunkToNode,
       Map<WordToken, ParseTreeNode> wordToNode) {
-    this.root = new ParseTreeNode(roots);
+    root = new ParseTreeNode(roots);
     this.chunkToNode = chunkToNode;
     this.wordToNode = wordToNode;
   }
@@ -106,11 +106,7 @@ public class ParseTree {
 
     for (final PhraseChunk chunk : phrases) {
 
-      ParseTreeNode treeNode = chunkToNode.get(chunk);
-      if (treeNode == null) {
-        treeNode = new ParseTreeNode(chunk);
-        chunkToNode.put(chunk, treeNode);
-      }
+      ParseTreeNode treeNode = chunkToNode.computeIfAbsent(chunk, ParseTreeNode::new);
 
       final Collection<PhraseChunk> covering = index.get(chunk);
       if (covering == null || covering.isEmpty()) {
@@ -152,12 +148,13 @@ public class ParseTree {
                 final List<WordToken> words = new ArrayList<>(allWords);
 
                 // Remove the words which are covered by our children, leaving just our words
-                if (n.hasChildren())
+                if (n.hasChildren()) {
                   n.getChildren()
                       .stream()
                       .map(t -> wordIndex.get(t.getChunk()))
                       .filter(Objects::nonNull)
                       .forEach(words::removeAll);
+                }
 
                 // Add the words into the treenode
                 n.addWords(words);
@@ -179,7 +176,11 @@ public class ParseTree {
    * @return the phrase chunk
    */
   private static PhraseChunk findSmallest(Collection<PhraseChunk> covering) {
-    return covering.stream().sorted(SHORTEST_FIRST).findFirst().get();
+    return covering
+        .stream()
+        .sorted(SHORTEST_FIRST)
+        .findFirst()
+        .orElseThrow(IllegalArgumentException::new);
   }
 
   /**

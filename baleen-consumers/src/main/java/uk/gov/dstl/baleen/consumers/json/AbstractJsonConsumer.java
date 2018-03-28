@@ -67,7 +67,7 @@ public abstract class AbstractJsonConsumer<T extends BaleenAnnotation> extends B
 
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-    String documentSourceName = SourceUtils.getDocumentSourceBaseName(jCas, getSupport());
+    String documentSourceName = SourceUtils.getDocumentSourceBaseName(jCas);
 
     JsonFactory factory = objectMapper.getFactory();
     try (Writer writer = createOutputWriter(documentSourceName);

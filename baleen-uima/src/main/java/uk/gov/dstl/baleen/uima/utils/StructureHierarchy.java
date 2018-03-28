@@ -1,7 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
-import static uk.gov.dstl.baleen.uima.utils.StructureUtil.filterAnnotations;
+import static uk.gov.dstl.baleen.uima.utils.TypeUtils.filterAnnotations;
 
 import java.util.List;
 import java.util.Set;

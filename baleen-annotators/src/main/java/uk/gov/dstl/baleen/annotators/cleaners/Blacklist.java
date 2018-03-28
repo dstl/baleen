@@ -39,7 +39,7 @@ import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 public class Blacklist extends BaleenAnnotator {
 
   /**
-   * A list of blacklisted entity values to remove from the CAS
+   * A list of blacklisted entity covering text and/or values to remove from the CAS
    *
    * @baleen.config
    */
@@ -54,7 +54,8 @@ public class Blacklist extends BaleenAnnotator {
   List<String> thingsToRemove = null;
 
   /**
-   * Should the comparison of the blacklist with entity values be done case sensitively?
+   * Should the comparison of the blacklist with entity covering text and/or values be done case
+   * sensitively?
    *
    * @baleen.config false
    */
@@ -78,6 +79,16 @@ public class Blacklist extends BaleenAnnotator {
 
   Class<? extends Annotation> et = null;
 
+  /**
+   * Should the comparison of the blacklist also be performed on the value of each entity?
+   *
+   * @baleen.config false
+   */
+  public static final String PARAM_CHECK_ENTITY_VALUE = "checkEntityValue";
+
+  @ConfigurationParameter(name = PARAM_CHECK_ENTITY_VALUE, defaultValue = "false")
+  Boolean checkEntityValue;
+
   @Override
   public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
     try {
@@ -88,9 +99,11 @@ public class Blacklist extends BaleenAnnotator {
       throw new ResourceInitializationException(e);
     }
 
-    thingsToRemove = Arrays.asList((String[]) terms);
+    thingsToRemove = Arrays.asList(terms);
 
-    if (!caseSensitive) thingsToRemove = toLowerCase(thingsToRemove);
+    if (!caseSensitive) {
+      thingsToRemove = toLowerCase(thingsToRemove);
+    }
   }
 
   @Override
@@ -102,28 +115,37 @@ public class Blacklist extends BaleenAnnotator {
       throw new AnalysisEngineProcessException(ex);
     }
 
-    Set<Entity> toRemove = new HashSet<Entity>();
+    Set<Entity> toRemove = new HashSet<>();
 
     FSIndex<Annotation> index = aJCas.getAnnotationIndex(e.getType());
     for (Annotation a : index) {
       Entity entity = (Entity) a;
 
-      String val = entity.getCoveredText();
-      if (!caseSensitive) val = val.toLowerCase();
+      String coveredText = entity.getCoveredText();
+      String value = entity.getValue();
 
-      if (thingsToRemove.contains(val)) {
-        getMonitor()
-            .info(
-                "Removing entity '{}' because it appears on the blacklist",
-                entity.getCoveredText());
+      if (isBlacklisted(coveredText) || (checkEntityValue && isBlacklisted(value))) {
+        getMonitor().info("Removing entity '{}' because it appears on the blacklist", coveredText);
         toRemove.add(entity);
       }
-    }
 
-    getMonitor().debug("{} has removed {} entities", this.getClass().getName(), toRemove.size());
+      getMonitor().debug("{} has removed {} entities", this.getClass().getName(), toRemove.size());
+    }
     for (Entity ent : toRemove) {
       removeFromJCasIndex(ent);
     }
+  }
+
+  private boolean isBlacklisted(String value) {
+    if (value == null) {
+      return false;
+    }
+
+    if (!caseSensitive) {
+      value = value.toLowerCase();
+    }
+
+    return thingsToRemove.contains(value);
   }
 
   @Override
@@ -133,7 +155,7 @@ public class Blacklist extends BaleenAnnotator {
   }
 
   private List<String> toLowerCase(List<String> list) {
-    List<String> l = new ArrayList<String>();
+    List<String> l = new ArrayList<>();
 
     for (String s : list) {
       l.add(s.toLowerCase());

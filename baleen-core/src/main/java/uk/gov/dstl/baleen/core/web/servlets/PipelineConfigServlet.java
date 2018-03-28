@@ -73,9 +73,9 @@ public class PipelineConfigServlet extends AbstractApiServlet {
       if (parts.length > 0) action = parts[parts.length - 1];
 
       if ("ordered".equals(action)) {
-        respond(resp, MediaType.PLAIN_TEXT_UTF_8, pipeline.get().orderedYaml());
+        respond(resp, MediaType.PLAIN_TEXT_UTF_8, pipeline.get().orderedConfig());
       } else {
-        respond(resp, MediaType.PLAIN_TEXT_UTF_8, pipeline.get().originalYaml());
+        respond(resp, MediaType.PLAIN_TEXT_UTF_8, pipeline.get().originalConfig());
       }
     }
   }

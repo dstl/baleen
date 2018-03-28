@@ -31,7 +31,7 @@ public class WordNetLemmatizerTest extends AbstractAnnotatorTest {
   }
 
   @Test
-  public void test() throws UIMAException, ResourceInitializationException {
+  public void testAddsLemma() throws UIMAException, ResourceInitializationException {
     jCas.setDocumentText("Is this working?");
 
     final WordToken t = new WordToken(jCas);
@@ -40,10 +40,20 @@ public class WordNetLemmatizerTest extends AbstractAnnotatorTest {
     t.setPartOfSpeech("VERB");
     t.addToIndexes();
 
-    // Add an another with an lemma already
+    processJCas("wordnet", wordnetErd);
+
+    final List<WordToken> out = new ArrayList<>(JCasUtil.select(jCas, WordToken.class));
+    assertEquals("work", out.get(0).getLemmas(0).getLemmaForm());
+  }
+
+  @Test
+  public void testAddsLemmaToExistingLemmas()
+      throws UIMAException, ResourceInitializationException {
+    jCas.setDocumentText("Is this working?");
+
     final WordToken s = new WordToken(jCas);
     s.setBegin(jCas.getDocumentText().indexOf("working"));
-    s.setEnd(t.getBegin() + "working".length());
+    s.setEnd(s.getBegin() + "working".length());
     s.setPartOfSpeech("VERB");
     s.setLemmas(new FSArray(jCas, 1));
     final WordLemma existingLemma = new WordLemma(jCas);
@@ -56,7 +66,7 @@ public class WordNetLemmatizerTest extends AbstractAnnotatorTest {
 
     final List<WordToken> out = new ArrayList<>(JCasUtil.select(jCas, WordToken.class));
 
-    assertEquals("work", out.get(0).getLemmas(0).getLemmaForm());
-    assertEquals(existingLemma, out.get(1).getLemmas(0));
+    assertEquals(existingLemma, out.get(0).getLemmas(0));
+    assertEquals("work", out.get(0).getLemmas(1).getLemmaForm());
   }
 }

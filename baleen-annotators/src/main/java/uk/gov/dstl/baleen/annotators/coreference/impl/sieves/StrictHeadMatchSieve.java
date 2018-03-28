@@ -37,7 +37,7 @@ public class StrictHeadMatchSieve extends AbstractCoreferenceSieve {
 
     this.compatibleModifiers = compatibleModifiers;
     this.wordInclusion = wordInclusion;
-    this.stopwordsPattern = StopwordUtils.buildStopwordPattern(stopwords, false);
+    stopwordsPattern = StopwordUtils.buildStopwordPattern(stopwords, false);
   }
 
   @Override
@@ -52,7 +52,9 @@ public class StrictHeadMatchSieve extends AbstractCoreferenceSieve {
       for (int j = i + 1; j < mentions.size(); j++) {
         final Mention b = mentions.get(j);
 
-        if (shouldAddToCluster(a, b)) addToCluster(a, b);
+        if (shouldAddToCluster(a, b)) {
+          addToCluster(a, b);
+        }
       }
     }
   }
@@ -112,10 +114,6 @@ public class StrictHeadMatchSieve extends AbstractCoreferenceSieve {
     // NOTE: We just check for overlap here, not if a sub-NP, which is a cheap test and
     // can come first (but not in the cluster based case since, then we need to find the
     // mentions to test first.
-    if (a.overlaps(b)) {
-      return false;
-    }
-
-    return true;
+    return !a.overlaps(b);
   }
 }

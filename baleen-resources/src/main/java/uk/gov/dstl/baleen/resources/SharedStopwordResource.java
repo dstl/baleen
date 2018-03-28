@@ -16,6 +16,7 @@ import java.util.Set;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceSpecifier;
 
+import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.BaleenResource;
 
 /** Shared resource for providing access to lists of common stop words. */
@@ -114,5 +115,41 @@ public class SharedStopwordResource extends BaleenResource {
     }
 
     return sw;
+  }
+
+  /**
+   * Get the stopwords defined by the given configuration. The configuration can be one of the
+   * existing {@link StopwordList} or a file path to load from.
+   *
+   * <p>If this configuration is not valid, or the file can not be opened the default stopwords will
+   * be returned
+   *
+   * @param configuration
+   * @return a collection of stopwords
+   * @throws ResourceInitializationException
+   */
+  public Collection<String> getStopwords(String configuration)
+      throws ResourceInitializationException {
+    try {
+      return getStopwords(SharedStopwordResource.StopwordList.valueOf(configuration));
+    } catch (IllegalArgumentException iae) {
+      getMonitor()
+          .info(
+              "Value of {} does not match pre-defined list, assuming value is a file",
+              configuration);
+      getMonitor().debug("Unable to parse value of {} as StopwordList enum", configuration, iae);
+
+      File f = new File(configuration);
+
+      try {
+        return getStopwords(f);
+      } catch (IOException ioe) {
+        throw new ResourceInitializationException(
+            new InvalidParameterException("Couldn't load stoplist", ioe));
+      }
+    } catch (IOException ioe) {
+      getMonitor().warn("Unable to load Stopword list, resorting to default list", ioe);
+      return getStopwords();
+    }
   }
 }

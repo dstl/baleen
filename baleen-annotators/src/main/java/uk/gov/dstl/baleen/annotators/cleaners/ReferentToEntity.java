@@ -33,6 +33,7 @@ import uk.gov.dstl.baleen.uima.utils.ReferentUtils;
 public class ReferentToEntity extends BaleenAnnotator {
 
   @Override
+  @SuppressWarnings("squid:S2175" /* false positive, a Base can be an Entity */)
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
 
     final Multimap<ReferenceTarget, Entity> referentMap =
@@ -71,7 +72,9 @@ public class ReferentToEntity extends BaleenAnnotator {
    * @return the best entity
    */
   protected static Entity getBestEntity(Collection<Entity> list) {
-    return list.stream().reduce((a, b) -> isBetterEntity(a, b) ? b : a).get();
+    return list.stream()
+        .reduce((a, b) -> isBetterEntity(a, b) ? b : a)
+        .orElseThrow(() -> new RuntimeException("Should always produce an entity"));
   }
 
   /**
@@ -85,10 +88,14 @@ public class ReferentToEntity extends BaleenAnnotator {
     // Simple version, just look for the longest string
     // we could look at how complete the attributes are, etc
     String origValue = original.getValue();
-    if (origValue == null) origValue = original.getCoveredText();
+    if (origValue == null) {
+      origValue = original.getCoveredText();
+    }
 
     String challValue = challenger.getValue();
-    if (challValue == null) challValue = challenger.getCoveredText();
+    if (challValue == null) {
+      challValue = challenger.getCoveredText();
+    }
 
     return origValue.length() < challValue.length();
   }

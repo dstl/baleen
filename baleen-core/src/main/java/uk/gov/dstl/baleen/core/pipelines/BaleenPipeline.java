@@ -4,7 +4,6 @@ package uk.gov.dstl.baleen.core.pipelines;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
@@ -15,13 +14,9 @@ import org.apache.uima.fit.factory.JCasFactory;
 import org.apache.uima.jcas.JCas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.DumperOptions.FlowStyle;
-import org.yaml.snakeyaml.Yaml;
 
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineActionStore;
 import uk.gov.dstl.baleen.core.pipelines.orderers.IPipelineOrderer;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
 
 /**
  * A UIMA-based pipeline that will take a collection reader, annotators and consumers and order
@@ -35,6 +30,8 @@ import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
  * documents (but will finish processing the current document).
  */
 public class BaleenPipeline implements Runnable {
+  private static final String PIPELINE_KEY = "pipeline";
+
   private static final Logger LOGGER = LoggerFactory.getLogger(BaleenPipeline.class);
 
   private final CollectionReader collectionReader;
@@ -45,7 +42,7 @@ public class BaleenPipeline implements Runnable {
   private volatile boolean destroy = false;
 
   private final String name;
-  private final String originalYaml;
+  private final PipelineConfiguration config;
 
   /**
    * Constructor
@@ -56,16 +53,47 @@ public class BaleenPipeline implements Runnable {
    * @param collectionReader The collection reader
    * @param annotators The annotators to be ordered and used
    * @param consumers The consumers to be ordered and used
+   * @throws IOException if error reading config
+   * @deprecated Use {@link BaleenPipeline#BaleenPipeline(String, PipelineConfiguration,
+   *     IPipelineOrderer, CollectionReader, List, List)}
    */
+  @Deprecated
   public BaleenPipeline(
       String name,
       String originalYaml,
       IPipelineOrderer orderer,
       CollectionReader collectionReader,
       List<AnalysisEngine> annotators,
+      List<AnalysisEngine> consumers)
+      throws IOException {
+    this(
+        name,
+        new YamlPiplineConfiguration(originalYaml),
+        orderer,
+        collectionReader,
+        annotators,
+        consumers);
+  }
+
+  /**
+   * Constructor
+   *
+   * @param name Pipeline name
+   * @param config The pipeline configuration object used to build the pipeline
+   * @param orderer The IPipelineOrderer to use to order the pipeline
+   * @param collectionReader The collection reader
+   * @param annotators The annotators to be ordered and used
+   * @param consumers The consumers to be ordered and used
+   */
+  public BaleenPipeline(
+      String name,
+      PipelineConfiguration config,
+      IPipelineOrderer orderer,
+      CollectionReader collectionReader,
+      List<AnalysisEngine> annotators,
       List<AnalysisEngine> consumers) {
     this.name = name;
-    this.originalYaml = originalYaml;
+    this.config = config;
     this.collectionReader = collectionReader;
     this.annotators = orderer.orderPipeline(annotators);
     this.consumers = orderer.orderPipeline(consumers);
@@ -81,55 +109,34 @@ public class BaleenPipeline implements Runnable {
   }
 
   /**
-   * Get the original YAML used to build the pipeline
+   * Get the original configuration used to build the pipeline
    *
-   * @return Original YAML
+   * @return Original configuration
+   * @throws Exception
    */
-  public String originalYaml() {
-    if (originalYaml == null) return "";
-
-    return originalYaml;
+  public String originalConfig() throws IOException {
+    return config.originalConfig();
   }
 
   /**
-   * Get an ordered version of the YAML that matches the actual pipeline order
+   * Get an ordered version of the configuration that matches the actual pipeline order
    *
-   * @return Ordered YAML
+   * @return Ordered config
    */
-  @SuppressWarnings("unchecked")
-  public String orderedYaml() {
-    if (originalYaml == null) return "";
-
-    DumperOptions options = new DumperOptions();
-    options.setDefaultFlowStyle(FlowStyle.BLOCK);
-    options.setPrettyFlow(true);
-
-    Yaml y = new Yaml(options);
-
-    // Load original configuration
-    Map<String, Object> confMap;
-    try {
-      confMap = (Map<String, Object>) y.load(YamlConfiguration.cleanTabs(originalYaml));
-    } catch (ClassCastException cce) {
-      LOGGER.error("Unable to build ordered YAML string", cce);
-      return "";
-    }
-
+  @SuppressWarnings("squid:RedundantThrowsDeclarationCheck" /* thrown from extending class */)
+  public String orderedConfig() throws IOException {
     // Replace annotators and consumers with ordered versions
     List<Object> ann = new ArrayList<>();
-    for (AnalysisEngine a : annotators)
+    for (AnalysisEngine a : annotators) {
       ann.add(a.getConfigParameterValue(PipelineBuilder.ORIGINAL_CONFIG));
-
-    confMap.put("annotators", ann);
+    }
 
     List<Object> con = new ArrayList<>();
-    for (AnalysisEngine c : consumers)
+    for (AnalysisEngine c : consumers) {
       con.add(c.getConfigParameterValue(PipelineBuilder.ORIGINAL_CONFIG));
+    }
 
-    confMap.put("consumers", con);
-
-    // Return YAML
-    return y.dump(confMap);
+    return config.dumpOrdered(ann, con);
   }
 
   @Override
@@ -148,28 +155,12 @@ public class BaleenPipeline implements Runnable {
     LOGGER.info("Starting {} {}", getType(), name);
     while (!destroy) {
       try {
-        // If we're not paused and there are documents to process, then process them
-        while (!paused && collectionReader.hasNext()) {
-          LOGGER.debug("Beginning processing of document on {} {}", getType(), name);
-
-          // Get next document from Collection Reader
-          collectionReader.getNext(jCas.getCas());
-
-          // Process JCas with each annotator in turn
-          for (AnalysisEngine ae : annotators) {
-            processAnalysisEngine(jCas, ae, "annotator");
-          }
-
-          // Process JCas with each consumer in turn
-          for (AnalysisEngine ae : consumers) {
-            processAnalysisEngine(jCas, ae, "consumer");
-          }
-
-          // Prepare the JCas for the next document
-          jCas.reset();
-
+        while (notPausedAndHasDocuments()) {
+          processDocument(jCas);
           // Check that we should continue
-          if (destroy) break;
+          if (destroy) {
+            break;
+          }
         }
       } catch (CollectionException | IOException e) {
         LOGGER.error("Error from collection reader", e);
@@ -180,6 +171,10 @@ public class BaleenPipeline implements Runnable {
     // Destroy collection reader and analysis engines
     LOGGER.debug("Destroying {} {}", getType(), name);
     collectionReader.destroy();
+    destroyAnalysisEngines();
+  }
+
+  private void destroyAnalysisEngines() {
     for (AnalysisEngine ae : annotators) {
       AnalysisEngineActionStore.getInstance()
           .remove((String) ae.getConfigParameterValue(PipelineBuilder.ANNOTATOR_UUID));
@@ -190,6 +185,30 @@ public class BaleenPipeline implements Runnable {
           .remove((String) ae.getConfigParameterValue(PipelineBuilder.ANNOTATOR_UUID));
       ae.destroy();
     }
+  }
+
+  private void processDocument(JCas jCas) throws IOException, CollectionException {
+    LOGGER.debug("Beginning processing of document on {} {}", getType(), name);
+
+    // Get next document from Collection Reader
+    collectionReader.getNext(jCas.getCas());
+
+    // Process JCas with each annotator in turn
+    for (AnalysisEngine ae : annotators) {
+      processAnalysisEngine(jCas, ae, "annotator");
+    }
+
+    // Process JCas with each consumer in turn
+    for (AnalysisEngine ae : consumers) {
+      processAnalysisEngine(jCas, ae, "consumer");
+    }
+
+    // Prepare the JCas for the next document
+    jCas.reset();
+  }
+
+  private boolean notPausedAndHasDocuments() throws IOException, CollectionException {
+    return !paused && collectionReader.hasNext();
   }
 
   /** Pause the pipeline */
@@ -233,7 +252,7 @@ public class BaleenPipeline implements Runnable {
 
   /** Provide the type of pipeline for use in logging */
   protected String getType() {
-    return "pipeline";
+    return PIPELINE_KEY;
   }
 
   private void processAnalysisEngine(JCas jCas, AnalysisEngine ae, String type) {

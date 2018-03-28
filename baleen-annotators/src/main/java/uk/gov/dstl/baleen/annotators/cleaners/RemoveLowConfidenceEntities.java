@@ -63,7 +63,7 @@ public class RemoveLowConfidenceEntities extends BaleenAnnotator {
 
   @Override
   public void doProcess(JCas aJCas) throws AnalysisEngineProcessException {
-    List<Entity> toRemove = new ArrayList<Entity>();
+    List<Entity> toRemove = new ArrayList<>();
 
     FSIterator<Annotation> iter = aJCas.getAnnotationIndex(Entity.type).iterator();
     while (iter.hasNext()) {

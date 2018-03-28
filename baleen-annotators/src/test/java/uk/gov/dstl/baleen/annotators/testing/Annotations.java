@@ -1,11 +1,21 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.testing;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.uima.jcas.JCas;
 
+import uk.gov.dstl.baleen.types.common.Organisation;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.common.Quantity;
 import uk.gov.dstl.baleen.types.geo.Coordinate;
+import uk.gov.dstl.baleen.types.language.Dependency;
+import uk.gov.dstl.baleen.types.language.Sentence;
+import uk.gov.dstl.baleen.types.language.WordToken;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Location;
@@ -91,8 +101,25 @@ public class Annotations {
     return rt;
   }
 
+  @SafeVarargs
+  public static <T extends Entity> ReferenceTarget createReferenceTarget(JCas jCas, T... entities) {
+    ReferenceTarget rt = new ReferenceTarget(jCas);
+    rt.addToIndexes();
+    Arrays.stream(entities).forEach(e -> e.setReferent(rt));
+    return rt;
+  }
+
   public static Person createPerson(JCas jCas, int begin, int end, String value) {
     Person p = new Person(jCas);
+    p.setValue(value);
+    p.setBegin(begin);
+    p.setEnd(end);
+    p.addToIndexes();
+    return p;
+  }
+
+  public static Organisation createOrganisation(JCas jCas, int begin, int end, String value) {
+    Organisation p = new Organisation(jCas);
     p.setValue(value);
     p.setBegin(begin);
     p.setEnd(end);
@@ -126,5 +153,68 @@ public class Annotations {
     }
     e.addToIndexes();
     return e;
+  }
+
+  public static Dependency createDependency(JCas jCas, WordToken gov, WordToken dep, String type) {
+    Dependency d = new Dependency(jCas);
+    d.setDependencyType(type);
+    d.setBegin(dep.getBegin());
+    d.setEnd(dep.getEnd());
+    d.setGovernor(gov);
+    d.setDependent(dep);
+    d.addToIndexes();
+    return d;
+  }
+
+  public static Sentence createSentence(JCas jCas, int begin, int end) {
+    Sentence s = new Sentence(jCas);
+    s.setBegin(begin);
+    s.setEnd(end);
+    s.addToIndexes();
+    return s;
+  }
+
+  public static List<WordToken> createWordTokens(JCas jCas) {
+    return createWordTokens(jCas, "(?=\\.)| |$");
+  }
+
+  public static List<Sentence> createSentences(JCas jCas) {
+    return createSentences(jCas, "(?<=\\.)( |$)");
+  }
+
+  public static List<WordToken> createWordTokens(JCas jCas, String regex) {
+    List<WordToken> words = new ArrayList<>();
+    String documentText = jCas.getDocumentText();
+    Matcher matcher = Pattern.compile(regex).matcher(documentText);
+    int begin = 0;
+    int end = 0;
+    while (matcher.find()) {
+      end = matcher.start();
+      WordToken wt = new WordToken(jCas);
+      wt.setBegin(begin);
+      wt.setEnd(end);
+      wt.addToIndexes();
+      words.add(wt);
+      begin = matcher.end();
+    }
+    return words;
+  }
+
+  public static List<Sentence> createSentences(JCas jCas, String regex) {
+    List<Sentence> sentences = new ArrayList<>();
+    String documentText = jCas.getDocumentText();
+    Matcher matcher = Pattern.compile(regex).matcher(documentText);
+    int begin = 0;
+    int end = 0;
+    while (matcher.find()) {
+      end = matcher.start();
+      Sentence s = new Sentence(jCas);
+      s.setBegin(begin);
+      s.setEnd(end);
+      s.addToIndexes();
+      sentences.add(s);
+      begin = matcher.end();
+    }
+    return sentences;
   }
 }

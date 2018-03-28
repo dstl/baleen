@@ -13,6 +13,7 @@ import org.apache.uima.jcas.tcas.Annotation;
 
 import com.google.common.collect.Maps;
 
+import uk.gov.dstl.baleen.types.BaleenAnnotation;
 import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.uima.utils.select.Node;
 
@@ -94,7 +95,7 @@ public class CoveringStructureHierarchy extends StructureHierarchy {
   private static Map<Annotation, Collection<Structure>> buildCovering(
       JCas jCas, Set<Class<? extends Structure>> structuralClasses) {
     return Maps.transformValues(
-        JCasUtil.indexCovering(jCas, Annotation.class, Structure.class),
-        s -> StructureUtil.filterAnnotations(s, structuralClasses));
+        JCasUtil.indexCovering(jCas, BaleenAnnotation.class, Structure.class),
+        s -> TypeUtils.filterAnnotations(s, structuralClasses));
   }
 }

@@ -7,6 +7,7 @@ import net.sf.extjwnl.data.IndexWord;
 import net.sf.extjwnl.data.POS;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -22,7 +23,7 @@ import uk.gov.dstl.baleen.types.language.WordToken;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 
 /**
- * Add lemma form of word to the WordToken (if the WordToken has no getLemma already).
+ * Add lemma form of word to the WordToken.
  *
  * <p>Uses WordNet, hence coverage will be as good as their dictionary.
  *
@@ -43,19 +44,30 @@ public class WordNetLemmatizer extends BaleenAnnotator {
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
     for (final WordToken t : JCasUtil.select(jCas, WordToken.class)) {
-      if (t.getLemmas() == null || t.getLemmas().size() == 0) {
-        final String text = t.getCoveredText();
-        final POS pos = WordNetUtils.toPos(t.getPartOfSpeech());
-        if (pos != null) {
-          final Optional<IndexWord> lookupWord = wordnet.lookupWord(pos, text);
-          if (lookupWord.isPresent()) {
-            t.setLemmas(new FSArray(jCas, 1));
-            final WordLemma wordLemma = new WordLemma(jCas);
-            wordLemma.setLemmaForm(lookupWord.get().getLemma());
-            t.setLemmas(0, wordLemma);
+      int lemmas = t.getLemmas() == null ? 0 : t.getLemmas().size();
+      final String text = t.getCoveredText();
+      final POS pos = WordNetUtils.toPos(t.getPartOfSpeech());
+      if (pos != null) {
+        final Optional<IndexWord> lookupWord = wordnet.lookupWord(pos, text);
+        if (lookupWord.isPresent()) {
+          FSArray fsArray = new FSArray(jCas, lemmas + 1);
+          if (lemmas > 0) {
+            copyExistingLemmas(t, fsArray);
           }
+          t.setLemmas(fsArray);
+          final WordLemma wordLemma = new WordLemma(jCas);
+          wordLemma.setLemmaForm(lookupWord.get().getLemma());
+          t.setLemmas(lemmas, wordLemma);
         }
       }
+    }
+  }
+
+  private void copyExistingLemmas(final WordToken t, FSArray fsArray) {
+    int i = 0;
+    for (FeatureStructure fs : t.getLemmas()) {
+      fsArray.set(i, fs);
+      i++;
     }
   }
 

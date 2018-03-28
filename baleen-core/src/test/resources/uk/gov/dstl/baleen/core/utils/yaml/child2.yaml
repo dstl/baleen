@@ -1,0 +1,3 @@
+- uk.gov.dstl.baleen.testing.DummyAnnotator1
+- class: uk.gov.dstl.baleen.testing.DummyAnnotator2
+  example.count: 6

@@ -34,7 +34,7 @@ import uk.gov.dstl.baleen.types.structure.TableRow;
 public class TableRelationTest extends AbstractAnnotatorTest {
 
   private static final String TH1 = "Name";
-  private static final String TH2 = "eMail";
+  private static final String TH2 = "email";
   private static final String R1C1 = "Stuart";
   private static final String R2C1 = "James";
   private static final String R3C1 = "Chris";
@@ -151,11 +151,11 @@ public class TableRelationTest extends AbstractAnnotatorTest {
 
     processJCas(
         SOURCE_PATTERN,
-        "Name",
+        TH1,
         SOURCE_TYPE,
         Person.class.getSimpleName(),
         TARGET_PATTERN,
-        "email",
+        TH2,
         TARGET_TYPE,
         CommsIdentifier.class.getSimpleName(),
         PARAM_TYPE,

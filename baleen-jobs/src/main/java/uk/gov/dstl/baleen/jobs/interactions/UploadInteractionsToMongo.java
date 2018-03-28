@@ -120,7 +120,7 @@ public class UploadInteractionsToMongo extends BaleenTask {
       }
 
       final CsvInteractionReader reader = new CsvInteractionReader(inputFilename);
-      reader.read((i, a) -> writer.write(i, a));
+      reader.read(writer::write);
     } catch (final IOException e) {
       throw new AnalysisEngineProcessException(e);
     }

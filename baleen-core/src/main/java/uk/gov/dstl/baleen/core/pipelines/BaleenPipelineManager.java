@@ -5,29 +5,43 @@ package uk.gov.dstl.baleen.core.pipelines;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Predicates;
 import com.google.common.base.Strings;
-import com.google.common.io.Files;
 
 import uk.gov.dstl.baleen.core.manager.AbstractBaleenComponent;
 import uk.gov.dstl.baleen.core.metrics.Metrics;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.Configuration;
+import uk.gov.dstl.baleen.core.utils.yaml.IncludedYaml;
+import uk.gov.dstl.baleen.core.utils.yaml.Yaml;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlFile;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlString;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /** Manages one or more BaleenPipelines */
 public class BaleenPipelineManager extends AbstractBaleenComponent {
 
+  private static final String PIPELINES_KEY = "pipelines";
+  private static final String PIPELINE = "pipeline";
+  private static final String FILE_KEY = "file";
+  private static final String CONFIG_KEY = "config";
+  private static final String MULTIPLICITY_KEY = "multiplicity";
+  private static final String NAME_KEY = "name";
   private final ConcurrentMap<String, BaleenPipeline> pipelines = new ConcurrentHashMap<>();
   private final ExecutorService es = Executors.newCachedThreadPool();
 
@@ -36,12 +50,12 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
 
   /** Constructor */
   public BaleenPipelineManager() {
-    this.metrics = MetricsFactory.getMetrics(BaleenPipelineManager.class);
-    this.logger = LoggerFactory.getLogger(BaleenPipelineManager.class);
+    metrics = MetricsFactory.getMetrics(BaleenPipelineManager.class);
+    logger = LoggerFactory.getLogger(BaleenPipelineManager.class);
   }
 
   @Override
-  public void configure(YamlConfiguration configuration) throws BaleenException {
+  public void configure(Configuration configuration) throws BaleenException {
     logger.debug("Configuring {} manager", getType());
 
     List<Map<String, Object>> initial = configuration.getAsListOfMaps(getConfigurationKey());
@@ -50,19 +64,37 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
     for (Map<String, Object> p : initial) {
       count++;
 
-      String name = (String) p.getOrDefault("name", getType() + count);
-      String file = (String) p.get("file");
+      String name = (String) p.getOrDefault(NAME_KEY, getType() + count);
+      int multiplicity = (int) p.getOrDefault(MULTIPLICITY_KEY, 1);
+      String config = (String) p.get(CONFIG_KEY);
+      String file = (String) p.get(FILE_KEY);
 
-      if (Strings.isNullOrEmpty(file)) {
-        logger.warn("File name omited for {} {} - will be skipped", getType(), name);
-        metrics.getCounter("errors").inc();
+      Yaml yaml;
+      String source = null;
+      if (!Strings.isNullOrEmpty(config)) {
+        yaml = new YamlString(config);
+        source = "string";
+      } else if (!Strings.isNullOrEmpty(file)) {
+        yaml = new IncludedYaml(new YamlFile(new File(file)));
+        source = "file";
       } else {
-        try {
-          logger.info("Attempting to create {} {}", getType(), name);
-          create(name, new File(file));
-        } catch (Exception e) {
-          logger.warn("Unable to create {} {} from file {} ", getType(), name, file, e);
-        }
+        logger.warn("Configuration omited for {} {} - will be skipped", getType(), name);
+        metrics.getCounter("errors").inc();
+        continue;
+      }
+
+      try {
+        logger.info("Attempting to create {} {}", getType(), name);
+        logger.debug("Pipline configuration: {}", yaml);
+        create(name, new YamlPiplineConfiguration(yaml), multiplicity);
+      } catch (Exception e) {
+        logger.warn(
+            "Unable to create {} {} from configuration {}\n{}{} ",
+            getType(),
+            name,
+            source,
+            yaml,
+            e);
       }
     }
 
@@ -73,7 +105,7 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
   public void stop() throws BaleenException {
     logger.info("Stopping {} manager, and removing instances", getType());
     try {
-      pipelines.values().forEach(bop -> bop.destroy());
+      pipelines.values().forEach(BaleenPipeline::destroy);
     } finally {
       pipelines.clear();
     }
@@ -106,22 +138,43 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
 
   /** Pause all pipelines */
   public void pauseAll() {
-    pipelines.values().forEach(bop -> bop.pause());
+    pipelines.values().forEach(BaleenPipeline::pause);
   }
 
   /** Unpause all pipelines */
   public void unpauseAll() {
-    pipelines.values().forEach(bop -> bop.unpause());
+    pipelines.values().forEach(BaleenPipeline::unpause);
+  }
+
+  /**
+   * Create a new pipeline from the provided configuration, with the given name and multiplicity. If
+   * multiplicity is greater than 1 names will be suffixed with '-n' for each multiple.
+   */
+  public List<BaleenPipeline> create(String name, PipelineConfiguration config, int multiplicity)
+      throws BaleenException {
+    if (multiplicity < 1) {
+      throw new BaleenException("Multiplicity of pipline " + name + " must be positive");
+    }
+
+    ArrayList<BaleenPipeline> created = new ArrayList<>();
+    if (multiplicity == 1) {
+      created.add(create(name, config));
+    } else {
+      for (int i = 1; i <= multiplicity; i++) {
+        created.add(create(name + "-" + i, config));
+      }
+    }
+    return created;
   }
 
   /** Create a new pipeline from the provided YAML, with the given name */
-  public BaleenPipeline create(String name, String yaml) throws BaleenException {
+  public BaleenPipeline create(String name, PipelineConfiguration config) throws BaleenException {
     if (pipelines.containsKey(name)) {
       throw new BaleenException("A " + getType() + " of that name already exists");
     }
 
     logger.info("Creating {}", name);
-    BaleenPipeline pipeline = toPipeline(name, yaml);
+    BaleenPipeline pipeline = toPipeline(name, config);
 
     pipelines.put(name, pipeline);
     es.submit(pipeline);
@@ -133,17 +186,22 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
 
   /** Create a new pipeline from the provided YAML, with the given name */
   public BaleenPipeline create(String name, InputStream yaml) throws BaleenException {
-    try {
-      return create(name, IOUtils.toString(yaml));
-    } catch (IOException e) {
-      throw new BaleenException(e);
-    }
+    return create(name, yaml);
   }
 
   /** Create a new pipeline from the provided YAML file, with the given name */
   public BaleenPipeline create(String name, File file) throws BaleenException {
+    return create(name, file, 1).get(0);
+  }
+
+  /**
+   * Create a new pipeline from the provided YAML file, with the given name. If multiplicity is
+   * greater than 1 names will be suffixed with '-n' for each multiple.
+   */
+  public List<BaleenPipeline> create(String name, File file, int multiplicity)
+      throws BaleenException {
     try {
-      return create(name, Files.asCharSource(file, StandardCharsets.UTF_8).read());
+      return create(name, new YamlPiplineConfiguration(file), multiplicity);
     } catch (IOException e) {
       throw new BaleenException(e);
     }
@@ -152,6 +210,21 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
   /** Remove a pipeline */
   public boolean remove(BaleenPipeline pipeline) {
     return remove(pipeline.getName());
+  }
+
+  /**
+   * Remove all pipelines create with given root name
+   *
+   * @return true only if all such pipelines correctly removed
+   */
+  public boolean removeAll(String name) {
+    List<String> toRemove = new ArrayList<>();
+    for (String key : pipelines.keySet()) {
+      if (key.matches(name + "(-\\d+)?")) {
+        toRemove.add(key);
+      }
+    }
+    return toRemove.stream().map(this::remove).allMatch(Predicates.equalTo(true));
   }
 
   /** Remove a pipeline by name */
@@ -174,12 +247,12 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
 
   /** Provide the type of pipeline for use in logging and naming */
   protected String getType() {
-    return "pipeline";
+    return PIPELINE;
   }
 
   /** Provide the configuration key to get the list of pipeline files from */
   protected String getConfigurationKey() {
-    return "pipelines";
+    return PIPELINES_KEY;
   }
 
   /**
@@ -187,8 +260,9 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
    *
    * <p>Provided so that sub-classes can override this to create, for example, a BaleenJob
    */
-  protected BaleenPipeline toPipeline(String name, String yaml) throws BaleenException {
-    PipelineBuilder pb = new PipelineBuilder(name, yaml);
+  protected BaleenPipeline toPipeline(String name, PipelineConfiguration config)
+      throws BaleenException {
+    PipelineBuilder pb = new PipelineBuilder(name, config);
     return pb.createNewPipeline();
   }
 }

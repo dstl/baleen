@@ -7,6 +7,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,7 +17,7 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
+import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.testing.TestingUtils;
 
@@ -42,7 +44,7 @@ public class MetricsFactoryTest {
   }
 
   @Test
-  public void testComponents() throws BaleenException {
+  public void testComponents() throws BaleenException, IOException {
     metrics.configure(new YamlConfiguration());
     metrics.start();
     metrics.getCounter(MetricsFactoryTest.class, "removeC");
@@ -145,7 +147,7 @@ public class MetricsFactoryTest {
   @Test
   public void testConfiguration() throws Exception {
     YamlConfiguration configuration =
-        YamlConfiguration.readFromResource(MetricsFactoryTest.class, "reporters.yaml");
+        new YamlConfiguration(MetricsFactoryTest.class, "reporters.yaml");
     metrics.configure(configuration);
 
     metrics.start();

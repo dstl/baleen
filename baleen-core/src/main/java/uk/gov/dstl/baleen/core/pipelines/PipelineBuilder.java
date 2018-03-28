@@ -1,6 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.pipelines;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +9,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import org.apache.uima.UIMAException;
@@ -26,7 +29,8 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.resource.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
+
+import com.google.common.collect.ImmutableSet;
 
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.history.logging.LoggingBaleenHistory;
@@ -34,7 +38,6 @@ import uk.gov.dstl.baleen.core.pipelines.orderers.IPipelineOrderer;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.core.utils.BuilderUtils;
-import uk.gov.dstl.baleen.core.utils.YamlConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.exceptions.MissingParameterException;
@@ -111,6 +114,17 @@ import uk.gov.dstl.baleen.exceptions.MissingParameterException;
  * @baleen.javadoc
  */
 public class PipelineBuilder {
+
+  protected static final String CONSUMERS_KEY = "consumers";
+
+  protected static final String ANNOTATORS_KEY = "annotators";
+
+  protected static final String COLLECTION_READER_KEY = "collectionreader";
+
+  protected static final String ORDERER_KEY = "orderer";
+
+  protected static final String CLASS = "class";
+
   /** Key for the configuration parameter holding the pipeline name */
   public static final String PIPELINE_NAME = "__pipelineName";
   /** Key for the configuration parameter holding the annotator UUID */
@@ -120,12 +134,12 @@ public class PipelineBuilder {
   /** Metadata key for storing the original YAML configuration */
   public static final String ORIGINAL_CONFIG = "__originalConfig";
 
-  private static final List<String> ignoreParams = new ArrayList<>(Arrays.asList("class"));
+  private static final List<String> ignoreParams = new ArrayList<>(Arrays.asList(CLASS));
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PipelineBuilder.class);
 
   protected final String name;
-  protected final String yaml;
+  protected final PipelineConfiguration yaml;
 
   protected Map<String, Object> globalConfig;
   protected Map<String, Object> collectionReaderConfig;
@@ -141,8 +155,21 @@ public class PipelineBuilder {
    *
    * @param name Pipeline name
    * @param yaml Pipeline YAML
+   * @throws IOException
+   * @deprecated Use {@link PipelineBuilder#PipelineBuilder(String, PipelineConfiguration)}
    */
-  public PipelineBuilder(String name, String yaml) {
+  @Deprecated
+  public PipelineBuilder(String name, String yaml) throws IOException {
+    this(name, new YamlPiplineConfiguration(yaml));
+  }
+
+  /**
+   * Construct a PipelineBuilder from the name and YAML
+   *
+   * @param name Pipeline name
+   * @param yaml Pipeline YAML
+   */
+  public PipelineBuilder(String name, PipelineConfiguration yaml) {
     this.name = name;
     this.yaml = yaml;
   }
@@ -200,7 +227,7 @@ public class PipelineBuilder {
    * Take a number of parameters and return a pipeline (or sub-class)
    *
    * @param name Pipeline name
-   * @param yaml Original YAML
+   * @param config baleen configuration
    * @param orderer Pipeline orderer to use
    * @param collectionReader Collection reader to use
    * @param annotators List of annotators (can be empty)
@@ -209,77 +236,66 @@ public class PipelineBuilder {
    */
   protected BaleenPipeline toPipeline(
       String name,
-      String yaml,
+      PipelineConfiguration config,
       IPipelineOrderer orderer,
       CollectionReader collectionReader,
       List<AnalysisEngine> annotators,
       List<AnalysisEngine> consumers) {
-    return new BaleenPipeline(name, yaml, orderer, collectionReader, annotators, consumers);
+    return new BaleenPipeline(name, config, orderer, collectionReader, annotators, consumers);
   }
 
-  /** Read configuration into the class variables */
+  /**
+   * Read configuration into the class variables
+   *
+   * @throws BaleenException if error reading configuration
+   */
   @SuppressWarnings("unchecked")
-  protected void readConfiguration() {
+  protected void readConfiguration() throws BaleenException {
     LOGGER.debug("Reading configuration");
-    Yaml y = new Yaml();
-    String cleanYaml = YamlConfiguration.cleanTabs(yaml);
-    globalConfig = (Map<String, Object>) y.load(cleanYaml);
 
-    pipelineOrderer = BuilderUtils.getClassNameFromConfig(globalConfig.remove("orderer"));
+    pipelineOrderer = yaml.get(ORDERER_KEY, BaleenDefaults.DEFAULT_ORDERER);
 
-    Object s = globalConfig.remove("collectionreader");
-    if (s instanceof String) {
+    Optional<Object> s = yaml.get(COLLECTION_READER_KEY);
+    if (!s.isPresent()) {
+      throw new BaleenException("A Collection Reader must be specified");
+    }
+    Object collectionReaderRaw = s.get();
+    if (collectionReaderRaw instanceof String) {
       collectionReaderConfig = new HashMap<>();
-      collectionReaderConfig.put("class", s);
+      collectionReaderConfig.put(CLASS, collectionReaderRaw);
+    } else if (collectionReaderRaw instanceof List) {
+      List<?> collectionReaderList = (List<?>) collectionReaderRaw;
+      if (collectionReaderList.size() != 1) {
+        throw new BaleenException("Only one collection reader is allowed");
+      }
+      collectionReaderConfig = (Map<String, Object>) collectionReaderList.get(0);
     } else {
-      collectionReaderConfig = (Map<String, Object>) s;
+      collectionReaderConfig = (Map<String, Object>) collectionReaderRaw;
     }
 
-    annotatorsConfig = (List<Object>) globalConfig.remove("annotators");
-    consumersConfig = (List<Object>) globalConfig.remove("consumers");
+    annotatorsConfig = yaml.getAsList(ANNOTATORS_KEY);
+    consumersConfig = yaml.getAsList(CONSUMERS_KEY);
 
-    globalConfig = BuilderUtils.flattenConfig(null, globalConfig);
+    globalConfig = yaml.flatten(getLocalKeys());
     globalConfig.put(PIPELINE_NAME, name);
   }
 
-  /** Create a new pipeline orderer */
-  private IPipelineOrderer createPipelineOrderer() {
-    if (pipelineOrderer == null) {
-      LOGGER.info("Pipeline orderer not specified - default will be used");
-      return getDefaultPipelineOrderer();
-    }
+  protected Set<String> getLocalKeys() {
+    return ImmutableSet.of(ORDERER_KEY, COLLECTION_READER_KEY, ANNOTATORS_KEY, CONSUMERS_KEY);
+  }
 
+  /**
+   * Create a new pipeline orderer
+   *
+   * @throws BaleenException
+   */
+  private IPipelineOrderer createPipelineOrderer() {
     Class<?> c;
     try {
       c = BuilderUtils.getClassFromString(pipelineOrderer, getDefaultOrdererPackage());
-    } catch (InvalidParameterException ipe) {
-      LOGGER.warn("Couldn't find specified orderer - default will be used", ipe);
-      return getDefaultPipelineOrderer();
-    }
-
-    if (!(IPipelineOrderer.class.isAssignableFrom(c))) {
-      LOGGER.warn(
-          "Specified orderer does not implement IPipelineOrderer interface - default will be used");
-      return getDefaultPipelineOrderer();
-    }
-
-    try {
       return (IPipelineOrderer) c.newInstance();
-    } catch (Exception e) {
-      LOGGER.error(
-          "Specified orderer does not implement IPipelineOrderer interface - default will be used",
-          e);
-      return getDefaultPipelineOrderer();
-    }
-  }
-
-  private IPipelineOrderer getDefaultPipelineOrderer() {
-    try {
-      return (IPipelineOrderer) Class.forName(BaleenDefaults.DEFAULT_ORDERER).newInstance();
-    } catch (Exception e) {
-      LOGGER.error(
-          "Unable to create default pipeline orderer, pipeline will run in order specified in configuration",
-          e);
+    } catch (InvalidParameterException | InstantiationException | IllegalAccessException ipe) {
+      LOGGER.warn("Couldn't find or use specified orderer " + pipelineOrderer, ipe);
       return new NoOpOrderer();
     }
   }
@@ -287,13 +303,13 @@ public class PipelineBuilder {
   /** Configure a new history resource object */
   @SuppressWarnings("unchecked")
   private ExternalResourceDescription configureHistory() {
-    String historyClass = (String) globalConfig.get("history.class");
+    Optional<String> historyClass = yaml.get("history.class");
 
     Class<? extends BaleenHistory> clazz = null;
 
-    if (historyClass != null) {
+    if (historyClass.isPresent()) {
       try {
-        clazz = (Class<? extends BaleenHistory>) Class.forName(historyClass);
+        clazz = (Class<? extends BaleenHistory>) Class.forName(historyClass.get());
       } catch (ClassNotFoundException | ClassCastException e) {
         LOGGER.warn("Unable to find perferred history implementation {}", historyClass, e);
       }

@@ -136,13 +136,12 @@ public class UbmreDependency extends AbstractInteractionBasedRelationshipAnnotat
                           .anyMatch(p -> p.getPartOfSpeech().startsWith("V"));
 
                   final Collection<Entity> c = e.getValue();
-                  return createMeshedRelations(jCas, i, c, 1.0f)
+                  return createMeshedRelations(jCas, i, c, confidence)
                       .filter(Objects::nonNull)
                       .filter(
                           r ->
                               // Filter applies RD2: If a verb then we interaction should be between
-                              // the two
-                              // entities
+                              // the two entities
                               !interactionIsVerb
                                   || AnnotationUtils.isInBetween(r, r.getSource(), r.getTarget()));
                 });
@@ -163,22 +162,24 @@ public class UbmreDependency extends AbstractInteractionBasedRelationshipAnnotat
       final Multimap<Interaction, Entity> interactionToEntities,
       final Entity entity) {
     return (d, f, t, h) -> {
-      if (f == null) // When starting allow it to carry on
-      return true;
+      if (f == null) {
+        return true;
+      }
 
-      if ("punct".equalsIgnoreCase(d.getDependencyType())) // Don't traverse punctuation
-      return false;
+      if ("punct".equalsIgnoreCase(d.getDependencyType())) {
+        return false;
+      }
 
       final boolean previousVerb =
-          h.stream()
-              .map(WordToken::getPartOfSpeech)
-              .anyMatch(s -> s.startsWith("V")); // Can we traverse to this node
+          h.stream().map(WordToken::getPartOfSpeech).anyMatch(s -> s.startsWith("V")); // Can we
+      // traverse
+      // to this
+      // node
       if (carryOn(previousVerb, t)) {
         final Collection<Interaction> interactions = tokenToInteraction.get(t);
-        if (interactions != null
-            && !interactions
-                .isEmpty()) // We've reached an interaction word, store our connection to it
-        interactions.forEach(i -> interactionToEntities.put(i, entity));
+        if (interactions != null && !interactions.isEmpty()) {
+          interactions.forEach(i -> interactionToEntities.put(i, entity));
+        }
 
         return true;
       } else {

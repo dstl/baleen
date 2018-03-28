@@ -20,7 +20,7 @@ public class WebPermission {
    * @param authenticated is an authenticated user required?
    */
   public WebPermission(String name, boolean authenticated) {
-    this(name, authenticated, null, new String[] {});
+    this(name, authenticated, null);
   }
 
   /**

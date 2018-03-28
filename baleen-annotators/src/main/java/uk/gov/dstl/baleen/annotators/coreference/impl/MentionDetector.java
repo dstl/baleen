@@ -125,7 +125,7 @@ public class MentionDetector {
   }
 
   private List<WordToken> identifyHeadCandidates(List<WordToken> words) {
-    final List<WordToken> candidates = new LinkedList<WordToken>();
+    final List<WordToken> candidates = new LinkedList<>();
 
     for (final WordToken word : words) {
       if (word.getPartOfSpeech().startsWith("N")) {
@@ -152,7 +152,7 @@ public class MentionDetector {
     JCasUtil.indexCovering(jCas, Entity.class, PhraseChunk.class)
         .values()
         .stream()
-        .flatMap(e -> e.stream())
+        .flatMap(Collection::stream)
         .forEach(phrases::remove);
 
     final Map<PhraseChunk, Collection<WordToken>> phraseToWord =

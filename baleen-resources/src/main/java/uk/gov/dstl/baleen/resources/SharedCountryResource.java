@@ -16,8 +16,10 @@ import org.apache.uima.resource.ResourceSpecifier;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 
 import uk.gov.dstl.baleen.uima.BaleenResource;
+import uk.gov.dstl.baleen.uima.UimaMonitor;
 
 /**
  * A shared resource that provides access to JSON and GeoJSON files pertaining to country
@@ -25,9 +27,10 @@ import uk.gov.dstl.baleen.uima.BaleenResource;
  * allow for retrieval of more information from the JSON files.
  */
 public class SharedCountryResource extends BaleenResource {
-  private Map<String, String> demonyms = null;
-  private Map<String, String> geoJson = null;
-  private Map<String, String> countryNames = null;
+
+  private static Map<String, String> demonyms = null;
+  private static Map<String, String> geoJson = null;
+  private static Map<String, String> countryNames = null;
 
   private static final String PROPERTIES = "properties";
 
@@ -35,59 +38,93 @@ public class SharedCountryResource extends BaleenResource {
   protected boolean doInitialize(ResourceSpecifier specifier, Map<String, Object> additionalParams)
       throws ResourceInitializationException {
     ObjectMapper mapper = new ObjectMapper();
-
-    loadCountriesJson(mapper);
-    loadCountriesGeoJson(mapper);
-
+    synchronized (this) {
+      UimaMonitor monitor = getMonitor();
+      if (demonyms == null) {
+        monitor.info("Shared country resource initialising");
+        JsonNode countriesJson = loadCountriesJson(mapper, monitor);
+        countryNames = ImmutableMap.copyOf(loadCountryNames(countriesJson, monitor));
+        demonyms = ImmutableMap.copyOf(loadDemonyms(countriesJson, monitor));
+        geoJson = ImmutableMap.copyOf(loadCountriesGeoJson(mapper, monitor));
+      } else {
+        monitor.info("Shared country resource already initialised");
+      }
+    }
     return true;
   }
 
-  private void loadCountriesJson(ObjectMapper mapper) throws ResourceInitializationException {
-    try (InputStream is = getClass().getResourceAsStream("countries/countries.json"); ) {
-      JsonNode rootNode = mapper.readTree(is);
+  private static JsonNode loadCountriesJson(ObjectMapper mapper, UimaMonitor uimaMonitor)
+      throws ResourceInitializationException {
+    try (InputStream is =
+        SharedCountryResource.class.getResourceAsStream("countries/countries.json"); ) {
+      return mapper.readTree(is);
 
-      Iterator<JsonNode> iter = rootNode.elements();
-
-      demonyms = new HashMap<>();
-      countryNames = new HashMap<>();
-
-      while (iter.hasNext()) {
-        JsonNode node = iter.next();
-
-        String demonym = getProperty(node, "demonym").toLowerCase();
-        String cca3 = getProperty(node, "cca3").toUpperCase();
-
-        if (demonym.isEmpty() || cca3.isEmpty()) {
-          getMonitor().warn("Empty demonym or country code found - entry will be skipped");
-          continue;
-        }
-
-        demonyms.put(demonym, cca3);
-
-        for (String name : getNames(node.path("name"))) {
-          countryNames.put(name, cca3);
-        }
-      }
-      getMonitor().info("{} nationalities read", demonyms.size());
     } catch (IOException ioe) {
-      getMonitor().error("Unable to read nationalities from countries.json", ioe);
+      uimaMonitor.error("Unable to read nationalities from countries.json", ioe);
       throw new ResourceInitializationException(ioe);
     }
   }
 
-  private void loadCountriesGeoJson(ObjectMapper mapper) throws ResourceInitializationException {
-    try (InputStream is = getClass().getResourceAsStream("countries/countries.geojson"); ) {
+  private static Map<String, String> loadCountryNames(JsonNode rootNode, UimaMonitor uimaMonitor) {
+
+    Iterator<JsonNode> iter = rootNode.elements();
+
+    Map<String, String> countryNames = new HashMap<>();
+
+    while (iter.hasNext()) {
+      JsonNode node = iter.next();
+      String cca3 = getProperty(node, "cca3").toUpperCase();
+
+      if (node == null || cca3.isEmpty()) {
+        uimaMonitor.warn("Empty country code found - entry will be skipped");
+        continue;
+      }
+
+      for (String name : getNames(node.path("name"))) {
+        countryNames.put(name, cca3);
+      }
+    }
+    uimaMonitor.info("{} country names read", countryNames.size());
+    return countryNames;
+  }
+
+  private static Map<String, String> loadDemonyms(JsonNode rootNode, UimaMonitor uimaMonitor) {
+    Iterator<JsonNode> iter = rootNode.elements();
+
+    demonyms = new HashMap<>();
+
+    while (iter.hasNext()) {
+      JsonNode node = iter.next();
+
+      String demonym = getProperty(node, "demonym").toLowerCase();
+      String cca3 = getProperty(node, "cca3").toUpperCase();
+
+      if (demonym.isEmpty() || cca3.isEmpty()) {
+        uimaMonitor.warn("Empty demonym or country code found - entry will be skipped");
+        continue;
+      }
+
+      demonyms.put(demonym, cca3);
+    }
+    uimaMonitor.info("{} nationalities read", demonyms.size());
+    return demonyms;
+  }
+
+  private static Map<String, String> loadCountriesGeoJson(
+      ObjectMapper mapper, UimaMonitor uimaMonitor) throws ResourceInitializationException {
+    try (InputStream is =
+        SharedCountryResource.class.getResourceAsStream("countries/countries.geojson"); ) {
       JsonNode rootNode = mapper.readTree(is);
 
       Iterator<JsonNode> iter = rootNode.path("features").elements();
 
-      geoJson = new HashMap<>();
+      Map<String, String> geoJson = new HashMap<>();
 
       while (iter.hasNext()) {
         JsonNode node = iter.next();
 
         if (!node.has(PROPERTIES)) {
-          getMonitor().warn("No properties found for entry - entry will be skipped");
+          uimaMonitor.warn("No properties found for entry - entry will be skipped");
           continue;
         }
 
@@ -95,26 +132,25 @@ public class SharedCountryResource extends BaleenResource {
         String geojson = getProperty(node, "geometry");
 
         if (geojson.isEmpty() || cca3.isEmpty()) {
-          getMonitor()
-              .warn(
-                  "Empty country code or GeoJSON found - entry will not have GeoJSON information");
+          uimaMonitor.warn(
+              "Empty country code or GeoJSON found - entry will not have GeoJSON information");
         } else if ("-99".equals(cca3)) {
-          getMonitor()
-              .warn(
-                  "Generic country code -99 found - entry {} will not have GeoJSON information",
-                  getProperty(node.path(PROPERTIES), "ADMIN"));
+          uimaMonitor.warn(
+              "Generic country code -99 found - entry {} will not have GeoJSON information",
+              getProperty(node.path(PROPERTIES), "ADMIN"));
         } else {
           geoJson.put(cca3, geojson);
         }
       }
-      getMonitor().info("{} countries read", geoJson.size());
+      uimaMonitor.info("{} countries read", geoJson.size());
+      return geoJson;
     } catch (IOException ioe) {
-      getMonitor().error("Unable to read countries from countries.geojson", ioe);
+      uimaMonitor.error("Unable to read countries from countries.geojson", ioe);
       throw new ResourceInitializationException(ioe);
     }
   }
 
-  private String getProperty(JsonNode node, String propertyName) {
+  private static String getProperty(JsonNode node, String propertyName) {
     if (node != null && node.has(propertyName)) {
       JsonNode property = node.get(propertyName);
       if (property == null) {
@@ -130,19 +166,13 @@ public class SharedCountryResource extends BaleenResource {
     }
   }
 
-  private List<String> getNames(JsonNode node) {
+  private static List<String> getNames(JsonNode node) {
     List<String> names = new ArrayList<>();
 
     names.addAll(node.findValuesAsText("common"));
     names.addAll(node.findValuesAsText("official"));
 
     return names.stream().filter(s -> !Strings.isNullOrEmpty(s)).collect(Collectors.toList());
-  }
-
-  @Override
-  protected void doDestroy() {
-    demonyms = null;
-    geoJson = null;
   }
 
   /**

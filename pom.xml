@@ -1,214 +1,263 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>uk.gov.dstl.baleen</groupId>
-	<artifactId>baleen</artifactId>
-	<version>2.5.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<name>Baleen</name>
-	<description>Structured information from unstructured data</description>
-	<url>http://github.com/dstl/baleen</url>
-	<inceptionYear>2015</inceptionYear>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>uk.gov.dstl.baleen</groupId>
+  <artifactId>baleen</artifactId>
+  <version>2.6.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Baleen</name>
+  <description>Structured information from unstructured data</description>
+  <url>http://github.com/dstl/baleen</url>
+  <inceptionYear>2015</inceptionYear>
 
-	<licenses>
-		<license>
-			<name>Apache License 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
-		</license>
-	</licenses>
+  <licenses>
+    <license>
+      <name>Apache License 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
 
-	<scm>
-		<url>http://github.com/dstl/baleen</url>
-		<connection>scm:git:git://github.com/dstl/baleen.git</connection>
-	</scm>
+  <scm>
+    <url>http://github.com/dstl/baleen</url>
+    <connection>scm:git:git://github.com/dstl/baleen.git</connection>
+  </scm>
 
-	<developers>
-		<developer>
-			<name>James Baker</name>
-		</developer>
-		<developer>
-			<name>Chris Flatley</name>
-		</developer>
-		<developer>
-			<name>Rich Brantingham</name>
-		</developer>
-		<developer>
-			<name>Alan Knox</name>
-		</developer>
-	</developers>
-	
-	<prerequisites>
-		<maven>3.0.1</maven>
-	</prerequisites>
+  <developers>
+    <developer>
+      <name>James Baker</name>
+    </developer>
+    <developer>
+      <name>Chris Flatley</name>
+    </developer>
+    <developer>
+      <name>Rich Brantingham</name>
+    </developer>
+    <developer>
+      <name>Alan Knox</name>
+    </developer>
+  </developers>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  <prerequisites>
+    <maven>3.0.1</maven>
+  </prerequisites>
 
-		<baleen.version>2.5.0-SNAPSHOT</baleen.version>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<!-- Dependencies -->
-		<activemq.version>5.15.3</activemq.version>
-		<ahocorasick.version>0.4.0</ahocorasick.version>
-		<commonscli.version>1.4</commonscli.version>
-		<commonslang3.version>3.7</commonslang3.version>
-		<concurrenttrees.version>2.6.1</concurrenttrees.version>
-		<elasticsearch.version>5.6.7</elasticsearch.version>
-		<evoinflector.version>1.2.2</evoinflector.version>
-		<extjwnl.version>1.9.4</extjwnl.version>
-		<extjwnldata.version>1.2</extjwnldata.version>
-		<fastclasspathscanner.version>2.18.1</fastclasspathscanner.version>
-		<gremlin.version>3.3.1</gremlin.version>
-		<guava.version>24.0-jre</guava.version>
-		<h2.version>1.4.196</h2.version>
-		<httpclient.version>4.5.5</httpclient.version>
-		<httpcore.version>4.4.9</httpcore.version>
-		<jackson.version>2.9.4</jackson.version>
-		<javamail.version>1.6.1</javamail.version>
-		<javassist.version>3.20.0-GA</javassist.version>
-		<jetty.version>9.3.22.v20171030</jetty.version>
-		<jmustache.version>1.14</jmustache.version>
-		<jsonic.version>1.3.10</jsonic.version>
-		<jsoup.version>1.11.2</jsoup.version>
-		<jung.version>2.1.1</jung.version>
-		<krill.version>1.0.3</krill.version>
-		<languagedetector.version>0.6</languagedetector.version>
-		<logback.version>1.2.3</logback.version>
-		<maltparser.version>1.9.2</maltparser.version>
-		<mboxiterator.version>0.8.1</mboxiterator.version>
-		<metrics.version>3.0.2</metrics.version>
-		<metrics-elasticsearch.version>2.2.0</metrics-elasticsearch.version>
-		<mongodb.version>3.5.0</mongodb.version>
-		<opencsv.version>4.1</opencsv.version>
-		<opennlp.version>1.8.4</opennlp.version>
-		<postgres.version>42.2.1</postgres.version>
-		<slf4j.version>1.7.25</slf4j.version>
-		<snakeyaml.version>1.19</snakeyaml.version>
-		<uimafit.version>2.4.0</uimafit.version>
-		
-		<!-- Testing -->
-		<fongo.version>2.1.1</fongo.version>
-		<greenmail.version>1.5.7</greenmail.version>
-		<junit.version>4.12</junit.version>
-		<jts.version>1.13</jts.version>
-		<log4j.version>2.10.0</log4j.version>
-		<mockito.version>2.15.0</mockito.version>
-		<spatial4j.version>0.6</spatial4j.version>
-		
-		<!-- Build and Reporting -->
-		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
-		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
-		<maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
-		<maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
-		<maven-spotless.version>1.0.0.BETA4</maven-spotless.version>
-	</properties>
+    <baleen.version>2.6.0-SNAPSHOT</baleen.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
 
-	<dependencies>
-		<!-- General utilities -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency>
+    <!-- Dependencies -->
+    <activemq.version>5.15.3</activemq.version>
+    <ahocorasick.version>0.4.0</ahocorasick.version>
+    <commonscli.version>1.4</commonscli.version>
+    <commonsemail.version>1.5</commonsemail.version>
+    <commonsio.version>2.6</commonsio.version>
+    <commonslang3.version>3.7</commonslang3.version>
+    <concurrenttrees.version>2.6.1</concurrenttrees.version>
+    <elasticsearch.version>5.6.7</elasticsearch.version>
+    <evoinflector.version>1.2.2</evoinflector.version>
+    <extjwnl.version>1.9.4</extjwnl.version>
+    <extjwnldata.version>1.2</extjwnldata.version>
+    <fastclasspathscanner.version>2.18.1</fastclasspathscanner.version>
+    <geojson-jackson.version>1.8</geojson-jackson.version>
+    <gremlin.version>3.3.1</gremlin.version>
+    <guava.version>24.0-jre</guava.version>
+    <h2.version>1.4.196</h2.version>
+    <httpclient.version>4.5.5</httpclient.version>
+    <httpcore.version>4.4.9</httpcore.version>
+    <jackson.version>2.9.4</jackson.version>
+    <javamail.version>1.6.1</javamail.version>
+    <javassist.version>3.20.0-GA</javassist.version>
+    <jest.version>2.4.0</jest.version>
+    <jetty.version>9.4.7.v20170914</jetty.version>
+    <jmustache.version>1.14</jmustache.version>
+    <jsonic.version>1.3.10</jsonic.version>
+    <jsoup.version>1.11.2</jsoup.version>
+    <jung.version>2.1.1</jung.version>
+    <krill.version>1.0.3</krill.version>
+    <languagedetector.version>0.6</languagedetector.version>
+    <logback.version>1.2.3</logback.version>
+    <maltparser.version>1.9.2</maltparser.version>
+    <mboxiterator.version>0.8.1</mboxiterator.version>
+    <metrics.version>3.0.2</metrics.version>
+    <metrics-elasticsearch.version>2.2.0</metrics-elasticsearch.version>
+    <mongodb.version>3.5.0</mongodb.version>
+    <opencsv.version>4.1</opencsv.version>
+    <opennlp.version>1.8.4</opennlp.version>
+    <postgres.version>42.2.1</postgres.version>
+    <reflections.version>0.9.11</reflections.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <snakeyaml.version>1.19</snakeyaml.version>
+    <uimafit.version>2.4.0</uimafit.version>
 
-		<!-- UIMA -->
-		<dependency>
-			<groupId>org.apache.uima</groupId>
-			<artifactId>uimafit-core</artifactId>
-			<version>${uimafit.version}</version>
-		</dependency>
 
-		<!-- Testing -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>${mockito.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <!-- Testing -->
+    <fongo.version>2.1.1</fongo.version>
+    <greenmail.version>1.5.7</greenmail.version>
+    <junit.version>4.12</junit.version>
+    <jts.version>1.13</jts.version>
+    <log4j.version>2.10.0</log4j.version>
+    <mockito.version>2.15.0</mockito.version>
+    <spatial4j.version>0.6</spatial4j.version>
+    <testcontainers.version>1.5.1</testcontainers.version>
 
-	<build>
-		<plugins>
+    <skip.unit.tests>${skipTests}</skip.unit.tests>
+    <skip.integration.tests>true</skip.integration.tests>
 
-			<!-- Compiler -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven-compiler-plugin.version}</version>
-			</plugin>
+    <!-- Build and Reporting -->
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+    <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+    <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+    <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
+    <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>${maven-surefire-plugin.version}</maven-failsafe-plugin.version>
+    <maven-spotless.version>1.0.0.BETA4</maven-spotless.version>
+  </properties>
 
-			<!-- Javadocs plugin -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>${maven-javadoc-plugin.version}</version>
-				<configuration>
-					<additionalparam>-Xdoclint:none</additionalparam>
-					<taglets>
-						<taglet>
-							<tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>
-							<tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>
-							<tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>
-							<tagletArtifact>
-								<groupId>uk.gov.dstl.baleen</groupId>
-								<artifactId>baleen-javadoc</artifactId>
-								<version>${baleen.version}</version>
-							</tagletArtifact>
-						</taglet>
-					</taglets>
-				</configuration>
-			</plugin>
-			<!--  formatter -->
-			<plugin>
-				<groupId>com.diffplug.spotless</groupId>
-				<artifactId>spotless-maven-plugin</artifactId>
-				<version>${maven-spotless.version}</version>
-				<configuration>
-					<java>
-						<googleJavaFormat>
-							<style>GOOGLE</style>
-						</googleJavaFormat>
-						<removeUnusedImports />
-						<importOrder>
-							<order>java,javax,org,com,uk</order>
-						</importOrder>
-					</java>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>apply</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+  <dependencies>
+    <!-- General utilities -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commonsio.version}</version>
+    </dependency>
 
-	<modules>
-		<module>baleen-core</module>
-		<module>baleen-annotators</module>
-		<module>baleen-uima</module>
-		<module>baleen-resources</module>
-		<module>baleen-collectionreaders</module>
-		<module>baleen-consumers</module>
-		<module>baleen-runner</module>
-		<module>baleen-history</module>
-		<module>baleen-javadoc</module>
-		<module>baleen-jobs</module>
-		<module>baleen-orderers</module>
-	</modules>
+    <!-- UIMA -->
+    <dependency>
+      <groupId>org.apache.uima</groupId>
+      <artifactId>uimafit-core</artifactId>
+      <version>${uimafit.version}</version>
+    </dependency>
+
+    <!-- Testing -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>${mockito.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+
+      <!-- Compiler -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven-surefire-plugin.version}</version>
+        <configuration>
+          <skipTests>${skip.unit.tests}</skipTests>
+          <excludes>
+            <exclude>**/*IT.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+
+      <!-- Javadocs plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${maven-javadoc-plugin.version}</version>
+        <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
+          <taglets>
+            <taglet>
+              <tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>
+              <tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>
+              <tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>
+              <tagletArtifact>
+                <groupId>uk.gov.dstl.baleen</groupId>
+                <artifactId>baleen-javadoc</artifactId>
+                <version>${baleen.version}</version>
+              </tagletArtifact>
+            </taglet>
+          </taglets>
+        </configuration>
+      </plugin>
+
+      <!-- Integration testing -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <skipITs>${skip.integration.tests}</skipITs>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- formatter -->
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>${maven-spotless.version}</version>
+        <configuration>
+          <java>
+            <googleJavaFormat>
+              <style>GOOGLE</style>
+            </googleJavaFormat>
+            <removeUnusedImports />
+            <importOrder>
+              <order>java,javax,org,com,uk</order>
+            </importOrder>
+          </java>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>apply</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
+  </build>
+
+  <modules>
+    <module>baleen-core</module>
+    <module>baleen-annotators</module>
+    <module>baleen-uima</module>
+    <module>baleen-resources</module>
+    <module>baleen-collectionreaders</module>
+    <module>baleen-consumers</module>
+    <module>baleen-runner</module>
+    <module>baleen-history</module>
+    <module>baleen-javadoc</module>
+    <module>baleen-jobs</module>
+    <module>baleen-orderers</module>
+  </modules>
 </project>

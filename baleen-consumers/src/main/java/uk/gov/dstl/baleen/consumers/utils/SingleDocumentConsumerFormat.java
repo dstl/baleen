@@ -4,7 +4,6 @@ package uk.gov.dstl.baleen.consumers.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,7 +58,8 @@ import uk.gov.dstl.baleen.uima.UimaSupport;
  * ...
  * }
  * ]
- * }</pre>
+ * }
+ * </pre>
  *
  * The protective marking set on the DocumentAnnotation is used as the classification of the
  * document, and ProtectiveMarking annotations are ignored. Events are not currently supported.
@@ -91,9 +91,7 @@ public class SingleDocumentConsumerFormat {
       boolean contentHashAsId,
       UimaMonitor monitor,
       UimaSupport support) {
-    Set<String> stopFeatures = new HashSet<>();
-    stopFeatures.add("uima.cas.AnnotationBase:sofa");
-    stopFeatures.add("uk.gov.dstl.baleen.types.BaleenAnnotation:internalId");
+    Set<String> stopFeatures = ConsumerUtils.getDefaultStopFeatures();
 
     Map<String, Object> output = new HashMap<>();
     EntityRelationConverter entityRelationConverter =
@@ -107,7 +105,7 @@ public class SingleDocumentConsumerFormat {
     }
 
     // Document Annotations
-    DocumentAnnotation da = support.getDocumentAnnotation(jCas);
+    DocumentAnnotation da = UimaSupport.getDocumentAnnotation(jCas);
     output.putAll(createDocumentAnnotationMap(da));
 
     String id = ConsumerUtils.getExternalId(da, contentHashAsId);

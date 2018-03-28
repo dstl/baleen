@@ -27,8 +27,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.google.common.collect.ImmutableList;
 import com.mongodb.client.MongoCollection;
 
+import uk.gov.dstl.baleen.annotators.testing.Annotations;
+import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
 import uk.gov.dstl.baleen.consumers.utils.DefaultFields;
 import uk.gov.dstl.baleen.consumers.utils.IEntityConverterFields;
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
@@ -44,7 +47,6 @@ import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Location;
-import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
@@ -266,25 +268,11 @@ public class MongoTest extends ConsumerTestBase {
     jCas.setDocumentText(
         "James went to London on 19th February 2015. His e-mail address is james@example.com");
 
-    Person p = new Person(jCas);
-    p.setBegin(0);
-    p.setEnd(5);
-    p.setValue(PERSON);
-    p.addToIndexes();
-
-    Location l = new Location(jCas);
-    l.setBegin(14);
-    l.setEnd(20);
-    l.setValue(LONDON);
-    l.setGeoJson("{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
-    l.addToIndexes();
-
-    Temporal dt = new Temporal(jCas);
-    dt.setBegin(24);
-    dt.setEnd(42);
+    Annotations.createPerson(jCas, 0, 5, PERSON);
+    Annotations.createLocation(
+        jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
+    Temporal dt = Annotations.createTemporal(jCas, 24, 42, DATE);
     dt.setConfidence(1.0);
-    dt.setValue(DATE);
-    dt.addToIndexes();
 
     CommsIdentifier ci = new CommsIdentifier(jCas);
     ci.setBegin(66);
@@ -316,7 +304,7 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(0, person.get(BEGIN));
     assertEquals(5, person.get(END));
     assertEquals(0.0, person.get(CONFIDENCE));
-    assertEquals("Person", person.get(TYPE));
+    assertEquals(Person.class.getSimpleName(), person.get(TYPE));
     assertEquals(PERSON, person.get(VALUE));
 
     Document b = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, LONDON)).first();
@@ -325,7 +313,7 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(14, location.get(BEGIN));
     assertEquals(20, location.get(END));
     assertEquals(0.0, location.get(CONFIDENCE));
-    assertEquals("Location", location.get(TYPE));
+    assertEquals(Location.class.getSimpleName(), location.get(TYPE));
     assertEquals(LONDON, location.get(VALUE));
 
     assertEquals("Point", ((Document) location.get("geoJson")).get(TYPE));
@@ -339,7 +327,7 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(24, date.get(BEGIN));
     assertEquals(42, date.get(END));
     assertEquals(1.0, date.get(CONFIDENCE));
-    assertEquals("Temporal", date.get(TYPE));
+    assertEquals(Temporal.class.getSimpleName(), date.get(TYPE));
     assertEquals(DATE, date.get(VALUE));
 
     Document d = entities.find(new Document(Mongo.FIELD_ENTITIES + "." + VALUE, EMAIL)).first();
@@ -348,7 +336,7 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(66, email.get(BEGIN));
     assertEquals(83, email.get(END));
     assertEquals(0.0, email.get(CONFIDENCE));
-    assertEquals("CommsIdentifier", email.get(TYPE));
+    assertEquals(CommsIdentifier.class.getSimpleName(), email.get(TYPE));
     assertEquals("email", email.get("subType"));
     assertEquals(EMAIL, email.get(VALUE));
 
@@ -369,29 +357,19 @@ public class MongoTest extends ConsumerTestBase {
   public void testReferenceTargets() throws AnalysisEngineProcessException {
     jCas.setDocumentText("Bill went to London. William came back.");
 
-    ReferenceTarget rt = new ReferenceTarget(jCas);
-    rt.addToIndexes();
-
-    Person p = new Person(jCas);
-    p.setBegin(0);
-    p.setEnd(4);
-    p.setValue("Bill");
-    p.addToIndexes();
-    p.setReferent(rt);
-
-    Person q = new Person(jCas);
-    q.setBegin(21);
-    q.setEnd(28);
-    q.setValue(NAME_2);
-    q.addToIndexes();
-    q.setReferent(rt);
+    Person p = Annotations.createPerson(jCas, 0, 4, "Bill");
+    Person q = Annotations.createPerson(jCas, 21, 28, NAME_2);
+    Annotations.createReferenceTarget(jCas, p, q);
 
     ae.process(jCas);
     assertEquals(1, documents.count());
     assertEquals(1, entities.count());
 
-    Document a = (Document) entities.find().first();
+    Document a = entities.find().first();
     assertEquals(2, ((List<Object>) a.get(Mongo.FIELD_ENTITIES)).size());
+    assertEquals(2, ((List<Object>) a.get(Mongo.FIELD_ENTITIES)).size());
+    assertEquals(
+        ConsumerUtils.getExternalId(ImmutableList.of(p, q)), a.getString(fields.getExternalId()));
   }
 
   @SuppressWarnings("unchecked")
@@ -399,17 +377,8 @@ public class MongoTest extends ConsumerTestBase {
   public void testHistory() throws AnalysisEngineProcessException {
     jCas.setDocumentText("Bill went to London. William came back.");
 
-    Person p = new Person(jCas);
-    p.setBegin(0);
-    p.setEnd(4);
-    p.setValue("Bill");
-    p.addToIndexes();
-
-    Person q = new Person(jCas);
-    q.setBegin(21);
-    q.setEnd(28);
-    q.setValue(NAME_2);
-    q.addToIndexes();
+    Person p = Annotations.createPerson(jCas, 0, 4, "Bill");
+    Person q = Annotations.createPerson(jCas, 21, 28, NAME_2);
 
     DocumentHistory documentHistory =
         history.getHistory("unknown:" + getDocumentAnnotation(jCas).getHash());
@@ -444,25 +413,14 @@ public class MongoTest extends ConsumerTestBase {
   public void testRelations() throws Exception {
     jCas.setDocumentText("James went to London on 19th February 2015.");
 
-    Person p = new Person(jCas);
-    p.setBegin(0);
-    p.setEnd(5);
-    p.setValue(PERSON);
-    p.addToIndexes();
+    Person p = Annotations.createPerson(jCas, 0, 5, PERSON);
 
-    Location l = new Location(jCas);
-    l.setBegin(14);
-    l.setEnd(20);
-    l.setValue(LONDON);
-    l.setGeoJson("{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
-    l.addToIndexes();
+    Location l =
+        Annotations.createLocation(
+            jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
 
-    Temporal dt = new Temporal(jCas);
-    dt.setBegin(24);
-    dt.setEnd(42);
+    Temporal dt = Annotations.createTemporal(jCas, 24, 42, DATE);
     dt.setConfidence(1.0);
-    dt.setValue(DATE);
-    dt.addToIndexes();
 
     Relation r = new Relation(jCas);
     r.setBegin(0);
@@ -517,8 +475,8 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(0, relation.get(BEGIN));
     assertEquals(20, relation.get(END));
     assertEquals(0.7, relation.get(CONFIDENCE));
-    assertEquals(person.get("externalId"), relation.get("source"));
-    assertEquals(location.get("externalId"), relation.get("target"));
+    assertEquals(person.get(fields.getExternalId()), relation.get("source"));
+    assertEquals(location.get(fields.getExternalId()), relation.get("target"));
     assertEquals("AT", relation.get("relationshipType"));
     assertEquals("James went to London", relation.get(VALUE));
   }

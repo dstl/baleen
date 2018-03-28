@@ -1,9 +1,10 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -108,19 +109,13 @@ public class MergeAdjacent extends BaleenAnnotator {
       Double lowestConfidence =
           mergeable
               .stream()
-              .min(
-                  new Comparator<Entity>() {
-                    @Override
-                    public int compare(Entity e1, Entity e2) {
-                      return Double.compare(e1.getConfidence(), e2.getConfidence());
-                    }
-                  })
-              .get()
-              .getConfidence();
+              .min((e1, e2) -> Double.compare(e1.getConfidence(), e2.getConfidence()))
+              .map(Entity::getConfidence)
+              .orElse(Double.valueOf(0.0));
 
       // Build a new annotation
       try {
-        Entity merged = type.getConstructor(JCas.class).newInstance(new Object[] {jCas});
+        Entity merged = type.getConstructor(JCas.class).newInstance(jCas);
 
         merged.setBegin(begin);
         merged.setEnd(end);
@@ -140,7 +135,7 @@ public class MergeAdjacent extends BaleenAnnotator {
   }
 
   private List<List<Entity>> findAllEntitiesToMerge(JCas jCas, Class<? extends Entity> type) {
-    List<List<Entity>> mergeables = new LinkedList<List<Entity>>();
+    List<List<Entity>> mergeables = new LinkedList<>();
     Map<Entity, List<Entity>> toMerge = new HashMap<>();
 
     // Create a mapping of annotations to join together
@@ -148,7 +143,9 @@ public class MergeAdjacent extends BaleenAnnotator {
     for (Entity current : entities) {
       List<Entity> following =
           filterEntities(JCasUtil.selectFollowing(jCas, type, current, 1), type);
-      if (following.isEmpty()) continue;
+      if (following.isEmpty()) {
+        continue;
+      }
 
       Entity next = following.get(0);
 
@@ -175,14 +172,7 @@ public class MergeAdjacent extends BaleenAnnotator {
 
   private List<Entity> filterEntities(
       Collection<? extends Entity> entities, Class<? extends Entity> type) {
-    // A better way to do this would be with .collect(),
-    // but there's a bug with the version of JDK we have installed on the Jenkins server that won't
-    // allow that at the moment
-    List<Entity> ret = new ArrayList<>();
-
-    entities.stream().filter(e -> e.getClass().equals(type)).forEach(e -> ret.add(e));
-
-    return ret;
+    return entities.stream().filter(e -> e.getClass().equals(type)).collect(toList());
   }
 
   /** Returns true if e1 should be merged with e2 */

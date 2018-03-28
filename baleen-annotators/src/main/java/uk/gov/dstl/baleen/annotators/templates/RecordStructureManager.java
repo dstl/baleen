@@ -93,7 +93,7 @@ public class RecordStructureManager {
         node.getChildren()
             .stream()
             .filter(c -> current.getType().equals(c.getItem().getClass()))
-            .skip(Math.max(0, current.getIndex() - 1) + adjustment)
+            .skip((long) adjustment + Math.max(0, current.getIndex() - 1))
             .findFirst();
     if (found.isPresent()) {
       return select(found.get(), remaining);

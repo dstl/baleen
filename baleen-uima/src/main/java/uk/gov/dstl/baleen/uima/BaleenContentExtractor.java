@@ -142,7 +142,7 @@ public abstract class BaleenContentExtractor implements IContentExtractor {
    * @return the document annotation
    */
   protected DocumentAnnotation getDocumentAnnotation(JCas jCas) {
-    return getSupport().getDocumentAnnotation(jCas);
+    return UimaSupport.getDocumentAnnotation(jCas);
   }
 
   /**

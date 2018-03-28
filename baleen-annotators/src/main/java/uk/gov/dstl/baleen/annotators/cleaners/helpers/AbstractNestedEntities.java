@@ -35,8 +35,8 @@ public abstract class AbstractNestedEntities<T extends Entity> extends BaleenAnn
 
     Collection<List<T>> annotations = compileEntities(jCas);
 
-    List<MergePair<T>> mergePairs = new LinkedList<MergePair<T>>();
-    Set<T> toRemove = new HashSet<T>();
+    List<MergePair<T>> mergePairs = new LinkedList<>();
+    Set<T> toRemove = new HashSet<>();
 
     for (List<T> entities : annotations) {
       removeNestedEntities(entities, mergePairs, toRemove);

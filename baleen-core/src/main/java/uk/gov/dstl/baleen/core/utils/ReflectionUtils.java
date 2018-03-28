@@ -24,7 +24,7 @@ public class ReflectionUtils {
   /** Return the singleton instance of the classpath scanner object */
   public static ScanResult getInstance() {
     if (scanner == null) {
-      scanner = new FastClasspathScanner();
+      scanner = new FastClasspathScanner("-scala");
     }
 
     if (scanResult == null) {
@@ -37,7 +37,9 @@ public class ReflectionUtils {
   /** Return a set of sub types for the given super type. Scans the full classpath. */
   @SuppressWarnings("unchecked")
   public static <T> Set<Class<? extends T>> getSubTypes(Class<T> superType) {
-    if (scanResult == null) getInstance();
+    if (scanResult == null) {
+      getInstance();
+    }
 
     List<String> classNames;
     if (superType.isInterface()) {

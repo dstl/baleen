@@ -62,7 +62,7 @@ public class JobConfigServlet extends AbstractApiServlet {
     if (!pipeline.isPresent()) {
       respondWithNotFound(resp);
     } else {
-      respond(resp, MediaType.PLAIN_TEXT_UTF_8, pipeline.get().originalYaml());
+      respond(resp, MediaType.PLAIN_TEXT_UTF_8, pipeline.get().originalConfig());
     }
   }
 }

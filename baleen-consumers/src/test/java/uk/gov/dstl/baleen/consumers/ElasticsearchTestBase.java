@@ -2,44 +2,36 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.lucene.search.join.ScoreMode;
-import org.apache.uima.UIMAException;
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
-import org.apache.uima.resource.ResourceInitializationException;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.node.NodeValidationException;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.annotators.testing.Annotations;
 import uk.gov.dstl.baleen.resources.EmbeddedElasticsearch5;
 import uk.gov.dstl.baleen.types.common.CommsIdentifier;
-import uk.gov.dstl.baleen.types.common.Person;
-import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 import uk.gov.dstl.baleen.types.semantic.Entity;
-import uk.gov.dstl.baleen.types.semantic.Location;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
@@ -52,60 +44,28 @@ public abstract class ElasticsearchTestBase {
   private static final String END = "end";
   private static final String BEGIN = "begin";
   private static final String DOC_TYPE = "docType";
-  private static final String BALEEN_INDEX = "baleen_index";
 
-  protected static final String CLUSTER = "test-cluster";
+  protected static final String BALEEN_INDEX = "baleen_index";
 
   protected JCas jCas;
   protected AnalysisEngine ae;
-
-  protected Client client;
-
-  private Path tmpDir;
-  private EmbeddedElasticsearch5 es5;
+  protected EmbeddedElasticsearch5 elasticsearch;
 
   @Before
   public void beforeTest() throws Exception {
     jCas = JCasSingleton.getJCasInstance();
-
-    try {
-      tmpDir = Files.createTempDirectory("elasticsearch");
-    } catch (IOException ioe) {
-      throw new ResourceInitializationException(ioe);
-    }
-
-    try {
-      es5 = new EmbeddedElasticsearch5(tmpDir.toString(), CLUSTER);
-    } catch (NodeValidationException nve) {
-      throw new UIMAException(nve);
-    }
-
-    Settings settings = Settings.builder().put("cluster.name", CLUSTER).build();
-    try {
-      client =
-          new PreBuiltTransportClient(settings)
-              .addTransportAddress(
-                  new InetSocketTransportAddress(InetAddress.getByName("localhost"), 9300));
-    } catch (UnknownHostException uhe) {
-      throw new UIMAException(uhe);
-    }
+    elasticsearch = new EmbeddedElasticsearch5();
   }
 
   @After
   public void afterTest() {
     ae.destroy();
-
-    if (client != null) {
-      client.close();
-    }
-    client = null;
-
     try {
-      es5.close();
+      elasticsearch.close();
     } catch (IOException ioe) {
       // Do nothing
     }
-    es5 = null;
+    elasticsearch = null;
   }
 
   @SuppressWarnings("unchecked")
@@ -114,12 +74,12 @@ public abstract class ElasticsearchTestBase {
     long timestamp = createNoEntitiesDocument();
     ae.process(jCas);
 
-    // Call refresh to force ES to write buffer
-    client.admin().indices().refresh(new RefreshRequest("baleen_index")).actionGet();
+    elasticsearch.flush(BALEEN_INDEX);
 
     assertEquals(new Long(1), getCount());
 
-    SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
+    SearchHit result =
+        elasticsearch.client().search(new SearchRequest()).actionGet().getHits().getHits()[0];
     assertEquals("Hello World", result.getSource().get("content"));
     assertEquals("en", result.getSource().get("language"));
     assertEquals(timestamp, result.getSource().get("dateAccessed"));
@@ -143,12 +103,12 @@ public abstract class ElasticsearchTestBase {
     createMetadataDocument();
     ae.process(jCas);
 
-    // Call refresh to force ES to write buffer
-    client.admin().indices().refresh(new RefreshRequest("baleen_index")).actionGet();
+    elasticsearch.flush(BALEEN_INDEX);
 
     assertEquals(new Long(1), getCount());
 
-    SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
+    SearchHit result =
+        elasticsearch.client().search(new SearchRequest()).actionGet().getHits().getHits()[0];
     List<String> pids = (List<String>) result.getSource().get("publishedId");
     assertEquals("id_1", pids.get(0));
     assertEquals("id_2", pids.get(1));
@@ -162,26 +122,25 @@ public abstract class ElasticsearchTestBase {
     assertEquals("ENG|WAL|SCO", metadataMap.get("countryInfo"));
   }
 
-  @SuppressWarnings("unchecked")
   @Test
+  @SuppressWarnings("unchecked")
   public void testEntities() throws Exception {
     createEntitiesDocument();
     ae.process(jCas);
 
-    // Call refresh to force ES to write buffer
-    client.admin().indices().refresh(new RefreshRequest("baleen_index")).actionGet();
+    elasticsearch.flush(BALEEN_INDEX);
 
     assertEquals(new Long(1), getCount());
 
-    SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
+    SearchHit result =
+        elasticsearch.client().search(new SearchRequest()).actionGet().getHits().getHits()[0];
     List<Map<String, Object>> entities =
         (List<Map<String, Object>>) result.getSource().get("entities");
     assertEquals(4, entities.size());
 
     Map<String, Object> person = entities.get(0);
-    assertTrue(
-        person.size()
-            >= 6); // The REST API only adds non-null fields, the Transport API add null fields too
+    assertTrue(person.size() >= 6); // The REST API only adds non-null fields, the Transport API add
+    // null fields too
     assertEquals(0, person.get(BEGIN));
     assertEquals(5, person.get(END));
     assertEquals(0.0, person.get(CONFIDENCE));
@@ -190,9 +149,8 @@ public abstract class ElasticsearchTestBase {
     assertNotNull(person.get(EXTERNAL_ID));
 
     Map<String, Object> location = entities.get(1);
-    assertTrue(
-        location.size()
-            >= 7); // The REST API only adds non-null fields, the Transport API add null fields too
+    assertTrue(location.size() >= 7); // The REST API only adds non-null fields, the Transport API
+    // add null fields too
     assertEquals(14, location.get(BEGIN));
     assertEquals(20, location.get(END));
     assertEquals(0.0, location.get(CONFIDENCE));
@@ -207,9 +165,8 @@ public abstract class ElasticsearchTestBase {
     assertEquals(geometryMap, location.get("geoJson"));
 
     Map<String, Object> date = entities.get(2);
-    assertTrue(
-        date.size()
-            >= 6); // The REST API only adds non-null fields, the Transport API add null fields too
+    assertTrue(date.size() >= 6); // The REST API only adds non-null fields, the Transport API add
+    // null fields too
     assertEquals(24, date.get(BEGIN));
     assertEquals(42, date.get(END));
     assertEquals(1.0, date.get(CONFIDENCE));
@@ -238,11 +195,11 @@ public abstract class ElasticsearchTestBase {
     getDocumentAnnotation(jCas).setDocumentClassification("TEST");
     ae.process(jCas);
 
-    // Call refresh to force ES to write buffer
-    client.admin().indices().refresh(new RefreshRequest("baleen_index")).actionGet();
+    elasticsearch.flush(BALEEN_INDEX);
 
     assertEquals(new Long(1), getCount());
-    SearchHit result = client.search(new SearchRequest()).actionGet().getHits().getHits()[0];
+    SearchHit result =
+        elasticsearch.client().search(new SearchRequest()).actionGet().getHits().getHits()[0];
 
     // This checks the last document is tone we are getting
     assertEquals("TEST", result.getSource().get("classification"));
@@ -256,14 +213,14 @@ public abstract class ElasticsearchTestBase {
     createEntitiesDocument2();
     ae.process(jCas);
 
-    // Call refresh to force ES to write buffer
-    client.admin().indices().refresh(new RefreshRequest("baleen_index")).actionGet();
+    elasticsearch.flush(BALEEN_INDEX);
 
     assertEquals(new Long(2), getCount());
 
     SearchRequestBuilder srb =
-        client
-            .prepareSearch("baleen_index")
+        elasticsearch
+            .client()
+            .prepareSearch(BALEEN_INDEX)
             .setQuery(
                 QueryBuilders.nestedQuery(
                     "entities",
@@ -272,7 +229,7 @@ public abstract class ElasticsearchTestBase {
                         .must(QueryBuilders.matchQuery("entities.value", "London")),
                     ScoreMode.Avg));
 
-    SearchHits results = client.search(srb.request()).actionGet().getHits();
+    SearchHits results = elasticsearch.client().search(srb.request()).actionGet().getHits();
     assertEquals(1, results.getTotalHits());
   }
 
@@ -312,25 +269,10 @@ public abstract class ElasticsearchTestBase {
     pid2.setValue("id_2");
     pid2.addToIndexes();
 
-    Metadata mdSourceAndInformation = new Metadata(jCas);
-    mdSourceAndInformation.setKey("sourceAndInformationGrading");
-    mdSourceAndInformation.setValue("D3");
-    mdSourceAndInformation.addToIndexes();
-
-    Metadata mdCountries = new Metadata(jCas);
-    mdCountries.setKey("countryInfo");
-    mdCountries.setValue("ENG|WAL|SCO");
-    mdCountries.addToIndexes();
-
-    Metadata mdTitle = new Metadata(jCas);
-    mdTitle.setKey("documentTitle");
-    mdTitle.setValue("Test Title");
-    mdTitle.addToIndexes();
-
-    Metadata mdMisc = new Metadata(jCas);
-    mdMisc.setKey("test_key");
-    mdMisc.setValue("test_value");
-    mdMisc.addToIndexes();
+    Annotations.createMetadata(jCas, "sourceAndInformationGrading", "D3");
+    Annotations.createMetadata(jCas, "countryInfo", "ENG|WAL|SCO");
+    Annotations.createMetadata(jCas, "documentTitle", "Test Title");
+    Annotations.createMetadata(jCas, "test_key", "test_value");
   }
 
   protected void createEntitiesDocument() {
@@ -338,24 +280,11 @@ public abstract class ElasticsearchTestBase {
     jCas.setDocumentText(
         "James went to London on 19th February 2015. His e-mail address is james@example.com");
 
-    Person p = new Person(jCas);
-    p.setBegin(0);
-    p.setEnd(5);
-    p.setValue("James");
-    p.addToIndexes();
-
-    Location l = new Location(jCas);
-    l.setBegin(14);
-    l.setEnd(20);
-    l.setValue("London");
-    l.setGeoJson("{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
-    l.addToIndexes();
-
-    Temporal d = new Temporal(jCas);
-    d.setBegin(24);
-    d.setEnd(42);
+    Annotations.createPerson(jCas, 0, 5, "James");
+    Annotations.createLocation(
+        jCas, 14, 20, "London", "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
+    Temporal d = Annotations.createTemporal(jCas, 24, 42, "");
     d.setConfidence(1.0);
-    d.addToIndexes();
 
     CommsIdentifier ci = new CommsIdentifier(jCas);
     ci.setBegin(66);
@@ -369,33 +298,21 @@ public abstract class ElasticsearchTestBase {
     jCas.setDocumentText(
         "Paula went to London on 12th February 2017. In Paris, she met a UID male.");
 
-    Person p = new Person(jCas);
-    p.setBegin(0);
-    p.setEnd(5);
-    p.setValue("Paula");
-    p.addToIndexes();
+    Annotations.createPerson(jCas, 0, 5, "Paula");
+    Annotations.createLocation(jCas, 47, 53, "Paris", null);
+    Temporal d = Annotations.createTemporal(jCas, 24, 42, "");
+    d.setConfidence(1.0);
 
     Entity e = new Entity(jCas);
     e.setBegin(14);
     e.setEnd(20);
     e.setValue("London");
     e.addToIndexes();
-
-    Temporal d = new Temporal(jCas);
-    d.setBegin(24);
-    d.setEnd(42);
-    d.setConfidence(1.0);
-    d.addToIndexes();
-
-    Location l = new Location(jCas);
-    l.setBegin(47);
-    l.setEnd(53);
-    l.setValue("Paris");
-    l.addToIndexes();
   }
 
   protected Long getCount() {
-    SearchResponse sr = client.prepareSearch(BALEEN_INDEX).setSize(0).execute().actionGet();
+    SearchResponse sr =
+        elasticsearch.client().prepareSearch(BALEEN_INDEX).setSize(0).execute().actionGet();
     return sr.getHits().getTotalHits();
   }
 }

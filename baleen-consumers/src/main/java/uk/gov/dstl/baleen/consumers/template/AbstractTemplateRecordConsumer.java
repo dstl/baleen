@@ -68,7 +68,7 @@ public abstract class AbstractTemplateRecordConsumer extends BaleenConsumer {
       records.put(source, new ExtractedRecord(makeFieldValues(remainingFields.get(source))));
     }
 
-    String documentSourceName = SourceUtils.getDocumentSourceBaseName(jCas, getSupport());
+    String documentSourceName = SourceUtils.getDocumentSourceBaseName(jCas);
     writeRecords(jCas, documentSourceName, records.asMap());
   }
 

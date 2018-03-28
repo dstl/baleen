@@ -39,6 +39,7 @@ import com.opencsv.CSVParserBuilder;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.IContentExtractor;
+import uk.gov.dstl.baleen.uima.UimaSupport;
 
 /**
  * Read a folder of CSV files and process each line in the CSV file as a separate document (with one
@@ -180,7 +181,9 @@ public class CsvFolderReader extends BaleenCollectionReader {
 
     for (File file : files) {
       if (!file.isDirectory()) {
-        if (addFile(file.toPath())) getMonitor().counter("files").inc();
+        if (addFile(file.toPath())) {
+          getMonitor().counter("files").inc();
+        }
       } else if (recursive) {
         addFilesFromDir(file);
       }
@@ -227,7 +230,7 @@ public class CsvFolderReader extends BaleenCollectionReader {
       md.addToIndexes();
     }
 
-    DocumentAnnotation doc = getSupport().getDocumentAnnotation(jCas);
+    DocumentAnnotation doc = UimaSupport.getDocumentAnnotation(jCas);
     doc.setSourceUri(currPath.toString());
     doc.setTimestamp(System.currentTimeMillis());
   }
@@ -346,7 +349,9 @@ public class CsvFolderReader extends BaleenCollectionReader {
   /** Check whether the needle appears in the haystack (case insensitive) */
   private static boolean inArray(String needle, String[] haystack) {
     for (String h : haystack) {
-      if (needle.equalsIgnoreCase(h)) return true;
+      if (needle.equalsIgnoreCase(h)) {
+        return true;
+      }
     }
 
     return false;
