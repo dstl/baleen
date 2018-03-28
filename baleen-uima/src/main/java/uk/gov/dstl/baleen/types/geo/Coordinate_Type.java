@@ -3,10 +3,7 @@
 package uk.gov.dstl.baleen.types.geo;
 
 import org.apache.uima.cas.Feature;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
@@ -15,36 +12,12 @@ import org.apache.uima.jcas.JCasRegistry;
 import uk.gov.dstl.baleen.types.semantic.Location_Type;
 
 /**
- * A well-formed coordinate value - MGRS or WGS84 DD or DMS cooridate system - explictly defined in
- * source document. Updated by JCasGen Tue Apr 12 12:06:36 BST 2016
+ * A well-formed coordinate value - MGRS or WGS84 DD or DMS coordinate system - explicitly defined
+ * in source document. Updated by JCasGen Tue Apr 12 12:06:36 BST 2016
  *
  * @generated
  */
 public class Coordinate_Type extends Location_Type {
-  /**
-   * @generated
-   * @return the generator for this type
-   */
-  @Override
-  protected FSGenerator getFSGenerator() {
-    return fsGenerator;
-  }
-  /** @generated */
-  private final FSGenerator fsGenerator =
-      new FSGenerator() {
-        public FeatureStructure createFS(int addr, CASImpl cas) {
-          if (Coordinate_Type.this.useExistingInstance) {
-            // Return eq fs instance if already created
-            FeatureStructure fs = Coordinate_Type.this.jcas.getJfsFromCaddr(addr);
-            if (null == fs) {
-              fs = new Coordinate(addr, Coordinate_Type.this);
-              Coordinate_Type.this.jcas.putJfsFromCaddr(addr, fs);
-              return fs;
-            }
-            return fs;
-          } else return new Coordinate(addr, Coordinate_Type.this);
-        }
-      };
   /** @generated */
   @SuppressWarnings("hiding")
   public static final int typeIndexID = Coordinate.typeIndexID;

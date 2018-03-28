@@ -71,6 +71,21 @@ Additional relationship types that have been added: {"QUANTITY", "ALIAS"}</descr
           <description>Used to record any sub-type information for the relation, for example the sub-relations defined within the ACE dataset.</description>
           <rangeTypeName>uima.cas.String</rangeTypeName>
         </featureDescription>
+      <featureDescription>
+          <name>sentenceDistance</name>
+          <description>A measure of the distance in the document between the two entities. The number of sentences between the two entities.</description>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>wordDistance</name>
+          <description>A measure of the distance in the sentence between the two entities. The number of words between the two entities.</description>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
+        <featureDescription>
+          <name>dependencyDistance</name>
+          <description>A measure of the dependency distance in the sentence between the two entities. The number of dependant words between the two entities according to a dependency parser.</description>
+          <rangeTypeName>uima.cas.Integer</rangeTypeName>
+        </featureDescription>
       </features>
     </typeDescription>
   <typeDescription>

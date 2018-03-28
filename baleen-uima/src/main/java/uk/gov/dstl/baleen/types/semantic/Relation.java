@@ -16,6 +16,9 @@ import uk.gov.dstl.baleen.types.Base;
  *
  * @generated
  */
+// ***************************************************************************************
+// WARNING Edited generated class to add Recordable interface, be careful on regeneration.
+// ***************************************************************************************
 public class Relation extends Base implements Recordable {
   /**
    * @generated
@@ -252,5 +255,109 @@ public class Relation extends Base implements Recordable {
           "relationSubType", "uk.gov.dstl.baleen.types.semantic.Relation");
     jcasType.ll_cas.ll_setStringValue(
         addr, ((Relation_Type) jcasType).casFeatCode_relationSubType, v);
+  }
+
+  // *--------------*
+  // * Feature: sentenceDistance
+
+  /**
+   * getter for sentenceDistance - gets A measure of the distance in the document between the two
+   * entities. The number of sentences between the two entities.
+   *
+   * @generated
+   * @return value of the feature
+   */
+  public int getSentenceDistance() {
+    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_sentenceDistance == null) {
+      jcasType.jcas.throwFeatMissing(
+          "sentenceDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    }
+    return jcasType.ll_cas.ll_getIntValue(
+        addr, ((Relation_Type) jcasType).casFeatCode_sentenceDistance);
+  }
+
+  /**
+   * setter for sentenceDistance - sets A measure of the distance in the document between the two
+   * entities. The number of sentences between the two entities.
+   *
+   * @generated
+   * @param v value to set into the feature
+   */
+  public void setSentenceDistance(int v) {
+    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_sentenceDistance == null) {
+      jcasType.jcas.throwFeatMissing(
+          "sentenceDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    }
+    jcasType.ll_cas.ll_setIntValue(
+        addr, ((Relation_Type) jcasType).casFeatCode_sentenceDistance, v);
+  }
+
+  // *--------------*
+  // * Feature: wordDistance
+
+  /**
+   * getter for wordDistance - gets A measure of the distance in the sentence between the two
+   * entities. The number of words between the two entities.
+   *
+   * @generated
+   * @return value of the feature
+   */
+  public int getWordDistance() {
+    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_wordDistance == null) {
+      jcasType.jcas.throwFeatMissing("wordDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    }
+    return jcasType.ll_cas.ll_getIntValue(
+        addr, ((Relation_Type) jcasType).casFeatCode_wordDistance);
+  }
+
+  /**
+   * setter for wordDistance - sets A measure of the distance in the sentence between the two
+   * entities. The number of words between the two entities.
+   *
+   * @generated
+   * @param v value to set into the feature
+   */
+  public void setWordDistance(int v) {
+    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_wordDistance == null) {
+      jcasType.jcas.throwFeatMissing("wordDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    }
+    jcasType.ll_cas.ll_setIntValue(addr, ((Relation_Type) jcasType).casFeatCode_wordDistance, v);
+  }
+
+  // *--------------*
+  // * Feature: dependencyDistance
+
+  /**
+   * getter for dependencyDistance - gets A measure of the dependency distance in the sentence
+   * between the two entities. The number of dependant words between the two entities according to a
+   * dependency parser.
+   *
+   * @generated
+   * @return value of the feature
+   */
+  public int getDependencyDistance() {
+    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_dependencyDistance == null) {
+      jcasType.jcas.throwFeatMissing(
+          "dependencyDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    }
+    return jcasType.ll_cas.ll_getIntValue(
+        addr, ((Relation_Type) jcasType).casFeatCode_dependencyDistance);
+  }
+
+  /**
+   * setter for dependencyDistance - sets A measure of the dependency distance in the sentence
+   * between the two entities. The number of dependant words between the two entities according to a
+   * dependency parser.
+   *
+   * @generated
+   * @param v value to set into the feature
+   */
+  public void setDependencyDistance(int v) {
+    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_dependencyDistance == null) {
+      jcasType.jcas.throwFeatMissing(
+          "dependencyDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
+    }
+    jcasType.ll_cas.ll_setIntValue(
+        addr, ((Relation_Type) jcasType).casFeatCode_dependencyDistance, v);
   }
 }

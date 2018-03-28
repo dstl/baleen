@@ -55,7 +55,7 @@ This XML file classified as UK OFFICIAL.</description>
         </featureDescription>
         <featureDescription>
           <name>constituentWords</name>
-          <description>Word tokens which comprose the constituent.</description>
+          <description>Word tokens which comprise the constituent.</description>
           <rangeTypeName>uima.cas.FSArray</rangeTypeName>
           <elementType>uk.gov.dstl.baleen.types.language.WordToken</elementType>
           <multipleReferencesAllowed>true</multipleReferencesAllowed>

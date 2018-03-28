@@ -9,8 +9,8 @@ import org.apache.uima.jcas.cas.TOP_Type;
 import uk.gov.dstl.baleen.types.semantic.Location;
 
 /**
- * A well-formed coordinate value - MGRS or WGS84 DD or DMS cooridate system - explictly defined in
- * source document. Updated by JCasGen Tue Apr 12 12:06:36 BST 2016 XML source:
+ * A well-formed coordinate value - MGRS or WGS84 DD or DMS coordinate system - explicitly defined
+ * in source document. Updated by JCasGen Tue Apr 12 12:06:36 BST 2016 XML source:
  * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/geo_type_system.xml
  *
  * @generated

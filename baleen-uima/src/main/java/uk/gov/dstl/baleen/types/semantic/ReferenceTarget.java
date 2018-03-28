@@ -93,4 +93,38 @@ public class ReferenceTarget extends BaleenAnnotation {
   private void readObject() {
     /*default - does nothing empty block */
   }
+  // *--------------*
+  // * Feature: linking
+
+  /**
+   * getter for linking - gets A property to define an external linking that may describe this group
+   * of mentions. For example, a set of mentions of a person could be linked to a database entry or
+   * webpage for the person.
+   *
+   * @generated
+   * @return value of the feature
+   */
+  public String getLinking() {
+    if (ReferenceTarget_Type.featOkTst && ((ReferenceTarget_Type) jcasType).casFeat_linking == null)
+      jcasType.jcas.throwFeatMissing(
+          "linking", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget");
+    return jcasType.ll_cas.ll_getStringValue(
+        addr, ((ReferenceTarget_Type) jcasType).casFeatCode_linking);
+  }
+
+  /**
+   * setter for linking - sets A property to define an external linking that may describe this group
+   * of mentions. For example, a set of mentions of a person could be linked to a database entry or
+   * webpage for the person.
+   *
+   * @generated
+   * @param v value to set into the feature
+   */
+  public void setLinking(String v) {
+    if (ReferenceTarget_Type.featOkTst && ((ReferenceTarget_Type) jcasType).casFeat_linking == null)
+      jcasType.jcas.throwFeatMissing(
+          "linking", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget");
+    jcasType.ll_cas.ll_setStringValue(
+        addr, ((ReferenceTarget_Type) jcasType).casFeatCode_linking, v);
+  }
 }

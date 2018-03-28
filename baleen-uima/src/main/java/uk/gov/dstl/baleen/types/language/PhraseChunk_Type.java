@@ -3,10 +3,7 @@
 package uk.gov.dstl.baleen.types.language;
 
 import org.apache.uima.cas.Feature;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
@@ -21,30 +18,6 @@ import uk.gov.dstl.baleen.types.Base_Type;
  * @generated
  */
 public class PhraseChunk_Type extends Base_Type {
-  /**
-   * @generated
-   * @return the generator for this type
-   */
-  @Override
-  protected FSGenerator getFSGenerator() {
-    return fsGenerator;
-  }
-  /** @generated */
-  private final FSGenerator fsGenerator =
-      new FSGenerator() {
-        public FeatureStructure createFS(int addr, CASImpl cas) {
-          if (PhraseChunk_Type.this.useExistingInstance) {
-            // Return eq fs instance if already created
-            FeatureStructure fs = PhraseChunk_Type.this.jcas.getJfsFromCaddr(addr);
-            if (null == fs) {
-              fs = new PhraseChunk(addr, PhraseChunk_Type.this);
-              PhraseChunk_Type.this.jcas.putJfsFromCaddr(addr, fs);
-              return fs;
-            }
-            return fs;
-          } else return new PhraseChunk(addr, PhraseChunk_Type.this);
-        }
-      };
   /** @generated */
   @SuppressWarnings("hiding")
   public static final int typeIndexID = PhraseChunk.typeIndexID;

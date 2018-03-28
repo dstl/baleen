@@ -3,10 +3,7 @@
 package uk.gov.dstl.baleen.types.semantic;
 
 import org.apache.uima.cas.Feature;
-import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.cas.Type;
-import org.apache.uima.cas.impl.CASImpl;
-import org.apache.uima.cas.impl.FSGenerator;
 import org.apache.uima.cas.impl.FeatureImpl;
 import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
@@ -20,30 +17,6 @@ import org.apache.uima.jcas.JCasRegistry;
  * @generated
  */
 public class Location_Type extends Entity_Type {
-  /**
-   * @generated
-   * @return the generator for this type
-   */
-  @Override
-  protected FSGenerator getFSGenerator() {
-    return fsGenerator;
-  }
-  /** @generated */
-  private final FSGenerator fsGenerator =
-      new FSGenerator() {
-        public FeatureStructure createFS(int addr, CASImpl cas) {
-          if (Location_Type.this.useExistingInstance) {
-            // Return eq fs instance if already created
-            FeatureStructure fs = Location_Type.this.jcas.getJfsFromCaddr(addr);
-            if (null == fs) {
-              fs = new Location(addr, Location_Type.this);
-              Location_Type.this.jcas.putJfsFromCaddr(addr, fs);
-              return fs;
-            }
-            return fs;
-          } else return new Location(addr, Location_Type.this);
-        }
-      };
   /** @generated */
   @SuppressWarnings("hiding")
   public static final int typeIndexID = Location.typeIndexID;
