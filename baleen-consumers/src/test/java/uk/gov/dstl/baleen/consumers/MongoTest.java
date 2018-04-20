@@ -270,8 +270,9 @@ public class MongoTest extends ConsumerTestBase {
         "James went to London on 19th February 2015. His e-mail address is james@example.com");
 
     Person p = Annotations.createPerson(jCas, 0, 5, PERSON);
-    Location l = Annotations.createLocation(
-        jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
+    Location l =
+        Annotations.createLocation(
+            jCas, 14, 20, LONDON, "{\"type\": \"Point\", \"coordinates\": [-0.1, 51.5]}");
 
     Temporal dt = Annotations.createTemporal(jCas, 24, 42, DATE);
     dt.setConfidence(1.0);

@@ -1,4 +1,4 @@
-// Dstl (c) Crown Copyright 2017
+// Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.renoun;
 
 import java.io.File;

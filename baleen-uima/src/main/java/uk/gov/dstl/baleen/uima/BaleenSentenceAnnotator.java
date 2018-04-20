@@ -1,4 +1,4 @@
-// Dstl (c) Crown Copyright 2017
+// Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.uima;
 
 import java.util.Collection;

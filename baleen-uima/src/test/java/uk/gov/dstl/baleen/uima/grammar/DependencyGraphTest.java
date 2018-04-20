@@ -1,4 +1,5 @@
 // Dstl (c) Crown Copyright 2017
+// Modified by Committed Software Copyright (c) 2018, opensource@committed.io
 package uk.gov.dstl.baleen.uima.grammar;
 
 import static org.junit.Assert.assertEquals;
