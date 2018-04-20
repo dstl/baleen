@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.uima.UIMAException;
@@ -37,23 +38,16 @@ public class BagOfWordsCandidateRankerTest {
     JCas jCas = JCasFactory.createJCas();
 
     jCas.setDocumentText(
-        "Sir John Major, KG, CH (born 29 March 1943) is a British politician who was Prime Minister of the United Kingdom and Leader of the Conservative Party from 1990 to 1997. Major became Prime Minister after Thatcher's reluctant resignation in November 1990.");
+        "Sir John Major was Prime Minister of the United Kingdom. Major became Prime Minister after Thatcher resigned.");
 
-    Sentence s1 = new Sentence(jCas);
-    s1.setBegin(0);
-    s1.setEnd(168);
-    s1.addToIndexes(jCas);
-    Sentence s2 = new Sentence(jCas);
-    s2.setBegin(169);
-    s2.setEnd(253);
-    s2.addToIndexes(jCas);
+    List<Sentence> s = Annotations.createSentences(jCas);
 
     Person j1 = Annotations.createPerson(jCas, 0, 14, "Sir John Major");
-    Person j2 = Annotations.createPerson(jCas, 169, 174, "Major");
+    Person j2 = Annotations.createPerson(jCas, 59, 64, "Major");
     ReferenceTarget jRT = Annotations.createReferenceTarget(jCas, j1, j2);
 
     entityInformation =
-        new EntityInformation<>(jRT, ImmutableSet.of(j1, j2), ImmutableSet.of(s1, s2));
+        new EntityInformation<>(jRT, ImmutableSet.of(j1, j2), ImmutableSet.copyOf(s));
   }
 
   @Test
