@@ -1,6 +1,4 @@
-/*
- *
- */
+// Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers.analysis.data;
 
 import java.util.HashMap;
