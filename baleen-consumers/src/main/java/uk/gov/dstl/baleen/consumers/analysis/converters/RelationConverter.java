@@ -1,5 +1,5 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
-package uk.gov.dstl.baleen.consumers.analysis.convertors;
+package uk.gov.dstl.baleen.consumers.analysis.converters;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +24,7 @@ import uk.gov.dstl.baleen.uima.UimaMonitor;
  * between the input and output. Previous version of Baleen output relations in a very basic form
  * (leading to the {@link MongoRelations} consumer.
  */
-public class RelationConvertor {
+public class RelationConverter {
   private final EntityRelationConverter converter;
   private final SharedIdGenerator idGenerator;
   private final UimaMonitor uimaMonitor;
@@ -36,7 +36,7 @@ public class RelationConvertor {
    * @param idGenerator to generate ids
    * @param converter the converter to use
    */
-  public RelationConvertor(
+  public RelationConverter(
       UimaMonitor uimaMonitor,
       final SharedIdGenerator idGenerator,
       final EntityRelationConverter converter) {

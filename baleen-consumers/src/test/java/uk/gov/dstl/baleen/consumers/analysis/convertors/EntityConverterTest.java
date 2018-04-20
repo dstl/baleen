@@ -8,15 +8,16 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.consumers.analysis.converters.EntityConverter;
 import uk.gov.dstl.baleen.consumers.analysis.data.BaleenEntity;
 
-public class EntityConvertorTest {
+public class EntityConverterTest {
 
   final AnalysisMockData data = new AnalysisMockData();
 
   @Test
   public void test() {
-    final EntityConvertor converter = new EntityConvertor();
+    final EntityConverter converter = new EntityConverter();
 
     final Map<String, BaleenEntity> entities = converter.convert(data.getMentions());
 

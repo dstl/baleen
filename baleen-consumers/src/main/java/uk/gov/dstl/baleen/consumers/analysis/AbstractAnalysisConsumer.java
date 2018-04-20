@@ -13,10 +13,10 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uk.gov.dstl.baleen.consumers.analysis.convertors.DocumentConvertor;
-import uk.gov.dstl.baleen.consumers.analysis.convertors.EntityConvertor;
-import uk.gov.dstl.baleen.consumers.analysis.convertors.MentionConvertor;
-import uk.gov.dstl.baleen.consumers.analysis.convertors.RelationConvertor;
+import uk.gov.dstl.baleen.consumers.analysis.converters.DocumentConverter;
+import uk.gov.dstl.baleen.consumers.analysis.converters.EntityConverter;
+import uk.gov.dstl.baleen.consumers.analysis.converters.MentionConverter;
+import uk.gov.dstl.baleen.consumers.analysis.converters.RelationConverter;
 import uk.gov.dstl.baleen.consumers.analysis.data.BaleenDocument;
 import uk.gov.dstl.baleen.consumers.analysis.data.BaleenEntity;
 import uk.gov.dstl.baleen.consumers.analysis.data.BaleenMention;
@@ -41,7 +41,7 @@ import uk.gov.dstl.baleen.uima.BaleenConsumer;
  *
  * <p>The consumer works by creating a set of POJOs (see the
  * uk.gov.dstl.baleen.consumers.analysis.data package) using a set of converters
- * (uk.gov.dstl.baleen.consumers.analysis.convertors).
+ * (uk.gov.dstl.baleen.consumers.analysis.converters).
  *
  * <p>The naming is as follows. This is a terminology conflict between UIMA Type Entity and the
  * BaleenEntity here. The names have been chosen to reflect the user of Baleen output understanding:
@@ -175,20 +175,20 @@ public abstract class AbstractAnalysisConsumer extends BaleenConsumer {
 
     // Output the 'basic types' values first
 
-    final DocumentConvertor documentConverter = new DocumentConvertor();
+    final DocumentConverter documentConverter = new DocumentConverter();
     final BaleenDocument baleenDocument =
         documentConverter.convert(jCas, documentId, baleenDocumentId, documentAnnotation);
 
-    final MentionConvertor mentionConverter =
-        new MentionConvertor(getMonitor(), idGenerator, entityRelationConverter);
+    final MentionConverter mentionConverter =
+        new MentionConverter(getMonitor(), idGenerator, entityRelationConverter);
     final Map<String, BaleenMention> mentions =
         mentionConverter.convert(jCas, documentId, baleenDocumentId);
 
-    final EntityConvertor entityConverter = new EntityConvertor();
+    final EntityConverter entityConverter = new EntityConverter();
     final Map<String, BaleenEntity> entities = entityConverter.convert(mentions);
 
-    final RelationConvertor relationConverter =
-        new RelationConvertor(getMonitor(), idGenerator, entityRelationConverter);
+    final RelationConverter relationConverter =
+        new RelationConverter(getMonitor(), idGenerator, entityRelationConverter);
     final Map<String, BaleenRelation> relations =
         relationConverter.convert(jCas, documentId, baleenDocumentId, mentions);
 

@@ -1,5 +1,5 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
-package uk.gov.dstl.baleen.consumers.analysis.convertors;
+package uk.gov.dstl.baleen.consumers.analysis.converters;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +42,7 @@ import uk.gov.dstl.baleen.uima.utils.ReferentUtils;
  * <p>It processes the geoJson in order to generate (if sensible) a set of latlon points. These are
  * more easily searched and aggregated by databases.
  */
-public class MentionConvertor {
+public class MentionConverter {
 
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -59,7 +59,7 @@ public class MentionConvertor {
    * @param idGenerator
    * @param converter the EntityRelationConverter must be set to output geoJson as string
    */
-  public MentionConvertor(
+  public MentionConverter(
       final UimaMonitor monitor,
       final SharedIdGenerator idGenerator,
       final EntityRelationConverter converter) {

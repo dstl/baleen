@@ -12,19 +12,20 @@ import java.util.Map;
 import org.apache.uima.fit.util.JCasUtil;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.consumers.analysis.converters.DocumentConverter;
 import uk.gov.dstl.baleen.consumers.analysis.data.AnalysisConstants;
 import uk.gov.dstl.baleen.consumers.analysis.data.BaleenDocument;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.metadata.PublishedId;
 
-public class DocumentConvertorTest {
+public class DocumentConverterTest {
 
   final AnalysisMockData data = new AnalysisMockData();
 
   @Test
   @SuppressWarnings("unchecked")
   public void test() {
-    final DocumentConvertor converter = new DocumentConvertor();
+    final DocumentConverter converter = new DocumentConverter();
 
     final BaleenDocument document =
         converter.convert(
@@ -65,7 +66,7 @@ public class DocumentConvertorTest {
 
   @Test
   public void testTitleFromMetadata() {
-    final DocumentConvertor converter = new DocumentConvertor();
+    final DocumentConverter converter = new DocumentConverter();
 
     final Metadata titleMetadata = new Metadata(data.getJCas());
     titleMetadata.setKey("title");
@@ -84,7 +85,7 @@ public class DocumentConvertorTest {
 
   @Test
   public void testTitleFromSource() {
-    final DocumentConvertor converter = new DocumentConvertor();
+    final DocumentConverter converter = new DocumentConverter();
 
     // Remove the publishedId which would be used instead
     JCasUtil.select(data.getJCas(), PublishedId.class).stream().forEach(p -> p.removeFromIndexes());

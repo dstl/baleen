@@ -1,5 +1,5 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
-package uk.gov.dstl.baleen.consumers.analysis.convertors;
+package uk.gov.dstl.baleen.consumers.analysis.converters;
 
 import java.util.Collection;
 import java.util.Map;
@@ -21,7 +21,7 @@ import uk.gov.dstl.baleen.consumers.analysis.data.BaleenMention;
  * <p>This class contains the 'merging' logic, and does not look at reference targets or the JCas.
  * It assumes the mentions have been created correctly before passing.
  */
-public class EntityConvertor {
+public class EntityConverter {
 
   /**
    * Create a series of entity from the mentions in a document.

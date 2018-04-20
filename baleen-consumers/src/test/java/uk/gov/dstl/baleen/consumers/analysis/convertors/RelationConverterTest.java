@@ -8,16 +8,17 @@ import java.util.Map;
 
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.consumers.analysis.converters.RelationConverter;
 import uk.gov.dstl.baleen.consumers.analysis.data.BaleenRelation;
 
-public class RelationConvertorTest {
+public class RelationConverterTest {
 
   final AnalysisMockData data = new AnalysisMockData();
 
   @Test
   public void testConverter() {
-    final RelationConvertor converter =
-        new RelationConvertor(data.getMonitor(), data.getIdGenerator(), data.getErc());
+    final RelationConverter converter =
+        new RelationConverter(data.getMonitor(), data.getIdGenerator(), data.getErc());
 
     final Map<String, BaleenRelation> relations =
         converter.convert(

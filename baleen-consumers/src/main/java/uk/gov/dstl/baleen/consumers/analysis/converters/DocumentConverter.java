@@ -1,5 +1,5 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
-package uk.gov.dstl.baleen.consumers.analysis.convertors;
+package uk.gov.dstl.baleen.consumers.analysis.converters;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -39,7 +39,7 @@ import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
  * information from the documentation annotation). This is 'best guess', but at least a standardised
  * best guess.
  */
-public class DocumentConvertor {
+public class DocumentConverter {
 
   /**
    * Convert the metadata, information, published ids to a BaleenDocument.

@@ -11,25 +11,26 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.consumers.analysis.converters.MentionConverter;
 import uk.gov.dstl.baleen.consumers.analysis.data.AnalysisConstants;
 import uk.gov.dstl.baleen.consumers.analysis.data.BaleenMention;
 import uk.gov.dstl.baleen.types.semantic.Location;
 
-public class MentionConvertorTest {
+public class MentionConverterTest {
 
   private AnalysisMockData data;
-  private MentionConvertor converter;
+  private MentionConverter converter;
 
   @Before
   public void setup() {
     data = new AnalysisMockData();
-    converter = new MentionConvertor(data.getMonitor(), data.getIdGenerator(), data.getErc());
+    converter = new MentionConverter(data.getMonitor(), data.getIdGenerator(), data.getErc());
   }
 
   @Test
   public void test() {
-    final MentionConvertor converter =
-        new MentionConvertor(data.getMonitor(), data.getIdGenerator(), data.getErc());
+    final MentionConverter converter =
+        new MentionConverter(data.getMonitor(), data.getIdGenerator(), data.getErc());
 
     final Map<String, BaleenMention> mentions =
         converter.convert(data.getJCas(), data.getDocumentId(), AnalysisMockData.BALEEN_DOC_ID);
