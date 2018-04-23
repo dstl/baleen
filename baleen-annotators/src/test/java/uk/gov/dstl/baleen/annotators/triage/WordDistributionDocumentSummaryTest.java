@@ -26,52 +26,32 @@ import uk.gov.dstl.baleen.uima.utils.JCasMetadata;
 public class WordDistributionDocumentSummaryTest extends AbstractMultiAnnotatorTest {
 
   private static final String FIRST_SENTENCE =
-      "Construction giant Carillion has gone into liquidation, threatening thousands of jobs. ";
+      "Baleen is an extensible text processing capability that allows entity-related information to be extracted from unstructured and semi-structured data sources. ";
   private static final String SECOND_SENTENCE =
-      "The move came after talks between the firm, its lenders and the government failed to reach a deal to save the UK's second biggest construction company. ";
+      "It makes available in a structured format things of interest otherwise stored in formats such as text documents - references to people, organisations, unique identifiers, location information.";
   private static final String THIRD_SENTENCE =
-      "Carillion ran into trouble after losing money on big contracts and running up huge debts. ";
+      "Baleen is written in Java 8 using the software project management tool Maven 3 and draws heavily on the Apache Unstructured Information Management Architecture (UIMA) which provides a framework, components and infrastructure to handle unstructured information management. ";
   private static final String FOURTH_SENTENCE =
-      "Its failure means the government will have to provide funding to maintain the private services run by Carillion. ";
-  private static final String FIFTH_SENTENCE =
-      "\"All employees should keep coming to work, you will continue to get paid. ";
+      "Baleen was written by the Defence Science and Technology Laboratory (Dstl) in support of UK Defence users looking to extract entities and search unstructured text documents. ";
   private static final String SIXTH_SENTENCE =
-      "Staff that are engaged on private sector contracts still have important work to do,\" said government minister David Lidington. ";
+      "License information can be found in the accompanying `LICENSE` file in this repository and the licenses of libraries on which Baleen is dependent are listed in the file `THIRD-PARTY`. ";
   private static final String SEVENTH_SENTENCE =
-      "Carillion is involved in major projects such as the HS2 high-speed rail line, as well as managing schools and prisons. ";
+      "Baleen is still under active development, and is released here not as a final product but as a work in progress. ";
   private static final String EIGHTH_SENTENCE =
-      "It is the second biggest supplier of maintenance services to Network Rail, and it maintains 50,000 homes for the Ministry of Defence. ";
+      "As such, there may be bugs, issues, typos, mistakes in the documentation, and more. ";
   private static final String NINTH_SENTENCE =
-      "Carillion chairman Philip Green said it was a \"very sad day\" for the company's workers, suppliers and customers. ";
-  private static final String TENTH_SENTENCE =
-      "The company has 43,000 staff worldwide - 20,000 in the UK. ";
-  private static final String ELEVENTH_SENTENCE =
-      "There are also thousands of small firms that carry out work on Carillion's behalf - many of those have contacted the BBC with concerns about whether they will be paid. ";
-  private static final String TWELFTH_SENTENCE =
-      "One company, which provided services for Carillion's prisons contract, told the BBC that it might fail if it is not paid the £80,000 owed to it. ";
-  private static final String THIRTEENTH_SENTENCE =
-      "What happens next depends on the actions of a court-appointed official receiver. \n With the help of a team of experts from accountants PwC, the receiver will review Carillion's business - a process which could take months. ";
-  private static final String FOURTEENTH_SENTENCE =
-      "With the help of a team of experts from accountants PwC, the receiver will review Carillion's business - a process which could take months. ";
-  private static final String FIFTEENTH_SENTENCE =
-      "The government has already said it is supporting public services and other firms are likely to take on some of Carillion's other contracts and staff. ";
+      "We hope that contributions from other users will improve Baleen and result in a better framework for others to use. ";
 
   private static final String DOCUMENT =
       FIRST_SENTENCE
           + SECOND_SENTENCE
           + THIRD_SENTENCE
           + FOURTH_SENTENCE
-          + FIFTH_SENTENCE
+          + FOURTH_SENTENCE
           + SIXTH_SENTENCE
           + SEVENTH_SENTENCE
           + EIGHTH_SENTENCE
-          + NINTH_SENTENCE
-          + TENTH_SENTENCE
-          + ELEVENTH_SENTENCE
-          + TWELFTH_SENTENCE
-          + THIRTEENTH_SENTENCE
-          + FOURTEENTH_SENTENCE
-          + FIFTEENTH_SENTENCE;
+          + NINTH_SENTENCE;
 
   private JCasMetadata metadata;
 
@@ -138,7 +118,7 @@ public class WordDistributionDocumentSummaryTest extends AbstractMultiAnnotatorT
   public void testMetadataValue() {
 
     final String expectedSummary =
-        FOURTEENTH_SENTENCE + "\n" + FOURTH_SENTENCE + "\n" + EIGHTH_SENTENCE + "\n";
+        EIGHTH_SENTENCE + "\n" + FOURTH_SENTENCE + "\n" + SIXTH_SENTENCE + "\n";
 
     assertEquals(
         "The metadata key should be the summary made up of top scoring sentences",
