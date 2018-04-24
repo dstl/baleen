@@ -24,7 +24,6 @@ import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceAccessException;
 import org.apache.uima.resource.ResourceInitializationException;
-import org.bson.Document;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,9 +32,9 @@ import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
+import uk.gov.dstl.baleen.annotators.triage.TestData;
 import uk.gov.dstl.baleen.consumers.Mongo;
 import uk.gov.dstl.baleen.jobs.triage.MalletClassifierTrainer;
 import uk.gov.dstl.baleen.jobs.triage.MaxEntClassifierTrainer;
@@ -64,91 +63,7 @@ public class MalletClassifierTrainerTest extends AbstractBaleenTaskTest {
       throws URISyntaxException, ResourceInitializationException, AnalysisEngineProcessException,
           ResourceAccessException {
 
-    // @formatter:off
-    ImmutableList<String> data =
-        ImmutableList.of(
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos1.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "I love this sandwich.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos2.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "this is an amazing place!'")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos3.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "I feel very good about these beers.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos4.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "this is my best work.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos5.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "what an awesome view")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos6.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "the beer was good.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos7.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "I feel amazing!")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos8.txt"))
-                .append(METADATA, new Document().append(LABEL, "pos"))
-                .append(CONTENT, "Gary is a friend of mine.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg1.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "I do not like this restaurant")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg2.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "I am tired of this stuff.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg3.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "I can't deal with this")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg4.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "he is my sworn enemy!")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg5.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "my boss is horrible.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg6.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "I do not enjoy my job")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg7.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "I ain't feeling dandy today.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg8.txt"))
-                .append(METADATA, new Document().append(LABEL, "neg"))
-                .append(CONTENT, "I can't believe I'm doing this.")
-                .toJson());
-
-    // @formatter:on
+    List<String> data = new TestData().asList();
 
     try {
       modelPath = Files.createTempFile("model", ".mallet");

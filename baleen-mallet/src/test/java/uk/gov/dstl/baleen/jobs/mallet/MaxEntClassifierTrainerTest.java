@@ -16,6 +16,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -37,7 +38,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 
-import uk.gov.dstl.baleen.consumers.Mongo;
+import uk.gov.dstl.baleen.annotators.triage.TestData;
 import uk.gov.dstl.baleen.jobs.triage.MaxEntClassifierTrainer;
 import uk.gov.dstl.baleen.mallet.FileObject;
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
@@ -50,9 +51,6 @@ public class MaxEntClassifierTrainerTest extends AbstractBaleenTaskTest {
   private static final URL LABELS_URL =
       MaxEntClassifierTrainerTest.class.getResource("/labels.txt");
 
-  private static final String SOURCE = Mongo.FIELD_DOCUMENT_SOURCE;
-  private static final String CONTENT = Mongo.FIELD_CONTENT;
-  private static final String DOCUMENT = Mongo.FIELD_DOCUMENT;
   private static final String COLLECTION = "collection";
 
   private Path modelPath;
@@ -67,75 +65,7 @@ public class MaxEntClassifierTrainerTest extends AbstractBaleenTaskTest {
         ExternalResourceFactory.createExternalResourceDescription(
             MaxEntClassifierTrainer.KEY_STOPWORDS, SharedStopwordResource.class);
 
-    // @formatter:off
-    ImmutableList<String> data =
-        ImmutableList.of(
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos1.txt"))
-                .append(CONTENT, "I love this sandwich.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos2.txt"))
-                .append(CONTENT, "this is an amazing place!'")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos3.txt"))
-                .append(CONTENT, "I feel very good about these beers.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos4.txt"))
-                .append(CONTENT, "this is my best work.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos5.txt"))
-                .append(CONTENT, "what an awesome view")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos6.txt"))
-                .append(CONTENT, "the beer was good.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos7.txt"))
-                .append(CONTENT, "I feel amazing!")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "pos8.txt"))
-                .append(CONTENT, "Gary is a friend of mine.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg1.txt"))
-                .append(CONTENT, "I do not like this restaurant")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg2.txt"))
-                .append(CONTENT, "I am tired of this stuff.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg3.txt"))
-                .append(CONTENT, "I can't deal with this")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg4.txt"))
-                .append(CONTENT, "he is my sworn enemy!")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg5.txt"))
-                .append(CONTENT, "my boss is horrible.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg6.txt"))
-                .append(CONTENT, "I do not enjoy my job")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg7.txt"))
-                .append(CONTENT, "I ain't feeling dandy today.")
-                .toJson(),
-            new Document()
-                .append(DOCUMENT, new Document().append(SOURCE, "neg8.txt"))
-                .append(CONTENT, "I can't believe I'm doing this.")
-                .toJson());
-
-    // @formatter:on
+    List<String> data = new TestData().asList();
 
     try {
       modelPath = Files.createTempFile("model", ".mallet");
