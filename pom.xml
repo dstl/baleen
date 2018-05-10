@@ -261,6 +261,7 @@
     <module>baleen-javadoc</module>
     <module>baleen-jobs</module>
     <module>baleen-orderers</module>
+    <module>baleen-odin</module>
     <module>baleen-entity-linking</module>
     <module>baleen-mallet</module>
     <module>baleen-graph</module>
