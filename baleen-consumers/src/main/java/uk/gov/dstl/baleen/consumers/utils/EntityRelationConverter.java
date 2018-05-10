@@ -1,14 +1,11 @@
 // Dstl (c) Crown Copyright 2017
+// Modified by Committed Software Copyright (c) 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import org.apache.uima.cas.Feature;
@@ -20,11 +17,8 @@ import com.fasterxml.jackson.databind.type.MapLikeType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import com.google.common.primitives.Ints;
 
 import uk.gov.dstl.baleen.core.history.DocumentHistory;
-import uk.gov.dstl.baleen.core.history.HistoryEvent;
-import uk.gov.dstl.baleen.core.history.HistoryEvents;
 import uk.gov.dstl.baleen.types.Base;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Event;
@@ -35,18 +29,46 @@ import uk.gov.dstl.baleen.uima.utils.FeatureUtils;
 /** Converts from an Entity or Relation into a Map representation, adding history if required. */
 public class EntityRelationConverter {
 
+  private static final String GEO_JSON = "geoJson";
+  private static final String FIELD_VALUE = "value";
+
   private final boolean outputHistory;
   private final DocumentHistory documentHistory;
   private final Set<String> stopFeatures;
   private final UimaMonitor monitor;
-  private final IEntityConverterFields fields;
 
-  private static final String FIELD_VALUE = "value";
+  private final IEntityConverterFields fields;
+  private final boolean mapGeoJsonToObject;
 
   private final ObjectMapper mapper = new ObjectMapper();
 
   private final MapLikeType mapLikeType =
       TypeFactory.defaultInstance().constructMapLikeType(Map.class, String.class, Object.class);
+
+  /**
+   * New instance.
+   *
+   * @param monitor the monitor to log to
+   * @param outputHistory true if should output history
+   * @param documentHistory the history of the document
+   * @param stopFeatures features which should be excluded from the serialisation
+   * @param fields fields to map properties to
+   * @param mapGeoJsonToObject set false to leave geoJson as string
+   */
+  public EntityRelationConverter(
+      UimaMonitor monitor,
+      boolean outputHistory,
+      DocumentHistory documentHistory,
+      Set<String> stopFeatures,
+      IEntityConverterFields fields,
+      boolean mapGeoJsonToObject) {
+    this.monitor = monitor;
+    this.outputHistory = outputHistory;
+    this.documentHistory = documentHistory;
+    this.stopFeatures = stopFeatures;
+    this.fields = fields;
+    this.mapGeoJsonToObject = mapGeoJsonToObject;
+  }
 
   /**
    * New instance.
@@ -63,11 +85,23 @@ public class EntityRelationConverter {
       DocumentHistory documentHistory,
       Set<String> stopFeatures,
       IEntityConverterFields fields) {
-    this.monitor = monitor;
-    this.outputHistory = outputHistory;
-    this.documentHistory = documentHistory;
-    this.stopFeatures = stopFeatures;
-    this.fields = fields;
+    this(monitor, outputHistory, documentHistory, stopFeatures, fields, true);
+  }
+
+  /**
+   * New instance.
+   *
+   * @param monitor the monitor to log to
+   * @param stopFeatures features which should be excluded from the serialisation
+   * @param fields fields to map properties to
+   * @param mapGeoJsonToObject set false to leave geoJson as string
+   */
+  public EntityRelationConverter(
+      UimaMonitor monitor,
+      Set<String> stopFeatures,
+      IEntityConverterFields fields,
+      boolean mapGeoJsonToObject) {
+    this(monitor, false, null, stopFeatures, fields, mapGeoJsonToObject);
   }
 
   private UimaMonitor getMonitor() {
@@ -81,15 +115,15 @@ public class EntityRelationConverter {
    * @return a map containing the entity's fields (and history is required)
    */
   public Map<String, Object> convertEntity(Entity entity) {
-    Map<String, Object> map = Maps.newHashMap();
+    Map<String, Object> map = new IgnoreEmptyKeyMapDecorator<>(Maps.newHashMap());
 
     convertFeatures(map, entity);
 
     if (outputHistory && documentHistory != null) {
-      Collection<HistoryEvent> events = documentHistory.getHistory(entity.getInternalId());
-      convertHistory(map, events, entity.getInternalId());
+      convertHistory(map, entity);
     }
-    putIfExists(map, fields.getExternalId(), entity.getExternalId());
+
+    map.put(fields.getExternalId(), entity.getExternalId());
 
     return map;
   }
@@ -101,15 +135,15 @@ public class EntityRelationConverter {
    * @return a map containing the relation's fields (and history is required)
    */
   public Map<String, Object> convertRelation(Relation relation) {
-    Map<String, Object> map = Maps.newHashMap();
+    Map<String, Object> map = new IgnoreEmptyKeyMapDecorator<>(Maps.newHashMap());
 
     convertFeatures(map, relation);
 
     if (outputHistory && documentHistory != null) {
-      Collection<HistoryEvent> events = documentHistory.getHistory(relation.getInternalId());
-      convertHistory(map, events, relation.getInternalId());
+      convertHistory(map, relation);
     }
-    putIfExists(map, fields.getExternalId(), relation.getExternalId());
+
+    map.put(fields.getExternalId(), relation.getExternalId());
 
     return map;
   }
@@ -121,45 +155,48 @@ public class EntityRelationConverter {
    * @return a map containing the relation's fields (and history is required)
    */
   public Map<String, Object> convertEvent(Event event) {
-    Map<String, Object> map = Maps.newHashMap();
+    Map<String, Object> map = new IgnoreEmptyKeyMapDecorator<>(Maps.newHashMap());
 
     convertFeatures(map, event);
 
     if (outputHistory && documentHistory != null) {
-      Collection<HistoryEvent> events = documentHistory.getHistory(event.getInternalId());
-      convertHistory(map, events, event.getInternalId());
+      convertHistory(map, event);
     }
-    putIfExists(map, fields.getExternalId(), event.getExternalId());
+    map.put(fields.getExternalId(), event.getExternalId());
 
     return map;
   }
 
   private void convertFeatures(Map<String, Object> map, Base base) {
     for (Feature f : base.getType().getFeatures()) {
-      if (stopFeatures.contains(f.getName())) {
-        continue;
-      }
-
-      try {
-        convertFeature(map, base, f);
-      } catch (Exception e) {
-        getMonitor()
-            .warn(
-                "Couldn't output {} to map. Type '{}' isn't supported.",
-                f.getName(),
-                f.getRange().getShortName(),
-                e);
-      }
+      processFeature(map, base, f);
     }
-    map.put("type", base.getType().getShortName());
+    map.put(fields.getType(), base.getType().getShortName());
     if (map.get(FIELD_VALUE) == null || Strings.isNullOrEmpty(map.get(FIELD_VALUE).toString())) {
       map.put(FIELD_VALUE, base.getCoveredText());
     }
   }
 
+  private void processFeature(Map<String, Object> map, Base base, Feature f) {
+    if (stopFeatures.contains(f.getName()) || stopFeatures.contains(f.getShortName())) {
+      return;
+    }
+
+    try {
+      convertFeature(map, base, f);
+    } catch (Exception e) {
+      getMonitor()
+          .warn(
+              "Couldn't output {} to map. Type '{}' isn't supported.",
+              f.getName(),
+              f.getRange().getShortName(),
+              e);
+    }
+  }
+
   private void convertFeature(Map<String, Object> map, Base base, Feature f) {
     if (f.getRange().isPrimitive()) {
-      if ("geoJson".equals(f.getShortName())) {
+      if (mapGeoJsonToObject && GEO_JSON.equals(f.getShortName())) {
         getMonitor().trace("Feature is GeoJSON - parsing to a database object");
         putGeoJson(map, base.getFeatureValueAsString(f));
       } else {
@@ -197,7 +234,7 @@ public class EntityRelationConverter {
   private void putGeoJson(Map<String, Object> map, String geojson) {
     try {
       if (!Strings.isNullOrEmpty(geojson)) {
-        putIfExists(map, fields.getGeoJSON(), mapper.readValue(geojson, mapLikeType));
+        map.put(fields.getGeoJSON(), mapper.readValue(geojson, mapLikeType));
       }
     } catch (IOException e) {
       getMonitor().warn("Unable to persist geoJson", e);
@@ -219,58 +256,9 @@ public class EntityRelationConverter {
     return entities;
   }
 
-  private void convertHistory(
-      Map<String, Object> map, Collection<HistoryEvent> events, long entityInternalId) {
-    List<Object> list = new LinkedList<>();
-    saveEvents(list, events, entityInternalId);
-    putIfExists(map, fields.getHistory(), list);
-  }
-
-  private void saveEvents(
-      List<Object> list, Collection<HistoryEvent> events, long entityInternalId) {
-    for (HistoryEvent event : events) {
-      saveEvent(list, event, entityInternalId);
-    }
-  }
-
-  private void saveEvent(List<Object> list, HistoryEvent event, long entityInternalId) {
-    Map<String, Object> e = new LinkedHashMap<>();
-
-    if (event.getRecordable().getInternalId() != entityInternalId) {
-      // Only save the internal id as a reference to entities which aren't this one.
-      putIfExists(e, fields.getHistoryRecordable(), event.getRecordable().getInternalId());
-    }
-    putIfExists(e, fields.getHistoryAction(), event.getAction());
-    putIfExists(e, fields.getHistoryType(), event.getEventType());
-    putIfExists(e, fields.getHistoryParameters(), event.getParameters());
-    putIfExists(e, fields.getHistoryReferrer(), event.getReferrer());
-    putIfExists(e, fields.getHistoryTimestamp(), event.getTimestamp());
-
-    list.add(e);
-
-    if (HistoryEvents.MERGED_TYPE.equalsIgnoreCase(event.getEventType())
-        && event.getParameters() != null
-        && event.getParameters(HistoryEvents.PARAM_MERGED_ID).isPresent()) {
-      Optional<String> mergedId = event.getParameters(HistoryEvents.PARAM_MERGED_ID);
-      if (mergedId.isPresent()) {
-        Integer id = Ints.tryParse(mergedId.get());
-        if (id != null) {
-          Collection<HistoryEvent> mergedEvents = documentHistory.getHistory(id);
-          if (mergedEvents != null) {
-            saveEvents(list, mergedEvents, entityInternalId);
-          } else {
-            getMonitor().warn("Null history for {}", id);
-          }
-        } else {
-          getMonitor().warn("No merge id for merge history of {}", event.getRecordable());
-        }
-      }
-    }
-  }
-
-  private void putIfExists(Map<String, Object> map, String key, Object value) {
-    if (!Strings.isNullOrEmpty(key)) {
-      map.put(key, value);
-    }
+  private void convertHistory(Map<String, Object> map, Base entity) {
+    HistoryConverter historyConverter =
+        new HistoryConverter(entity, fields, documentHistory, monitor);
+    map.putAll(historyConverter.convert());
   }
 }

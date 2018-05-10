@@ -77,6 +77,13 @@
       <version>${elasticsearch.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-uima</artifactId>
+      <version>${baleen.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

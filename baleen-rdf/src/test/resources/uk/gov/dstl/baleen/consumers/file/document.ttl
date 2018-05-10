@@ -1,0 +1,467 @@
+@prefix baleen: <http://baleen.dstl.gov.uk/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl:   <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+baleen:SlideShow  a      owl:Class ;
+        rdfs:comment     "A slide show."@EN ;
+        rdfs:subClassOf  baleen:Document .
+
+baleen:tokens  a      owl:DatatypeProperty ;
+        rdfs:comment  "WordTokens which relate to the event type (eg verbs in the sentence)"@EN ;
+        rdfs:domain   baleen:Event ;
+        rdfs:range    xsd:string .
+
+baleen:Url  a            owl:Class ;
+        rdfs:comment     "A well-formed uniform resource location (URL) value"@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:gender  a      owl:DatatypeProperty ;
+        rdfs:comment  "Should be one of the following:\n* MALE\n* FEMALE\n* UNKNOWN\n\nIf empty or null, it is assumed to be UNKNOWN."@EN ;
+        rdfs:domain   baleen:Person ;
+        rdfs:range    xsd:string .
+
+baleen:Temporal  a       owl:Class ;
+        rdfs:comment     "Type to record all temporal references in the text and, where possible, information about them (e.g. timestamp). This includes all times, dates, datetimes, periods, etc."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:depth  a       owl:DatatypeProperty ;
+        rdfs:comment  "The depth of the structural component."@EN ;
+        rdfs:domain   baleen:Document ;
+        rdfs:range    xsd:int .
+
+baleen:countryCode  a  owl:DatatypeProperty ;
+        rdfs:comment  "The country code associated with this nationality, e.g. FRA for French"@EN ;
+        rdfs:domain   baleen:Nationality ;
+        rdfs:range    xsd:string .
+
+baleen:DocumentReference
+        a                owl:Class ;
+        rdfs:comment     "A publication reference/serial/identifier within the source document."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:SpreadSheet  a    owl:Class ;
+        rdfs:comment     "A spread sheet file."@EN ;
+        rdfs:subClassOf  baleen:Document .
+
+baleen:Location  a       owl:Class ;
+        rdfs:comment     "A reference to a place, country, administrative region or geo-political entity within the source document. This is a general purpose type that is extended in \"geo\" types."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:tags  a        owl:DatatypeProperty ;
+        rdfs:comment  "A list of types that are associated with a given BuzzWord value."@EN ;
+        rdfs:domain   baleen:Buzzword ;
+        rdfs:range    xsd:string .
+
+baleen:participantIn  a  owl:ObjectProperty ;
+        rdfs:comment  "A participant in the event"@EN ;
+        rdfs:domain   baleen:Entity ;
+        rdfs:range    baleen:Event .
+
+baleen:2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630
+        a                     baleen:Person ;
+        baleen:begin          "50" ;
+        baleen:confidence     "0.8" ;
+        baleen:end            "58" ;
+        baleen:gender         "Female" ;
+        baleen:isNormalised   "false" ;
+        baleen:mentionIn      baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 ;
+        baleen:mentionOf      baleen:e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527 ;
+        baleen:participantIn  baleen:15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e ;
+        baleen:type           "Person" ;
+        baleen:value          "Jane Doe" .
+
+baleen:Quantity  a       owl:Class ;
+        rdfs:comment     "Type to annotate references to quantities within text"@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:TextDocument  a   owl:Class ;
+        rdfs:comment     "A text based document."@EN ;
+        rdfs:subClassOf  baleen:Document .
+
+baleen:quantity  a    owl:DatatypeProperty ;
+        rdfs:comment  "The raw quantity"@EN ;
+        rdfs:domain   baleen:Quantity ;
+        rdfs:range    xsd:double .
+
+baleen:3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef
+        a                 baleen:ReferenceTarget ;
+        baleen:linking    "testLinking" ;
+        baleen:mentionIn  baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 .
+
+baleen:vehicleIdentifier
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "An identifying name or number for the vehicle"@EN ;
+        rdfs:domain   baleen:Vehicle ;
+        rdfs:range    xsd:string .
+
+baleen:cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23
+        a                     baleen:Person ;
+        baleen:begin          "25" ;
+        baleen:confidence     "0.9" ;
+        baleen:end            "35" ;
+        baleen:gender         "Male" ;
+        baleen:isNormalised   "false" ;
+        baleen:mentionIn      baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 ;
+        baleen:mentionOf      baleen:3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef ;
+        baleen:participantIn  baleen:15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e ;
+        baleen:source         baleen:3f94c0e8189cc0b78ba36414489b0ee7c2e57fc5d9424fff1bd0aa026bd38b66 , baleen:104d630293cf15b144a3628a7ecb6c66466a5e96573695a85246f75c5eeda0fa ;
+        baleen:type           "Person" ;
+        baleen:value          "John Smith" .
+
+baleen:timestampStop  a  owl:DatatypeProperty ;
+        rdfs:comment  "Timestamp of the point when the temporal reference ends (exclusive), in seconds."@EN ;
+        rdfs:domain   baleen:Temporal ;
+        rdfs:range    xsd:long .
+
+baleen:eventType  a   owl:DatatypeProperty ;
+        rdfs:comment  "The event type which classifies the event.\n\nFor example Currently based on the ACE2002 top-level relationships: {\"AT\" , \"NEAR\" , \"PART\" , \"ROLE\" , \"SOCIAL\"}\nAdditional relationship types that have been added: {\"QUANTITY\", \"ALIAS\"}"@EN ;
+        rdfs:domain   baleen:Event ;
+        rdfs:range    xsd:string .
+
+baleen:wordDistance  a  owl:DatatypeProperty ;
+        rdfs:comment  "A measure of the distance in the sentence between the two entities. The number of words between the two entities."@EN ;
+        rdfs:domain   baleen:Relation ;
+        rdfs:range    xsd:int .
+
+baleen:amount  a      owl:DatatypeProperty ;
+        rdfs:comment  "Numeric value of amount of money mentioned in document."@EN ;
+        rdfs:domain   baleen:Money ;
+        rdfs:range    xsd:double .
+
+baleen:elementClass  a  owl:DatatypeProperty ;
+        rdfs:comment  "A holder for further class information, say a more specific html class or a defined word style."@EN ;
+        rdfs:domain   baleen:Document ;
+        rdfs:range    xsd:string .
+
+baleen:32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b
+        a                    baleen:Person ;
+        baleen:begin         "60" ;
+        baleen:confidence    "0.9" ;
+        baleen:end           "62" ;
+        baleen:gender        "Male" ;
+        baleen:isNormalised  "false" ;
+        baleen:mentionIn     baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 ;
+        baleen:mentionOf     baleen:3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef ;
+        baleen:type          "Person" ;
+        baleen:value         "He" .
+
+baleen:elementId  a   owl:DatatypeProperty ;
+        rdfs:comment  "A holder for an id, if defined from the format."@EN ;
+        rdfs:domain   baleen:Document ;
+        rdfs:range    xsd:string .
+
+baleen:dependencyDistance
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A measure of the dependency distance in the sentence between the two entities. The number of dependant words between the two entities according to a dependency parser."@EN ;
+        rdfs:domain   baleen:Relation ;
+        rdfs:range    xsd:int .
+
+baleen:MilitaryPlatform
+        a                owl:Class ;
+        rdfs:comment     "A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:confidence  a  owl:DatatypeProperty ;
+        rdfs:comment  "Confidence value between 0 and 1 from annotation processor."@EN ;
+        rdfs:domain   baleen:Document ;
+        rdfs:range    xsd:double .
+
+baleen:relationSubType
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Used to record any sub-type information for the relation, for example the sub-relations defined within the ACE dataset."@EN ;
+        rdfs:domain   baleen:Relation ;
+        rdfs:range    xsd:string .
+
+baleen:begin  a       owl:DatatypeProperty ;
+        rdfs:comment  "The start of the mention offset"@EN ;
+        rdfs:domain   baleen:Mention ;
+        rdfs:range    xsd:int .
+
+baleen:Vulnerability  a  owl:Class ;
+        rdfs:comment     "Cyber vulnerabilities"@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8
+        a                 baleen:ReferenceTarget ;
+        baleen:linking    "" ;
+        baleen:mentionIn  baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 .
+
+baleen:Chemical  a       owl:Class ;
+        rdfs:comment     "A chemical or substance"@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:Mention  a     owl:Class ;
+        rdfs:comment  "Root mention type"@EN .
+
+baleen:unit  a        owl:DatatypeProperty ;
+        rdfs:comment  "The unit of the raw quantity"@EN ;
+        rdfs:domain   baleen:Quantity ;
+        rdfs:range    xsd:string .
+
+baleen:Event  a          owl:Class ;
+        rdfs:comment     "An event relates one or more entities with an associated action."@EN ;
+        rdfs:subClassOf  baleen:Mention .
+
+baleen:CommsIdentifier
+        a                owl:Class ;
+        rdfs:comment     "A communication identifier - including equipent, user, accounts or subscription.  Includes (but not limited to) the following types: emailAddress, IPv4, IPv6, MSISDN, IMEI, IMSI values."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:3f94c0e8189cc0b78ba36414489b0ee7c2e57fc5d9424fff1bd0aa026bd38b66
+        a                          baleen:Relation ;
+        baleen:begin               "36" ;
+        baleen:confidence          "0.0" ;
+        baleen:dependencyDistance  "0" ;
+        baleen:end                 "49" ;
+        baleen:mentionIn           baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 ;
+        baleen:relationshipType    "related" ;
+        baleen:sentenceDistance    "0" ;
+        baleen:source              "cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" ;
+        baleen:target              "2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" ;
+        baleen:target              baleen:2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630 ;
+        baleen:type                "Relation" ;
+        baleen:value               "is related to" ;
+        baleen:wordDistance        "0" .
+
+baleen:Document  a    owl:Class ;
+        rdfs:comment  "A document."@EN .
+
+baleen:Nationality  a    owl:Class ;
+        rdfs:comment     "Nationality denonym (e.g. French, British, Spanish)"@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:Person  a         owl:Class ;
+        rdfs:comment     "A Person named entitiy, as defined by an explict name reference within the source document."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:Organisation  a   owl:Class ;
+        rdfs:comment     "An explicit refrence to a formal organisation, including governmental, political, religious, charitable, economic/financial, business or criminal bodies."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:Buzzword  a       owl:Class ;
+        rdfs:comment     "User-defined key phrases or domain-specific terms, described by a type property."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:mentionOf  a   owl:ObjectProperty ;
+        rdfs:comment  "The mention of the reference"@EN ;
+        rdfs:domain   baleen:Entity ;
+        rdfs:range    baleen:ReferenceTarget .
+
+baleen:geoJson  a     owl:DatatypeProperty ;
+        rdfs:comment  "A strnig representation of geoJson format represention of geographic information associated with the location, including where possible coordinate(s)."@EN ;
+        rdfs:domain   baleen:Location ;
+        rdfs:range    xsd:string .
+
+baleen:arguments  a   owl:DatatypeProperty ;
+        rdfs:comment  "Additional text information, such as subject/object, in addition to the entities."@EN ;
+        rdfs:domain   baleen:Event ;
+        rdfs:range    xsd:string .
+
+baleen:temporalType  a  owl:DatatypeProperty ;
+        rdfs:comment  "Does this temporal entity describe a date, a time or a datetime. If unknown, then leave as null (or empty).\n\nExpected values: DATE, TIME, DATETIME, null"@EN ;
+        rdfs:domain   baleen:Temporal ;
+        rdfs:range    xsd:string .
+
+baleen:scope  a       owl:DatatypeProperty ;
+        rdfs:comment  "Does this temporal entity describe a single temporal instance (e.g. 12 Oct 2016) or a temporal range (12-16 Oct 2016). If unknown, then leave as null (or empty).\n\nExpected values: SINGLE, RANGE, null"@EN ;
+        rdfs:domain   baleen:Temporal ;
+        rdfs:range    xsd:string .
+
+baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165
+        a                      baleen:Document ;
+        baleen:caveats         "[GITHUB, CAVEAT]" ;
+        baleen:classification  "CLASS" ;
+        baleen:externalId      "8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165" ;
+        baleen:language        "en" ;
+        baleen:metadata        "{test=[1, 2]}" ;
+        baleen:publishedIds    "[{id=12, type=test}]" ;
+        baleen:source          "http://test.com" ;
+        baleen:timestamp       "Tue Mar 27 16:41:12 BST 2018" ;
+        baleen:type            "MANUAL" .
+
+baleen:title  a       owl:DatatypeProperty ;
+        rdfs:comment  "A person's title, for example Mr or President"@EN ;
+        rdfs:domain   baleen:Person ;
+        rdfs:range    xsd:string .
+
+baleen:value  a       owl:DatatypeProperty ;
+        rdfs:comment  "The value of the mention"@EN ;
+        rdfs:domain   baleen:Mention ;
+        rdfs:range    xsd:string .
+
+baleen:a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2
+        a                    baleen:Location ;
+        baleen:begin         "72" ;
+        baleen:confidence    "0.9" ;
+        baleen:end           "87" ;
+        baleen:geoJson       "{ \"type\": \"Feature\", \"geometry\": {\"type\":\"Point\",\"coordinates\": [125.6, 10.1]},\"properties\": {\"name\": \"Dinagat Islands\"}}" ;
+        baleen:isNormalised  "false" ;
+        baleen:mentionIn     baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 ;
+        baleen:mentionOf     baleen:a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8 ;
+        baleen:type          "Location" ;
+        baleen:value         "Dinagat Islands" .
+
+baleen:normalizedUnit
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "The unit of the normalized quantity"@EN ;
+        rdfs:domain   baleen:Quantity ;
+        rdfs:range    xsd:string .
+
+baleen:isNormalised  a  owl:DatatypeProperty ;
+        rdfs:comment  "Marks the entity value as having been normalised from the original value"@EN ;
+        rdfs:domain   baleen:Entity ;
+        rdfs:range    xsd:boolean .
+
+baleen:linking  a     owl:DatatypeProperty ;
+        rdfs:comment  "A property to define an external linking that may describe this group of mentions. For example, a set of mentions of a person could be linked to a database entry or webpage for the person."@EN ;
+        rdfs:domain   baleen:ReferenceTarget ;
+        rdfs:range    xsd:string .
+
+baleen:Entity  a         owl:Class ;
+        rdfs:comment     "Type to represent named entities - values that are assigned a semantic type."@EN ;
+        rdfs:subClassOf  baleen:Mention .
+
+baleen:end  a         owl:DatatypeProperty ;
+        rdfs:comment  "The end of the mention offset"@EN ;
+        rdfs:domain   baleen:Mention ;
+        rdfs:range    xsd:int .
+
+baleen:Weapon  a         owl:Class ;
+        rdfs:comment     "A weapon; for example a rifle, knife, or shotgun"@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:Coordinate  a     owl:Class ;
+        rdfs:comment     "A well-formed coordinate value - MGRS or WGS84 DD or DMS coordinate system - explicitly defined in source document."@EN ;
+        rdfs:subClassOf  baleen:Location .
+
+baleen:Relation  a       owl:ObjectProperty , owl:Class ;
+        rdfs:comment     "A relationship between two entities"@EN , "Records a relationship between named entities, explicitly mentioned within the source document."@EN ;
+        rdfs:domain      baleen:Entity ;
+        rdfs:range       baleen:Entity ;
+        rdfs:subClassOf  baleen:Mention .
+
+baleen:relationshipType
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Denotes the semantic type of the relationship between entities. \n\nCurrently based on the ACE2002 top-level relationships: {\"AT\" , \"NEAR\" , \"PART\" , \"ROLE\" , \"SOCIAL\"}\nAdditional relationship types that have been added: {\"QUANTITY\", \"ALIAS\"}"@EN ;
+        rdfs:domain   baleen:Relation ;
+        rdfs:range    xsd:string .
+
+baleen:docId  a       owl:DatatypeProperty ;
+        rdfs:comment  "The docId the mention came from"@EN ;
+        rdfs:domain   baleen:Mention ;
+        rdfs:range    xsd:string .
+
+baleen:mentionIn  a   owl:ObjectProperty ;
+        rdfs:comment  "The document this is mentioned in"@EN ;
+        rdfs:domain   baleen:Mention ;
+        rdfs:range    baleen:Document .
+
+baleen:currency  a    owl:DatatypeProperty ;
+        rdfs:comment  "String value of the currency denomination the money amount is specified in."@EN ;
+        rdfs:domain   baleen:Money ;
+        rdfs:range    xsd:string .
+
+baleen:referent  a    owl:DatatypeProperty ;
+        rdfs:comment  "Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text."@EN ;
+        rdfs:domain   baleen:Document ;
+        rdfs:range    xsd:string .
+
+baleen:15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e
+        a                  baleen:Event ;
+        baleen:arguments   "[argument, Other]" ;
+        baleen:begin       "0" ;
+        baleen:confidence  "0.0" ;
+        baleen:end         "10" ;
+        baleen:entities    "[cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, 2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630]" ;
+        baleen:eventType   "[MEETING]" ;
+        baleen:mentionIn   baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 ;
+        baleen:type        "Event" ;
+        baleen:value       "test event" .
+
+baleen:sentenceDistance
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A measure of the distance in the document between the two entities. The number of sentences between the two entities."@EN ;
+        rdfs:domain   baleen:Relation ;
+        rdfs:range    xsd:int .
+
+baleen:source  a      owl:ObjectProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The source of the relationship"@EN , "The source of the relationship (subject)"@EN ;
+        rdfs:domain   baleen:Entity ;
+        rdfs:range    baleen:Relation .
+
+baleen:Vehicle  a        owl:Class ;
+        rdfs:comment     "Specific vehicle or vessel"@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527
+        a                 baleen:ReferenceTarget ;
+        baleen:linking    "" ;
+        baleen:mentionIn  baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 .
+
+baleen:target  a      owl:ObjectProperty , owl:DatatypeProperty ;
+        rdfs:comment  "The target of the relationship"@EN , "The target of the relationship (object)"@EN ;
+        rdfs:domain   baleen:Relation ;
+        rdfs:range    baleen:Entity .
+
+baleen:normalizedQuantity
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "The normalized quantity"@EN ;
+        rdfs:domain   baleen:Quantity ;
+        rdfs:range    xsd:double .
+
+baleen:ReferenceTarget
+        a             owl:Class ;
+        rdfs:comment  "A target type for the referent property, such that entities pointing to the same target are assumed to be coreferences. The target can therefore be thought of as a super-entity, though it has no properties or value of it's own. The span of this entity is taken to be the scope in which this reference target is valid."@EN .
+
+baleen:entities  a    owl:DatatypeProperty ;
+        rdfs:comment  "The entities which are involved / related / associated with the event."@EN ;
+        rdfs:domain   baleen:Event ;
+        rdfs:range    xsd:string .
+
+baleen:Frequency  a      owl:Class ;
+        rdfs:comment     "A specific frequency value in the electro-magnetic spectrum (Hertz - Hz, MHz, GHz etc.)."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:subType  a     owl:DatatypeProperty ;
+        rdfs:comment  "String identifying sub type of entity."@EN ;
+        rdfs:domain   baleen:Entity ;
+        rdfs:range    xsd:string .
+
+baleen:coordinateValue
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "A normalised value for the coordinate."@EN ;
+        rdfs:domain   baleen:Coordinate ;
+        rdfs:range    xsd:string .
+
+baleen:Money  a          owl:Class ;
+        rdfs:comment     "Specific amount of some current mentioned within the document."@EN ;
+        rdfs:subClassOf  baleen:Entity .
+
+baleen:precision  a   owl:DatatypeProperty ;
+        rdfs:comment  "What level of precision does this temporal entity have. Do we know exactly when it refers to (i.e. we would expect to know timestampStart and timestampEnd); or is it relative to something else (i.e. we would expect to know timestampStart and timestampEnd only if we know when it is relative to); or is it unqualified (i.e. we would not expect to know timestampStart and timestampStop)?\n\nIf unknown, then leave as null (or empty).\n\nExpected values: EXACT, RELATIVE, UNQUALIFIED, null"@EN ;
+        rdfs:domain   baleen:Temporal ;
+        rdfs:range    xsd:string .
+
+baleen:timestampStart
+        a             owl:DatatypeProperty ;
+        rdfs:comment  "Timestamp of the point when the temporal reference starts (inclusive), in seconds."@EN ;
+        rdfs:domain   baleen:Temporal ;
+        rdfs:range    xsd:long .
+
+baleen:104d630293cf15b144a3628a7ecb6c66466a5e96573695a85246f75c5eeda0fa
+        a                          baleen:Relation ;
+        baleen:begin               "63" ;
+        baleen:confidence          "0.0" ;
+        baleen:dependencyDistance  "0" ;
+        baleen:end                 "71" ;
+        baleen:mentionIn           baleen:8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165 ;
+        baleen:relationshipType    "lives" ;
+        baleen:sentenceDistance    "0" ;
+        baleen:source              "cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" ;
+        baleen:target              "a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2" ;
+        baleen:target              baleen:a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2 ;
+        baleen:type                "Relation" ;
+        baleen:value               "lives at" ;
+        baleen:wordDistance        "0" .
