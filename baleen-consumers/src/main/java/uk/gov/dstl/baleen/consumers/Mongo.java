@@ -365,9 +365,11 @@ public class Mongo extends BaleenConsumer {
             .stream()
             .map(
                 e -> {
+                  ReferenceTarget referenceTarget = e.getKey();
                   return new Document()
                       .append(FIELD_DOCUMENT_ID, documentId)
                       .append(fields.getExternalId(), ConsumerUtils.getExternalId(e.getValue()))
+                      .append(FIELD_LINKING, referenceTarget.getLinking())
                       .append(
                           FIELD_ENTITIES,
                           e.getValue().stream().map(converter::convertEntity).collect(toList()));

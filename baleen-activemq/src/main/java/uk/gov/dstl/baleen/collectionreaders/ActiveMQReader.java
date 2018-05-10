@@ -2,8 +2,8 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import javax.jms.JMSException;
@@ -11,6 +11,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.TextMessage;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -105,8 +106,8 @@ public class ActiveMQReader extends BaleenCollectionReader {
       final Message msg = consumer.receive();
       if (msg instanceof TextMessage) {
         final String text = ((TextMessage) msg).getText();
-        extractor.processStream(
-            new ByteArrayInputStream(text.getBytes(Charset.defaultCharset())), source, jCas);
+        final InputStream is = IOUtils.toInputStream(text, Charset.defaultCharset());
+        extractor.processStream(is, source, jCas);
       } else {
         throw new IOException(
             String.format(

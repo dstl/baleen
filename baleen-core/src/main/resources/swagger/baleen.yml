@@ -477,6 +477,11 @@ paths:
         description: "The name of the pipeline (must not already be in use)"
         required: true
         type: "string"
+      - name: "multiplicity"
+        in: "formData"
+        description: "The positive multiplicity of the pipeline"
+        required: false
+        type: "integer"
       - name: "yaml"
         in: "formData"
         description: "The YAML configuration for this pipeline"
