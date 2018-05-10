@@ -100,4 +100,23 @@ public class FileGazetteerTest {
 
     gaz.destroy();
   }
+
+  @Test
+  public void testHasValueTermSeparator() throws BaleenException {
+    File gazetteerFile = new File(FileGazetteerTest.class.getResource("gazetteer.tsv").getPath());
+
+    Map<String, Object> tsConfig = new HashMap<>();
+    tsConfig.put(FileGazetteer.CONFIG_FILE, gazetteerFile.getPath());
+    tsConfig.put(FileGazetteer.CONFIG_TERM_SEPARATOR, "\t");
+
+    FileGazetteer gaz = new FileGazetteer();
+    gaz.init(sfr, tsConfig);
+
+    assertTrue(gaz.hasValue("howdy"));
+    assertTrue(gaz.hasValue("hej"));
+    assertTrue(gaz.hasValue("HEJ"));
+    assertFalse(gaz.hasValue("good morning"));
+
+    gaz.destroy();
+  }
 }
