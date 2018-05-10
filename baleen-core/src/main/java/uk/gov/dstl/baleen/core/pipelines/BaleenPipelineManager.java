@@ -186,7 +186,20 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
 
   /** Create a new pipeline from the provided YAML, with the given name */
   public BaleenPipeline create(String name, InputStream yaml) throws BaleenException {
-    return create(name, yaml);
+    return create(name, yaml, 1).get(0);
+  }
+
+  /**
+   * Create a new pipeline from the provided YAML, with the given name. If multiplicity is greater
+   * than 1 names will be suffixed with '-n' for each multiple.
+   */
+  public List<BaleenPipeline> create(String name, InputStream yaml, int multiplicity)
+      throws BaleenException {
+    try {
+      return create(name, new YamlPiplineConfiguration(yaml), multiplicity);
+    } catch (IOException e) {
+      throw new BaleenException(e);
+    }
   }
 
   /** Create a new pipeline from the provided YAML file, with the given name */

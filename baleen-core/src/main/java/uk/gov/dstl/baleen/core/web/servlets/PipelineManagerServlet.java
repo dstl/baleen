@@ -16,6 +16,8 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
+
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
 import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
@@ -31,6 +33,7 @@ public class PipelineManagerServlet extends AbstractApiServlet {
 
   public static final String PARAM_NAME = "name";
   public static final String PARAM_YAML = "yaml";
+  public static final String PARAM_MULTIPLICITY = "multiplicity";
 
   private final transient BaleenPipelineManager manager;
 
@@ -98,7 +101,7 @@ public class PipelineManagerServlet extends AbstractApiServlet {
 
     String[] parts = servletPath.split("/");
     String action = "";
-    if (parts.length > 4) { // <>/<api>/<1>/<pipelines> are first four splits
+    if (parts.length > 4) { // 	<>/<api>/<1>/<pipelines> are first four splits
       action = parts[parts.length - 1];
     }
 
@@ -152,15 +155,17 @@ public class PipelineManagerServlet extends AbstractApiServlet {
   private void create(HttpServletRequest req, HttpServletResponse resp) throws IOException {
     String name = req.getParameter(PARAM_NAME);
     String yaml = req.getParameter(PARAM_YAML);
+    String multi = req.getParameter(PARAM_MULTIPLICITY);
+    int multiplicity = Strings.isNullOrEmpty(multi) ? 1 : Integer.parseInt(multi);
 
     if (!parametersPresent(name, yaml) || manager.has(name)) {
       respondWithBadArguments(resp);
       return;
     }
 
-    BaleenPipeline t;
+    List<BaleenPipeline> t;
     try {
-      t = manager.create(name, new YamlPiplineConfiguration(yaml));
+      t = manager.create(name, new YamlPiplineConfiguration(yaml), multiplicity);
     } catch (BaleenException e) {
       LOGGER.error("Unable to create", e);
       respondWithError(
@@ -168,7 +173,11 @@ public class PipelineManagerServlet extends AbstractApiServlet {
       return;
     }
 
-    respondWithJson(resp, t);
+    if (multiplicity == 1) {
+      respondWithJson(resp, t.get(0));
+    } else {
+      respondWithJson(resp, t);
+    }
   }
 
   @Override

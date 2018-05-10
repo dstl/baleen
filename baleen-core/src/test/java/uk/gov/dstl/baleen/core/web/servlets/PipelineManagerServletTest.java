@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.core.web.servlets;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -21,6 +22,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import com.google.common.collect.ImmutableList;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
@@ -41,6 +44,7 @@ public class PipelineManagerServletTest {
   private static final String REAL = "real";
   private static final String NAME = PipelineManagerServlet.PARAM_NAME;
   private static final String YAML = PipelineManagerServlet.PARAM_YAML;
+  private static final String MULTIPLICITY = PipelineManagerServlet.PARAM_MULTIPLICITY;
   private static final String MISSING = "missing";
 
   @Mock BaleenPipelineManager pipelineManager;
@@ -132,14 +136,30 @@ public class PipelineManagerServletTest {
   @Test
   public void testPostForCreate() throws Exception {
     String yaml = "yaml";
-    when(pipelineManager.create(eq("new"), anyPiplieConfiguration())).thenReturn(realPipeline);
+    when(pipelineManager.create(eq("new"), anyPiplieConfiguration(), eq(1)))
+        .thenReturn(ImmutableList.of(realPipeline));
     ServletCaller caller = new ServletCaller();
     caller.setRequestUri(ROOT);
     caller.addParameter(NAME, "new");
     caller.addParameter(YAML, yaml);
     caller.doPost(new PipelineManagerServlet(pipelineManager));
     assertEquals(200, caller.getResponseStatus().intValue());
-    verify(pipelineManager).create(eq("new"), anyPiplieConfiguration());
+    verify(pipelineManager).create(eq("new"), anyPiplieConfiguration(), eq(1));
+  }
+
+  @Test
+  public void testPostForCreateMultiple() throws Exception {
+    String yaml = "yaml: test";
+    when(pipelineManager.create(eq("new"), anyPiplieConfiguration(), eq(2)))
+        .thenReturn(ImmutableList.of(realPipeline, realPipeline));
+    ServletCaller caller = new ServletCaller();
+    caller.setRequestUri(ROOT);
+    caller.addParameter(NAME, "new");
+    caller.addParameter(YAML, yaml);
+    caller.addParameter(MULTIPLICITY, "2");
+    caller.doPost(new PipelineManagerServlet(pipelineManager));
+    assertEquals(200, caller.getResponseStatus().intValue());
+    verify(pipelineManager).create(eq("new"), anyPiplieConfiguration(), eq(2));
   }
 
   @Test
@@ -192,7 +212,7 @@ public class PipelineManagerServletTest {
   public void testPostCreationFailure() throws Exception {
     doThrow(BaleenException.class)
         .when(pipelineManager)
-        .create(anyString(), anyPiplieConfiguration());
+        .create(anyString(), anyPiplieConfiguration(), anyInt());
 
     String yaml = "yaml";
     ServletCaller caller = new ServletCaller();

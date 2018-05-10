@@ -1,5 +1,4 @@
 // Dstl (c) Crown Copyright 2017
-// Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers;
 
 import java.util.ArrayList;

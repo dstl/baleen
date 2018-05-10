@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableSet;
 import uk.gov.dstl.baleen.annotators.templates.TemplateRecordConfiguration.Kind;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.types.templates.TemplateField;
 import uk.gov.dstl.baleen.types.templates.TemplateRecord;
@@ -121,6 +122,16 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
   @ConfigurationParameter(name = PARAM_TYPE_NAMES, mandatory = false)
   private String[] typeNames;
 
+  /**
+   * Metadata key used to store templates matched
+   *
+   * @baleen.config topic
+   */
+  public static final String PARAM_METADTA_KEY = "key";
+
+  @ConfigurationParameter(name = PARAM_METADTA_KEY, defaultValue = "label")
+  private String metadataKey;
+
   /** The structural classes. */
   private Set<Class<? extends Structure>> structuralClasses;
 
@@ -199,6 +210,7 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
       TemplateRecordConfiguration recordDefinition) {
 
     Optional<Structure> preceding = Optional.empty();
+    boolean matched = false;
     try {
       preceding = manager.select(recordDefinition.getPrecedingPath());
     } catch (InvalidParameterException e) {
@@ -223,6 +235,7 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
         last = manager.repeatRecord(preceding, repeatSearch, isFirst);
 
         if (last.isPresent()) {
+          matched = true;
           createRecordAnnotation(
               jCas,
               source,
@@ -251,6 +264,14 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
           jCas, source, recordDefinition.getName(), getPreceedingEnd(preceding), end);
 
       createTemplateFields(jCas, manager, source, recordDefinition.getFields(), end);
+
+      matched = true;
+    }
+    if (matched) {
+      Metadata md = new Metadata(jCas);
+      md.setKey(metadataKey);
+      md.setValue(recordDefinition.getName());
+      addToJCasIndex(md);
     }
   }
 
@@ -320,11 +341,12 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
       int end) {
     String fieldName = field.getName();
     String fieldPath = field.getPath();
+    boolean matched = false;
     try {
       SelectorPath path = SelectorPath.parse(fieldPath);
       Optional<Structure> fieldStructure = manager.select(path);
       if (fieldStructure.isPresent()) {
-        createFieldAnnotation(jCas, source, field, fieldStructure.get());
+        matched = createFieldAnnotation(jCas, source, field, fieldStructure.get());
       } else {
         manager.recordMissing(path);
         getMonitor()
@@ -341,12 +363,18 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
         while (field.isRepeat() && fieldStructure.isPresent()) {
           fieldStructure = manager.repeatField(fieldStructure, path, fieldEnd);
           if (fieldStructure.isPresent()) {
-            createFieldAnnotation(jCas, source, field, fieldStructure.get());
+            matched |= createFieldAnnotation(jCas, source, field, fieldStructure.get());
           }
         }
       }
     } catch (InvalidParameterException e) {
       getMonitor().warn("Failed to match structure for field " + fieldName, e);
+    }
+    if (matched) {
+      Metadata md = new Metadata(jCas);
+      md.setKey(metadataKey);
+      md.setValue(fieldName);
+      addToJCasIndex(md);
     }
   }
 
@@ -354,11 +382,13 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
    * Create field annotation for the given field definition and matched structural element.
    *
    * @param jCas JCas object to process
+   * @param manager the record structure manager
    * @param source the source template definition file name
    * @param field the field
    * @param structure the structure
+   * @return true if created
    */
-  private void createFieldAnnotation(
+  private boolean createFieldAnnotation(
       JCas jCas, String source, TemplateFieldConfiguration field, Structure structure) {
 
     String defaultValue = field.getDefaultValue();
@@ -366,11 +396,12 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
     if (structure.getCoveredText().isEmpty()) {
       if (field.isRequired() && defaultValue == null) {
         getMonitor().info("Required field missing {} in {}", field.getName(), source);
+        return false;
       } else {
         createFieldAnnotation(
             jCas, source, field.getName(), structure.getBegin(), structure.getEnd(), defaultValue);
+        return true;
       }
-      return;
     }
 
     String regex = field.getRegex();
@@ -383,6 +414,7 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
           structure.getBegin(),
           structure.getEnd(),
           structure.getCoveredText());
+      return true;
     } else {
       Pattern pattern = Pattern.compile(regex);
       String coveredText = structure.getCoveredText();
@@ -395,6 +427,7 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
             structure.getBegin() + matcher.start(),
             structure.getBegin() + matcher.end(),
             matcher.group());
+        return true;
       } else if (defaultValue != null) {
         getMonitor()
             .info(
@@ -409,8 +442,10 @@ public class TemplateAnnotator extends AbstractTemplateAnnotator {
             structure.getBegin(),
             structure.getBegin(),
             defaultValue);
+        return true;
       } else {
         getMonitor().warn("Failed to match pattern {} in {} - ignoring", regex, coveredText);
+        return false;
       }
     }
   }
