@@ -263,5 +263,10 @@
     <module>baleen-graph</module>
     <module>baleen-graph-neo4j</module>
     <module>baleen-rdf</module>
+    <module>baleen-transports</module>
+    <module>baleen-activemq</module>
+    <module>baleen-kafka</module>
+    <module>baleen-rabbitmq</module>
+    <module>baleen-redis</module>
   </modules>
 </project>
