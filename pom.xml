@@ -70,6 +70,7 @@
     <jackson.version>2.9.4</jackson.version>
     <javamail.version>1.6.1</javamail.version>
     <javassist.version>3.20.0-GA</javassist.version>
+    <jena.version>3.6.0</jena.version>
     <jest.version>2.4.0</jest.version>
     <jetty.version>9.4.7.v20170914</jetty.version>
     <jmustache.version>1.14</jmustache.version>
@@ -90,6 +91,7 @@
     <reflections.version>0.9.11</reflections.version>
     <slf4j.version>1.7.25</slf4j.version>
     <snakeyaml.version>1.19</snakeyaml.version>
+    <trove4j.version>3.0.3</trove4j.version>
     <uimafit.version>2.4.0</uimafit.version>
 
 
@@ -260,5 +262,15 @@
     <module>baleen-jobs</module>
     <module>baleen-orderers</module>
     <module>baleen-odin</module>
+    <module>baleen-entity-linking</module>
+    <module>baleen-mallet</module>
+    <module>baleen-graph</module>
+    <module>baleen-graph-neo4j</module>
+    <module>baleen-rdf</module>
+    <module>baleen-transports</module>
+    <module>baleen-activemq</module>
+    <module>baleen-kafka</module>
+    <module>baleen-rabbitmq</module>
+    <module>baleen-redis</module>
   </modules>
 </project>

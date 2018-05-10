@@ -1,0 +1,319 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:baleen="http://baleen.dstl.gov.uk/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Temporal">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://baleen.dstl.gov.uk/Entity"/>
+    </rdfs:subClassOf>
+    <rdfs:comment xml:lang="EN">Type to record all temporal references in the text and, where possible, information about them (e.g. timestamp). This includes all times, dates, datetimes, periods, etc.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Entity">
+    <rdfs:comment xml:lang="EN">Type to represent named entities - values that are assigned a semantic type.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Coordinate">
+    <rdfs:subClassOf>
+      <owl:Class rdf:about="http://baleen.dstl.gov.uk/Location"/>
+    </rdfs:subClassOf>
+    <rdfs:comment xml:lang="EN">A well-formed coordinate value - MGRS or WGS84 DD or DMS coordinate system - explicitly defined in source document.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Weapon">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A weapon; for example a rifle, knife, or shotgun</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Quantity">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Type to annotate references to quantities within text</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/MilitaryPlatform">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A reference to a military platform - space, air, land, surface and sub-surface platforms, where the type platform is described as a property.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/CommsIdentifier">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A communication identifier - including equipent, user, accounts or subscription.  Includes (but not limited to) the following types: emailAddress, IPv4, IPv6, MSISDN, IMEI, IMSI values.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Buzzword">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">User-defined key phrases or domain-specific terms, described by a type property.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/DocumentReference">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A publication reference/serial/identifier within the source document.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Url">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A well-formed uniform resource location (URL) value</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Organisation">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">An explicit refrence to a formal organisation, including governmental, political, religious, charitable, economic/financial, business or criminal bodies.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Vehicle">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Specific vehicle or vessel</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Nationality">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Nationality denonym (e.g. French, British, Spanish)</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Frequency">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A specific frequency value in the electro-magnetic spectrum (Hertz - Hz, MHz, GHz etc.).</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Location">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A reference to a place, country, administrative region or geo-political entity within the source document. This is a general purpose type that is extended in "geo" types.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Money">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Specific amount of some current mentioned within the document.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Vulnerability">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Cyber vulnerabilities</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Event">
+    <rdfs:comment xml:lang="EN">An event relates one or more entities with an associated action.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Person">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A Person named entitiy, as defined by an explict name reference within the source document.</rdfs:comment>
+  </owl:Class>
+  <owl:Class rdf:about="http://baleen.dstl.gov.uk/Chemical">
+    <rdfs:subClassOf rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A chemical or substance</rdfs:comment>
+  </owl:Class>
+  <owl:ObjectProperty rdf:about="http://baleen.dstl.gov.uk/Relation">
+    <rdfs:range rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A relationship between two entities</rdfs:comment>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://baleen.dstl.gov.uk/participantIn">
+    <rdfs:range rdf:resource="http://baleen.dstl.gov.uk/Event"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A participant in the event</rdfs:comment>
+  </owl:ObjectProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/vehicleIdentifier">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Vehicle"/>
+    <rdfs:comment xml:lang="EN">An identifying name or number for the vehicle</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/timestampStop">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Temporal"/>
+    <rdfs:comment xml:lang="EN">Timestamp of the point when the temporal reference ends (exclusive), in seconds.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/precision">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Temporal"/>
+    <rdfs:comment xml:lang="EN">What level of precision does this temporal entity have. Do we know exactly when it refers to (i.e. we would expect to know timestampStart and timestampEnd); or is it relative to something else (i.e. we would expect to know timestampStart and timestampEnd only if we know when it is relative to); or is it unqualified (i.e. we would not expect to know timestampStart and timestampStop)?
+
+If unknown, then leave as null (or empty).
+
+Expected values: EXACT, RELATIVE, UNQUALIFIED, null</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/arguments">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Event"/>
+    <rdfs:comment xml:lang="EN">Additional text information, such as subject/object, in addition to the entities.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/isNormalised">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Marks the entity value as having been normalised from the original value</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/timestampStart">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Temporal"/>
+    <rdfs:comment xml:lang="EN">Timestamp of the point when the temporal reference starts (inclusive), in seconds.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/mentions">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">The details of the mentions</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/amount">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Money"/>
+    <rdfs:comment xml:lang="EN">Numeric value of amount of money mentioned in document.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/tokens">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Event"/>
+    <rdfs:comment xml:lang="EN">WordTokens which relate to the event type (eg verbs in the sentence)</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/entities">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Event"/>
+    <rdfs:comment xml:lang="EN">The entities which are involved / related / associated with the event.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/countryCode">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Nationality"/>
+    <rdfs:comment xml:lang="EN">The country code associated with this nationality, e.g. FRA for French</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/tags">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Buzzword"/>
+    <rdfs:comment xml:lang="EN">A list of types that are associated with a given BuzzWord value.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/quantity">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Quantity"/>
+    <rdfs:comment xml:lang="EN">The raw quantity</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/unit">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Quantity"/>
+    <rdfs:comment xml:lang="EN">The unit of the raw quantity</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/coordinateValue">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Coordinate"/>
+    <rdfs:comment xml:lang="EN">A normalised value for the coordinate.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/normalizedUnit">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Quantity"/>
+    <rdfs:comment xml:lang="EN">The unit of the normalized quantity</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/gender">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Person"/>
+    <rdfs:comment xml:lang="EN">Should be one of the following:
+* MALE
+* FEMALE
+* UNKNOWN
+
+If empty or null, it is assumed to be UNKNOWN.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/referent">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Can be used to link a corefence to an entity to another (presuambly more definitive) mention of the same entity elsewhere in the text.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/currency">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Money"/>
+    <rdfs:comment xml:lang="EN">String value of the currency denomination the money amount is specified in.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/mostCommonValue">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">The most common value of the mention</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/geoJson">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Location"/>
+    <rdfs:comment xml:lang="EN">A strnig representation of geoJson format represention of geographic information associated with the location, including where possible coordinate(s).</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/title">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Person"/>
+    <rdfs:comment xml:lang="EN">A person's title, for example Mr or President</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/eventType">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Event"/>
+    <rdfs:comment xml:lang="EN">The event type which classifies the event.
+
+For example Currently based on the ACE2002 top-level relationships: {"AT" , "NEAR" , "PART" , "ROLE" , "SOCIAL"}
+Additional relationship types that have been added: {"QUANTITY", "ALIAS"}</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/docId">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:comment xml:lang="EN">The docId the mention came from</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/longestValue">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">The longest value of the mention</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/confidence">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">Confidence value between 0 and 1 from annotation processor.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/subType">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">String identifying sub type of entity.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/temporalType">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Temporal"/>
+    <rdfs:comment xml:lang="EN">Does this temporal entity describe a date, a time or a datetime. If unknown, then leave as null (or empty).
+
+Expected values: DATE, TIME, DATETIME, null</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/value">
+    <rdfs:comment xml:lang="EN">The value of the mention</rdfs:comment>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Entity"/>
+    <rdfs:comment xml:lang="EN">A value which reflects the name of the entity. May or may not differ from underlying span from the document.</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/normalizedQuantity">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#double"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Quantity"/>
+    <rdfs:comment xml:lang="EN">The normalized quantity</rdfs:comment>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://baleen.dstl.gov.uk/scope">
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    <rdfs:domain rdf:resource="http://baleen.dstl.gov.uk/Temporal"/>
+    <rdfs:comment xml:lang="EN">Does this temporal entity describe a single temporal instance (e.g. 12 Oct 2016) or a temporal range (12-16 Oct 2016). If unknown, then leave as null (or empty).
+
+Expected values: SINGLE, RANGE, null</rdfs:comment>
+  </owl:DatatypeProperty>
+  <baleen:Person rdf:about="http://baleen.dstl.gov.uk/3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
+    <baleen:gender>Male</baleen:gender>
+    <baleen:Relation>
+      <baleen:Person rdf:about="http://baleen.dstl.gov.uk/e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527">
+        <baleen:isNormalised>false</baleen:isNormalised>
+        <baleen:gender>Female</baleen:gender>
+        <baleen:mentions>{confidence=0.8, end=58, id=2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630, begin=50}</baleen:mentions>
+        <baleen:linking></baleen:linking>
+        <baleen:type>Person</baleen:type>
+        <baleen:longestValue>Jane Doe</baleen:longestValue>
+        <baleen:value>Jane Doe</baleen:value>
+        <baleen:docId>8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</baleen:docId>
+        <baleen:mostCommonValue>Jane Doe</baleen:mostCommonValue>
+      </baleen:Person>
+    </baleen:Relation>
+    <baleen:Relation>
+      <baleen:Location rdf:about="http://baleen.dstl.gov.uk/a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8">
+        <baleen:type>Location</baleen:type>
+        <baleen:longestValue>Dinagat Islands</baleen:longestValue>
+        <baleen:isNormalised>false</baleen:isNormalised>
+        <baleen:mentions>{confidence=0.9, end=87, id=a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2, begin=72}</baleen:mentions>
+        <baleen:docId>8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</baleen:docId>
+        <baleen:mostCommonValue>Dinagat Islands</baleen:mostCommonValue>
+        <baleen:linking></baleen:linking>
+        <baleen:value>Dinagat Islands</baleen:value>
+        <baleen:geoJson>{ "type": "Feature", "geometry": {"type":"Point","coordinates": [125.6, 10.1]},"properties": {"name": "Dinagat Islands"}}</baleen:geoJson>
+      </baleen:Location>
+    </baleen:Relation>
+    <baleen:value>He</baleen:value>
+    <baleen:isNormalised>false</baleen:isNormalised>
+    <baleen:mentions>{confidence=0.9, end=62, id=32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b, begin=60}</baleen:mentions>
+    <baleen:mostCommonValue>John Smith</baleen:mostCommonValue>
+    <baleen:docId>8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</baleen:docId>
+    <baleen:mentions>{confidence=0.9, end=35, id=cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, begin=25}</baleen:mentions>
+    <baleen:linking>testLinking</baleen:linking>
+    <baleen:longestValue>John Smith</baleen:longestValue>
+    <baleen:type>Person</baleen:type>
+    <baleen:value>John Smith</baleen:value>
+  </baleen:Person>
+  <baleen:Event rdf:about="http://baleen.dstl.gov.uk/15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+    <baleen:participantIn rdf:resource="http://baleen.dstl.gov.uk/15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e"/>
+    <baleen:value>test event</baleen:value>
+    <baleen:type>Event</baleen:type>
+    <baleen:eventType>[MEETING]</baleen:eventType>
+    <baleen:arguments>[argument, Other]</baleen:arguments>
+    <baleen:mentions>{confidence=0.0, end=10, id=15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e, begin=0}</baleen:mentions>
+    <baleen:docId>8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</baleen:docId>
+    <baleen:entities>[cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, 2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630]</baleen:entities>
+  </baleen:Event>
+</rdf:RDF>

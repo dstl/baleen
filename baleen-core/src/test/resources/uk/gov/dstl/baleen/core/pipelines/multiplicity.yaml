@@ -1,0 +1,9 @@
+pipelines:
+- name: multi
+  multiplicity: 4
+  config: "
+collectionreader: uk.gov.dstl.baleen.testing.RandomStringCollectionReader\n
+annotators:\n
+  - class: uk.gov.dstl.baleen.testing.DummyResourceAnnotator\n
+consumers:\n
+  - class: uk.gov.dstl.baleen.testing.DummyConsumer\n"
