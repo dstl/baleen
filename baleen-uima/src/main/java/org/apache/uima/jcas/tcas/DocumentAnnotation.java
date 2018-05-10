@@ -31,6 +31,7 @@ public class DocumentAnnotation extends Annotation {
    */
   @SuppressWarnings("hiding")
   public static final int type = typeIndexID;
+
   /**
    * @generated
    * @return index of the type
@@ -92,7 +93,7 @@ public class DocumentAnnotation extends Annotation {
    * @generated modifiable
    */
   private void readObject() {
-    /*default - does nothing empty block */
+    /* default - does nothing empty block */
   }
 
   // *--------------*

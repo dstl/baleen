@@ -1,0 +1,157 @@
+<?xml version="1.0" ?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.1/graphml.xsd">
+    <key id="arguments" for="node" attr.name="arguments" attr.type="string"></key>
+    <key id="begin" for="node" attr.name="begin" attr.type="int"></key>
+    <key id="confidence" for="node" attr.name="confidence" attr.type="double"></key>
+    <key id="docId" for="node" attr.name="docId" attr.type="string"></key>
+    <key id="end" for="node" attr.name="end" attr.type="int"></key>
+    <key id="entities" for="node" attr.name="entities" attr.type="string"></key>
+    <key id="eventType" for="node" attr.name="eventType" attr.type="string"></key>
+    <key id="gender" for="node" attr.name="gender" attr.type="string"></key>
+    <key id="geoJson" for="node" attr.name="geoJson" attr.type="string"></key>
+    <key id="isNormalised" for="node" attr.name="isNormalised" attr.type="boolean"></key>
+    <key id="labelV" for="node" attr.name="labelV" attr.type="string"></key>
+    <key id="linking" for="node" attr.name="linking" attr.type="string"></key>
+    <key id="type" for="node" attr.name="type" attr.type="string"></key>
+    <key id="value" for="node" attr.name="value" attr.type="string"></key>
+    <key id="begin" for="edge" attr.name="begin" attr.type="int"></key>
+    <key id="confidence" for="edge" attr.name="confidence" attr.type="double"></key>
+    <key id="dependencyDistance" for="edge" attr.name="dependencyDistance" attr.type="int"></key>
+    <key id="docId" for="edge" attr.name="docId" attr.type="string"></key>
+    <key id="end" for="edge" attr.name="end" attr.type="int"></key>
+    <key id="labelE" for="edge" attr.name="labelE" attr.type="string"></key>
+    <key id="relationshipType" for="edge" attr.name="relationshipType" attr.type="string"></key>
+    <key id="sentenceDistance" for="edge" attr.name="sentenceDistance" attr.type="int"></key>
+    <key id="source" for="edge" attr.name="source" attr.type="string"></key>
+    <key id="target" for="edge" attr.name="target" attr.type="string"></key>
+    <key id="type" for="edge" attr.name="type" attr.type="string"></key>
+    <key id="value" for="edge" attr.name="value" attr.type="string"></key>
+    <key id="wordDistance" for="edge" attr.name="wordDistance" attr.type="int"></key>
+    <graph id="G" edgedefault="directed">
+        <node id="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+            <data key="labelV">Event</data>
+            <data key="arguments">[argument, Other]</data>
+            <data key="begin">0</data>
+            <data key="confidence">0.0</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="end">10</data>
+            <data key="entities">[cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, 2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630]</data>
+            <data key="eventType">[MEETING]</data>
+            <data key="type">Event</data>
+            <data key="value">test event</data>
+        </node>
+        <node id="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630">
+            <data key="labelV">Mention</data>
+            <data key="begin">50</data>
+            <data key="confidence">0.8</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="end">58</data>
+            <data key="gender">Female</data>
+            <data key="isNormalised">false</data>
+            <data key="type">Person</data>
+            <data key="value">Jane Doe</data>
+        </node>
+        <node id="32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b">
+            <data key="labelV">Mention</data>
+            <data key="begin">60</data>
+            <data key="confidence">0.9</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="end">62</data>
+            <data key="gender">Male</data>
+            <data key="isNormalised">false</data>
+            <data key="type">Person</data>
+            <data key="value">He</data>
+        </node>
+        <node id="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
+            <data key="labelV">ReferenceTarget</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="linking">testLinking</data>
+        </node>
+        <node id="a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8">
+            <data key="labelV">ReferenceTarget</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="linking"></data>
+        </node>
+        <node id="a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2">
+            <data key="labelV">Mention</data>
+            <data key="begin">72</data>
+            <data key="confidence">0.9</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="end">87</data>
+            <data key="geoJson">{ "type": "Feature", "geometry": {"type":"Point","coordinates": [125.6, 10.1]},"properties": {"name": "Dinagat Islands"}}</data>
+            <data key="isNormalised">false</data>
+            <data key="type">Location</data>
+            <data key="value">Dinagat Islands</data>
+        </node>
+        <node id="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23">
+            <data key="labelV">Mention</data>
+            <data key="begin">25</data>
+            <data key="confidence">0.9</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="end">35</data>
+            <data key="gender">Male</data>
+            <data key="isNormalised">false</data>
+            <data key="type">Person</data>
+            <data key="value">John Smith</data>
+        </node>
+        <node id="e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527">
+            <data key="labelV">ReferenceTarget</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="linking"></data>
+        </node>
+        <edge id="104d630293cf15b144a3628a7ecb6c66466a5e96573695a85246f75c5eeda0fa" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2">
+            <data key="labelE">Relation</data>
+            <data key="begin">63</data>
+            <data key="confidence">0.0</data>
+            <data key="dependencyDistance">0</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="end">71</data>
+            <data key="relationshipType">lives</data>
+            <data key="sentenceDistance">0</data>
+            <data key="source">cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23</data>
+            <data key="target">a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2</data>
+            <data key="type">Relation</data>
+            <data key="value">lives at</data>
+            <data key="wordDistance">0</data>
+        </edge>
+        <edge id="24" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
+            <data key="labelE">mentionOf</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+        </edge>
+        <edge id="25" source="32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b" target="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
+            <data key="labelE">mentionOf</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+        </edge>
+        <edge id="34" source="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" target="e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527">
+            <data key="labelE">mentionOf</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+        </edge>
+        <edge id="3f94c0e8189cc0b78ba36414489b0ee7c2e57fc5d9424fff1bd0aa026bd38b66" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630">
+            <data key="labelE">Relation</data>
+            <data key="begin">36</data>
+            <data key="confidence">0.0</data>
+            <data key="dependencyDistance">0</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+            <data key="end">49</data>
+            <data key="relationshipType">related</data>
+            <data key="sentenceDistance">0</data>
+            <data key="source">cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23</data>
+            <data key="target">2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630</data>
+            <data key="type">Relation</data>
+            <data key="value">is related to</data>
+            <data key="wordDistance">0</data>
+        </edge>
+        <edge id="43" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+            <data key="labelE">participantIn</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+        </edge>
+        <edge id="44" source="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+            <data key="labelE">participantIn</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+        </edge>
+        <edge id="8" source="a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2" target="a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8">
+            <data key="labelE">mentionOf</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+        </edge>
+    </graph>
+</graphml>
