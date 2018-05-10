@@ -1,11 +1,19 @@
 // Dstl (c) Crown Copyright 2017
+// Modified by Committed Software Copyright (c) 2018, opensource@committed.io
 package uk.gov.dstl.baleen.uima.grammar;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -18,11 +26,15 @@ import org.apache.uima.jcas.JCas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.SetMultimap;
 
 import uk.gov.dstl.baleen.types.language.Dependency;
 import uk.gov.dstl.baleen.types.language.WordToken;
+import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
  * A graph of grammar dependencies within an annotated jCas.
@@ -38,16 +50,23 @@ public class DependencyGraph {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(DependencyGraph.class);
 
+  private static final DependencyNode DUMMY_NODE = new DependencyNode("DUMMY", null, null);
+
+  private static final List<String> ROOT_POS =
+      ImmutableList.of("JJ", "RB", "NN", "PP", "IN", "V", "VB", "VV", "VH", "WP");
+
   private final SetMultimap<WordToken, Edge> edges;
 
-  private final SetMultimap<WordToken, Dependency> dependents;
+  private final SetMultimap<String, WordToken> partOfSpeech;
+  private final Map<WordToken, Dependency> dependents;
   private final SetMultimap<WordToken, Dependency> governors;
 
   /** Instantiates a new dependency graph. */
   private DependencyGraph() {
     edges = HashMultimap.create();
-    dependents = HashMultimap.create();
+    dependents = new HashMap<>();
     governors = HashMultimap.create();
+    partOfSpeech = HashMultimap.create();
   }
 
   /**
@@ -59,11 +78,13 @@ public class DependencyGraph {
    */
   private DependencyGraph(
       SetMultimap<WordToken, Edge> edges,
-      SetMultimap<WordToken, Dependency> dependentMap,
-      SetMultimap<WordToken, Dependency> governorMap) {
+      Map<WordToken, Dependency> dependentMap,
+      SetMultimap<WordToken, Dependency> governorMap,
+      SetMultimap<String, WordToken> partOfSpeechMap) {
     this.edges = edges;
-    this.dependents = dependentMap;
-    this.governors = governorMap;
+    dependents = dependentMap;
+    governors = governorMap;
+    partOfSpeech = partOfSpeechMap;
   }
 
   /**
@@ -72,8 +93,8 @@ public class DependencyGraph {
    * @param word the word
    * @return the dependents
    */
-  public Set<Dependency> getDependents(WordToken word) {
-    return Collections.unmodifiableSet(dependents.get(word));
+  public Dependency getDependency(WordToken word) {
+    return dependents.get(word);
   }
 
   /**
@@ -109,6 +130,19 @@ public class DependencyGraph {
     edges.put(dependent, edge);
     dependents.put(dependent, dependency);
     governors.put(governor, dependency);
+    addPartOfSpeech(governor);
+    addPartOfSpeech(dependent);
+  }
+
+  private void addPartOfSpeech(final WordToken wt) {
+    String pos = wt.getPartOfSpeech();
+    partOfSpeech.put(pos, wt);
+    ROOT_POS.forEach(
+        root -> {
+          if (pos.startsWith(root)) {
+            partOfSpeech.put(root, wt);
+          }
+        });
   }
 
   /**
@@ -290,7 +324,6 @@ public class DependencyGraph {
 
     final StringBuilder dependentSb = new StringBuilder();
     dependents
-        .asMap()
         .entrySet()
         .stream()
         .forEach(
@@ -298,18 +331,14 @@ public class DependencyGraph {
               dependentSb.append("\t");
               dependentSb.append(e.getKey().getCoveredText());
               dependentSb.append(": ");
-              e.getValue()
-                  .stream()
-                  .forEach(
-                      w ->
-                          dependentSb.append(
-                              " " + w.getCoveredText() + "[" + w.getDependencyType() + "]"));
+              Dependency w = e.getValue();
+              dependentSb.append(" " + w.getCoveredText() + "[" + w.getDependencyType() + "]");
               dependentSb.append("\n");
             });
 
     DependencyGraph.LOGGER.info(
         "Dependency graph:  Edges:\n{}\n  Governors\n{}\n  Dependent\n{}",
-        sb.toString(),
+        sb,
         governorSb,
         dependentSb);
   }
@@ -322,8 +351,9 @@ public class DependencyGraph {
    */
   public DependencyGraph filter(Predicate<WordToken> predicate) {
     final SetMultimap<WordToken, Edge> filteredEdges = HashMultimap.create();
-    final SetMultimap<WordToken, Dependency> filteredDependent = HashMultimap.create();
+    final Map<WordToken, Dependency> filteredDependent = new HashMap<>();
     final SetMultimap<WordToken, Dependency> filteredGovernor = HashMultimap.create();
+    final SetMultimap<String, WordToken> filteredPartOfSpeech = HashMultimap.create();
 
     edges
         .asMap()
@@ -357,22 +387,29 @@ public class DependencyGraph {
             });
 
     dependents
-        .asMap()
         .keySet()
         .stream()
         .filter(predicate)
         .forEach(
             k -> {
-              final List<Dependency> filtered =
-                  dependents
-                      .get(k)
-                      .stream()
-                      .filter(
-                          d -> predicate.test(d.getGovernor()) && predicate.test(d.getDependent()))
-                      .collect(Collectors.toList());
-              filteredDependent.putAll(k, filtered);
+              final Dependency d = dependents.get(k);
+              if (predicate.test(d.getGovernor()) && predicate.test(d.getDependent())) {
+                filteredDependent.put(k, d);
+              }
             });
-    return new DependencyGraph(filteredEdges, filteredDependent, filteredGovernor);
+
+    partOfSpeech
+        .asMap()
+        .entrySet()
+        .forEach(
+            entry -> {
+              final List<WordToken> filtered =
+                  entry.getValue().stream().filter(predicate).collect(Collectors.toList());
+              filteredPartOfSpeech.putAll(entry.getKey(), filtered);
+            });
+
+    return new DependencyGraph(
+        filteredEdges, filteredDependent, filteredGovernor, filteredPartOfSpeech);
   }
 
   /**
@@ -386,6 +423,9 @@ public class DependencyGraph {
         && dependency.getGovernor() != null
         && dependency.getDependent() != null) {
       addEdge(dependency);
+
+    } else if ("ROOT".equalsIgnoreCase(dependency.getDependencyType())) {
+      dependents.put(dependency.getDependent(), dependency);
     }
   }
 
@@ -399,7 +439,7 @@ public class DependencyGraph {
   }
 
   /**
-   * Shortest path between from and to, limited by maxDistance..
+   * Shortest path between from and to, limited by maxDistance.
    *
    * @param from the from
    * @param to the to
@@ -500,7 +540,7 @@ public class DependencyGraph {
       return;
     }
 
-    final ImmutableStack<WordToken> history = new ImmutableStack<WordToken>();
+    final ImmutableStack<WordToken> history = new ImmutableStack<>();
 
     for (final Dependency d : start) {
       if (predicate.test(d, null, d.getDependent(), history)) {
@@ -554,5 +594,247 @@ public class DependencyGraph {
      */
     boolean test(
         Dependency dependency, WordToken from, WordToken to, ImmutableStack<WordToken> history);
+  }
+
+  /**
+   * Check for "isomorphic" matches in this graph to the given {@link DependencyTree}.
+   *
+   * <p>By isomorphic here we must have the same graph structure and all the nodes and edges must
+   * match according the the definition of match for node and edge. Which is that a edge must have
+   * exactly the same type and a node must have the same root type (e.g. NN will also match NNP) and
+   * may additionally specify a regular expression for the content to match.
+   *
+   * <p>Multiple matches may occur.
+   *
+   * @param dependencyTree to search for
+   * @return a collection of found {@link DependencyMatch}es
+   */
+  public Collection<DependencyMatch> match(DependencyTree dependencyTree) {
+    if (!isTreeSmaller(dependencyTree)) {
+      return Collections.emptySet();
+    }
+
+    DependencyNode root = dependencyTree.getRoot();
+    List<WordToken> rootCandidates =
+        partOfSpeech
+            .get(root.getType())
+            .stream()
+            .filter(root::matches)
+            .collect(Collectors.toList());
+
+    if (rootCandidates.isEmpty()) {
+      return Collections.emptySet();
+    }
+
+    List<BiMap<DependencyNode, WordToken>> matched = new ArrayList<>();
+    for (WordToken rootCandidate : rootCandidates) {
+
+      List<BiMap<DependencyNode, WordToken>> total = new ArrayList<>();
+      BiMap<DependencyNode, WordToken> nodeToToken = HashBiMap.create();
+      List<DependencyTree> treeMatch = Arrays.asList(dependencyTree);
+      List<WordToken> twMatch = Arrays.asList(rootCandidate);
+
+      if (matchTree(total, treeMatch, twMatch, nodeToToken)) {
+        matched.addAll(total);
+      }
+    }
+
+    return matched.stream().map(DependencyMatch::new).collect(Collectors.toList());
+  }
+
+  private boolean isTreeSmaller(DependencyTree dependencyTree) {
+    return dependencyTree.size() < partOfSpeech.size();
+  }
+
+  private boolean matchTree(
+      List<BiMap<DependencyNode, WordToken>> total,
+      List<DependencyTree> treeMatchs,
+      List<WordToken> wtMatchs,
+      BiMap<DependencyNode, WordToken> nodeToTokens) {
+
+    List<DependencyTree> treeMatch = new ArrayList<>(treeMatchs);
+    List<WordToken> wtMatch = new ArrayList<>(wtMatchs);
+    BiMap<DependencyNode, WordToken> nodeToToken = HashBiMap.create(nodeToTokens);
+
+    boolean failure = false;
+    boolean success = true;
+    while (!treeMatch.isEmpty()) {
+      DependencyTree tree = treeMatch.remove(0);
+      DependencyNode root = tree.getRoot();
+      WordToken candidate = wtMatch.remove(0);
+
+      if (!root.matches(candidate)) {
+        return failure;
+      }
+
+      if (nodeToToken.containsKey(root) || nodeToToken.containsValue(candidate)) {
+        if (!nodeToToken.get(root).equals(candidate)) {
+          return failure;
+        }
+      } else {
+        nodeToToken.put(root, candidate);
+      }
+
+      List<DependencyEdge> children = tree.getDependencies();
+      Set<Dependency> dependants = governors.get(candidate);
+
+      if (children.size() > dependants.size()) {
+        return failure;
+      }
+
+      for (DependencyEdge edge : children) {
+        List<WordToken> candidates = new ArrayList<>();
+        addDependantsToCandidates(dependants, edge, candidates);
+
+        DependencyTree childTree = edge.getTree();
+        DependencyNode childNode = childTree.getRoot();
+
+        boolean flag = false;
+        boolean terminate = false;
+        for (WordToken childCandidate : candidates) {
+          if (nodeToToken.containsKey(childNode) || nodeToToken.containsValue(childCandidate)) {
+            if (nodeToToken.inverse().getOrDefault(childCandidate, DUMMY_NODE).equals(childNode)) {
+              terminate = true;
+              break;
+            } else {
+              continue;
+            }
+          }
+          List<DependencyTree> treeMatchTemp =
+              ImmutableList.<DependencyTree>builder()
+                  .addAll(treeMatch)
+                  .add(tree)
+                  .add(childTree)
+                  .build();
+
+          List<WordToken> wtMatchTemp =
+              ImmutableList.<WordToken>builder()
+                  .addAll(wtMatch)
+                  .add(candidate)
+                  .add(childCandidate)
+                  .build();
+
+          flag |= matchTree(total, treeMatchTemp, wtMatchTemp, nodeToToken);
+        }
+
+        if (terminate) {
+          continue;
+        }
+        if (flag) {
+          return success;
+        }
+
+        return failure;
+      }
+    }
+
+    total.add(nodeToToken);
+    return success;
+  }
+
+  private void addDependantsToCandidates(
+      Set<Dependency> dependants, DependencyEdge edge, List<WordToken> candidates) {
+    for (Dependency dependency : dependants) {
+      if (edge.matches(dependency)) {
+        candidates.add(dependency.getDependent());
+      }
+    }
+  }
+
+  /**
+   * Get the head node for the given annotation.
+   *
+   * <p>This is the highest word token in the dependency graph covered by the annotation.
+   *
+   * @param annotation
+   * @return the head node
+   */
+  public Optional<WordToken> getHeadNode(Entity annotation) {
+    List<WordToken> covered = JCasUtil.selectCovered(WordToken.class, annotation);
+    return getHeadNode(covered);
+  }
+
+  /**
+   * Get the head node from the given set of WordTokens.
+   *
+   * <p>This is the highest word token in the dependency graph covered by the annotation, assumes
+   * they are connected.
+   *
+   * @param annotation
+   * @return the head node
+   */
+  public Optional<WordToken> getHeadNode(List<WordToken> covered) {
+    if (covered.isEmpty()) {
+      return Optional.empty();
+    }
+    if (covered.size() == 1) {
+      return Optional.of(covered.get(0));
+    }
+    WordToken head = covered.get(0);
+    Dependency d = dependents.get(head);
+    while (d != null && !head.equals(d.getGovernor()) && covered.contains(d.getGovernor())) {
+      head = d.getGovernor();
+    }
+    return Optional.of(head);
+  }
+
+  /**
+   * Get the minimal tree containing the given word tokens.
+   *
+   * <p>The tokens must be from the same dependency tree (i.e. be in the same sentence) or an {@link
+   * IllegalArgumentException} will be thrown.
+   *
+   * @param tokens to contain
+   * @return the minimal subtree
+   */
+  public DependencyTree minimalTree(Collection<WordToken> tokens) {
+    final Set<WordToken> common = getCommonParents(tokens);
+    if (common.isEmpty()) {
+      throw new IllegalArgumentException(
+          "Given tokens not from the same dependency tree: " + tokens.toString());
+    }
+
+    Set<Dependency> dependencies = new HashSet<>();
+    Deque<WordToken> deque = new ArrayDeque<>(tokens);
+    while (!deque.isEmpty()) {
+      WordToken current = deque.removeLast();
+      Dependency dependency = dependents.get(current);
+
+      if (dependency != null
+          && dependencies.add(dependency)
+          && !common.contains(dependency.getDependent())) {
+        deque.push(dependency.getGovernor());
+      }
+    }
+    return DependencyTreeBuilder.buildFromDependencies(dependencies);
+  }
+
+  private Set<WordToken> getCommonParents(Collection<WordToken> tokens) {
+    final Iterator<Set<WordToken>> iterator =
+        tokens
+            .stream()
+            .map(
+                t -> {
+                  final Set<WordToken> path = new HashSet<>();
+                  WordToken wt = t;
+                  do {
+                    path.add(wt);
+                    wt = dependents.get(wt).getGovernor();
+
+                  } while (!path.contains(wt));
+
+                  return path;
+                })
+            .iterator();
+
+    final Set<WordToken> common = new HashSet<>();
+
+    if (iterator.hasNext()) {
+      common.addAll(iterator.next());
+      while (iterator.hasNext()) {
+        common.retainAll(new HashSet<>(iterator.next()));
+      }
+    }
+    return common;
   }
 }
