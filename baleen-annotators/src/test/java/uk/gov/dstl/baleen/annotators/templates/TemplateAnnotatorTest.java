@@ -18,6 +18,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
 
+import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.types.templates.TemplateField;
 import uk.gov.dstl.baleen.types.templates.TemplateRecord;
 
@@ -82,6 +83,8 @@ public class TemplateAnnotatorTest extends AbstractRecordAnnotatorTest {
       assertEquals(PARA5, field1.getCoveredText());
       assertEquals(PARA5, field1.getValue());
 
+      assertEquals(2, JCasUtil.select(jCas, Metadata.class).size());
+
     } finally {
       Files.delete(definitionFile);
     }
@@ -115,6 +118,7 @@ public class TemplateAnnotatorTest extends AbstractRecordAnnotatorTest {
       processJCas(TemplateAnnotator.PARAM_RECORD_DEFINITIONS_DIRECTORY, tempDirectory.toString());
 
       assertEquals(0, JCasUtil.select(jCas, TemplateField.class).size());
+      assertEquals(0, JCasUtil.select(jCas, Metadata.class).size());
     } finally {
       Files.delete(definitionFile);
     }
@@ -133,6 +137,8 @@ public class TemplateAnnotatorTest extends AbstractRecordAnnotatorTest {
       assertEquals(212, field1.getEnd());
       assertEquals("", field1.getCoveredText());
       assertEquals("default value", field1.getValue());
+
+      assertEquals(1, JCasUtil.select(jCas, Metadata.class).size());
 
     } finally {
       Files.delete(definitionFile);
@@ -217,6 +223,8 @@ public class TemplateAnnotatorTest extends AbstractRecordAnnotatorTest {
       assertEquals(159, field1.getEnd());
       assertEquals("", field1.getCoveredText());
       assertEquals("horse", field1.getValue());
+
+      assertEquals(2, JCasUtil.select(jCas, Metadata.class).size());
 
     } finally {
       Files.delete(definitionFile);

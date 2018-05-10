@@ -1,8 +1,6 @@
 // Dstl (c) Crown Copyright 2017
-package uk.gov.dstl.baleen.annotators.misc.helpers;
+package uk.gov.dstl.baleen.annotators.triage.impl;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -10,7 +8,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+
+import opennlp.tools.stemmer.Stemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer;
+import opennlp.tools.stemmer.snowball.SnowballStemmer.ALGORITHM;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -18,7 +19,9 @@ import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import com.google.common.base.Strings;
+
+import uk.gov.dstl.baleen.annotators.misc.helpers.NoOpStemmer;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
 import uk.gov.dstl.baleen.types.common.Buzzword;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
@@ -32,6 +35,10 @@ import uk.gov.dstl.baleen.uima.utils.UimaTypesUtils;
  * @baleen.javadoc
  */
 public abstract class AbstractKeywordsAnnotator extends BaleenTextAwareAnnotator {
+
+  /** The metadata key used for keywords */
+  public static final String KEYWORD_METADATA_KEY = "keyword";
+
   /**
    * Should the extracted keywords be annotated as Buzzwords within the document?
    *
@@ -82,40 +89,45 @@ public abstract class AbstractKeywordsAnnotator extends BaleenTextAwareAnnotator
   @ExternalResource(key = KEY_STOPWORDS)
   protected SharedStopwordResource stopwordResource;
 
+  /**
+   * The stemming algorithm to use, as defined in OpenNLP's SnowballStemmer.ALGORITHM enum, e.g.
+   * ENGLISH. If not set, or set to an undefined value, then no stemming will be used
+   *
+   * @baleen.config
+   */
+  public static final String PARAM_STEMMING = "stemming";
+
+  @ConfigurationParameter(name = PARAM_STEMMING, defaultValue = "")
+  private String stemming;
+
   protected Collection<String> stopwords;
+  protected Stemmer stemmer;
 
   @Override
   public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
-    try {
-      stopwords =
-          stopwordResource.getStopwords(SharedStopwordResource.StopwordList.valueOf(stoplist));
-    } catch (IllegalArgumentException iae) {
-      getMonitor()
-          .info(
-              "Value of {} does not match pre-defined list, assuming value is a file",
-              PARAM_STOPLIST);
-      getMonitor().debug("Unable to parse value of {} as StopwordList enum", PARAM_STOPLIST, iae);
+    stopwords = stopwordResource.getStopwords(stoplist);
 
-      File f = new File(stoplist);
-
+    if (!Strings.isNullOrEmpty(stemming)) {
       try {
-        stopwords = stopwordResource.getStopwords(f);
-      } catch (IOException ioe) {
-        throw new ResourceInitializationException(
-            new InvalidParameterException("Couldn't load stoplist", ioe));
+        ALGORITHM algo = ALGORITHM.valueOf(stemming);
+        stemmer = new SnowballStemmer(algo);
+      } catch (IllegalArgumentException iae) {
+        getMonitor()
+            .warn(
+                "Value of {} does not match pre-defined list, no stemming will be used.",
+                PARAM_STEMMING,
+                iae);
+        stemmer = new NoOpStemmer();
       }
-    } catch (IOException ioe) {
-      getMonitor().warn("Unable to load Stopword list, resorting to default list", ioe);
-      stopwords = stopwordResource.getStopwords();
+    } else {
+      stemmer = new NoOpStemmer();
     }
   }
 
   /** Add the supplied keywords to the CAS as Metadata and, if configured, Buzzwords */
   protected void addKeywordsToJCas(JCas jCas, List<String> keywords) {
-    Metadata md = new Metadata(jCas);
-    md.setKey("keywords");
-    md.setValue(keywords.stream().collect(Collectors.joining(";")));
-    addToJCasIndex(md);
+
+    addKeywordsToMetadata(jCas, keywords);
 
     if (addBuzzwords) {
       addAllKeywords(jCas, keywords);
@@ -129,10 +141,8 @@ public abstract class AbstractKeywordsAnnotator extends BaleenTextAwareAnnotator
    */
   protected void addKeywordsToJCas(
       JCas jCas, List<String> keywords, List<String> additionalBuzzwords) {
-    Metadata md = new Metadata(jCas);
-    md.setKey("keywords");
-    md.setValue(keywords.stream().collect(Collectors.joining(";")));
-    addToJCasIndex(md);
+
+    addKeywordsToMetadata(jCas, keywords);
 
     if (addBuzzwords) {
       Set<String> allKeywords = new HashSet<>(keywords);
@@ -141,6 +151,19 @@ public abstract class AbstractKeywordsAnnotator extends BaleenTextAwareAnnotator
 
       addAllKeywords(jCas, allKeywords);
     }
+  }
+
+  private void addKeywordsToMetadata(JCas jCas, List<String> keywords) {
+    keywords
+        .stream()
+        .limit(maxKeywords)
+        .forEach(
+            k -> {
+              Metadata md = new Metadata(jCas);
+              md.setKey(KEYWORD_METADATA_KEY);
+              md.setValue(k);
+              addToJCasIndex(md);
+            });
   }
 
   private void addAllKeywords(JCas jCas, Collection<String> allKeywords) {
