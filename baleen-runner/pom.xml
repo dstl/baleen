@@ -57,42 +57,12 @@
     </dependency>
     <dependency>
       <groupId>uk.gov.dstl.baleen</groupId>
-      <artifactId>baleen-odin</artifactId>
-      <version>${baleen.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>uk.gov.dstl.baleen</groupId>
-      <artifactId>baleen-entity-linking</artifactId>
-      <version>${baleen.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>uk.gov.dstl.baleen</groupId>
-      <artifactId>baleen-mallet</artifactId>
-      <version>${baleen.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>uk.gov.dstl.baleen</groupId>
-      <artifactId>baleen-graph</artifactId>
-      <version>${baleen.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>uk.gov.dstl.baleen</groupId>
       <artifactId>baleen-transports</artifactId>
       <version>${baleen.version}</version>
     </dependency>
     <dependency>
       <groupId>uk.gov.dstl.baleen</groupId>
-      <artifactId>baleen-graph-neo4j</artifactId>
-      <version>${baleen.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>uk.gov.dstl.baleen</groupId>
       <artifactId>baleen-activemq</artifactId>
-      <version>${baleen.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>uk.gov.dstl.baleen</groupId>
-      <artifactId>baleen-rdf</artifactId>
       <version>${baleen.version}</version>
     </dependency>
     <dependency>
@@ -108,6 +78,36 @@
     <dependency>
       <groupId>uk.gov.dstl.baleen</groupId>
       <artifactId>baleen-redis</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-graph</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-graph-neo4j</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-rdf</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-mallet</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-entity-linking</artifactId>
+      <version>${baleen.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>uk.gov.dstl.baleen</groupId>
+      <artifactId>baleen-odin</artifactId>
       <version>${baleen.version}</version>
     </dependency>
   </dependencies>
