@@ -18,6 +18,11 @@ public class MergedYaml extends AbstractBaseYaml {
 
   private final List<Yaml> yamls;
 
+  /**
+   * New instance
+   *
+   * @param yamls {@link List} of {@link Yaml}'s to be merged
+   */
   public MergedYaml(List<Yaml> yamls) {
     this.yamls = ImmutableList.copyOf(yamls);
   }

@@ -44,6 +44,16 @@ import uk.gov.dstl.baleen.uima.utils.TypeUtils;
  */
 public class SentenceRelationshipAnnotator extends AbstractTypedRelationshipAnnotator {
 
+  /**
+   * The valid values for the strategy
+   *
+   * <p>SENTENCE - The whole sentence
+   *
+   * <p>BETWEEN - The tokens between the entities
+   *
+   * <p>DEPENDENCY - The dependent words between the two entities, (NB Requires dependency annotator
+   * ((e.g. MaltParser, ClearNlp) to run previously
+   */
   public enum ValueStrategy {
     /** The whole sentence */
     SENTENTCE,

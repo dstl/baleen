@@ -24,6 +24,12 @@ public class DependencyTreeBuilder {
     return buildFromDependencies(JCasUtil.selectCovered(Dependency.class, s));
   }
 
+  /**
+   * Build a {@link DependencyTree} for the given dependencies.
+   *
+   * @param dependencies the dependencies to build a {@link DependencyTree} for
+   * @return the build {@link DependencyTree} or null if no root node found
+   */
   public static DependencyTree buildFromDependencies(Collection<Dependency> dependencies) {
     Map<WordToken, DependencyTree> map = new HashMap<>();
     for (Dependency d : dependencies) {

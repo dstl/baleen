@@ -13,6 +13,7 @@ public class LiveRabbitMQConsumer extends AbstractRabbitMQChannel implements Rab
   private final String exchangeName;
   private final String routingKey;
 
+  /** New instance */
   public LiveRabbitMQConsumer(
       final UimaMonitor monitor,
       final Channel channel,

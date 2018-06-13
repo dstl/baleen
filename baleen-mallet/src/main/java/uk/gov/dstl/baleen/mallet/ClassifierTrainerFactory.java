@@ -30,6 +30,20 @@ public class ClassifierTrainerFactory {
 
   private final String trainerDescriptor;
 
+  /**
+   * New instance
+   * @param trainerDescriptor {@link String} based on the Mallet string format.
+   *
+   * <pre>
+   * ClassName,parameterName=parameterValue,parameterName=parameterValue
+   * </pre>
+   *
+   * For example
+   *
+   * <pre>
+   * MaxEnt,gaussianPriorVariance=1.0,numIterations=1000
+   * </pre>
+   */
   public ClassifierTrainerFactory(String trainerDescriptor) {
     this.trainerDescriptor = trainerDescriptor;
   }

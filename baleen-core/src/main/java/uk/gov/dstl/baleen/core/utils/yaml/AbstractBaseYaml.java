@@ -23,6 +23,7 @@ public abstract class AbstractBaseYaml implements Yaml {
 
   protected final org.yaml.snakeyaml.Yaml yamlProcessor;
 
+  /** New instance. */
   public AbstractBaseYaml() {
     DumperOptions options = new DumperOptions();
     options.setDefaultFlowStyle(FlowStyle.BLOCK);

@@ -220,6 +220,7 @@ public class JCasDeserialiser {
     private final BaleenAnnotation annotation;
     private final Feature feature;
 
+    /** New instance of private class */
     public ReferencedFeatures(
         final BaleenAnnotation annotation, final Feature feature, final Object references) {
       this.annotation = annotation;

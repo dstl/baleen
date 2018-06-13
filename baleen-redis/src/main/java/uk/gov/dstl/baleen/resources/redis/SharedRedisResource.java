@@ -57,6 +57,7 @@ public class SharedRedisResource extends BaleenResource {
     return true;
   }
 
+  /** returns the Jedis client */
   public Jedis getJedis() {
     return jedisPool.getResource();
   }

@@ -11,6 +11,7 @@ import uk.gov.dstl.baleen.uima.UimaMonitor;
 /** Implements a {@link RabbitMQSupplier} with a live channel to an instance of RabbitMQ */
 public class LiveRabbitMQSupplier extends AbstractRabbitMQChannel implements RabbitMQSupplier {
 
+  /** New instance */
   public LiveRabbitMQSupplier(
       final UimaMonitor monitor, final Channel channel, final String queueName) {
     super(monitor, channel, queueName);

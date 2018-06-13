@@ -78,18 +78,42 @@ public class OdinSentence extends Sentence {
         chainId);
   }
 
+  /**
+   * Select a specific word from the {@link Sentence}
+   *
+   * @param index the {@link int} index of the word within the {@link Sentence}
+   * @return the specified word as a {@link String}
+   */
   public String word(int index) {
     return get(words(), index);
   }
 
+  /**
+   * Select a specific part of speech tag from the {@link Sentence}
+   *
+   * @param index the {@link int} index of the POS tag within the {@link Sentence}
+   * @return the specified tag as a {@link String}
+   */
   public String tag(int index) {
     return get(tags(), index);
   }
 
+  /**
+   * Select a specific lemma from the {@link Sentence}
+   *
+   * @param index the {@link int} index of the lemma within the {@link Sentence}
+   * @return the specified lemma as a {@link String}
+   */
   public String lemma(int index) {
     return get(lemmas(), index);
   }
 
+  /**
+   * Select a specific named entity from the {@link Sentence}
+   *
+   * @param index the {@link int} index of the named entity within the {@link Sentence}
+   * @return the specified named entity as a {@link String}
+   */
   public String entity(int index) {
     return get(entities(), index);
   }

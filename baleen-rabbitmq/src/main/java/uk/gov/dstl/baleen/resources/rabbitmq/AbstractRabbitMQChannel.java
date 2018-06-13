@@ -15,6 +15,7 @@ public abstract class AbstractRabbitMQChannel implements RabbitMQQueue {
   protected final UimaMonitor monitor;
   protected final String queueName;
 
+  /** New instance */
   public AbstractRabbitMQChannel(
       final UimaMonitor monitor, final Channel channel, final String queueName) {
     this.monitor = monitor;

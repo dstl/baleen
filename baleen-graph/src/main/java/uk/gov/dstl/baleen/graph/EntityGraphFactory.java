@@ -78,6 +78,12 @@ public class EntityGraphFactory {
 
   private final EntityGraphOptions options;
 
+  /**
+   * Constructor for EntityGraphFactory
+   *
+   * @param monitor to report
+   * @param options to be used during creation of graphs
+   */
   public EntityGraphFactory(final UimaMonitor monitor, EntityGraphOptions options) {
 
     this.monitor = monitor;
