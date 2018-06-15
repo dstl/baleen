@@ -50,6 +50,8 @@ public class SqlCellReader extends AbstractSqlReader {
   }
 
   @Override
+  @SuppressWarnings("squid:S2077" /* The value of col is read from the database column names and so should be safe to use in this context */)
+    
   protected void doGetNext(JCas jCas) throws IOException, CollectionException {
     if (colsToProcess.isEmpty()) {
       // Get next row
@@ -61,6 +63,7 @@ public class SqlCellReader extends AbstractSqlReader {
     String col = colsToProcess.remove(0);
 
     String content;
+    
     try (ResultSet rs =
         conn.prepareStatement(
                 "SELECT `" + col + "` FROM `" + table + "` WHERE `" + idColumn + "` = " + currId)

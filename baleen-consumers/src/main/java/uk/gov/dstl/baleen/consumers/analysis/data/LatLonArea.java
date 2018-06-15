@@ -21,6 +21,11 @@ public class LatLonArea extends LatLon implements Comparable<LatLonArea> {
     return area;
   }
 
+  /** 
+   * Overrides the compareTo operator to compare objects based on area only.
+   * <p> Note that equals has not been overridden so it is not the case that (x.compareTo(y)==p)==(x.equals(y)) if x and y have the same Area but different locations.
+   * @return The Area */
+  @SuppressWarnings("squid:S1210" /* Equals is deliberately not overridden (see Javadoc) */)
   @Override
   public int compareTo(final LatLonArea o) {
     // Largest area to smallest
