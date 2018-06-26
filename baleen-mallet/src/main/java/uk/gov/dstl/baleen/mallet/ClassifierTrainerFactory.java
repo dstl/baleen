@@ -32,15 +32,13 @@ public class ClassifierTrainerFactory {
 
   /**
    * New instance
-   * @param trainerDescriptor {@link String} based on the Mallet string format.
    *
-   * <pre>
+   * @param trainerDescriptor {@link String} based on the Mallet string format.
+   *     <pre>
    * ClassName,parameterName=parameterValue,parameterName=parameterValue
    * </pre>
-   *
-   * For example
-   *
-   * <pre>
+   *     For example
+   *     <pre>
    * MaxEnt,gaussianPriorVariance=1.0,numIterations=1000
    * </pre>
    */

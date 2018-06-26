@@ -13,10 +13,10 @@ public class MathUtils {
     if (base <= 0 || argument <= 0) {
       throw new ArithmeticException("Base and argument of logarithms must be greater than 0");
     }
-    double answer = Math.log(argument)/Math.log(base);
+    double answer = Math.log(argument) / Math.log(base);
     if (Double.isInfinite(answer)) {
       throw new ArithmeticException("Base of logarithm must be positive and not equal to 1");
     }
-    return  answer;
+    return answer;
   }
 }
