@@ -71,16 +71,16 @@
 			
 			<h3>Running Baleen</h3>
 			<p>To start the Baleen server, run the following command from the home directory of Baleen:</p>
-			<pre>java -jar baleen-2.5.0-SNAPSHOT.jar</pre>
+			<pre>java -jar baleen-2.6.0.jar</pre>
 			<p>Note that the name of the JAR file may be different depending on the version of Baleen that you are running. This applies to all references of JAR files in this document.</p>
-			<p>In order to have access to the JavaDoc on your server, you must have <em>baleen-2.5.0-SNAPSHOT-javadoc.jar</em> in the same directory as the Baleen JAR. If this file isn't present, JavaDoc will not be accessible.</p>
+			<p>In order to have access to the JavaDoc on your server, you must have <em>baleen-2.6.0-javadoc.jar</em> in the same directory as the Baleen JAR. If this file isn't present, JavaDoc will not be accessible.</p>
 			<p>Once running, you can access it at <a href="http://localhost:6413">http://localhost:6413</a>.</p>
 			
 			<h3>Configuring Baleen</h3>
 			<p>Baleen is configured via a YAML file, that is passed to the server on start up.
 			The YAML file can be called whatever you want, but in this document we will refer to it as <em>config.yaml</em>.
 			To pass the YAML file to Baleen, use the following command:</p>
-			<pre>java -jar baleen-2.5.0-SNAPSHOT.jar config.yaml</pre>
+			<pre>java -jar baleen-2.5.0.jar config.yaml</pre>
 			<p>The configuration file contains a number of different sections that refer to different aspects of Baleen, such as the server configuration, default pipelines and logging.
 			These are described in the JavaDoc, and listed on the <a href="/javadoc/uk/gov/dstl/baleen/runner/Baleen.html">Baleen</a> page.
 			Sensible defaults are assumed where an explicit setting is not provided in the configuration.</p>
