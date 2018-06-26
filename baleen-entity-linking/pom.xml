@@ -9,7 +9,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>baleen-entity-linking</artifactId>
-
+  <name>Baleen Entity Linking</name>
+  
   <dependencies>
     <dependency>
       <groupId>org.apache.jena</groupId>
