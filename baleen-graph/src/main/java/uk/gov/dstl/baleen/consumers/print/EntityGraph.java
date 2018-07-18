@@ -16,7 +16,7 @@ import uk.gov.dstl.baleen.uima.UimaMonitor;
  * @see EntityGraphFactory
  * @baleen.javadoc
  */
-public class EnityGraph extends AbstractEntityGraphFormatConsumer {
+public class EntityGraph extends AbstractEntityGraphFormatConsumer {
 
   @Override
   protected OutputStream createOutputStream(String documentSourceName) {

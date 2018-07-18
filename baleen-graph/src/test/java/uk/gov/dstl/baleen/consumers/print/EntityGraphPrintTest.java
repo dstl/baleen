@@ -18,6 +18,6 @@ public class EntityGraphPrintTest extends AnnotatorTestBase {
   public void testGraph() throws UIMAException {
 
     JCasTestGraphUtil.populateJcas(jCas);
-    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(EnityGraph.class));
+    SimplePipeline.runPipeline(jCas, AnalysisEngineFactory.createEngine(EntityGraph.class));
   }
 }
