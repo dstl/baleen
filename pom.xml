@@ -79,6 +79,7 @@
     <jung.version>2.1.1</jung.version>
     <krill.version>1.0.3</krill.version>
     <languagedetector.version>0.6</languagedetector.version>
+    <liblinear.version>1.94</liblinear.version>
     <logback.version>1.2.3</logback.version>
     <maltparser.version>1.9.2</maltparser.version>
     <mboxiterator.version>0.8.1</mboxiterator.version>
