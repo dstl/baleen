@@ -36,8 +36,15 @@ public class OdinParser extends BaleenAnnotator {
   @Override
   public void doProcess(JCas jCas) throws AnalysisEngineProcessException {
 
-    Document document = processor.annotate(jCas.getDocumentText(), false);
-
+    Document document;
+    try {
+      document = processor.annotate(jCas.getDocumentText(), false);
+    } catch (Exception e) {
+      getMonitor()
+          .error(
+              "OdinParser has a known bug if the Baleen JAR path contains spaces. See https://github.com/dstl/baleen/issues/82 for further details");
+      throw e;
+    }
     DocumentConverter converter = new DocumentConverter(jCas, document);
     converter.convert();
   }
