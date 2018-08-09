@@ -221,6 +221,7 @@ public class SharedRabbitMQResource extends BaleenResource {
     channel.queueBind(queueName, exchangeName, routingKey);
   }
 
+  /** Creates the RabbitMQ consumer */
   public RabbitMQConsumer createConsumer(
       final String exchangeName, final String routingKey, final String queueName)
       throws IOException {
@@ -229,6 +230,7 @@ public class SharedRabbitMQResource extends BaleenResource {
     return new LiveRabbitMQConsumer(getMonitor(), channel, exchangeName, routingKey, queueName);
   }
 
+  /** Creates the RabbitMQ supplier */
   public RabbitMQSupplier createSupplier(
       final String exchangeName, final String routingKey, final String queueName)
       throws IOException {

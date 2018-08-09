@@ -54,6 +54,7 @@ public class EpochTime extends AbstractRegexAnnotator<Temporal> {
   @ConfigurationParameter(name = PARAM_MILLIS, defaultValue = "false")
   private boolean millis;
 
+  /** New instance. */
   public EpochTime() {
     super(Pattern.compile("\\b\\d+\\b"), 1.0);
   }

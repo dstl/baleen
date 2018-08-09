@@ -10,6 +10,13 @@ import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
+/**
+ * Collection reader to provide the default document with fact sentences
+ *
+ * <p>Used in the first stage of the ReNoun relationship extraction system, in conjunction with
+ * language parsers such as {@link uk.gov.dstl.baleen.annotators.language.OpenNLP OpenNLP} or {@link
+ * uk.gov.dstl.baleen.annotators.language.MaltParser MaltParser}
+ */
 public class ReNounSeedDocument extends BaleenCollectionReader {
 
   private static final String SEP = "\n";

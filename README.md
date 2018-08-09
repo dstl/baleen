@@ -18,7 +18,7 @@ Baleen includes an in-built server, which hosts full documentation and guides on
 To get started, you will need to launch this server and read this documentation.
 To launch the server, run the following command.
 
-> java -jar baleen-2.6.0-SNAPSHOT.jar
+> java -jar baleen-2.6.0.jar
 
 Once running, the server can be accessed at [http://localhost:6413](http://localhost:6413).
 
@@ -43,16 +43,6 @@ The develop with Baleen, we suggest you use:
 
 Baleen requires Java 8 or later.
 
-## What's coming in Baleen 2.6
-Baleen 2.5.0-SNAPSHOT contains the following new functionality and components:
-* New components
-  * Annotators: CVE (Common Vulnerabilities and Exposures), Epoch Time, IPv6, Lenient URL
-  * Collection Readers: CSV Folder, MBOX, SQL Cell, SQL DB Cell, SQL Row
-  * Consumers: Elastic-Kibana, Gremlin
-* Upgrades Elasticsearch to 5.6.4 - this is likely to be a breaking change and will require Elasticsearch servers to be upgraded. It is possible that the ElasticsearchRest consumer may still work with Elasticsearch 2 but this is untested.
-* Java 9 support
-
-as well as a number of bug fixes and improvements to previous versions.
 # Licence
 
 Crown copyright 2017

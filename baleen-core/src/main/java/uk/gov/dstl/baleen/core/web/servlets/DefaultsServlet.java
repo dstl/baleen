@@ -15,12 +15,14 @@ import org.slf4j.LoggerFactory;
 
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 
+/** Servlet to retrieve default values (.e.g. default ContentExtractor) */
 public class DefaultsServlet extends AbstractApiServlet {
   private static final Logger LOGGER = LoggerFactory.getLogger(DefaultsServlet.class);
   private static final long serialVersionUID = 1L;
 
   private final Map<String, String> defaults = new TreeMap<>();
 
+  /** New instance */
   public DefaultsServlet() {
     super(LOGGER, DefaultsServlet.class);
 

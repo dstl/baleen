@@ -56,6 +56,7 @@ public class OwlSchemaFactory {
 
   private List<String> ignoreProperties;
 
+  /** New instance */
   public OwlSchemaFactory(String namespace, TypeSystem typeSystem, List<String> ignoreProperties)
       throws ResourceInitializationException {
     this.namespace = namespace;
@@ -64,6 +65,7 @@ public class OwlSchemaFactory {
     descriptions = TypeSystemDescriptionFactory.createTypeSystemDescription();
   }
 
+  /** Creates a document ontology */
   public OntModel createDocumentOntology() {
     OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
 
@@ -92,6 +94,7 @@ public class OwlSchemaFactory {
     return ontModel;
   }
 
+  /** Creates an entity ontology */
   public OntModel createEntityOntology() {
     OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
 

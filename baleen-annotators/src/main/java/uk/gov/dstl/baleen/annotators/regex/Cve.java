@@ -20,6 +20,7 @@ import uk.gov.dstl.baleen.types.common.Vulnerability;
  */
 public class Cve extends AbstractRegexAnnotator<Vulnerability> {
 
+  /** New instance. */
   public Cve() {
     super("\\bCVE-[0-9]{4}-[0-9]+\\b", false, 1.0);
   }

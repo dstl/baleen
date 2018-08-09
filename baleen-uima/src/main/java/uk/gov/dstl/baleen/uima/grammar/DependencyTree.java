@@ -225,14 +225,29 @@ public class DependencyTree {
     return true;
   }
 
+  /**
+   * Remove the specific word from all nodes. This leaves the part of speech and dependency
+   * information.
+   */
   public void delexicalize() {
     flattened().map(DependencyTree::getRoot).forEach(DependencyNode::delexicalize);
   }
 
+  /**
+   * Remove the specific word from all the nodes with id in the given set. This leaves the part of
+   * speech and dependency information.
+   *
+   * @param ids the ids of the node to delexicalise
+   */
   public void delexicalize(Collection<String> ids) {
     ids.stream().map(this::getNode).forEach(n -> n.ifPresent(DependencyNode::delexicalize));
   }
 
+  /**
+   * Change the ids of the node given map
+   *
+   * @param idMap a map of the current id to the new id.
+   */
   public void mapIds(Map<String, String> idMap) {
     flattened()
         .map(DependencyTree::getRoot)
