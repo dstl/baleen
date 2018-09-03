@@ -1,6 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.collectionreaders;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -128,7 +129,8 @@ public class MimeReader extends BaleenCollectionReader {
       da.setTimestamp(calculateBestDate(message, file));
       da.setDocType("email");
       da.setDocumentClassification("O");
-      da.setSourceUri(file.getAbsolutePath().substring(rootFolder.length()));
+      String source = file.getAbsolutePath().substring(rootFolder.length());
+      da.setSourceUri(source);
       da.setLanguage("en");
 
       // Add all headers as metadata, with email prefix
@@ -168,8 +170,7 @@ public class MimeReader extends BaleenCollectionReader {
       text.setEnd(actualContent.length());
       text.addToIndexes();
 
-      // TODO: consider using the content extractor
-      jCas.setDocumentText(content);
+      extractContent(new ByteArrayInputStream(content.getBytes()), source, jCas);
     } catch (final Exception e) {
       getMonitor().warn("Discarding message", e);
     }
