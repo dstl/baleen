@@ -200,9 +200,7 @@ public class PipelineBuilder {
     LOGGER.debug("Configuring pipeline orderer");
     IPipelineOrderer orderer = createPipelineOrderer();
 
-    LOGGER.debug("Configuring history");
-    ExternalResourceDescription erdHistory = configureHistory();
-    resourceDescriptors.put(BALEEN_HISTORY, erdHistory);
+    configureResources();
 
     LOGGER.debug("Creating collection reader");
     CollectionReader collectionReader = createCollectionReader();
@@ -224,6 +222,14 @@ public class PipelineBuilder {
     }
 
     return toPipeline(name, yaml, orderer, collectionReader, annotators, consumers);
+  }
+
+  /* protected so extensions can configure different resources if required */
+  protected void configureResources() throws BaleenException {
+    LOGGER.debug("Configuring history");
+    ExternalResourceDescription erdHistory = configureHistory();
+    resourceDescriptors.put(BALEEN_HISTORY, erdHistory);
+
   }
 
   /**
