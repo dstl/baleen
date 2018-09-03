@@ -17,7 +17,6 @@ import com.google.common.io.Files;
 
 public class YamlFileTest {
 
-  // @formatter:off
   private static final String FORMATTED =
       "example:\n"
           + "  color: red\n"
@@ -26,6 +25,7 @@ public class YamlFileTest {
           + "  - a\n"
           + "  - b\n"
           + "  - c\n"
+          + "contentextractor: uk.gov.dstl.baleen.testing.DummyContentExtractor\n"
           + "collectionreader:\n"
           + "  class: uk.gov.dstl.baleen.testing.DummyCollectionReader\n"
           + "annotators:\n"
@@ -39,7 +39,6 @@ public class YamlFileTest {
           + "consumers:\n"
           + "- class: uk.gov.dstl.baleen.testing.DummyConsumer\n"
           + "";
-  // @formatter:on
 
   private static final String YAMLCONFIGURATION_YAML = "yamlconfiguration.yaml";
   private YamlFile yamlFile;

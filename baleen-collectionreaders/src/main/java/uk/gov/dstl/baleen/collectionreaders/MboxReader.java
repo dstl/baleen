@@ -35,11 +35,8 @@ import org.apache.uima.resource.ResourceInitializationException;
 
 import com.google.common.io.CharStreams;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 import uk.gov.dstl.baleen.uima.UimaSupport;
 
 /**
@@ -94,20 +91,6 @@ public class MboxReader extends BaleenCollectionReader {
   )
   private String[] ignoreExtensions;
 
-  /**
-   * The content extractor to use to extract content from attachments
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  private String contentExtractor;
-
-  private IContentExtractor extractor;
   private Iterator<CharBufferWrapper> mboxIterator;
   private Charset charset;
   private DefaultMessageBuilder messageBuilder;
@@ -119,13 +102,6 @@ public class MboxReader extends BaleenCollectionReader {
 
   @Override
   protected void doInitialize(UimaContext context) throws ResourceInitializationException {
-    // Initialise content extractor for attachments
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
 
     // Initialise charset for MBOX processing
     try {
@@ -261,7 +237,7 @@ public class MboxReader extends BaleenCollectionReader {
   /** Process body of message as an attachment */
   private void processBinaryBody(JCas jCas, BinaryBody binaryBody, String sourceUrl)
       throws IOException {
-    extractor.processStream(binaryBody.getInputStream(), sourceUrl, jCas);
+    extractContent(binaryBody.getInputStream(), sourceUrl, jCas);
   }
 
   /** Process body of message as plain text */
@@ -279,12 +255,12 @@ public class MboxReader extends BaleenCollectionReader {
   }
 
   @Override
-  protected void doClose() throws IOException {
-    extractor.destroy();
+  public boolean doHasNext() throws IOException, CollectionException {
+    return !attachments.isEmpty() || mboxIterator.hasNext();
   }
 
   @Override
-  public boolean doHasNext() throws IOException, CollectionException {
-    return !attachments.isEmpty() || mboxIterator.hasNext();
+  protected void doClose() throws IOException {
+    // DO NOTHING
   }
 }

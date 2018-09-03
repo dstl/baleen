@@ -80,7 +80,7 @@ public class SqlCellReader extends AbstractSqlReader {
 
     String sourceUrl = sqlConn.substring(5) + "." + table + "#" + currId + "." + col;
 
-    extractor.processStream(
+    extractContent(
         new ByteArrayInputStream(content.getBytes(Charset.defaultCharset())), sourceUrl, jCas);
   }
 }

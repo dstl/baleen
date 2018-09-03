@@ -1,24 +1,31 @@
 // NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.collectionreaders;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
-import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
-import uk.gov.dstl.baleen.types.metadata.Metadata;
+import uk.gov.dstl.baleen.contentextractors.StructureContentExtractor;
+import uk.gov.dstl.baleen.core.pipelines.content.ContentExtractor;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
+import uk.gov.dstl.baleen.uima.utils.JCasMetadata;
 
 public class SqlDbCellReaderTest extends AbstractReaderTest {
   public SqlDbCellReaderTest() {
     super(SqlDbCellReader.class);
+  }
+
+  @Override
+  protected Class<? extends ContentExtractor> getContentExtractorClass() {
+    return StructureContentExtractor.class;
   }
 
   private Connection conn;
@@ -108,23 +115,18 @@ public class SqlDbCellReaderTest extends AbstractReaderTest {
 
   private void testJcasTable1(JCas jCas, int row) {
     assertTrue(jCas.getDocumentText().startsWith("TEXT BLOCK"));
-
-    Map<String, String> meta = new HashMap<>();
-    for (Metadata md : JCasUtil.select(jCas, Metadata.class)) {
-      meta.put(md.getKey(), md.getValue());
-    }
-
-    assertTrue(meta.get("resourceName").toLowerCase().startsWith("h2:mem:test.my_table#" + row));
+    JCasMetadata metadata = new JCasMetadata(jCas);
+    Optional<String> find = metadata.find("resourceName");
+    assertTrue(find.get().toLowerCase().startsWith("h2:mem:test.my_table#" + row));
   }
 
   private void testJcasTable2(JCas jCas, int row) {
-    Map<String, String> meta = new HashMap<>();
-    for (Metadata md : JCasUtil.select(jCas, Metadata.class)) {
-      meta.put(md.getKey(), md.getValue());
-    }
-    assertTrue(meta.get("resourceName").toLowerCase().startsWith("h2:mem:test.my_table2#" + row));
+    JCasMetadata metadata = new JCasMetadata(jCas);
+    Optional<String> find = metadata.find("resourceName").map(String::toLowerCase);
 
-    if (meta.get("resourceName").toLowerCase().endsWith("ignore_me")) {
+    assertTrue(find.get().startsWith("h2:mem:test.my_table2#" + row));
+
+    if (find.get().endsWith("ignore_me")) {
       assertEquals("IGNORE", jCas.getDocumentText());
     } else {
       assertTrue(jCas.getDocumentText().startsWith("TEXT BLOCK"));

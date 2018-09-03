@@ -11,10 +11,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.uima.UimaContext;
-import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.impl.CustomResourceSpecifier_impl;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.metadata.Metadata;
@@ -25,11 +24,10 @@ public class TearlineContentExtractorTest {
 
   @Test
   public void testTearline() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
-    contentExtractor.initialize(context, Collections.emptyMap());
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 
     String[] files = new String[] {"1.docx", "2.docx", "3.docx", "4.docx", "5.doc", "6.pdf"};
     for (String file : files) {
@@ -47,11 +45,10 @@ public class TearlineContentExtractorTest {
 
   @Test
   public void testNoTearline() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
-    contentExtractor.initialize(context, Collections.emptyMap());
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 
     File f = new File(getClass().getResource("tearline/notearline.docx").getPath());
 
@@ -66,14 +63,13 @@ public class TearlineContentExtractorTest {
 
   @Test
   public void testBoilerplate() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     Map<String, Object> params = new HashMap<>();
     params.put("boilerplate", new String[] {"[aeiou]"});
 
     BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
-    contentExtractor.initialize(context, params);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), params);
 
     File f = new File(getClass().getResource("tearline/notearline.docx").getPath());
 
@@ -88,11 +84,10 @@ public class TearlineContentExtractorTest {
 
   @Test
   public void testMetadata() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
-    contentExtractor.initialize(context, Collections.emptyMap());
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 
     File f = new File(getClass().getResource("tearline/1.docx").getPath());
 
@@ -105,14 +100,13 @@ public class TearlineContentExtractorTest {
 
   @Test
   public void testCustomTearline() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     Map<String, Object> params = new HashMap<>();
     params.put("tearline", "Customer Form:");
 
     BaleenContentExtractor contentExtractor = new TearlineContentExtractor();
-    contentExtractor.initialize(context, params);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), params);
 
     File f = new File(getClass().getResource("tearline/customtearline.docx").getPath());
 

@@ -19,10 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
  * Abstract class for building collection readers using an SQL backend. Class handles connection to
@@ -31,18 +28,6 @@ import uk.gov.dstl.baleen.uima.IContentExtractor;
  * @baleen.javadoc
  */
 public abstract class AbstractSqlReader extends BaleenCollectionReader {
-  /**
-   * The content extractor to use to extract content from files
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  protected String contentExtractor;
 
   /**
    * The JDBC connection string, including database.
@@ -125,7 +110,6 @@ public abstract class AbstractSqlReader extends BaleenCollectionReader {
   @ConfigurationParameter(name = PARAM_SQL_COLUMNS, defaultValue = "SHOW COLUMNS FROM `?`")
   protected String columnsSql;
 
-  protected IContentExtractor extractor;
   protected Connection conn;
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSqlReader.class);
@@ -134,13 +118,6 @@ public abstract class AbstractSqlReader extends BaleenCollectionReader {
 
   @Override
   protected void doInitialize(UimaContext context) throws ResourceInitializationException {
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
-
     try {
       if (Strings.isNullOrEmpty(user) || Strings.isNullOrEmpty(pass)) {
         conn = DriverManager.getConnection(sqlConn);

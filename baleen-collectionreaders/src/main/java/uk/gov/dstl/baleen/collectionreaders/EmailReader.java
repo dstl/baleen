@@ -43,11 +43,8 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
  * Connects to a specified mail server, treating each message and/or it's attachments as documents.
@@ -172,24 +169,9 @@ public class EmailReader extends BaleenCollectionReader {
   @ConfigurationParameter(name = PARAM_PROCESS, defaultValue = BOTH)
   private String process;
 
-  /**
-   * The content extractor to use to extract content from files
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  private String contentExtractor;
-
   public static final String BOTH = "both";
   public static final String CONTENT = "content";
   public static final String ATTACHMENTS = "attachments";
-
-  private IContentExtractor extractor;
 
   private Long lastCheck = 0L;
 
@@ -204,13 +186,6 @@ public class EmailReader extends BaleenCollectionReader {
   @Override
   protected void doInitialize(UimaContext context) throws ResourceInitializationException {
     validateParams();
-
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
 
     Authenticator authenticator =
         new Authenticator() {
@@ -363,7 +338,7 @@ public class EmailReader extends BaleenCollectionReader {
     String sender = getAddress(msg.getFrom()[0]);
 
     InputStream is = IOUtils.toInputStream(content, Charset.defaultCharset());
-    extractor.processStream(is, "mailto:" + sender + "#" + subject, jCas);
+    extractContent(is, "mailto:" + sender + "#" + subject, jCas);
 
     addMetadata(jCas, "sender", sender);
     addMetadata(jCas, "subject", subject);
@@ -407,7 +382,7 @@ public class EmailReader extends BaleenCollectionReader {
 
   private void processAttachment(JCas jCas, File attachment) throws IOException {
     try (InputStream is = new FileInputStream(attachment); ) {
-      extractor.processStream(is, attachment.getAbsolutePath(), jCas);
+      extractContent(is, attachment.getAbsolutePath(), jCas);
     }
 
     // Delete attachment?

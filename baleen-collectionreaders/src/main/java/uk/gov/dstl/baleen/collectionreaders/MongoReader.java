@@ -21,12 +21,9 @@ import org.bson.types.ObjectId;
 
 import com.mongodb.client.MongoCollection;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
  * This collection reader will process an entire Mongo collection, and then watch for new documents.
@@ -79,19 +76,6 @@ public class MongoReader extends BaleenCollectionReader {
   private String contentField;
 
   /**
-   * The content extractor to use to extract content from files
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  private String contentExtractor;
-
-  /**
    * Should the source document be deleted from Mongo after reading
    *
    * @baleen.config false
@@ -106,17 +90,8 @@ public class MongoReader extends BaleenCollectionReader {
   List<ObjectId> queue = new LinkedList<>();
   ObjectId lastId = null;
 
-  private IContentExtractor extractor;
-
   @Override
   protected void doInitialize(UimaContext context) throws ResourceInitializationException {
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
-
     coll = mongo.getDB().getCollection(collection);
     getNewIds();
   }
@@ -137,7 +112,7 @@ public class MongoReader extends BaleenCollectionReader {
 
     InputStream is = IOUtils.toInputStream(content, Charset.defaultCharset());
 
-    extractor.processStream(is, mongo.getMongoURI() + "." + collection + "#" + id, jCas);
+    extractContent(is, mongo.getMongoURI() + "." + collection + "#" + id, jCas);
 
     for (Entry<String, Object> entry : document.entrySet()) {
       String key = entry.getKey();
@@ -178,11 +153,6 @@ public class MongoReader extends BaleenCollectionReader {
   @Override
   protected void doClose() throws IOException {
     coll = null;
-
-    if (extractor != null) {
-      extractor.destroy();
-      extractor = null;
-    }
   }
 
   @Override

@@ -102,7 +102,7 @@ public class SqlRowReader extends AbstractSqlReader {
 
     String sourceUrl = sqlConn.substring(5) + "." + table + "#" + currId;
 
-    extractor.processStream(
+    extractContent(
         new ByteArrayInputStream(content.getBytes(Charset.defaultCharset())), sourceUrl, jCas);
 
     // Need to do after we've set the JCas content

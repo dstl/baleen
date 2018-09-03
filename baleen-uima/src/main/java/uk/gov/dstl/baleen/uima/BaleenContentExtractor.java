@@ -8,16 +8,19 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.apache.uima.UimaContext;
+import org.apache.uima.fit.component.Resource_ImplBase;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.Annotation;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.ResourceSpecifier;
 
 import com.google.common.base.Strings;
 
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
+import uk.gov.dstl.baleen.core.pipelines.content.ContentExtractor;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
@@ -27,10 +30,10 @@ import uk.gov.dstl.baleen.uima.utils.UimaUtils;
  * <p>This abstract class provides the basis for content extractors. It provides metrics and support
  * elements to help development.
  *
- * <p>Implementors should look to override doProcessStream as per {@link IContentExtractor}
+ * <p>Implementors should look to override doProcessStream as per {@link ContentExtractor}
  * processFile.
  */
-public abstract class BaleenContentExtractor implements IContentExtractor {
+public abstract class BaleenContentExtractor extends Resource_ImplBase implements ContentExtractor {
   private UimaMonitor monitor;
   private UimaSupport support;
 
@@ -45,17 +48,21 @@ public abstract class BaleenContentExtractor implements IContentExtractor {
   BaleenHistory history;
 
   @Override
-  public final void initialize(UimaContext context, Map<String, Object> params)
+  public final boolean initialize(ResourceSpecifier specifier, Map<String, Object> additionalParams)
       throws ResourceInitializationException {
+    boolean result = super.initialize(specifier, additionalParams);
 
+    UimaContext context = getUimaContext();
     String pipelineName = UimaUtils.getPipelineName(context);
     monitor = createMonitor(pipelineName);
     support = createSupport(pipelineName, context);
     monitor.startFunction("initialize");
 
-    doInitialize(context, params);
+    doInitialize(context, additionalParams);
 
     monitor.finishFunction("initialize");
+
+    return result;
   }
 
   protected UimaSupport createSupport(String pipelineName, UimaContext context) {

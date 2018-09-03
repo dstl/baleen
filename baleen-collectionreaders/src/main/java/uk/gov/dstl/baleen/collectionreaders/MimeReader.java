@@ -168,6 +168,7 @@ public class MimeReader extends BaleenCollectionReader {
       text.setEnd(actualContent.length());
       text.addToIndexes();
 
+      // TODO: consider using the content extractor
       jCas.setDocumentText(content);
     } catch (final Exception e) {
       getMonitor().warn("Discarding message", e);

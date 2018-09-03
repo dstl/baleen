@@ -2,6 +2,7 @@ example:
   color: red
   count: 7
 orderer: NoOpPipelineOrderer
+contentextractor: uk.gov.dstl.baleen.testing.DummyContentExtractor
 collectionreader: uk.gov.dstl.baleen.testing.DummyCollectionReader
 annotators:
 - uk.gov.dstl.baleen.testing.DummyAnnotator1

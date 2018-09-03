@@ -1,6 +1,7 @@
 pipelines:
 - name: one
   config: "
+contentextractor: uk.gov.dstl.baleen.testing.DummyContentExtractor\n
 collectionreader: uk.gov.dstl.baleen.testing.RandomStringCollectionReader\n
 annotators:\n
   - class: uk.gov.dstl.baleen.testing.DummyResourceAnnotator\n
@@ -8,6 +9,7 @@ consumers:\n
   - class: uk.gov.dstl.baleen.testing.DummyConsumer\n"
 - name: two
   config: "
+contentextractor: uk.gov.dstl.baleen.testing.DummyContentExtractor\n
 collectionreader: uk.gov.dstl.baleen.testing.RandomStringCollectionReader\n
 annotators:\n
   - class: uk.gov.dstl.baleen.testing.DummyResourceAnnotator\n

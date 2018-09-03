@@ -2,6 +2,7 @@ pipelines:
 - name: multi
   multiplicity: 4
   config: "
+contentextractor: uk.gov.dstl.baleen.testing.DummyContentExtractor\n
 collectionreader: uk.gov.dstl.baleen.testing.RandomStringCollectionReader\n
 annotators:\n
   - class: uk.gov.dstl.baleen.testing.DummyResourceAnnotator\n

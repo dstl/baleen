@@ -162,12 +162,12 @@ public class BaleenWebApi extends AbstractBaleenComponent {
 
   @Override
   public void configure(Configuration configuration) throws BaleenException {
-    String host = configuration.get(CONFIG_HOST, DEFAULT_HOST);
-    int port = configuration.get(CONFIG_PORT, DEFAULT_PORT);
-    String webRoot = (String) configuration.get(CONFIG_WEB_ROOT).orElse(null);
+    String host = configuration.get(String.class, CONFIG_HOST, DEFAULT_HOST);
+    int port = configuration.get(Integer.class, CONFIG_PORT, DEFAULT_PORT);
+    String webRoot = configuration.get(String.class, CONFIG_WEB_ROOT).orElse(null);
 
-    String authName = configuration.get(CONFIG_BASE + "auth.name", "baleen");
-    String authType = configuration.get(CONFIG_BASE + "auth.type", "none");
+    String authName = configuration.get(String.class, CONFIG_BASE + "auth.name", "baleen");
+    String authType = configuration.get(String.class, CONFIG_BASE + "auth.type", "none");
 
     WebAuthConfig authConfig =
         new WebAuthConfig(AuthType.valueOf(authType.toUpperCase()), authName);

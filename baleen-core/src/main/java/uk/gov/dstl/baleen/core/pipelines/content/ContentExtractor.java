@@ -1,23 +1,14 @@
 // Dstl (c) Crown Copyright 2017
-package uk.gov.dstl.baleen.uima;
+package uk.gov.dstl.baleen.core.pipelines.content;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
-import org.apache.uima.UimaContext;
 import org.apache.uima.jcas.JCas;
-import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.Resource;
 
 /** Content Extractor interface */
-public interface IContentExtractor {
-  /**
-   * Initialize the ContentExtractor
-   *
-   * @param context
-   */
-  void initialize(UimaContext context, Map<String, Object> params)
-      throws ResourceInitializationException;
+public interface ContentExtractor extends Resource {
 
   /**
    * Process an input stream
@@ -27,7 +18,4 @@ public interface IContentExtractor {
    * @param jCas The JCas object to add data to
    */
   void processStream(InputStream stream, String source, JCas jCas) throws IOException;
-
-  /** Destroy the ContentExtractor */
-  void destroy();
 }
