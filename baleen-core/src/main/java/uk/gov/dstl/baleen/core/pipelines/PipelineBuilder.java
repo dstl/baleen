@@ -123,8 +123,11 @@ public class PipelineBuilder {
 
   protected static final String ORDERER_KEY = "orderer";
 
+  protected static final String HISTORY_KEY = "history";
+
   protected static final String CLASS = "class";
 
+  protected static final String DOT_CLASS = "." + CLASS;
   /** Key for the configuration parameter holding the pipeline name */
   public static final String PIPELINE_NAME = "__pipelineName";
   /** Key for the configuration parameter holding the annotator UUID */
@@ -253,7 +256,9 @@ public class PipelineBuilder {
   protected void readConfiguration() throws BaleenException {
     LOGGER.debug("Reading configuration");
 
-    pipelineOrderer = yaml.get(ORDERER_KEY, BaleenDefaults.DEFAULT_ORDERER);
+    pipelineOrderer =
+        yaml.getFirst(String.class, ORDERER_KEY + DOT_CLASS, ORDERER_KEY)
+            .orElse(BaleenDefaults.DEFAULT_ORDERER);
 
     Optional<Object> s = yaml.get(COLLECTION_READER_KEY);
     if (!s.isPresent()) {
@@ -303,14 +308,16 @@ public class PipelineBuilder {
   /** Configure a new history resource object */
   @SuppressWarnings("unchecked")
   private ExternalResourceDescription configureHistory() {
-    Optional<String> historyClass = yaml.get("history.class");
+    Optional<String> historyClass = yaml.get(String.class, HISTORY_KEY + DOT_CLASS);
 
     Class<? extends BaleenHistory> clazz = null;
 
     if (historyClass.isPresent()) {
       try {
-        clazz = (Class<? extends BaleenHistory>) Class.forName(historyClass.get());
-      } catch (ClassNotFoundException | ClassCastException e) {
+        clazz =
+            BuilderUtils.getClassFromString(
+                historyClass.get(), BaleenDefaults.DEFAULT_HISTORY_PACKAGE);
+      } catch (InvalidParameterException e) {
         LOGGER.warn("Unable to find perferred history implementation {}", historyClass, e);
       }
     } else {

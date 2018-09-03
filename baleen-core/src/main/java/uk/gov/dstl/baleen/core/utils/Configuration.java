@@ -38,21 +38,40 @@ public interface Configuration {
   /**
    * Get a value as a path.
    *
-   * <p>Note type unsafe conversion (so may through a runtime exception)
-   *
    * @param path
-   * @return
+   * @return optional of value found
    */
-  <T> Optional<T> get(String path);
+  default Optional<Object> get(String path) {
+    return get(Object.class, path);
+  }
 
   /**
-   * Get a value from a path, returning returning default value if missing.
+   * Get a value as a path.
    *
+   * @param clazz type to return
+   * @param path
+   * @return optional of value found if can be cast to type
+   */
+  <T> Optional<T> get(Class<T> clazz, String path);
+
+  /**
+   * Get the first path that has a value or empty if none.
+   *
+   * @param clazz type to return
+   * @param paths to check
+   * @return optional of value found if can be cast to type
+   */
+  <T> Optional<T> getFirst(Class<T> clazz, String... paths);
+
+  /**
+   * Get a value from a path, returning default value if missing.
+   *
+   * @param clazz type to return
    * @param path
    * @param defaultValue
    * @return
    */
-  <T> T get(String path, T defaultValue);
+  <T> T get(Class<T> clazz, String path, T defaultValue);
 
   /**
    * @return the original config, as a string

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -131,21 +132,31 @@ public class YamlConfiguration implements Configuration {
   }
 
   @Override
-  public <T> Optional<T> get(String path) {
-    return Optional.ofNullable(get(path, null));
+  public <T> Optional<T> get(Class<T> clazz, String path) {
+    return Optional.ofNullable(get(clazz, path, null));
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public <T> T get(String path, T defaultValue) {
+  public <T> Optional<T> getFirst(Class<T> clazz, String... paths) {
+    for (String path : Arrays.asList(paths)) {
+      Optional<T> optional = get(clazz, path);
+      if (optional.isPresent()) {
+        return optional;
+      }
+    }
+    return Optional.empty();
+  }
+
+  @Override
+  public <T> T get(Class<T> clazz, String path, T defaultValue) {
     Optional<Object> o = internalGet(path);
     T ret = defaultValue;
 
     if (o.isPresent()) {
       try {
-        ret = (T) o.get();
+        ret = clazz.cast(o.get());
       } catch (ClassCastException cce) {
-        LOGGER.warn("Requested path cannot be cast to requested type", cce);
+        LOGGER.debug("Requested path cannot be cast to requested type", cce);
       }
     }
 

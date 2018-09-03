@@ -22,17 +22,22 @@ public class EmptyConfiguration implements Configuration {
   }
 
   @Override
-  public <T> Optional<T> get(String path) {
+  public <T> Optional<T> get(Class<T> clazz, String path) {
     return Optional.empty();
   }
 
   @Override
-  public <T> T get(String path, T defaultValue) {
+  public <T> T get(Class<T> clazz, String path, T defaultValue) {
     return defaultValue;
   }
 
   @Override
   public String originalConfig() throws IOException {
     return "";
+  }
+
+  @Override
+  public <T> Optional<T> getFirst(Class<T> clazz, String... paths) {
+    return Optional.empty();
   }
 }

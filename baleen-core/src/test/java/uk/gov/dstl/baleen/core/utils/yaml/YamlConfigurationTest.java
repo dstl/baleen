@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,8 +48,7 @@ public class YamlConfigurationTest {
     YamlConfiguration yc =
         new YamlConfiguration("example:\n  color: red\n  count: 7\n  list:\n  - a\n  - b\n  - c");
     assertTrue(yc.getAsList("example.list").containsAll(Arrays.asList("a", "b", "c")));
-    assertEquals("red", yc.get("example.color").get());
-    assertEquals(7, yc.get("example.count").get());
+    assertEquals("red", yc.get(String.class, "example.color").get());
   }
 
   @Test
@@ -69,15 +69,34 @@ public class YamlConfigurationTest {
 
   @Test
   public void testGet() {
-    assertTrue(config.get(INT_KEY).isPresent());
-    assertEquals(7, (int) config.get(INT_KEY).get());
-    assertFalse(config.get(MISSING_KEY).isPresent());
+    assertTrue(config.get(Integer.class, INT_KEY).isPresent());
+    assertEquals(7, (int) config.get(Integer.class, INT_KEY).get());
+    assertFalse(config.get(Object.class, MISSING_KEY).isPresent());
+  }
+
+  @Test
+  public void testGetFirst() {
+    assertEquals(
+        "uk.gov.dstl.baleen.testing.DummyContentExtractor",
+        config.getFirst(String.class, "contentextractor.class", "contentextractor").get());
+    assertEquals(
+        "uk.gov.dstl.baleen.testing.DummyCollectionReader",
+        config.getFirst(String.class, "collectionreader.class", "collectionreader").get());
+    Optional<String> found = config.getFirst(String.class, MISSING_KEY, "example", "missing");
+    assertFalse(found.isPresent());
+  }
+
+  @Test
+  public void testGetObject() {
+    Optional<Object> found = config.get("example");
+    assertTrue(found.isPresent());
+    assertTrue(found.get() instanceof Map);
   }
 
   @Test
   public void testGetWithDefault() {
-    assertEquals(7, (int) config.get(INT_KEY, 4));
-    assertEquals(1, (int) config.get(MISSING_KEY, 1));
+    assertEquals(7, (int) config.get(Integer.class, INT_KEY, 4));
+    assertEquals(1, (int) config.get(Integer.class, MISSING_KEY, 1));
   }
 
   @Test
