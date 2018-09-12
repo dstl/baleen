@@ -22,7 +22,7 @@ public class Area extends AbstractQuantityRegexAnnotator {
   public static final double MI2_TO_M2 = 2589988.1;
   public static final double YD2_TO_M2 = 0.83612739;
   public static final double FT2_TO_M2 = 0.092903044;
-  public static final double IN2_TO_M2 = 0.000064516;
+  public static final double IN2_TO_M2 = 0.00064516;
 
   public static final double ACRE_TO_M2 = 4046.8564;
   public static final double HECTARE_TO_M2 = 10000.0;
