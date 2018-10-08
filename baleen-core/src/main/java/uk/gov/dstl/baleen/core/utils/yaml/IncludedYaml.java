@@ -72,10 +72,15 @@ public class IncludedYaml extends AbstractBaseYaml implements Yaml {
       Object value = e.getValue();
       if (INCLUDE.equals(key)) {
         if (value instanceof String) {
-          return mapping.apply((String) value).dataTree();
+          Object includedTree = mapping.apply((String) value).dataTree();
+          if (includedTree instanceof Map) {
+            Map<String, Object> includedMap = (Map<String, Object>) includedTree;
+            includedMap.forEach((k, v) -> processed.put(k, v));
+          } else {
+            return includedTree;
+          }
         } else if (value instanceof List) {
           return getIncludedList((List<String>) value);
-
         } else {
           throw new IllegalArgumentException("include must be a string or list of strings");
         }

@@ -1,0 +1,9 @@
+
+include: reader.yaml
+
+annotators:
+  - include: child1.yaml
+  - class: uk.gov.dstl.baleen.testing.DummyAnnotator
+
+consumers:
+  - class: uk.gov.dstl.baleen.testing.DummyConsumer

@@ -22,6 +22,7 @@ public class IncludeYamlTest {
   private static final String YAMLCONFIGURATION_YAML = "yamlconfiguration.yaml";
   private static final String GRAND_PARENT_YAML = "grandparent.yaml";
   private static final String PARENT_YAML = "parent.yaml";
+  private static final String PARENT_INCLUDE_YAML = "parentInclude.yaml";
 
   Function<String, Yaml> mapping =
       new Function<String, Yaml>() {
@@ -54,6 +55,25 @@ public class IncludeYamlTest {
   public void simpleInclude() throws IOException {
     Yaml yaml = new IncludedYaml(new YamlFile(YamlFileTest.class, PARENT_YAML), mapping);
     String expected = getRaw(PARENT_YAML);
+    assertEquals(expected, yaml.original());
+    Object data = yaml.dataTree();
+    assertTrue(data instanceof Map);
+    Map<String, Object> dataTree = (Map<String, Object>) data;
+    assertTrue(dataTree.containsKey("collectionreader"));
+    List<Object> annotators = (List<Object>) dataTree.get("annotators");
+    assertEquals(2, annotators.size());
+    assertEquals(
+        "uk.gov.dstl.baleen.testing.DummyAnnotator",
+        ((Map<String, Object>) annotators.get(1)).get("class"));
+    assertEquals(
+        "uk.gov.dstl.baleen.testing.DummyResourceAnnotator",
+        ((Map<String, Object>) annotators.get(0)).get("class"));
+  }
+
+  @Test
+  public void mapInclude() throws IOException {
+    Yaml yaml = new IncludedYaml(new YamlFile(YamlFileTest.class, PARENT_INCLUDE_YAML), mapping);
+    String expected = getRaw(PARENT_INCLUDE_YAML);
     assertEquals(expected, yaml.original());
     Object data = yaml.dataTree();
     assertTrue(data instanceof Map);
