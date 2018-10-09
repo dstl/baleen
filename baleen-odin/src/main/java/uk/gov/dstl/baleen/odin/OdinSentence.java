@@ -34,7 +34,7 @@ public class OdinSentence extends Sentence {
       String[] words,
       int[] startOffsets,
       int[] endOffsets) {
-    super(words, startOffsets, endOffsets);
+    super(words, startOffsets, endOffsets, words);
     this.sentenceIndex = sentenceIndex;
     this.baleenSentence = baleenSentence;
     this.tokens = tokens;
