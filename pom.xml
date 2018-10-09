@@ -185,21 +185,23 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
-        <configuration>
-          <additionalparam>-Xdoclint:none</additionalparam>
-          <taglets>
-            <taglet>
-              <tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>
-              <tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>
-              <tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>
-              <tagletArtifact>
-                <groupId>uk.gov.dstl.baleen</groupId>
-                <artifactId>baleen-javadoc</artifactId>
-                <version>${baleen.version}</version>
-              </tagletArtifact>
-            </taglet>
-          </taglets>
-        </configuration>
+        <!-- The Baleen Javadoc Taglets is deprecated as the Javadoc API has changed -->
+        <!-- This was the configuration for Java 8 -->
+        <!-- <configuration>-->
+          <!--<additionalparam>-Xdoclint:none</additionalparam>-->
+          <!--<taglets>-->
+            <!--<taglet>-->
+              <!--<tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>-->
+              <!--<tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>-->
+              <!--<tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>-->
+              <!--<tagletArtifact>-->
+                <!--<groupId>uk.gov.dstl.baleen</groupId>-->
+                <!--<artifactId>baleen-javadoc</artifactId>-->
+                <!--<version>${baleen.version}</version>-->
+              <!--</tagletArtifact>-->
+            <!--</taglet>-->
+          <!--</taglets>-->
+        <!--</configuration>-->
       </plugin>
 
       <!-- Integration testing -->
@@ -259,7 +261,6 @@
     <module>baleen-consumers</module>
     <module>baleen-runner</module>
     <module>baleen-history</module>
-    <module>baleen-javadoc</module>
     <module>baleen-jobs</module>
     <module>baleen-orderers</module>
     <module>baleen-odin</module>
@@ -273,5 +274,10 @@
     <module>baleen-kafka</module>
     <module>baleen-rabbitmq</module>
     <module>baleen-redis</module>
+
+    <!-- This module is deprecated as the Javadoc API has changed -->
+    <!-- If you are running JDK 8 you could reenable it -->
+    <!--<module>baleen-javadoc</module>-->
+
   </modules>
 </project>
