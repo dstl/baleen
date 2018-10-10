@@ -177,6 +177,7 @@
           <excludes>
             <exclude>**/*IT.java</exclude>
           </excludes>
+          <argLine>-Xmx2048m -XX:MaxPermSize=256m</argLine>
         </configuration>
       </plugin>
 
