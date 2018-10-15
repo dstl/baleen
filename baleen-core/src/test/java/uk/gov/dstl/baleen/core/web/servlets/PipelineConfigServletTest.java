@@ -15,7 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
-import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPipelineConfiguration;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.testing.servlets.ServletCaller;
 
@@ -46,7 +46,7 @@ public class PipelineConfigServletTest {
     BaleenPipeline pipeline =
         new BaleenPipeline(
             "name",
-            new YamlPiplineConfiguration(),
+            new YamlPipelineConfiguration(),
             new NoOpOrderer(),
             null,
             Collections.emptyList(),
@@ -64,7 +64,7 @@ public class PipelineConfigServletTest {
     BaleenPipeline pipeline =
         new BaleenPipeline(
             "name",
-            new YamlPiplineConfiguration("Config"),
+            new YamlPipelineConfiguration("Config"),
             new NoOpOrderer(),
             null,
             Collections.emptyList(),

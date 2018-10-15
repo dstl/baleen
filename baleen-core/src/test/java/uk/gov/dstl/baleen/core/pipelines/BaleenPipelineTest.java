@@ -18,7 +18,7 @@ public class BaleenPipelineTest {
     BaleenPipeline bop =
         new BaleenPipeline(
             "Test Name",
-            new YamlPiplineConfiguration("Test YAML"),
+            new YamlPipelineConfiguration("Test YAML"),
             new NoOpOrderer(),
             null,
             Collections.emptyList(),
@@ -34,7 +34,7 @@ public class BaleenPipelineTest {
     BaleenPipeline bop =
         new BaleenPipeline(
             "Test Name",
-            new YamlPiplineConfiguration(),
+            new YamlPipelineConfiguration(),
             new NoOpOrderer(),
             null,
             Collections.emptyList(),

@@ -11,7 +11,7 @@ import uk.gov.dstl.baleen.core.utils.Configuration;
 public interface PipelineConfiguration extends Configuration {
 
   /**
-   * Dump ordered version of the pipline
+   * Dump ordered version of the pipeline
    *
    * @param ann ordered annotators
    * @param con ordered consumers

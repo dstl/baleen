@@ -67,7 +67,7 @@ public class Baleen {
         "dry-run",
         false,
         "Configure, start, then immediately stop. Useful for testing configuration noting some documents may be processed.");
-    options.addOption("p", PIPELINE, true, "Run the pipline specified in the given file.");
+    options.addOption("p", PIPELINE, true, "Run the pipeline specified in the given file.");
     options.addOption("j", JOB, true, "Run the job specified in the given file.");
 
     boolean dryRun = false;

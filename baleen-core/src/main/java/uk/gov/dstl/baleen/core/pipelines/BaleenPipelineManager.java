@@ -78,15 +78,15 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
         yaml = new IncludedYaml(new YamlFile(new File(file)));
         source = "file";
       } else {
-        logger.warn("Configuration omited for {} {} - will be skipped", getType(), name);
+        logger.warn("Configuration omitted for {} {} - will be skipped", getType(), name);
         metrics.getCounter("errors").inc();
         continue;
       }
 
       try {
         logger.info("Attempting to create {} {}", getType(), name);
-        logger.debug("Pipline configuration: {}", yaml);
-        create(name, new YamlPiplineConfiguration(yaml), multiplicity);
+        logger.debug("Pipeline configuration: {}", yaml);
+        create(name, new YamlPipelineConfiguration(yaml), multiplicity);
       } catch (Exception e) {
         logger.warn(
             "Unable to create {} {} from configuration {}\n{}{} ",
@@ -153,7 +153,7 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
   public List<BaleenPipeline> create(String name, PipelineConfiguration config, int multiplicity)
       throws BaleenException {
     if (multiplicity < 1) {
-      throw new BaleenException("Multiplicity of pipline " + name + " must be positive");
+      throw new BaleenException("Multiplicity of pipeline " + name + " must be positive");
     }
 
     ArrayList<BaleenPipeline> created = new ArrayList<>();
@@ -196,7 +196,7 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
   public List<BaleenPipeline> create(String name, InputStream yaml, int multiplicity)
       throws BaleenException {
     try {
-      return create(name, new YamlPiplineConfiguration(yaml), multiplicity);
+      return create(name, new YamlPipelineConfiguration(yaml), multiplicity);
     } catch (IOException e) {
       throw new BaleenException(e);
     }
@@ -214,7 +214,7 @@ public class BaleenPipelineManager extends AbstractBaleenComponent {
   public List<BaleenPipeline> create(String name, File file, int multiplicity)
       throws BaleenException {
     try {
-      return create(name, new YamlPiplineConfiguration(file), multiplicity);
+      return create(name, new YamlPipelineConfiguration(file), multiplicity);
     } catch (IOException e) {
       throw new BaleenException(e);
     }

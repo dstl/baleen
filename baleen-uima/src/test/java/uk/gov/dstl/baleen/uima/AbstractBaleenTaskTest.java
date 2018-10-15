@@ -15,7 +15,7 @@ import org.junit.Before;
 
 import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
-import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPipelineConfiguration;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
@@ -68,13 +68,13 @@ public abstract class AbstractBaleenTaskTest {
   protected BaleenJob wrapInJob(Class<? extends BaleenTask>... taskClasses)
       throws BaleenException, IOException {
     String yaml = getYaml(taskClasses);
-    return (BaleenJob) jobManager.create("testjob", new YamlPiplineConfiguration(yaml));
+    return (BaleenJob) jobManager.create("testjob", new YamlPipelineConfiguration(yaml));
   }
 
   protected BaleenJob wrapInJob(Class<? extends BaleenTask> taskClass, Map<String, String> params)
       throws BaleenException, IOException {
     String yaml = getYaml(taskClass, params);
-    return (BaleenJob) jobManager.create("testjob", new YamlPiplineConfiguration(yaml));
+    return (BaleenJob) jobManager.create("testjob", new YamlPipelineConfiguration(yaml));
   }
 
   protected JobSettings execute(AnalysisEngine... analysisEngines)

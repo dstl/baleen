@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 
-/** Basic test of baleen pipline manager, */
+/** Basic test of baleen pipeline manager, */
 public class BaleenPipelineManagerTest {
 
   @Test
@@ -79,7 +79,7 @@ public class BaleenPipelineManagerTest {
   }
 
   @Test
-  public void testWithRemoveAllPiplines() throws Exception {
+  public void testWithRemoveAllPipelines() throws Exception {
     BaleenPipelineManager manager = new BaleenPipelineManager();
     try {
       YamlConfiguration config = new YamlConfiguration(getClass(), "multiplicity.yaml");

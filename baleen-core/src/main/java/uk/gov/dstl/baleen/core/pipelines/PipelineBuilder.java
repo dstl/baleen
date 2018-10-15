@@ -160,7 +160,7 @@ public class PipelineBuilder {
    */
   @Deprecated
   public PipelineBuilder(String name, String yaml) throws IOException {
-    this(name, new YamlPiplineConfiguration(yaml));
+    this(name, new YamlPipelineConfiguration(yaml));
   }
 
   /**
