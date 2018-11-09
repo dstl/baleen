@@ -81,7 +81,7 @@ public class PipelineBuilderTest {
   public void testLegacy() throws Exception {
     String yaml = Files.asCharSource(getFile("legacyConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPipelineConfiguration(yaml));
     BaleenPipeline pipeline = pb.createNewPipeline();
 
     assertEquals("Test Pipeline", pipeline.getName());
@@ -123,7 +123,7 @@ public class PipelineBuilderTest {
     String yaml =
         Files.asCharSource(getFile("errorNotFoundCEConfig.yaml"), StandardCharsets.UTF_8).read();
 
-    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPipelineConfiguration(yaml));
 
     try {
       pb.createNewPipeline();
