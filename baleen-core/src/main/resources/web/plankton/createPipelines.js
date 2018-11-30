@@ -63,7 +63,12 @@ function loadContentExtractors(){
 			var option = "<option>"+reader.substring(2)+"</option>";
 			$("#contentExtractor").append(option);
 		});
-		componentListLoaded();
+		var defaultContentExtractor = baleenDefaultValues.DEFAULT_CONTENT_EXTRACTOR.replace(baleenDefaultValues.DEFAULT_CONTENT_EXTRACTOR_PACKAGE + ".", "");
+                $("#contentExtractor").val(defaultContentExtractor);
+                $("#contentExtractor-default").val(defaultContentExtractor);
+                $("#contentExtractor").change();
+                $("#contentExtractorPanel").removeClass("hidden");
+                componentListLoaded();
 	}).error(function(data){
 		$("#alertCouldntLoad").removeClass("hidden");
 		$("#createPanel").addClass("hidden");
@@ -112,12 +117,6 @@ function getCollectionReader(name){
 	});
 	
 	$("#collectionReaderParameters").empty();
-	$("#contentExtractorPanel").addClass("hidden");
-	
-	var contentExtractorResources = $("#contentExtractorResources").val().split(",");
-	contentExtractorResources.forEach(function(el){
-		removeResource({key: el});
-	});
 	
 	$.ajax({
 		url: baleenUrl + "api/1/collectionreaders/"+name,
@@ -128,24 +127,19 @@ function getCollectionReader(name){
 	
 		data.forEach(function(el){
 			if(el.type == "parameter"){
-				if(el.name == "contentExtractor"){
-				    var defaultContentExtractor = el.defaultValue.replace(baleenDefaultValues.DEFAULT_CONTENT_EXTRACTOR_PACKAGE + ".", "");
+		
+                                var label = "<label for=\""+name+"-"+el.name+"\">"+el.name+"</label>";
+                                var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
+                                var input = "<input type=\"text\" id=\""+name+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
+                                var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
 
-				    $("#contentExtractor").val(defaultContentExtractor);
-					$("#contentExtractor-default").val(defaultContentExtractor);
-					$("#contentExtractor").change();
-					$("#contentExtractorPanel").removeClass("hidden");
-				}else{				
-					var label = "<label for=\""+name+"-"+el.name+"\">"+el.name+"</label>";
-					var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
-					var input = "<input type=\"text\" id=\""+name+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
-					var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
-					
-					$("#collectionReaderParameters").append($("<p></p>").append(label, toTextArea, input, defaultValue));
-				}
+                                $("#collectionReaderParameters").append($("<p></p>").append(label, toTextArea, input, defaultValue));
+
 			}else if(el.type == "resource"){
-				addResource(el);
-				resourcesString += el.key + ",";
+				
+                                addResource(el);
+                                resourcesString += el.key + ",";
+
 			}else{
 				console.log("Didn't understand data - unknown type '"+el.type+"'");
 			}
@@ -167,7 +161,12 @@ function getContentExtractor(name){
 	});
 	
 	$("#contentExtractorParameters").empty();
-	
+    
+	var contentExtractorResources = $("#contentExtractorResources").val().split(",");
+	contentExtractorResources.forEach(function(el){
+		removeResource({key: el});
+	});
+        
 	$.ajax({
 		url: baleenUrl + "api/1/contentextractors/"+name,
 	}).done(function(data){
@@ -364,7 +363,7 @@ function addAllConsumers(){
 var resources = {}
 function addResource(resource){
 	resource.key = sanitizeName(resource.key);
-	if(resource.key != "__baleenHistory"){
+	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor"){
 		if(resources[resource.key] == undefined){
 			resources[resource.key] = 0
 		}
@@ -413,7 +412,7 @@ function addResource(resource){
 function removeResource(resource){
 	resource.key = sanitizeName(resource.key);
 	
-	if(resource.key != "__baleenHistory" && resource.key != "" && resources[resource.key] != undefined && resources[resource.key] >= 1){
+	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor" && resource.key != "" && resources[resource.key] != undefined && resources[resource.key] >= 1){
 		resources[resource.key]--;
 		
 		if(resources[resource.key] == 0){
@@ -495,31 +494,48 @@ function createCollectionReaderYaml(){
 		}
 	});
 	
-	var contentextractor = $("#contentExtractor").val();
-	if(contentextractor != $("#contentExtractor-default").val()){
-		content += "  contentExtractor: "+ contentextractor + "\n";
-	}
 	
-	$("#contentExtractorParameters .form-control").each(function(index, element){
-		var value = $(element).val();
-		var id = $(element).attr("id");
+	return content;
+}
 
-		if(value != null && value != $("#"+id+"-default").val()){
-			content += "  " + id.substring(contentextractor.length + 1) + ": ";
+function createContentExtractorYaml(){
+	
+	var contentextractor = $("#contentExtractor").val();
+        var params = [];
+
+        $("#contentExtractorParameters .form-control").each(function(index, element){
+
+                var value = $(element).val();
+                var id = $(element).attr("id");
+                if(value != null && value != $("#"+id+"-default").val()){
+			var paramName = id.substring(contentextractor.length + 1) + ": ";
 			if(value.indexOf("\n") != -1){
-				var values = value.match(/[^\r\n]+/g);
-				content += "\n";
+				params.push(paramName);
+                                var values = value.match(/[^\r\n]+/g);				
 				values.forEach(function(el){
-					content += "  - "+el + "\n";
+					params.push("  - "+el);
 				});
 			}else if(value == ""){
-					params.push(paramName + "\"\"");
+				params.push(paramName + "\"\"");
 			}else{
-				content += value + "\n";
+				params.push(paramName + value);
 			}
 		}
-	});
+                
+        });
+        
+
+        var content = "contentextractor:";
 	
+        if(params.length == 0){
+            content += "  "+contentextractor+"\n";
+        }else{
+            content += "\n  class: "+contentextractor+"\n";
+            params.forEach(function(param){
+                    content += "  "+ param + "\n";
+            });
+        }
+        	
 	return content;
 }
 
@@ -685,6 +701,7 @@ function createPipelineName(){
 function createYaml(){
 	var yaml = createOrdererYaml();
 	yaml += "\n" + createCollectionReaderYaml();
+	yaml += "\n" + createContentExtractorYaml();
 	yaml += "\n" + createAnnotatorYaml();
 	yaml += "\n" + createConsumerYaml();
 	yaml += "\n" + createResourcesYaml();

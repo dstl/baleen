@@ -142,27 +142,32 @@
 										<select id="collectionReader" class="form-control"></select>
 									</p>
 									<div id="collectionReaderParameters">
-									</div>
-									<div class="panel panel-default hidden" id="contentExtractorPanel">
-										<div class="panel-heading">
-											<h3 class="panel-title">Content Extractor: <strong id="contentExtractorName"></strong></h3>
-										</div>
-										<div class="panel-body">
-											<input type="hidden" id="contentExtractorResources" value="">
-											<p>
-												<label for="contentExtractor">Content Extractor</label>
-												<select id="contentExtractor" class="form-control"></select>
-												<input type="hidden" id="contentExtractor-default" value="">
-											</p>
-											<div id="contentExtractorParameters">
-											</div>
-										</div>
-									</div>
+									</div>									
 								</div>
 							</form>
 						</div>
 					</div>
 					
+					<div class="panel panel-default">
+						<div class="panel-heading" data-toggle="collapse" data-target="#contentExtractorPanel">
+							<h3 class="panel-title">Content Extractor: <strong id="contentExtractorName"></strong></h3>
+						</div>
+						<div class="panel-body collapse in" id="contentExtractorPanel">
+                                                        <form>
+                                                                <input type="hidden" id="contentExtractorResources" value="">
+                                                                <div class="form-group">
+                                                                    <p>
+                                                                            <label for="contentExtractor">Content Extractor</label>
+                                                                            <select id="contentExtractor" class="form-control"></select>
+                                                                            <input type="hidden" id="contentExtractor-default" value="">
+                                                                    </p>
+                                                                    <div id="contentExtractorParameters">
+                                                                    </div>
+                                                                </div>
+                                                        </form>
+						</div>
+					</div>
+                                    
 					<div class="panel panel-default">
 						<div class="panel-heading" data-toggle="collapse" data-target="#annotatorsPanelBody">
 							<h3 class="panel-title">Annotators</h3>
