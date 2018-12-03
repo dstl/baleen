@@ -4,11 +4,7 @@ package uk.gov.dstl.baleen.core.pipelines;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.yaml.snakeyaml.DumperOptions;
@@ -21,17 +17,16 @@ import uk.gov.dstl.baleen.core.utils.yaml.Yaml;
 import uk.gov.dstl.baleen.core.utils.yaml.YamlConfiguration;
 import uk.gov.dstl.baleen.core.utils.yaml.YamlFile;
 
-/** A yaml based implementation of a pipline config */
-@SuppressWarnings("unchecked")
-public class YamlPiplineConfiguration extends YamlConfiguration implements PipelineConfiguration {
+/** A yaml based implementation of a pipeline config */
+public class YamlPipelineConfiguration extends YamlConfiguration implements PipelineConfiguration {
 
   /**
    * Construct configuration from yaml string
    *
-   * @param originalYaml
+   * @param yaml
    * @throws Exception
    */
-  public YamlPiplineConfiguration(Yaml yaml) throws IOException {
+  public YamlPipelineConfiguration(Yaml yaml) throws IOException {
     super(yaml);
   }
 
@@ -41,12 +36,12 @@ public class YamlPiplineConfiguration extends YamlConfiguration implements Pipel
    * @param originalYaml
    * @throws Exception
    */
-  public YamlPiplineConfiguration(String originalYaml) throws IOException {
+  public YamlPipelineConfiguration(String originalYaml) throws IOException {
     super(originalYaml);
   }
 
   /** Construct empty configuration */
-  public YamlPiplineConfiguration() throws IOException {
+  public YamlPipelineConfiguration() throws IOException {
     super();
   }
 
@@ -56,7 +51,7 @@ public class YamlPiplineConfiguration extends YamlConfiguration implements Pipel
    * @param is stream to read
    * @throws Exception
    */
-  public YamlPiplineConfiguration(InputStream is) throws IOException {
+  public YamlPipelineConfiguration(InputStream is) throws IOException {
     super(is);
   }
 
@@ -65,7 +60,7 @@ public class YamlPiplineConfiguration extends YamlConfiguration implements Pipel
    *
    * @param file to read
    */
-  public YamlPiplineConfiguration(File file) throws IOException {
+  public YamlPipelineConfiguration(File file) throws IOException {
     super(new IncludedYaml(new YamlFile(file)));
   }
 

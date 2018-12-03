@@ -15,7 +15,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.core.jobs.BaleenJob;
 import uk.gov.dstl.baleen.core.jobs.BaleenJobManager;
-import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPipelineConfiguration;
 import uk.gov.dstl.baleen.testing.servlets.ServletCaller;
 
 /** Tests for {@link BaleenManagerConfigServlet}. */
@@ -43,7 +43,7 @@ public class JobConfigServletTest {
   @Test
   public void testEmpty() throws Exception {
     BaleenJob job =
-        new BaleenJob("name", new YamlPiplineConfiguration(), null, Collections.emptyList());
+        new BaleenJob("name", new YamlPipelineConfiguration(), null, Collections.emptyList());
     doReturn(Optional.of(job)).when(manager).get(anyString());
 
     ServletCaller caller = new ServletCaller();

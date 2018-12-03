@@ -20,7 +20,7 @@ import com.google.common.base.Strings;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipelineManager;
-import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPipelineConfiguration;
 import uk.gov.dstl.baleen.core.web.security.WebPermission;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
@@ -165,7 +165,7 @@ public class PipelineManagerServlet extends AbstractApiServlet {
 
     List<BaleenPipeline> t;
     try {
-      t = manager.create(name, new YamlPiplineConfiguration(yaml), multiplicity);
+      t = manager.create(name, new YamlPipelineConfiguration(yaml), multiplicity);
     } catch (BaleenException e) {
       LOGGER.error("Unable to create", e);
       respondWithError(

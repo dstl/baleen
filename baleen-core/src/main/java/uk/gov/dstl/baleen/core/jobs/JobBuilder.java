@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableSet;
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
 import uk.gov.dstl.baleen.core.pipelines.PipelineConfiguration;
-import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPipelineConfiguration;
 import uk.gov.dstl.baleen.core.pipelines.orderers.IPipelineOrderer;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
@@ -66,7 +66,7 @@ public class JobBuilder extends PipelineBuilder {
    */
   @Deprecated
   public JobBuilder(String name, String yaml) throws IOException {
-    this(name, new YamlPiplineConfiguration(yaml));
+    this(name, new YamlPipelineConfiguration(yaml));
   }
 
   /**

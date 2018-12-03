@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import com.google.common.io.Files;
 
-import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPipelineConfiguration;
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 
 public class JobBuilderTest {
@@ -22,7 +22,7 @@ public class JobBuilderTest {
   public void testValid1() throws Exception {
     String yaml = Files.asCharSource(getFile("jobConfig.yaml"), Charset.defaultCharset()).read();
 
-    JobBuilder jb = new JobBuilder("Test Job", new YamlPiplineConfiguration(yaml));
+    JobBuilder jb = new JobBuilder("Test Job", new YamlPipelineConfiguration(yaml));
     BaleenJob job = (BaleenJob) jb.createNewPipeline();
 
     assertEquals("Test Job", job.getName());
@@ -52,7 +52,7 @@ public class JobBuilderTest {
   public void testValid2() throws Exception {
     String yaml = Files.asCharSource(getFile("jobConfig2.yaml"), Charset.defaultCharset()).read();
 
-    JobBuilder jb = new JobBuilder("Test Job", new YamlPiplineConfiguration(yaml));
+    JobBuilder jb = new JobBuilder("Test Job", new YamlPipelineConfiguration(yaml));
     BaleenJob job = (BaleenJob) jb.createNewPipeline();
 
     assertEquals("Test Job", job.getName());
@@ -82,7 +82,7 @@ public class JobBuilderTest {
   public void testValid3() throws Exception {
     String yaml = Files.asCharSource(getFile("jobConfig3.yaml"), Charset.defaultCharset()).read();
 
-    JobBuilder jb = new JobBuilder("Test Job", new YamlPiplineConfiguration(yaml));
+    JobBuilder jb = new JobBuilder("Test Job", new YamlPipelineConfiguration(yaml));
     BaleenJob job = (BaleenJob) jb.createNewPipeline();
 
     assertEquals("Test Job", job.getName());

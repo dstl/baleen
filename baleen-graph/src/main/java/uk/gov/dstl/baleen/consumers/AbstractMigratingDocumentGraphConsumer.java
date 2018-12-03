@@ -79,7 +79,7 @@ public abstract class AbstractMigratingDocumentGraphConsumer extends AbstractDoc
 
   /**
    * Implementations should create and return the graph to be populated. The graph will be auto on
-   * pipline close.
+   * pipeline close.
    *
    * @return a Graph
    */

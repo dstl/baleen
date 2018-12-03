@@ -10,7 +10,7 @@ import org.apache.uima.collection.CollectionReader;
 
 import uk.gov.dstl.baleen.core.pipelines.BaleenPipeline;
 import uk.gov.dstl.baleen.core.pipelines.PipelineConfiguration;
-import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
+import uk.gov.dstl.baleen.core.pipelines.YamlPipelineConfiguration;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 
 /**
@@ -32,7 +32,7 @@ public class BaleenJob extends BaleenPipeline {
   public BaleenJob(
       String name, String originalYaml, CollectionReader scheduler, List<AnalysisEngine> tasks)
       throws IOException {
-    this(name, new YamlPiplineConfiguration(originalYaml), scheduler, tasks);
+    this(name, new YamlPipelineConfiguration(originalYaml), scheduler, tasks);
   }
 
   /**

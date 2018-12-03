@@ -68,7 +68,7 @@ public class BaleenPipeline implements Runnable {
       throws IOException {
     this(
         name,
-        new YamlPiplineConfiguration(originalYaml),
+        new YamlPipelineConfiguration(originalYaml),
         orderer,
         collectionReader,
         annotators,
