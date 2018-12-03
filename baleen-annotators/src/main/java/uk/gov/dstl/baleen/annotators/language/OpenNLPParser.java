@@ -1,21 +1,18 @@
 // Dstl (c) Crown Copyright 2017
+// Modified by Committed Software Copy 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.language;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import opennlp.tools.parser.AbstractBottomUpParser;
-import opennlp.tools.parser.Parse;
-import opennlp.tools.parser.Parser;
-import opennlp.tools.parser.ParserFactory;
-import opennlp.tools.parser.ParserModel;
+import opennlp.tools.parser.*;
 import opennlp.tools.util.Span;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -46,10 +43,12 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  */
 public class OpenNLPParser extends BaleenAnnotator {
   private static final Set<String> PHRASE_TYPES =
-      new HashSet<String>(
-          Arrays.asList(
-              "ADJP", "ADVP", "FRAG", "INTJ", "LST", "NAC", "NP", "NX", "PP", "PRN", "PRT", "QP",
-              "RRC", "UCP", "VP", "WHADJP", "WHAVP", "WHNP", "WHPP", "X"));
+      ImmutableSet.of(
+          "ADJP", "ADVP", "FRAG", "INTJ", "LST", "NAC", "NP", "NX", "PP", "PRN", "PRT", "QP", "RRC",
+          "UCP", "VP", "WHADJP", "WHAVP", "WHNP", "WHPP", "X");
+
+  private static final Set<String> CLAUSE_TYPES =
+      ImmutableSet.of("S", "SBAR", "SBARQ", "SINV", "SQ");
 
   /**
    * OpenNLP Resource (chunker) - use en-parser-chunking.bin
@@ -61,13 +60,27 @@ public class OpenNLPParser extends BaleenAnnotator {
   @ExternalResource(key = OpenNLPParser.PARAM_TOKEN)
   private SharedOpenNLPModel parserChunkingModel;
 
+  /** Set true to include clause level node in the parse tree */
+  public static final String INCLUDE_CLAUSES_PARAM = "includeClauses";
+
+  @ConfigurationParameter(name = INCLUDE_CLAUSES_PARAM, defaultValue = "false")
+  private boolean includeClauses = false;
+
   private Parser parser;
+
+  private Set<String> nodeTypes;
 
   @Override
   public void doInitialize(final UimaContext aContext) throws ResourceInitializationException {
     try {
       parserChunkingModel.loadModel(
           ParserModel.class, getClass().getResourceAsStream("en_parser_chunking.bin"));
+
+      ImmutableSet.Builder<String> builder = ImmutableSet.<String>builder().addAll(PHRASE_TYPES);
+      if (includeClauses) {
+        builder.addAll(CLAUSE_TYPES);
+      }
+      nodeTypes = builder.build();
     } catch (final BaleenException be) {
       getMonitor().error("Unable to load OpenNLP Language Models", be);
       throw new ResourceInitializationException(be);
@@ -114,8 +127,7 @@ public class OpenNLPParser extends BaleenAnnotator {
    */
   private void updatePhraseChunks(final JCas jCas, final Sentence sentence, final Parse parsed) {
     // We remove all the existing PhraseChunks as they are going to be
-    // replace with the parsed
-    // version
+    // replace with the parsed version
     // TODO: Should we create a new ConstiuentPhraseChunk type in Uima?
     removeFromJCasIndex(JCasUtil.selectCovered(jCas, PhraseChunk.class, sentence));
 
@@ -133,9 +145,8 @@ public class OpenNLPParser extends BaleenAnnotator {
     final String type = parsed.getType();
 
     // Ignore non phrase types
-    if (OpenNLPParser.PHRASE_TYPES.contains(type)) {
+    if (nodeTypes.contains(type)) {
       // Otherwise add new ParseChunks
-
       final Span span = parsed.getSpan();
       final PhraseChunk phraseChunk = new PhraseChunk(jCas);
       phraseChunk.setBegin(offset + span.getStart());
