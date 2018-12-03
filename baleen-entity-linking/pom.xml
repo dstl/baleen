@@ -26,6 +26,7 @@
       <groupId>uk.gov.dstl.baleen</groupId>
       <artifactId>baleen-annotators</artifactId>
       <version>${baleen.version}</version>
+
     </dependency>
 
     <!-- JSON Flattener -->
