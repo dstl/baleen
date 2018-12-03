@@ -34,6 +34,7 @@ import com.google.common.collect.ImmutableSet;
 
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.history.logging.LoggingBaleenHistory;
+import uk.gov.dstl.baleen.core.pipelines.content.ContentExtractor;
 import uk.gov.dstl.baleen.core.pipelines.orderers.IPipelineOrderer;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
@@ -74,6 +75,8 @@ import uk.gov.dstl.baleen.exceptions.MissingParameterException;
  *   mergeDistinctEntities: true
  *
  * orderer: NoOpPipelineOrderer
+ *
+ * contentExtractor: StructureContentExtractor
  *
  * collectionreader:
  *   class: DummyReader
@@ -119,11 +122,17 @@ public class PipelineBuilder {
 
   protected static final String ANNOTATORS_KEY = "annotators";
 
+  protected static final String CONTENT_EXTRACTOR_KEY = "contentextractor";
+
   protected static final String COLLECTION_READER_KEY = "collectionreader";
 
   protected static final String ORDERER_KEY = "orderer";
 
+  protected static final String HISTORY_KEY = "history";
+
   protected static final String CLASS = "class";
+
+  protected static final String DOT_CLASS = "." + CLASS;
 
   /** Key for the configuration parameter holding the pipeline name */
   public static final String PIPELINE_NAME = "__pipelineName";
@@ -131,6 +140,8 @@ public class PipelineBuilder {
   public static final String ANNOTATOR_UUID = "__uuid";
   /** Key for the resource holding the history object */
   public static final String BALEEN_HISTORY = "__baleenHistory";
+  /** Key for the resource holding the history object */
+  public static final String CONTENT_EXTRACTOR = "__contentExtractor";
   /** Metadata key for storing the original YAML configuration */
   public static final String ORIGINAL_CONFIG = "__originalConfig";
 
@@ -197,9 +208,7 @@ public class PipelineBuilder {
     LOGGER.debug("Configuring pipeline orderer");
     IPipelineOrderer orderer = createPipelineOrderer();
 
-    LOGGER.debug("Configuring history");
-    ExternalResourceDescription erdHistory = configureHistory();
-    resourceDescriptors.put(BALEEN_HISTORY, erdHistory);
+    configureResources();
 
     LOGGER.debug("Creating collection reader");
     CollectionReader collectionReader = createCollectionReader();
@@ -221,6 +230,17 @@ public class PipelineBuilder {
     }
 
     return toPipeline(name, yaml, orderer, collectionReader, annotators, consumers);
+  }
+
+  /* protected so extensions can configure different resources if required */
+  protected void configureResources() throws BaleenException {
+    LOGGER.debug("Configuring history");
+    ExternalResourceDescription erdHistory = configureHistory();
+    resourceDescriptors.put(BALEEN_HISTORY, erdHistory);
+
+    LOGGER.debug("Configuring content extractor");
+    ExternalResourceDescription erdContentExtractor = configureContentExtractor();
+    resourceDescriptors.put(CONTENT_EXTRACTOR, erdContentExtractor);
   }
 
   /**
@@ -253,7 +273,9 @@ public class PipelineBuilder {
   protected void readConfiguration() throws BaleenException {
     LOGGER.debug("Reading configuration");
 
-    pipelineOrderer = yaml.get(ORDERER_KEY, BaleenDefaults.DEFAULT_ORDERER);
+    pipelineOrderer =
+        yaml.getFirst(String.class, ORDERER_KEY + DOT_CLASS, ORDERER_KEY)
+            .orElse(BaleenDefaults.DEFAULT_ORDERER);
 
     Optional<Object> s = yaml.get(COLLECTION_READER_KEY);
     if (!s.isPresent()) {
@@ -303,14 +325,16 @@ public class PipelineBuilder {
   /** Configure a new history resource object */
   @SuppressWarnings("unchecked")
   private ExternalResourceDescription configureHistory() {
-    Optional<String> historyClass = yaml.get("history.class");
+    Optional<String> historyClass = yaml.get(String.class, HISTORY_KEY + DOT_CLASS);
 
     Class<? extends BaleenHistory> clazz = null;
 
     if (historyClass.isPresent()) {
       try {
-        clazz = (Class<? extends BaleenHistory>) Class.forName(historyClass.get());
-      } catch (ClassNotFoundException | ClassCastException e) {
+        clazz =
+            BuilderUtils.getClassFromString(
+                historyClass.get(), BaleenDefaults.DEFAULT_HISTORY_PACKAGE);
+      } catch (InvalidParameterException e) {
         LOGGER.warn("Unable to find perferred history implementation {}", historyClass, e);
       }
     } else {
@@ -329,6 +353,53 @@ public class PipelineBuilder {
 
     return ExternalResourceFactory.createExternalResourceDescription(
         BALEEN_HISTORY, clazz, stringParams);
+  }
+
+  /** Configure a new content extractor resource object */
+  @SuppressWarnings("unchecked")
+  private ExternalResourceDescription configureContentExtractor() throws BaleenException {
+
+    Optional<String> contentExtractorClass =
+        yaml.getFirst(
+            String.class,
+            CONTENT_EXTRACTOR_KEY,
+            CONTENT_EXTRACTOR_KEY + DOT_CLASS,
+            COLLECTION_READER_KEY + ".contentExtractor");
+
+    Class<? extends ContentExtractor> clazz = null;
+
+    if (contentExtractorClass.isPresent()) {
+      try {
+        clazz =
+            BuilderUtils.getClassFromString(
+                contentExtractorClass.get(), BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR_PACKAGE);
+      } catch (InvalidParameterException e) {
+        LOGGER.warn(
+            "Unable to find perferred extractor implementation {}", contentExtractorClass, e);
+      }
+    } else {
+      LOGGER.warn("No extractor implementation specified");
+    }
+
+    if (clazz == null) {
+      try {
+        clazz =
+            (Class<? extends ContentExtractor>)
+                Class.forName(BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR);
+        LOGGER.info(
+            "Using the default content extractor implementation {}", clazz.getCanonicalName());
+      } catch (ClassNotFoundException | ClassCastException e) {
+        throw new BaleenException("Couldn't initialize default content extractor", e);
+      }
+    }
+
+    Object[] params =
+        BuilderUtils.extractParams(globalConfig, ignoreParams, getOrCreateResources(clazz));
+
+    Object[] stringParams = BuilderUtils.convertToStringArray(params);
+
+    return ExternalResourceFactory.createExternalResourceDescription(
+        CONTENT_EXTRACTOR, clazz, stringParams);
   }
 
   /** Create a new Collection Reader */

@@ -23,7 +23,7 @@ public class BaleenPipelineManagerTest {
   }
 
   @Test
-  public void testWithSinglePipline() throws Exception {
+  public void testWithSinglePipeline() throws Exception {
     BaleenPipelineManager manager = new BaleenPipelineManager();
     try {
       YamlConfiguration config = new YamlConfiguration(getClass(), "single.yaml");
@@ -36,7 +36,7 @@ public class BaleenPipelineManagerTest {
   }
 
   @Test
-  public void testWithDoublePipline() throws Exception {
+  public void testWithDoublePipeline() throws Exception {
     BaleenPipelineManager manager = new BaleenPipelineManager();
     try {
       YamlConfiguration config = new YamlConfiguration(getClass(), "double.yaml");
@@ -50,7 +50,7 @@ public class BaleenPipelineManagerTest {
   }
 
   @Test
-  public void testWithMultiplicityPipline() throws Exception {
+  public void testWithMultiplicityPipeline() throws Exception {
     BaleenPipelineManager manager = new BaleenPipelineManager();
     try {
       YamlConfiguration config = new YamlConfiguration(getClass(), "multiplicity.yaml");
@@ -66,7 +66,7 @@ public class BaleenPipelineManagerTest {
   }
 
   @Test
-  public void testRemoveSinglePipline() throws Exception {
+  public void testRemoveSinglePipeline() throws Exception {
     BaleenPipelineManager manager = new BaleenPipelineManager();
     try {
       YamlConfiguration config = new YamlConfiguration(getClass(), "single.yaml");

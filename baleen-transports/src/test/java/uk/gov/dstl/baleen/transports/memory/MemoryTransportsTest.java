@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.transports.memory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static uk.gov.dstl.baleen.uima.BaleenCollectionReader.KEY_CONTENT_EXTRACTOR;
 
 import java.io.IOException;
 import java.util.concurrent.CyclicBarrier;
@@ -26,6 +27,7 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 
 import uk.gov.dstl.baleen.resources.SharedMemoryQueueResource;
+import uk.gov.dstl.baleen.transports.util.FakeBaleenContentExtractor;
 import uk.gov.dstl.baleen.transports.util.TransportTester;
 import uk.gov.dstl.baleen.types.common.Person;
 import uk.gov.dstl.baleen.types.semantic.Location;
@@ -167,6 +169,9 @@ public class MemoryTransportsTest {
         CollectionReaderFactory.createReader(
             MemoryTransportReceiver.class,
             TypeSystemSingleton.getTypeSystemDescriptionInstance(),
+            KEY_CONTENT_EXTRACTOR,
+            ExternalResourceFactory.createExternalResourceDescription(
+                KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class),
             SharedMemoryQueueResource.RESOURCE_KEY,
             erd);
   }

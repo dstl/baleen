@@ -19,11 +19,8 @@ import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.resources.SharedActiveMQResource;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
  * This collection reader will process all waiting messages available on the ActiveMQ message
@@ -65,32 +62,10 @@ public class ActiveMQReader extends BaleenCollectionReader {
   @ConfigurationParameter(name = PARAM_MESSAGE_SELECTOR, defaultValue = "")
   private String messageSelector;
 
-  /**
-   * The content extractor to use to extract content from files
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  private String contentExtractor;
-
-  private IContentExtractor extractor;
-
   private MessageConsumer consumer;
 
   @Override
   protected void doInitialize(final UimaContext context) throws ResourceInitializationException {
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (final InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
-
     try {
       consumer = activeMQ.createConsumer(endpoint, messageSelector);
     } catch (final JMSException e) {
@@ -107,7 +82,7 @@ public class ActiveMQReader extends BaleenCollectionReader {
       if (msg instanceof TextMessage) {
         final String text = ((TextMessage) msg).getText();
         final InputStream is = IOUtils.toInputStream(text, Charset.defaultCharset());
-        extractor.processStream(is, source, jCas);
+        extractContent(is, source, jCas);
       } else {
         throw new IOException(
             String.format(

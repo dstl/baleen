@@ -1,6 +1,6 @@
-contentextractor: uk.gov.dstl.baleen.testing.DummyContentExtractor
 
 collectionreader:
+  contentExtractor: uk.gov.dstl.baleen.testing.DummyContentExtractor
   class: uk.gov.dstl.baleen.testing.RandomStringCollectionReader
 
 annotators:

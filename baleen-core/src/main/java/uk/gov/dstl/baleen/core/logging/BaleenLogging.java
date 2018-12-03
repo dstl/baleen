@@ -133,7 +133,8 @@ public class BaleenLogging extends AbstractBaleenComponent {
 
     // Add the evicting builder for in memory logging access monitoring
 
-    int maxLogsInMemory = yaml.get("logging.recent", EvictingQueueAppender.DEFAULT_MAX_SIZE);
+    int maxLogsInMemory =
+        yaml.get(Integer.class, "logging.recent", EvictingQueueAppender.DEFAULT_MAX_SIZE);
     EvictingQueueBuilder evictingQueueBuilder =
         new EvictingQueueBuilder(
             DEFAULT_PATTERN,

@@ -5,44 +5,38 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static uk.gov.dstl.baleen.uima.BaleenCollectionReader.KEY_CONTENT_EXTRACTOR;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.factory.CollectionReaderFactory;
+import org.apache.uima.fit.factory.ExternalResourceFactory;
 import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.apache.uima.util.Progress;
 import org.apache.uima.util.ProgressImpl;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.uima.testing.DummyBaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.testing.FakeContentExtractor;
 import uk.gov.dstl.baleen.uima.testing.JCasSingleton;
 
 public class BaleenCollectionReaderTest {
   @Test
   public void testHasNextLooping() throws Exception {
+
+    ExternalResourceDescription contentExtractor =
+        ExternalResourceFactory.createExternalResourceDescription(
+            KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class);
+
     DummyBaleenCollectionReader cr =
         (DummyBaleenCollectionReader)
-            CollectionReaderFactory.createReader(DummyBaleenCollectionReader.class);
-
-    // Create a thread which will kill the manager as soon as its started
-    new Thread(
-            new Runnable() {
-              @Override
-              public void run() {
-
-                try {
-                  Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                  // Do nothing
-                }
-              }
-            })
-        .start();
+            CollectionReaderFactory.createReader(
+                DummyBaleenCollectionReader.class,
+                BaleenCollectionReader.KEY_CONTENT_EXTRACTOR,
+                contentExtractor);
 
     while (cr.hasNext()) {
       JCas jCas = JCasSingleton.getJCasInstance();
@@ -54,7 +48,17 @@ public class BaleenCollectionReaderTest {
 
   @Test
   public void test() throws Exception {
-    FakeCollectionReader cr = new FakeCollectionReader();
+
+    ExternalResourceDescription contentExtractor =
+        ExternalResourceFactory.createExternalResourceDescription(
+            KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class);
+
+    FakeCollectionReader cr =
+        (FakeCollectionReader)
+            CollectionReaderFactory.createReader(
+                FakeCollectionReader.class,
+                BaleenCollectionReader.KEY_CONTENT_EXTRACTOR,
+                contentExtractor);
 
     UimaContext context = UimaContextFactory.createUimaContext();
     cr.initialize(context);
@@ -77,23 +81,7 @@ public class BaleenCollectionReaderTest {
     assertTrue(cr.closed);
   }
 
-  @Test
-  public void testStatic() throws Exception {
-    IContentExtractor extractor =
-        BaleenCollectionReader.getContentExtractor(FakeContentExtractor.class.getCanonicalName());
-    assertNotNull(extractor);
-
-    UimaContext context =
-        UimaContextFactory.createUimaContext(
-            "test1", new Integer(123), "test2", "Hello World", "test3", true);
-    Map<String, Object> config = BaleenCollectionReader.getConfigParameters(context);
-    assertEquals(3, config.size());
-    assertEquals(new Integer(123), config.get("test1"));
-    assertEquals("Hello World", config.get("test2"));
-    assertEquals(true, config.get("test3"));
-  }
-
-  public class FakeCollectionReader extends BaleenCollectionReader {
+  public static class FakeCollectionReader extends BaleenCollectionReader {
 
     private boolean initialised;
     private boolean hasNext;

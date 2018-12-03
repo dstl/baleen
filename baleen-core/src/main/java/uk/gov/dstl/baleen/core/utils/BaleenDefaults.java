@@ -44,6 +44,9 @@ public class BaleenDefaults {
   public static final String DEFAULT_CONTENT_EXTRACTOR_PACKAGE =
       "uk.gov.dstl.baleen.contentextractors";
 
+  /** Default package for History */
+  public static final String DEFAULT_HISTORY_PACKAGE = "uk.gov.dstl.baleen.history";
+
   private BaleenDefaults() {
     // Private constructor
   }

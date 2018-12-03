@@ -34,10 +34,7 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
  * Inspect a folder for unprocessed files, and process them through the pipeline. Currently, the
@@ -83,19 +80,6 @@ public class FolderReader extends BaleenCollectionReader {
   private boolean recursive = true;
 
   /**
-   * The content extractor to use to extract content from files
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  private String contentExtractor;
-
-  /**
    * A list of patterns that the filename must match. This can be used for specifying allowed file
    * extensions (e.g. .*\\.txt would accept all text files).
    *
@@ -120,8 +104,6 @@ public class FolderReader extends BaleenCollectionReader {
   private Map<WatchKey, Path> watchKeys = new HashMap<>();
   private List<Path> queue = new ArrayList<>();
 
-  private IContentExtractor extractor;
-
   @Override
   public void doInitialize(UimaContext context) throws ResourceInitializationException {
     if (folders == null || folders.length == 0) {
@@ -142,13 +124,6 @@ public class FolderReader extends BaleenCollectionReader {
                 pse);
       }
     }
-
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
 
     try {
       watcher = FileSystems.getDefault().newWatchService();
@@ -229,7 +204,7 @@ public class FolderReader extends BaleenCollectionReader {
     Path path = queue.remove(0);
     getMonitor().info("Processing file {}", path.toString());
     try (InputStream is = new FileInputStream(path.toFile()); ) {
-      extractor.processStream(is, path.toString(), jCas);
+      extractContent(is, path.toString(), jCas);
     }
   }
 
@@ -242,11 +217,6 @@ public class FolderReader extends BaleenCollectionReader {
 
     watchKeys.clear();
     queue.clear();
-
-    if (extractor != null) {
-      extractor.destroy();
-      extractor = null;
-    }
   }
 
   /**

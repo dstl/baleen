@@ -78,6 +78,19 @@ public class PipelineBuilderTest {
   }
 
   @Test
+  public void testLegacy() throws Exception {
+    String yaml = Files.asCharSource(getFile("legacyConfig.yaml"), StandardCharsets.UTF_8).read();
+
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
+    BaleenPipeline pipeline = pb.createNewPipeline();
+
+    assertEquals("Test Pipeline", pipeline.getName());
+    assertEquals(yaml, pipeline.originalConfig());
+
+    // Will throw an exception if the content extractor was not found resource wasn't initialized
+  }
+
+  @Test
   public void testResources() throws Exception {
     String yaml = Files.asCharSource(getFile("resourceConfig.yaml"), StandardCharsets.UTF_8).read();
 
@@ -103,6 +116,22 @@ public class PipelineBuilderTest {
 
     List<AnalysisEngine> annotators = pipeline.annotators();
     assertEquals(0, annotators.size());
+  }
+
+  @Test
+  public void testErrorContentExtractorNotFound() throws Exception {
+    String yaml =
+        Files.asCharSource(getFile("errorNotFoundCEConfig.yaml"), StandardCharsets.UTF_8).read();
+
+    PipelineBuilder pb = new PipelineBuilder("Test Pipeline", new YamlPiplineConfiguration(yaml));
+
+    try {
+      pb.createNewPipeline();
+
+      fail("Expected exception not thrown");
+    } catch (BaleenException be) {
+      // Expected exception, do nothing
+    }
   }
 
   @Test

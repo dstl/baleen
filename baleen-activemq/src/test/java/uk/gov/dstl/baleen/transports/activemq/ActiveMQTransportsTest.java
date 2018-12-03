@@ -1,6 +1,8 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.transports.activemq;
 
+import static uk.gov.dstl.baleen.uima.BaleenCollectionReader.KEY_CONTENT_EXTRACTOR;
+
 import java.io.IOException;
 
 import org.apache.uima.UIMAException;
@@ -13,6 +15,7 @@ import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.resources.SharedActiveMQResource;
+import uk.gov.dstl.baleen.transports.util.FakeBaleenContentExtractor;
 import uk.gov.dstl.baleen.transports.util.TransportTester;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
@@ -22,7 +25,7 @@ public class ActiveMQTransportsTest {
   private static String PROTOCOL_VALUE = "vm";
   private static String BROKERARGS_VALUE = "broker.persistent=false";
 
-  private final ExternalResourceDescription erd =
+  private final ExternalResourceDescription mqerd =
       ExternalResourceFactory.createExternalResourceDescription(
           SharedActiveMQResource.RESOURCE_KEY,
           SharedActiveMQResource.class,
@@ -30,6 +33,10 @@ public class ActiveMQTransportsTest {
           PROTOCOL_VALUE,
           SharedActiveMQResource.PARAM_BROKERARGS,
           BROKERARGS_VALUE);
+
+  private final ExternalResourceDescription ceerd =
+      ExternalResourceFactory.createExternalResourceDescription(
+          KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class);
 
   @Test
   public void testTransportCanSendAndRecieve() throws UIMAException, IOException {
@@ -58,11 +65,13 @@ public class ActiveMQTransportsTest {
             ActiveMQTransportReceiver.class,
             TypeSystemSingleton.getTypeSystemDescriptionInstance(),
             SharedActiveMQResource.RESOURCE_KEY,
-            erd);
+            mqerd,
+            KEY_CONTENT_EXTRACTOR,
+            ceerd);
   }
 
   private AnalysisEngine createAnalysisEngine() throws ResourceInitializationException {
-    return createAnalysisEngine(SharedActiveMQResource.RESOURCE_KEY, erd);
+    return createAnalysisEngine(SharedActiveMQResource.RESOURCE_KEY, mqerd);
   }
 
   private AnalysisEngine createAnalysisEngine(Object... args)

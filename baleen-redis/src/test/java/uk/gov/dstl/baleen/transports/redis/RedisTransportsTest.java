@@ -1,6 +1,8 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.transports.redis;
 
+import static uk.gov.dstl.baleen.uima.BaleenCollectionReader.KEY_CONTENT_EXTRACTOR;
+
 import java.io.IOException;
 
 import org.apache.uima.UIMAException;
@@ -14,6 +16,7 @@ import org.junit.Test;
 
 import uk.gov.dstl.baleen.resources.redis.MockRedisResource;
 import uk.gov.dstl.baleen.resources.redis.SharedRedisResource;
+import uk.gov.dstl.baleen.transports.util.FakeBaleenContentExtractor;
 import uk.gov.dstl.baleen.transports.util.JCasSerializationTester;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
@@ -61,7 +64,10 @@ public class RedisTransportsTest {
             RedisTransportReceiver.class,
             TypeSystemSingleton.getTypeSystemDescriptionInstance(),
             SharedRedisResource.RESOURCE_KEY,
-            erd);
+            erd,
+            KEY_CONTENT_EXTRACTOR,
+            ExternalResourceFactory.createExternalResourceDescription(
+                KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class));
   }
 
   private AnalysisEngine createAnalysisEngine() throws ResourceInitializationException {

@@ -18,11 +18,9 @@ import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
  * Reads a file, and treats each line as a separate document. Once completed, the pipeline will stay
@@ -45,24 +43,9 @@ public class LineReader extends BaleenCollectionReader {
   @ConfigurationParameter(name = PARAM_FILE, defaultValue = "")
   private File file;
 
-  /**
-   * The content extractor to use to extract content from files
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  private String contentExtractor;
-
   private BufferedReader br;
   private String line;
   private Integer lineNumber = 0;
-
-  private IContentExtractor extractor;
 
   @Override
   protected void doInitialize(UimaContext context) throws ResourceInitializationException {
@@ -78,18 +61,13 @@ public class LineReader extends BaleenCollectionReader {
     } catch (IOException ioe) {
       throw new ResourceInitializationException(ioe);
     }
-
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
   }
 
   @Override
   public boolean doHasNext() throws IOException, CollectionException {
-    if (br == null) return false;
+    if (br == null) {
+      return false;
+    }
 
     while ((line = br.readLine()) != null) {
       lineNumber++;
@@ -113,7 +91,7 @@ public class LineReader extends BaleenCollectionReader {
   @Override
   protected void doGetNext(JCas jCas) throws IOException, CollectionException {
     InputStream is = IOUtils.toInputStream(line, Charset.defaultCharset());
-    extractor.processStream(is, file.getPath() + "#" + lineNumber, jCas);
+    extractContent(is, file.getPath() + "#" + lineNumber, jCas);
 
     Metadata md = new Metadata(jCas);
     md.setKey("lineNumber");
@@ -130,11 +108,6 @@ public class LineReader extends BaleenCollectionReader {
         getMonitor().debug("An error occurred when closing the BufferedReader", ioe);
       }
       br = null;
-    }
-
-    if (extractor != null) {
-      extractor.destroy();
-      extractor = null;
     }
   }
 }

@@ -3,8 +3,7 @@
 package uk.gov.dstl.baleen.uima;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.InputStream;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.collection.CollectionException;
@@ -17,9 +16,7 @@ import org.apache.uima.util.Progress;
 import uk.gov.dstl.baleen.core.history.BaleenHistory;
 import uk.gov.dstl.baleen.core.metrics.MetricsFactory;
 import uk.gov.dstl.baleen.core.pipelines.PipelineBuilder;
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
-import uk.gov.dstl.baleen.core.utils.BuilderUtils;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
+import uk.gov.dstl.baleen.core.pipelines.content.ContentExtractor;
 import uk.gov.dstl.baleen.uima.utils.UimaUtils;
 
 /**
@@ -41,8 +38,18 @@ public abstract class BaleenCollectionReader extends JCasCollectionReader_ImplBa
    */
   public static final String KEY_HISTORY = PipelineBuilder.BALEEN_HISTORY;
 
+  /**
+   * Baleen Content Extractor resource
+   *
+   * @baleen.resource uk.gov.dstl.baleen.core.pipelines.content.ContentExtractor
+   */
+  public static final String KEY_CONTENT_EXTRACTOR = PipelineBuilder.CONTENT_EXTRACTOR;
+
   @ExternalResource(key = KEY_HISTORY, mandatory = false)
   BaleenHistory history;
+
+  @ExternalResource(key = KEY_CONTENT_EXTRACTOR, mandatory = false)
+  ContentExtractor contentExtractor;
 
   @Override
   public final void initialize(UimaContext context) throws ResourceInitializationException {
@@ -98,6 +105,7 @@ public abstract class BaleenCollectionReader extends JCasCollectionReader_ImplBa
   @Override
   public final void close() throws IOException {
     monitor.startFunction("close");
+    contentExtractor.destroy();
 
     doClose();
 
@@ -165,25 +173,6 @@ public abstract class BaleenCollectionReader extends JCasCollectionReader_ImplBa
    */
   public abstract boolean doHasNext() throws IOException, CollectionException;
 
-  /**
-   * Takes a string of the class name and return a Class
-   *
-   * @param className The name of the class, which must implement IContentExtractor
-   * @return The class specified
-   */
-  public static IContentExtractor getContentExtractor(String className)
-      throws InvalidParameterException {
-    try {
-      return (IContentExtractor)
-          BuilderUtils.getClassFromString(
-                  className, BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR_PACKAGE)
-              .newInstance();
-    } catch (Exception e1) {
-      throw new InvalidParameterException(
-          "Could not find or instantiate content extractor " + className, e1);
-    }
-  }
-
   protected UimaMonitor getMonitor() {
     return monitor;
   }
@@ -193,17 +182,15 @@ public abstract class BaleenCollectionReader extends JCasCollectionReader_ImplBa
   }
 
   /**
-   * Create a configuration map from a context.
+   * Extract the content from the given inputStream and add it to the supplied jCas.
    *
-   * @param context the context
-   * @return non-empty map of config param name to config param value
+   * @param stream The InputStream of data to process
+   * @param source The source URI to set
+   * @param jCas The JCas object to add data to
+   * @throws IOException
    */
-  protected static Map<String, Object> getConfigParameters(UimaContext context) {
-    Map<String, Object> ret = new HashMap<>();
-    for (String name : context.getConfigParameterNames()) {
-      ret.put(name, context.getConfigParameterValue(name));
-    }
-
-    return ret;
+  protected void extractContent(InputStream inputStream, String source, JCas jCas)
+      throws IOException {
+    contentExtractor.processStream(inputStream, source, jCas);
   }
 }

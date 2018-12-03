@@ -28,7 +28,7 @@ public class DependencyNode {
   }
 
   /** @return the (optional) id */
-  String getId() {
+  public String getId() {
     return id;
   }
 
@@ -42,7 +42,7 @@ public class DependencyNode {
   }
 
   /** @return the type of this node */
-  String getType() {
+  public String getType() {
     return type;
   }
 

@@ -23,6 +23,7 @@ import uk.gov.dstl.baleen.core.pipelines.YamlPiplineConfiguration;
 import uk.gov.dstl.baleen.core.pipelines.orderers.IPipelineOrderer;
 import uk.gov.dstl.baleen.core.pipelines.orderers.NoOpOrderer;
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
+import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /**
  * This class provides functionality to convert a Baleen YAML job configuration file into a {@link
@@ -120,6 +121,11 @@ public class JobBuilder extends PipelineBuilder {
       List<AnalysisEngine> annotators,
       List<AnalysisEngine> consumers) {
     return new BaleenJob(name, yaml, collectionReader, annotators);
+  }
+
+  @Override
+  protected void configureResources() throws BaleenException {
+    // DO NOTHING, no specific resources required
   }
 
   @Override

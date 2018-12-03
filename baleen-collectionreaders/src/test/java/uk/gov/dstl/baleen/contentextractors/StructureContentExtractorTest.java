@@ -14,11 +14,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UIMAException;
-import org.apache.uima.UimaContext;
-import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
+import org.apache.uima.resource.impl.CustomResourceSpecifier_impl;
 import org.junit.Test;
 
 import com.google.common.collect.LinkedHashMultimap;
@@ -50,11 +49,10 @@ public class StructureContentExtractorTest {
 
   @Test
   public void test() throws UIMAException, IOException {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TestStructureContentExtractor();
-    contentExtractor.initialize(context, Collections.emptyMap());
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 
     contentExtractor.processStream(null, "source", jCas);
 
@@ -75,13 +73,13 @@ public class StructureContentExtractorTest {
 
   @Test
   public void testInitializingManipulator() throws UIMAException, IOException {
-    UimaContext context = UimaContextFactory.createUimaContext();
+
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TestStructureContentExtractor();
     Map<String, Object> params = new HashMap<>();
     params.put("contentManipulators", new String[] {"RemoveEmptyText"});
-    contentExtractor.initialize(context, params);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), params);
 
     contentExtractor.processStream(null, "source", jCas);
 
@@ -98,13 +96,12 @@ public class StructureContentExtractorTest {
 
   @Test
   public void testInitializingMapper() throws UIMAException, IOException {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TestStructureContentExtractor();
     Map<String, Object> params = new HashMap<>();
     params.put("contentMappers", new String[] {"MetaTags"});
-    contentExtractor.initialize(context, params);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), params);
 
     contentExtractor.processStream(null, "source", jCas);
 
@@ -121,24 +118,22 @@ public class StructureContentExtractorTest {
 
   @Test(expected = ResourceInitializationException.class)
   public void testInitializingBadMapper() throws UIMAException, IOException {
-    UimaContext context = UimaContextFactory.createUimaContext();
 
     BaleenContentExtractor contentExtractor = new TestStructureContentExtractor();
     Map<String, Object> params = new HashMap<>();
     params.put("contentMappers", new String[] {"DoesNotExist"});
-    contentExtractor.initialize(context, params);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), params);
   }
 
   @Test
   public void testInitializingManipulatorAsMapper() throws UIMAException, IOException {
-    UimaContext context = UimaContextFactory.createUimaContext();
 
     BaleenContentExtractor contentExtractor = new TestStructureContentExtractor();
     Map<String, Object> params = new HashMap<>();
     params.put(
         "contentMappers",
         new String[] {"uk.gov.dstl.baleen.contentmanipulators.HeaderAndFooterRemover"});
-    contentExtractor.initialize(context, params);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), params);
 
     // TODO Could test its not actually used here...
 
@@ -146,11 +141,10 @@ public class StructureContentExtractorTest {
 
   @Test
   public void testTextBlocksEnabled() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TestStructureContentExtractor();
-    contentExtractor.initialize(context, Collections.emptyMap());
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 
     contentExtractor.processStream(null, "source", jCas);
 
@@ -161,13 +155,12 @@ public class StructureContentExtractorTest {
 
   @Test
   public void testDisableTextBlocks() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new TestStructureContentExtractor();
     Map<String, Object> map = new HashMap<>();
     map.put(StructureContentExtractor.FIELD_EXTRACT_TEXT_BLOCKS, "false");
-    contentExtractor.initialize(context, map);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), map);
 
     contentExtractor.processStream(null, "source", jCas);
 

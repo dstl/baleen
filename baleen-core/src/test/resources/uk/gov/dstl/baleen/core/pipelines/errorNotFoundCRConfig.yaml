@@ -1,5 +1,7 @@
+contentextractor: uk.gov.dstl.baleen.testing.MissingContentExtractor
+
 collectionreader:
-  class: uk.gov.dstl.baleen.testing.MissingCollectionReader
+  class: uk.gov.dstl.baleen.testing.DummyCollectionReader
 
 annotators:
   - class: uk.gov.dstl.baleen.testing.DummyAnnotator1

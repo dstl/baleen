@@ -17,7 +17,6 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.uima.UIMAException;
-import org.apache.uima.fit.factory.CollectionReaderFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.junit.Before;
 import org.junit.Rule;
@@ -318,21 +317,19 @@ public class EmailReaderTest extends AbstractReaderTest {
 
     // Check that there are no messages on the server
     bcr =
-        (BaleenCollectionReader)
-            CollectionReaderFactory.createReader(
-                EmailReader.class,
-                EmailReader.PARAM_PROTOCOL,
-                "pop3",
-                EmailReader.PARAM_WAIT,
-                5,
-                EmailReader.PARAM_SERVER,
-                greenMail.getPop3().getBindTo(),
-                EmailReader.PARAM_PORT,
-                greenMail.getPop3().getPort(),
-                EmailReader.PARAM_USER,
-                "to@localhost.com",
-                EmailReader.PARAM_PASS,
-                "password");
+        getCollectionReader(
+            EmailReader.PARAM_PROTOCOL,
+            "pop3",
+            EmailReader.PARAM_WAIT,
+            5,
+            EmailReader.PARAM_SERVER,
+            greenMail.getPop3().getBindTo(),
+            EmailReader.PARAM_PORT,
+            greenMail.getPop3().getPort(),
+            EmailReader.PARAM_USER,
+            "to@localhost.com",
+            EmailReader.PARAM_PASS,
+            "password");
 
     bcr.initialize();
     assertFalse(bcr.doHasNext());
@@ -884,21 +881,19 @@ public class EmailReaderTest extends AbstractReaderTest {
 
     // Check that there are no messages on the server
     bcr =
-        (BaleenCollectionReader)
-            CollectionReaderFactory.createReader(
-                EmailReader.class,
-                EmailReader.PARAM_PROTOCOL,
-                "imap",
-                EmailReader.PARAM_WAIT,
-                5,
-                EmailReader.PARAM_SERVER,
-                greenMail.getImap().getBindTo(),
-                EmailReader.PARAM_PORT,
-                greenMail.getImap().getPort(),
-                EmailReader.PARAM_USER,
-                "to@localhost.com",
-                EmailReader.PARAM_PASS,
-                "password");
+        getCollectionReader(
+            EmailReader.PARAM_PROTOCOL,
+            "imap",
+            EmailReader.PARAM_WAIT,
+            5,
+            EmailReader.PARAM_SERVER,
+            greenMail.getImap().getBindTo(),
+            EmailReader.PARAM_PORT,
+            greenMail.getImap().getPort(),
+            EmailReader.PARAM_USER,
+            "to@localhost.com",
+            EmailReader.PARAM_PASS,
+            "password");
 
     bcr.initialize();
     assertFalse(bcr.doHasNext());

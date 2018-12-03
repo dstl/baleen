@@ -14,6 +14,8 @@ import org.apache.uima.jcas.JCas;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.collectionreaders.testing.AbstractReaderTest;
+import uk.gov.dstl.baleen.contentextractors.StructureContentExtractor;
+import uk.gov.dstl.baleen.core.pipelines.content.ContentExtractor;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 
@@ -24,6 +26,11 @@ public class SqlCellReaderTest extends AbstractReaderTest {
 
   private Connection conn;
   private int curr = 1;
+
+  @Override
+  protected Class<? extends ContentExtractor> getContentExtractorClass() {
+    return StructureContentExtractor.class;
+  }
 
   @Test
   public void test() throws Exception {

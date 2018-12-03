@@ -14,10 +14,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.uima.UimaContext;
-import org.apache.uima.fit.factory.UimaContextFactory;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
+import org.apache.uima.resource.impl.CustomResourceSpecifier_impl;
 import org.junit.Test;
 
 import uk.gov.dstl.baleen.types.metadata.Metadata;
@@ -28,7 +27,6 @@ public class CsvContentExtractorTest {
 
   @Test
   public void test() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new CsvContentExtractor();
@@ -40,7 +38,7 @@ public class CsvContentExtractorTest {
     config.put(CsvContentExtractor.PARAM_CONTENT_COLUMN, "2");
     config.put(CsvContentExtractor.PARAM_COLUMNS, Arrays.asList("id", "test1", "", "test3"));
 
-    contentExtractor.initialize(context, config);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), config);
     try (InputStream is = new FileInputStream(f); ) {
       contentExtractor.processStream(is, f.getPath(), jCas);
     }
@@ -74,7 +72,6 @@ public class CsvContentExtractorTest {
 
   @Test
   public void testNotEnoughCols() throws Exception {
-    UimaContext context = UimaContextFactory.createUimaContext();
     JCas jCas = JCasSingleton.getJCasInstance();
 
     BaleenContentExtractor contentExtractor = new CsvContentExtractor();
@@ -86,7 +83,7 @@ public class CsvContentExtractorTest {
     config.put(CsvContentExtractor.PARAM_CONTENT_COLUMN, "20");
     config.put(CsvContentExtractor.PARAM_COLUMNS, Arrays.asList("id", "test1", "", "test3"));
 
-    contentExtractor.initialize(context, config);
+    contentExtractor.initialize(new CustomResourceSpecifier_impl(), config);
     try (InputStream is = new FileInputStream(f); ) {
       contentExtractor.processStream(is, f.getPath(), jCas);
       fail("Expected error not thrown");

@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.transports.kafka;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
+import static uk.gov.dstl.baleen.uima.BaleenCollectionReader.KEY_CONTENT_EXTRACTOR;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import uk.gov.dstl.baleen.resources.kafka.MockKafkaResource;
 import uk.gov.dstl.baleen.resources.kafka.SharedKafkaResource;
+import uk.gov.dstl.baleen.transports.util.FakeBaleenContentExtractor;
 import uk.gov.dstl.baleen.transports.util.JCasSerializationTester;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
@@ -107,6 +109,9 @@ public class KafkaTransportsTest {
             KafkaTransportReceiver.class,
             TypeSystemSingleton.getTypeSystemDescriptionInstance(),
             SharedKafkaResource.RESOURCE_KEY,
-            erd);
+            erd,
+            KEY_CONTENT_EXTRACTOR,
+            ExternalResourceFactory.createExternalResourceDescription(
+                KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class));
   }
 }

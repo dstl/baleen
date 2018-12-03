@@ -24,11 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
-import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.uima.BaleenCollectionReader;
-import uk.gov.dstl.baleen.uima.IContentExtractor;
 
 /**
  * Processes all tables in an SQL database, treating each cell in the table as a separate document.
@@ -40,19 +37,6 @@ import uk.gov.dstl.baleen.uima.IContentExtractor;
  * @baleen.javadoc
  */
 public class SqlDbCellReader extends BaleenCollectionReader {
-
-  /**
-   * The content extractor to use to extract content from files
-   *
-   * @baleen.config Value of BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-   */
-  public static final String PARAM_CONTENT_EXTRACTOR = "contentExtractor";
-
-  @ConfigurationParameter(
-    name = PARAM_CONTENT_EXTRACTOR,
-    defaultValue = BaleenDefaults.DEFAULT_CONTENT_EXTRACTOR
-  )
-  protected String contentExtractor;
 
   /**
    * The JDBC connection string, including database.
@@ -142,7 +126,6 @@ public class SqlDbCellReader extends BaleenCollectionReader {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SqlDbCellReader.class);
 
-  private IContentExtractor extractor;
   private Connection conn;
 
   private String currTable = "";
@@ -154,13 +137,6 @@ public class SqlDbCellReader extends BaleenCollectionReader {
 
   @Override
   protected void doInitialize(UimaContext context) throws ResourceInitializationException {
-    try {
-      extractor = getContentExtractor(contentExtractor);
-    } catch (InvalidParameterException ipe) {
-      throw new ResourceInitializationException(ipe);
-    }
-    extractor.initialize(context, getConfigParameters(context));
-
     try {
       if (Strings.isNullOrEmpty(user) || Strings.isNullOrEmpty(pass)) {
         conn = DriverManager.getConnection(sqlConn);
@@ -261,7 +237,7 @@ public class SqlDbCellReader extends BaleenCollectionReader {
     Object o = currRow.remove(key);
 
     String sourceUrl = sqlConn.substring(5) + "." + currTable + "#" + rowId + "." + key;
-    extractor.processStream(
+    extractContent(
         new ByteArrayInputStream(o.toString().getBytes(Charset.defaultCharset())), sourceUrl, jCas);
   }
 
