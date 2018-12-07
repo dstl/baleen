@@ -194,7 +194,7 @@
               <tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>
               <tagletArtifact>
                 <groupId>uk.gov.dstl.baleen</groupId>
-                <artifactId>baleen-javadoc</artifactId>
+                <artifactId>${javadoc.artifact}</artifactId>
                 <version>${baleen.version}</version>
               </tagletArtifact>
             </taglet>
@@ -259,7 +259,6 @@
     <module>baleen-consumers</module>
     <module>baleen-runner</module>
     <module>baleen-history</module>
-    <module>baleen-javadoc</module>
     <module>baleen-jobs</module>
     <module>baleen-orderers</module>
     <module>baleen-odin</module>
@@ -273,5 +272,28 @@
     <module>baleen-kafka</module>
     <module>baleen-rabbitmq</module>
     <module>baleen-redis</module>
+    <module>${javadoc.artifact}</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>java-8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <properties>
+        <javadoc.artifact>baleen-javadoc</javadoc.artifact>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java-9</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <properties>
+        <javadoc.artifact>baleen-javadoc9</javadoc.artifact>
+      </properties>
+    </profile>
+  </profiles>
 </project>
