@@ -7,8 +7,8 @@
     <version>2.7.0-SNAPSHOT</version>
   </parent>
   <artifactId>baleen-javadoc</artifactId>
-  <name>Baleen Javadoc</name>
-  <description>Taglets to assist with the generation of Baleen specific Javadoc</description>
+  <name>Baleen Javadoc 8</name>
+  <description>Taglets to assist with the generation of Baleen specific Javadoc in Java 8</description>
   <dependencies>
   <!-- Building with javadoc see https://github.com/dstl/baleen/wiki/Building-Javadoc -->
     <dependency>

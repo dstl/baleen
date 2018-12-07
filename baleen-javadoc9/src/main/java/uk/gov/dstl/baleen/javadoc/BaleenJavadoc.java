@@ -94,8 +94,8 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
     String desc =
         wrapWithTag(
             "td",
-            elementUtils.getDocComment(field),
-            "padding-right: 20px"); // TODO: This will include the @baleen.config (etc)
+            removeJavadocAnnotations(elementUtils.getDocComment(field)),
+            "padding-right: 20px");
 
     StringJoiner defaultValues = new StringJoiner("<br />");
     for (String value : tagletValues) {
@@ -149,5 +149,9 @@ public class BaleenJavadoc extends AbstractBaleenTaglet {
         + "</"
         + tag
         + ">";
+  }
+
+  protected static String removeJavadocAnnotations(String s) {
+    return s.replaceAll("@baleen\\..*", "").replaceAll("\n{2,}", "\n").trim();
   }
 }
