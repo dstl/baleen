@@ -35,7 +35,7 @@ public abstract class AbstractBaleenTaglet implements Taglet {
     return false;
   }
 
-  /** Return a list of fields for this element, including fields inherited fields */
+  /** Return a list of fields for this element, including inherited fields */
   protected List<VariableElement> getFields(Element element, String javadocTag) {
     List<VariableElement> fields = new ArrayList<>();
 
