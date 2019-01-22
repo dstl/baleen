@@ -56,7 +56,7 @@ public class OdinParserTest extends AbstractAnnotatorTest {
     assertEquals("VBZ", next.getPartOfSpeech());
     assertEquals(1, next.getLemmas().size());
     assertEquals("VBZ", next.getLemmas(0).getPartOfSpeech());
-    assertEquals("is", next.getLemmas(0).getLemmaForm());
+    assertEquals("be", next.getLemmas(0).getLemmaForm());
     next = iterator.next();
     assertEquals(8, next.getBegin());
     assertEquals(9, next.getEnd());

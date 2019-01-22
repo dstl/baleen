@@ -13,6 +13,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import org.apache.commons.lang.SystemUtils;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Before;
@@ -24,6 +25,8 @@ import uk.gov.dstl.baleen.graph.JCasTestGraphUtil;
 
 public class EntityGraphFileTest extends AbstractAnnotatorTest {
 
+  private static final String GYRO_8_NAME = "entity8.kyro";
+  private static final String GRAPHSON_8_NAME = "entity8.json";
   private static final String GYRO_NAME = "entity.kyro";
   private static final String GRAPHSON_NAME = "entity.json";
   private static final String GRAPHML_NAME = "entity.xml";
@@ -32,6 +35,10 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
   private static final URL EXPECTED_GRAPHSON_FILE =
       EntityGraphFileTest.class.getResource(GRAPHSON_NAME);
   private static final URL EXPECTED_GYRO_FILE = EntityGraphFileTest.class.getResource(GYRO_NAME);
+  private static final URL EXPECTED_GRAPHSON_8_FILE =
+      EntityGraphFileTest.class.getResource(GRAPHSON_8_NAME);
+  private static final URL EXPECTED_GYRO_8_FILE =
+      EntityGraphFileTest.class.getResource(GYRO_8_NAME);
 
   private Path tempDirectory;
 
@@ -87,6 +94,13 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
   public void testGraphson()
       throws AnalysisEngineProcessException, ResourceInitializationException, IOException,
           URISyntaxException {
+    // Due to serialisation order differences
+    URL expectedFile = null;
+    if (SystemUtils.JAVA_VERSION_FLOAT > 8) {
+      expectedFile = EXPECTED_GRAPHSON_FILE;
+    } else {
+      expectedFile = EXPECTED_GRAPHSON_8_FILE;
+    }
     processJCas(
         EntityGraph.PARAM_OUTPUT_DIRECTORY,
         tempDirectory.toString(),
@@ -94,7 +108,7 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
         GraphFormat.GRAPHSON.toString());
 
     Path actual = tempDirectory.resolve(tempDirectory.toFile().list()[0]);
-    Path expected = createAndFailIfMissing(actual, EXPECTED_GRAPHSON_FILE, GRAPHSON_NAME);
+    Path expected = createAndFailIfMissing(actual, expectedFile, GRAPHSON_NAME);
 
     assertPathsEqual(expected, actual);
 
@@ -105,6 +119,14 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
   public void testGyro()
       throws AnalysisEngineProcessException, ResourceInitializationException, IOException,
           URISyntaxException {
+    // Due to serialisation order differences
+    URL expectedFile = null;
+    if (SystemUtils.JAVA_VERSION_FLOAT > 8) {
+      expectedFile = EXPECTED_GYRO_FILE;
+    } else {
+      expectedFile = EXPECTED_GYRO_8_FILE;
+    }
+
     processJCas(
         EntityGraph.PARAM_OUTPUT_DIRECTORY,
         tempDirectory.toString(),
@@ -113,7 +135,7 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
 
     Path path = tempDirectory.resolve(tempDirectory.toFile().list()[0]);
 
-    Path expectedPath = createAndFailIfMissing(path, EXPECTED_GYRO_FILE, GYRO_NAME);
+    Path expectedPath = createAndFailIfMissing(path, expectedFile, GYRO_NAME);
     assertTrue(com.google.common.io.Files.equal(expectedPath.toFile(), path.toFile()));
 
     Files.delete(path);

@@ -59,7 +59,7 @@ public class DocumentConverterTest {
     String[] words = {"This", "is", "a", "test", "."};
     int[] startOffsets = {0, 5, 8, 10, 14};
     int[] endOffsets = {4, 7, 9, 14, 15};
-    sentence = new Sentence(words, startOffsets, endOffsets);
+    sentence = new Sentence(words, startOffsets, endOffsets, words);
   }
 
   @Test
@@ -67,11 +67,9 @@ public class DocumentConverterTest {
     JCas jCas = JCasFactory.createJCas();
     jCas.setDocumentText("This is a test. This is another test.");
 
+    String[] words = new String[] {"This", "is", "another", "test", "."};
     Sentence sentence2 =
-        new Sentence(
-            new String[] {"This", "is", "another", "test", "."},
-            new int[] {16, 21, 24, 31, 35},
-            new int[] {20, 23, 30, 34, 36});
+        new Sentence(words, new int[] {16, 21, 24, 31, 35}, new int[] {20, 23, 30, 34, 36}, words);
     when(document.sentences()).thenReturn(new Sentence[] {sentence, sentence2});
     DocumentConverter converter = new DocumentConverter(jCas, document);
     converter.convert();
