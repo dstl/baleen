@@ -177,7 +177,7 @@
           <excludes>
             <exclude>**/*IT.java</exclude>
           </excludes>
-          <argLine>-Xmx2048m -XX:MaxPermSize=256m</argLine>
+          <argLine>${argLine} -Xmx2048m -XX:MaxPermSize=256m</argLine>
         </configuration>
       </plugin>
 
@@ -188,6 +188,7 @@
         <version>${maven-javadoc-plugin.version}</version>
         <configuration>
           <additionalparam>-Xdoclint:none</additionalparam>
+          <doclint>none</doclint>
           <taglets>
             <taglet>
               <tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>
