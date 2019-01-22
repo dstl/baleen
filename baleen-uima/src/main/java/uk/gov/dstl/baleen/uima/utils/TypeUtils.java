@@ -83,7 +83,7 @@ public class TypeUtils {
           c = (Class<AnnotationBase>) unchecked;
           types.put(t.getName(), c);
         } else {
-          LOGGER.debug("Skipping class {} that doesn't inherit from AnnotationBase");
+          LOGGER.debug("Skipping class {} that doesn't inherit from AnnotationBase", clazz);
         }
       } catch (ClassNotFoundException e) {
         LOGGER.warn("Unable to load class {} from type system", t.getName(), e);
