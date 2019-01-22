@@ -186,23 +186,21 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
-        <!-- The Baleen Javadoc Taglets is deprecated as the Javadoc API has changed -->
-        <!-- This was the configuration for Java 8 -->
-        <!-- <configuration>-->
-          <!--<additionalparam>-Xdoclint:none</additionalparam>-->
-          <!--<taglets>-->
-            <!--<taglet>-->
-              <!--<tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>-->
-              <!--<tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>-->
-              <!--<tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>-->
-              <!--<tagletArtifact>-->
-                <!--<groupId>uk.gov.dstl.baleen</groupId>-->
-                <!--<artifactId>baleen-javadoc</artifactId>-->
-                <!--<version>${baleen.version}</version>-->
-              <!--</tagletArtifact>-->
-            <!--</taglet>-->
-          <!--</taglets>-->
-        <!--</configuration>-->
+        <configuration>
+          <additionalparam>-Xdoclint:none</additionalparam>
+          <taglets>
+            <taglet>
+              <tagletClass>uk.gov.dstl.baleen.javadoc.ConfigurationParameters</tagletClass>
+              <tagletClass>uk.gov.dstl.baleen.javadoc.ExternalResources</tagletClass>
+              <tagletClass>uk.gov.dstl.baleen.javadoc.BaleenJavadoc</tagletClass>
+              <tagletArtifact>
+                <groupId>uk.gov.dstl.baleen</groupId>
+                <artifactId>${javadoc.artifact}</artifactId>
+                <version>${baleen.version}</version>
+              </tagletArtifact>
+            </taglet>
+          </taglets>
+        </configuration>
       </plugin>
 
       <!-- Integration testing -->
@@ -275,10 +273,28 @@
     <module>baleen-kafka</module>
     <module>baleen-rabbitmq</module>
     <module>baleen-redis</module>
-
-    <!-- This module is deprecated as the Javadoc API has changed -->
-    <!-- If you are running JDK 8 you could reenable it -->
-    <!--<module>baleen-javadoc</module>-->
-
+    <module>${javadoc.artifact}</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>java-8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <properties>
+        <javadoc.artifact>baleen-javadoc</javadoc.artifact>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>java-9</id>
+      <activation>
+        <jdk>[9,)</jdk>
+      </activation>
+      <properties>
+        <javadoc.artifact>baleen-javadoc9</javadoc.artifact>
+      </properties>
+    </profile>
+  </profiles>
 </project>
