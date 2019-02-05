@@ -299,5 +299,22 @@
         <javadoc.artifact>baleen-javadoc9</javadoc.artifact>
       </properties>
     </profile>
+    
+    <profile>
+	  <id>disable-logging</id>
+	  <build>
+	  <testResources>	  
+        <testResource>
+          <directory>src/test/resources</directory>
+        </testResource>
+        <testResource>
+          <directory>${user.dir}/build</directory>
+          <includes>
+            <include>logback-test.xml</include>
+          </includes>
+        </testResource>
+      </testResources>
+	  </build>
+	</profile>
   </profiles>
 </project>
