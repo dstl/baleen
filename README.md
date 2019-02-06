@@ -1,5 +1,7 @@
 # Baleen
 
+[![Build Status](https://travis-ci.org/dstl/baleen.svg?branch=master)](https://travis-ci.org/dstl/baleen) [![Coverage Status](https://coveralls.io/repos/github/dstl/baleen/badge.svg?branch=travis)](https://coveralls.io/github/dstl/baleen?branch=travis)
+
 Baleen is an extensible text processing capability that allows entity-related information to be extracted from unstructured and semi-structured data sources. It makes available in a structured format things of interest otherwise stored in formats such as text documents - references to people, organisations, unique identifiers, location information.
 
 Baleen is written in [Java 8](http://www.oracle.com/java/javase/downloads/jre8-downloads-2133155.html) using the software project management tool [Maven 3](http://maven.apache.org) and draws heavily on the [Apache Unstructured Information Management Architecture (UIMA)](http://uima.apache.org) which provides a framework, components and infrastructure to handle unstructured information management.    
