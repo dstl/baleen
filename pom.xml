@@ -37,15 +37,9 @@
     </developer>
   </developers>
 
-  <prerequisites>
-    <maven>3.0.1</maven>
-  </prerequisites>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-	<argLine></argLine>
-	
     <baleen.version>2.7.0-SNAPSHOT</baleen.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
@@ -119,6 +113,8 @@
     <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>${maven-surefire-plugin.version}</maven-failsafe-plugin.version>
     <maven-spotless.version>1.17.0</maven-spotless.version>
+	<jacoco.version>0.8.3</jacoco.version>
+	<coveralls.version>4.3.0</coveralls.version>
   </properties>
 
   <dependencies>
@@ -250,6 +246,26 @@
           </execution>
         </executions>
       </plugin>
+	  
+	  <plugin>
+		<groupId>org.jacoco</groupId>
+		<artifactId>jacoco-maven-plugin</artifactId>
+		<version>${jacoco.version}</version>
+		<executions>
+		  <execution>
+		    <id>prepare-agent</id>
+			<goals>
+			  <goal>prepare-agent</goal>
+			</goals>
+		  </execution>
+		</executions>
+	  </plugin>
+	  
+	  <plugin>
+	    <groupId>org.eluder.coveralls</groupId>
+		<artifactId>coveralls-maven-plugin</artifactId>
+		<version>${coveralls.version}</version>
+	  </plugin>
     </plugins>
 
   </build>
