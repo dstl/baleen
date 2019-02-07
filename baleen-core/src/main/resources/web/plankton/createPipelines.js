@@ -121,6 +121,240 @@ function loadConsumers(){
 	});
 }
 
+var resources = {}
+function addResource(resource){
+	resource.key = sanitizeName(resource.key);
+	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor"){
+		if(resources[resource.key] == undefined){
+			resources[resource.key] = 0
+		}
+		resources[resource.key]++;
+		
+		$("#noResources").remove();
+		
+		if(resources[resource.key] == 1){
+			//New resource - add it in
+			var resourceDiv = $("#resourceDivTemplate").clone();
+			resourceDiv.removeClass("hidden");
+			resourceDiv.attr("id", "resourceDiv-"+resource.key);
+
+			$(".panel-heading", resourceDiv).attr("data-target", "#resourcePanelBody-"+resource.key);
+			$("#resourcePanelBody", resourceDiv).attr("id", "resourcePanelBody-"+resource.key);
+			
+			$("#resource", resourceDiv).attr("id", "resource-"+resource.key).text(resource.class);
+			$("#resourceKey", resourceDiv).attr("id", "resourceKey-"+resource.key).text(resource.key);
+			$("#resourceUsage", resourceDiv).attr("id", "resourceUsage-"+resource.key).text(resources[resource.key]);
+			$("#resourceName", resourceDiv).attr("id", "resourceName-"+resource.key).text(resource.class + " ("+resource.key+")");
+			
+			var params = $("#resourceParameters", resourceDiv).attr("id", "resourceParameters-"+resource.key);		
+		
+			resource.parameters.forEach(function(el){
+				el.name = sanitizeName(el.name);
+				if(el.type == "parameter"){
+					var label = "<label for=\""+resource.key+"-"+el.name+"\">"+el.name+"</label>";
+					var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+resource.key+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
+					var input = "<input type=\"text\" id=\""+resource.key+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
+					var defaultValue = "<input type=\"hidden\" id=\""+resource.key+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
+						
+					params.append($("<p></p>").append(label, toTextArea, input, defaultValue));
+				}else{
+					console.log("Didn't understand data - unknown type '"+el.type+"'");
+				}
+			});
+			
+			$("#resources").append(resourceDiv);
+		}else{
+			//Existing resource - update usage
+			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
+		}
+	}
+}
+
+function removeResource(resource){
+	resource.key = sanitizeName(resource.key);
+	
+	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor" && resource.key != "" && resources[resource.key] != undefined && resources[resource.key] >= 1){
+		resources[resource.key]--;
+		
+		if(resources[resource.key] == 0){
+			$("#resourceDiv-"+resource.key).remove();
+		}else{
+			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
+		}
+		
+		showNoResources()
+	}
+}
+
+function getCollectionReader(name){
+	if(name == null || name == "")
+		return;
+	
+	var collectionReaderResources = $("#collectionReaderResources").val().split(",");
+	collectionReaderResources.forEach(function(el){
+		removeResource({key: el});
+	});
+	
+	$("#collectionReaderParameters").empty();
+	
+	$.ajax({
+		url: baleenUrl + "api/1/collectionreaders/"+name,
+	}).done(function(data){
+		name = sanitizeName(name);
+	
+		var resourcesString = "";
+	
+		data.forEach(function(el){
+			if(el.type == "parameter"){
+		
+                                var label = "<label for=\""+name+"-"+el.name+"\">"+el.name+"</label>";
+                                var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
+                                var input = "<input type=\"text\" id=\""+name+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
+                                var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
+
+                                $("#collectionReaderParameters").append($("<p></p>").append(label, toTextArea, input, defaultValue));
+
+			}else if(el.type == "resource"){
+				
+                                addResource(el);
+                                resourcesString += el.key + ",";
+
+			}else{
+				console.log("Didn't understand data - unknown type '"+el.type+"'");
+			}
+		});
+		
+		$("#collectionReaderResources").val(resourcesString);
+	}).error(function(data){
+		$("#alertCouldntLoadComponent").removeClass("hidden");
+	});
+}
+
+function getContentExtractor(name){
+	if(name == null || name == "")
+		return;
+		
+	var contentExtractorResources = $("#contentExtractorResources").val().split(",");
+	contentExtractorResources.forEach(function(el){
+		removeResource({key: el});
+	});
+	
+	$("#contentExtractorParameters").empty();
+    
+	var contentExtractorResources = $("#contentExtractorResources").val().split(",");
+	contentExtractorResources.forEach(function(el){
+		removeResource({key: el});
+	});
+        
+	$.ajax({
+		url: baleenUrl + "api/1/contentextractors/"+name,
+	}).done(function(data){
+		name = sanitizeName(name);
+
+		var resourcesString = "";
+		
+		data.forEach(function(el){
+			if(el.type == "parameter"){
+				var label = "<label for=\""+name+"-"+el.name+"\">"+el.name+"</label>";
+				var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
+				var input = "<input type=\"text\" id=\""+name+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
+				var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
+					
+				$("#contentExtractorParameters").append($("<p></p>").append(label, toTextArea, input, defaultValue));
+			}else if(el.type == "resource"){
+				addResource(el);
+				resourcesString += el.key + ",";
+			}else{
+				console.log("Didn't understand data - unknown type '"+el.type+"'");
+			}
+		});
+		
+		$("#contentExtractorResources").val(resourcesString);
+	}).error(function(data){
+		$("#alertCouldntLoadComponent").removeClass("hidden");
+	});
+}
+
+function getAnnotator(name, id){
+	if(name == null || name == "")
+		return;
+	
+	var annotatorResources = $("#annotatorResources-"+id).val().split(",");
+	annotatorResources.forEach(function(el){
+		removeResource({key: el});
+	});
+	
+	$("#annotatorParameters-"+id).empty();
+	
+	$.ajax({
+		url: baleenUrl + "api/1/annotators/"+name,
+	}).done(function(data){
+		name = sanitizeName(name);
+		
+		var resourcesString = "";
+		
+		data.forEach(function(el){
+			if(el.type == "parameter"){
+				var label = "<label for=\""+name+"-"+el.name+"-"+id+"\">"+el.name+"</label>";
+				var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"-"+id+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
+				var input = "<input type=\"text\" id=\""+name+"-"+el.name+"-"+id+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
+				var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-"+id+"-default\" value=\""+el.defaultValue+"\">";
+					
+				$("#annotatorParameters-"+id).append($("<p></p>").append(label, toTextArea, input, defaultValue));
+			}else if(el.type == "resource"){
+				addResource(el);
+				resourcesString += el.key + ",";
+			}else{
+				console.log("Didn't understand data - unknown type '"+el.type+"'");
+			}
+		});
+		
+		$("#annotatorResources-"+id).val(resourcesString);
+	}).error(function(data){
+		$("#alertCouldntLoadComponent").removeClass("hidden");
+	});
+}
+
+function getConsumer(name, id){
+	if(name == null || name == "")
+		return;
+	
+	var consumerResources = $("#consumerResources-"+id).val().split(",");
+	consumerResources.forEach(function(el){
+		removeResource({key: el});
+	});
+	
+	$("#consumerParameters-"+id).empty();
+	
+	$.ajax({
+		url: baleenUrl + "api/1/consumers/"+name,
+	}).done(function(data){
+		name = sanitizeName(name);
+		
+		var resourcesString = "";
+		
+		data.forEach(function(el){
+			if(el.type == "parameter"){
+				var label = "<label for=\""+name+"-"+el.name+"-"+id+"\">"+el.name+"</label>";
+				var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"-"+id+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
+				var input = "<input type=\"text\" id=\""+name+"-"+el.name+"-"+id+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
+				var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-"+id+"-default\" value=\""+el.defaultValue+"\">";
+					
+				$("#consumerParameters-"+id).append($("<p></p>").append(label, toTextArea, input, defaultValue));
+			}else if(el.type == "resource"){
+				addResource(el);
+				resourcesString += el.key + ",";
+			}else{
+				console.log("Didn't understand data - unknown type '"+el.type+"'");
+			}
+		});
+		
+		$("#consumerResources-"+id).val(resourcesString);
+	}).error(function(data){
+		$("#alertCouldntLoadComponent").removeClass("hidden");
+	});
+}
+
 var annotatorId = 0;
 function addAnnotator(){
 	addAnnotator(null);
@@ -203,71 +437,6 @@ function addAllConsumers(){
 	$("#consumer option").each(function(index, el){
 		addConsumer($(el).text());
 	});
-}
-
-var resources = {}
-function addResource(resource){
-	resource.key = sanitizeName(resource.key);
-	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor"){
-		if(resources[resource.key] == undefined){
-			resources[resource.key] = 0
-		}
-		resources[resource.key]++;
-		
-		$("#noResources").remove();
-		
-		if(resources[resource.key] == 1){
-			//New resource - add it in
-			var resourceDiv = $("#resourceDivTemplate").clone();
-			resourceDiv.removeClass("hidden");
-			resourceDiv.attr("id", "resourceDiv-"+resource.key);
-
-			$(".panel-heading", resourceDiv).attr("data-target", "#resourcePanelBody-"+resource.key);
-			$("#resourcePanelBody", resourceDiv).attr("id", "resourcePanelBody-"+resource.key);
-			
-			$("#resource", resourceDiv).attr("id", "resource-"+resource.key).text(resource.class);
-			$("#resourceKey", resourceDiv).attr("id", "resourceKey-"+resource.key).text(resource.key);
-			$("#resourceUsage", resourceDiv).attr("id", "resourceUsage-"+resource.key).text(resources[resource.key]);
-			$("#resourceName", resourceDiv).attr("id", "resourceName-"+resource.key).text(resource.class + " ("+resource.key+")");
-			
-			var params = $("#resourceParameters", resourceDiv).attr("id", "resourceParameters-"+resource.key);		
-		
-			resource.parameters.forEach(function(el){
-				el.name = sanitizeName(el.name);
-				if(el.type == "parameter"){
-					var label = "<label for=\""+resource.key+"-"+el.name+"\">"+el.name+"</label>";
-					var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+resource.key+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
-					var input = "<input type=\"text\" id=\""+resource.key+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
-					var defaultValue = "<input type=\"hidden\" id=\""+resource.key+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
-						
-					params.append($("<p></p>").append(label, toTextArea, input, defaultValue));
-				}else{
-					console.log("Didn't understand data - unknown type '"+el.type+"'");
-				}
-			});
-			
-			$("#resources").append(resourceDiv);
-		}else{
-			//Existing resource - update usage
-			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
-		}
-	}
-}
-
-function removeResource(resource){
-	resource.key = sanitizeName(resource.key);
-	
-	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor" && resource.key != "" && resources[resource.key] != undefined && resources[resource.key] >= 1){
-		resources[resource.key]--;
-		
-		if(resources[resource.key] == 0){
-			$("#resourceDiv-"+resource.key).remove();
-		}else{
-			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
-		}
-		
-		showNoResources()
-	}
 }
 
 function removeAnnotator(annotator){
@@ -519,175 +688,6 @@ function createResourcesYaml(){
 	}
 	
 	return content;
-}
-
-function getCollectionReader(name){
-	if(name == null || name == "")
-		return;
-	
-	var collectionReaderResources = $("#collectionReaderResources").val().split(",");
-	collectionReaderResources.forEach(function(el){
-		removeResource({key: el});
-	});
-	
-	$("#collectionReaderParameters").empty();
-	
-	$.ajax({
-		url: baleenUrl + "api/1/collectionreaders/"+name,
-	}).done(function(data){
-		name = sanitizeName(name);
-	
-		var resourcesString = "";
-	
-		data.forEach(function(el){
-			if(el.type == "parameter"){
-		
-                                var label = "<label for=\""+name+"-"+el.name+"\">"+el.name+"</label>";
-                                var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
-                                var input = "<input type=\"text\" id=\""+name+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
-                                var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
-
-                                $("#collectionReaderParameters").append($("<p></p>").append(label, toTextArea, input, defaultValue));
-
-			}else if(el.type == "resource"){
-				
-                                addResource(el);
-                                resourcesString += el.key + ",";
-
-			}else{
-				console.log("Didn't understand data - unknown type '"+el.type+"'");
-			}
-		});
-		
-		$("#collectionReaderResources").val(resourcesString);
-	}).error(function(data){
-		$("#alertCouldntLoadComponent").removeClass("hidden");
-	});
-}
-
-function getContentExtractor(name){
-	if(name == null || name == "")
-		return;
-		
-	var contentExtractorResources = $("#contentExtractorResources").val().split(",");
-	contentExtractorResources.forEach(function(el){
-		removeResource({key: el});
-	});
-	
-	$("#contentExtractorParameters").empty();
-    
-	var contentExtractorResources = $("#contentExtractorResources").val().split(",");
-	contentExtractorResources.forEach(function(el){
-		removeResource({key: el});
-	});
-        
-	$.ajax({
-		url: baleenUrl + "api/1/contentextractors/"+name,
-	}).done(function(data){
-		name = sanitizeName(name);
-
-		var resourcesString = "";
-		
-		data.forEach(function(el){
-			if(el.type == "parameter"){
-				var label = "<label for=\""+name+"-"+el.name+"\">"+el.name+"</label>";
-				var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
-				var input = "<input type=\"text\" id=\""+name+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
-				var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
-					
-				$("#contentExtractorParameters").append($("<p></p>").append(label, toTextArea, input, defaultValue));
-			}else if(el.type == "resource"){
-				addResource(el);
-				resourcesString += el.key + ",";
-			}else{
-				console.log("Didn't understand data - unknown type '"+el.type+"'");
-			}
-		});
-		
-		$("#contentExtractorResources").val(resourcesString);
-	}).error(function(data){
-		$("#alertCouldntLoadComponent").removeClass("hidden");
-	});
-}
-
-function getAnnotator(name, id){
-	if(name == null || name == "")
-		return;
-	
-	var annotatorResources = $("#annotatorResources-"+id).val().split(",");
-	annotatorResources.forEach(function(el){
-		removeResource({key: el});
-	});
-	
-	$("#annotatorParameters-"+id).empty();
-	
-	$.ajax({
-		url: baleenUrl + "api/1/annotators/"+name,
-	}).done(function(data){
-		name = sanitizeName(name);
-		
-		var resourcesString = "";
-		
-		data.forEach(function(el){
-			if(el.type == "parameter"){
-				var label = "<label for=\""+name+"-"+el.name+"-"+id+"\">"+el.name+"</label>";
-				var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"-"+id+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
-				var input = "<input type=\"text\" id=\""+name+"-"+el.name+"-"+id+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
-				var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-"+id+"-default\" value=\""+el.defaultValue+"\">";
-					
-				$("#annotatorParameters-"+id).append($("<p></p>").append(label, toTextArea, input, defaultValue));
-			}else if(el.type == "resource"){
-				addResource(el);
-				resourcesString += el.key + ",";
-			}else{
-				console.log("Didn't understand data - unknown type '"+el.type+"'");
-			}
-		});
-		
-		$("#annotatorResources-"+id).val(resourcesString);
-	}).error(function(data){
-		$("#alertCouldntLoadComponent").removeClass("hidden");
-	});
-}
-
-function getConsumer(name, id){
-	if(name == null || name == "")
-		return;
-	
-	var consumerResources = $("#consumerResources-"+id).val().split(",");
-	consumerResources.forEach(function(el){
-		removeResource({key: el});
-	});
-	
-	$("#consumerParameters-"+id).empty();
-	
-	$.ajax({
-		url: baleenUrl + "api/1/consumers/"+name,
-	}).done(function(data){
-		name = sanitizeName(name);
-		
-		var resourcesString = "";
-		
-		data.forEach(function(el){
-			if(el.type == "parameter"){
-				var label = "<label for=\""+name+"-"+el.name+"-"+id+"\">"+el.name+"</label>";
-				var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+name+"-"+el.name+"-"+id+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
-				var input = "<input type=\"text\" id=\""+name+"-"+el.name+"-"+id+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
-				var defaultValue = "<input type=\"hidden\" id=\""+name+"-"+el.name+"-"+id+"-default\" value=\""+el.defaultValue+"\">";
-					
-				$("#consumerParameters-"+id).append($("<p></p>").append(label, toTextArea, input, defaultValue));
-			}else if(el.type == "resource"){
-				addResource(el);
-				resourcesString += el.key + ",";
-			}else{
-				console.log("Didn't understand data - unknown type '"+el.type+"'");
-			}
-		});
-		
-		$("#consumerResources-"+id).val(resourcesString);
-	}).error(function(data){
-		$("#alertCouldntLoadComponent").removeClass("hidden");
-	});
 }
 
 function toTextArea(id){

@@ -190,7 +190,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthChild_simple() {
+  public void nthChildSimple() {
     for (int i = 1; i <= 10; i++) {
       check(
           root.select(String.format("Section:nth-of-type(1) :nth-child(%d)", i)),
@@ -199,7 +199,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthOfType_unknownTag() {
+  public void nthOfTypeUnknownTag() {
     for (int i = 1; i <= 10; i++) {
       check(
           root.select(String.format("Section:nth-of-type(2) Figure:nth-of-type(%d)", i)),
@@ -208,7 +208,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthLastChild_simple() {
+  public void nthLastChildSimple() {
     for (int i = 1; i <= 10; i++) {
       check(
           root.select(String.format("Section:nth-of-type(1) :nth-last-child(%d)", i)),
@@ -217,7 +217,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthOfType_simple() {
+  public void nthOfTypeSimple() {
     for (int i = 1; i <= 10; i++) {
       check(
           root.select(String.format("Section:nth-of-type(2) Paragraph:nth-of-type(%d)", i)),
@@ -226,7 +226,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthLastOfType_simple() {
+  public void nthLastOfTypeSimple() {
     for (int i = 1; i <= 10; i++) {
       check(
           root.select(String.format("Section:nth-of-type(2) :nth-last-of-type(%d)", i)),
@@ -238,7 +238,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthChild_advanced() {
+  public void nthChildAdvanced() {
     check(root.select("Section:nth-of-type(1) :nth-child(-5)"));
     check(root.select("Section:nth-of-type(1) :nth-child(odd)"), "1", "3", "5", "7", "9");
     check(root.select("Section:nth-of-type(1) :nth-child(2n-1)"), "1", "3", "5", "7", "9");
@@ -252,7 +252,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthOfType_advanced() {
+  public void nthOfTypeAdvanced() {
     check(root.select("Section:nth-of-type(2) :nth-of-type(-5)"));
     check(
         root.select("Section:nth-of-type(2) Paragraph:nth-of-type(odd)"), "1", "3", "5", "7", "9");
@@ -275,7 +275,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthLastChild_advanced() {
+  public void nthLastChildAdvanced() {
     check(root.select("Section:nth-of-type(1) :nth-last-child(-5)"));
     check(root.select("Section:nth-of-type(1) :nth-last-child(odd)"), "2", "4", "6", "8", "10");
     check(root.select("Section:nth-of-type(1) :nth-last-child(2n-1)"), "2", "4", "6", "8", "10");
@@ -290,7 +290,7 @@ public class SelectTest {
   }
 
   @Test
-  public void nthLastOfType_advanced() {
+  public void nthLastOfTypeAdvanced() {
     check(root.select("Section:nth-of-type(2) :nth-last-of-type(-5)"));
     check(
         root.select("Section:nth-of-type(2) Paragraph:nth-last-of-type(odd)"),

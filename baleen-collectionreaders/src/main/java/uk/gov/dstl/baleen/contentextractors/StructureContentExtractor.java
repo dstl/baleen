@@ -35,7 +35,6 @@ import uk.gov.dstl.baleen.contentmappers.helpers.ContentMapper;
 import uk.gov.dstl.baleen.core.utils.BaleenDefaults;
 import uk.gov.dstl.baleen.core.utils.BuilderUtils;
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
-import uk.gov.dstl.baleen.types.structure.Structure;
 
 /**
  * Extracts metadata, structural annotations and text content from the supplied input.

@@ -367,7 +367,7 @@ public class DocumentGraphFactory {
         .entrySet()
         .stream()
         .filter(property -> property.getValue() != null)
-        .filter(property -> property.getKey() != fields.getExternalId())
+        .filter(property -> !property.getKey().equals(fields.getExternalId()))
         .forEach(property -> vertex.property(property.getKey(), coerce(property.getValue())));
   }
 
@@ -421,7 +421,7 @@ public class DocumentGraphFactory {
         .entrySet()
         .stream()
         .filter(property -> property.getValue() != null)
-        .filter(property -> property.getKey() != fields.getExternalId())
+        .filter(property -> !property.getKey().equals(fields.getExternalId()))
         .forEach(property -> setProperty(rel, property.getKey(), property.getValue()));
   }
 
@@ -444,8 +444,9 @@ public class DocumentGraphFactory {
                               e.entrySet()
                                   .stream()
                                   .filter(property -> property.getValue() != null)
-                                  .filter(property -> property.getKey() != fields.getExternalId())
-                                  .filter(property -> property.getKey() != "entities")
+                                  .filter(
+                                      property -> !property.getKey().equals(fields.getExternalId()))
+                                  .filter(property -> !property.getKey().equals("entities"))
                                   .forEach(
                                       property ->
                                           setProperty(

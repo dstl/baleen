@@ -121,7 +121,7 @@ public class WordDistributionDocumentSummary extends BaleenTextAwareAnnotator {
         break;
       }
 
-      summaryCharacterCount = summaryBuilder.toString().length();
+      summaryCharacterCount = summaryBuilder.length();
     }
 
     String summary = summaryBuilder.toString();

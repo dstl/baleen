@@ -36,7 +36,6 @@ import com.google.common.collect.ImmutableList.Builder;
 
 import uk.gov.dstl.baleen.annotators.templates.TemplateAnnotator;
 import uk.gov.dstl.baleen.annotators.templates.TemplateFieldConfiguration;
-import uk.gov.dstl.baleen.annotators.templates.TemplateFieldDefinitionAnnotator;
 import uk.gov.dstl.baleen.annotators.templates.TemplateRecordConfiguration;
 import uk.gov.dstl.baleen.annotators.templates.TemplateRecordDefinitionAnnotator;
 import uk.gov.dstl.baleen.consumers.utils.SourceUtils;

@@ -116,7 +116,6 @@ public class ReNounDependencySeedFactsTest extends AbstractMultiAnnotatorTest {
                     + " "
                     + r.getTarget().getCoveredText())
         .forEach(System.out::println);
-    ;
 
     assertTrue(relations.size() >= 8);
 

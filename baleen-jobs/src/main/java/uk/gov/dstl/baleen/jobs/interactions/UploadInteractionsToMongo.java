@@ -7,8 +7,6 @@ import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 
-import com.mongodb.Mongo;
-
 import uk.gov.dstl.baleen.jobs.interactions.io.CsvInteractionReader;
 import uk.gov.dstl.baleen.jobs.interactions.io.CsvInteractionWriter;
 import uk.gov.dstl.baleen.jobs.interactions.io.MongoInteractionWriter;
