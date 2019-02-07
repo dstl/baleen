@@ -409,7 +409,6 @@ Expected values: SINGLE, RANGE, null</rdfs:comment>
           <baleen:Event rdf:about="http://baleen.dstl.gov.uk/15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
             <baleen:begin>0</baleen:begin>
             <baleen:arguments>[argument, Other]</baleen:arguments>
-            <baleen:entities>[cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, 2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630]</baleen:entities>
             <baleen:end>10</baleen:end>
             <baleen:confidence>0.0</baleen:confidence>
             <baleen:eventType>[MEETING]</baleen:eventType>
