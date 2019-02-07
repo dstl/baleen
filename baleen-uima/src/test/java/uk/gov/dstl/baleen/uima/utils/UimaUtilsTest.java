@@ -41,10 +41,10 @@ public class UimaUtilsTest {
             UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, false)));
     assertFalse(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, new Boolean(false))));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, Boolean.FALSE)));
     assertTrue(
         UimaUtils.isMergeDistinctEntities(
-            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, new Boolean(true))));
+            UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, Boolean.TRUE)));
     assertTrue(
         UimaUtils.isMergeDistinctEntities(
             UimaContextFactory.createUimaContext(MERGE_DISTINCT_ENTITIES, true)));

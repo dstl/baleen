@@ -15,5 +15,5 @@ public enum GraphFormat {
    *
    * @see https://github.com/EsotericSoftware/kryo
    */
-  GYRO
+  GRYO
 }

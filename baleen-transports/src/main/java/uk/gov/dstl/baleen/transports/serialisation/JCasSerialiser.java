@@ -235,12 +235,12 @@ public class JCasSerialiser {
       } else {
         getMonitor().trace("Feature is singular - attempting conversion to a single annotation");
         final FeatureStructure ent = base.getFeatureValue(f);
-        if (ent == null) {
-          // Ignore null entities
-        } else if (ent instanceof BaleenAnnotation) {
-          map.put(JsonJCas.makeReference(name), ((BaleenAnnotation) ent).getInternalId());
-        } else {
-          getMonitor().trace("Unable to persist feature {}", name);
+        if (ent != null) { // Ignore null entities
+          if (ent instanceof BaleenAnnotation) {
+            map.put(JsonJCas.makeReference(name), ((BaleenAnnotation) ent).getInternalId());
+          } else {
+            getMonitor().trace("Unable to persist feature {}", name);
+          }
         }
       }
     }

@@ -184,9 +184,9 @@ public class PatternExtractor extends BaleenAnnotator {
       patterns.add(new PatternExtract(a, b, a.getEnd(), b.getBegin()));
     } else if (a.getBegin() > b.getEnd()) {
       patterns.add(new PatternExtract(b, a, b.getEnd(), a.getBegin()));
-    } else {
-      // Overlapping entities ... ignore as no words between them
     }
+
+    // Else: Overlapping entities ... ignore as no words between them
   }
 
   /**

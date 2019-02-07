@@ -35,8 +35,8 @@ public class EntityGraph extends AbstractEntityGraphFormatConsumer {
     }
     String extension;
     switch (getGraphFormat()) {
-      case GYRO:
-        extension = ".kyro";
+      case GRYO:
+        extension = ".kryo";
         break;
       case GRAPHSON:
         extension = ".json";

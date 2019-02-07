@@ -220,12 +220,12 @@ public class EntityRelationConverter {
       } else {
         getMonitor().trace("Feature is singular - attempting conversion to a single entity");
         FeatureStructure ent = base.getFeatureValue(f);
-        if (ent == null) {
-          // Ignore null entities
-        } else if (ent instanceof Entity) {
-          map.put(ConsumerUtils.toCamelCase(f.getShortName()), ((Entity) ent).getExternalId());
-        } else {
-          getMonitor().trace("Unable to persist feature {}", f.getShortName());
+        if (ent != null) { // Ignore null entities
+          if (ent instanceof Entity) {
+            map.put(ConsumerUtils.toCamelCase(f.getShortName()), ((Entity) ent).getExternalId());
+          } else {
+            getMonitor().trace("Unable to persist feature {}", f.getShortName());
+          }
         }
       }
     }

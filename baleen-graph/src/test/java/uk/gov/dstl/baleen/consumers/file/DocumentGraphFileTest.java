@@ -24,7 +24,7 @@ import uk.gov.dstl.baleen.graph.JCasTestGraphUtil;
 
 public class DocumentGraphFileTest extends AbstractAnnotatorTest {
 
-  private static final String GYRO_NAME = "gyro.kyro";
+  private static final String GRYO_NAME = "gryo.kryo";
   private static final String GRAPHML_NAME = "graphml.xml";
   private static final String GRAPHSON_NAME = "graphson.json";
 
@@ -32,7 +32,7 @@ public class DocumentGraphFileTest extends AbstractAnnotatorTest {
       DocumentGraphFileTest.class.getResource(GRAPHML_NAME);
   private static final URL EXPECTED_GRAPHSON_FILE =
       DocumentGraphFileTest.class.getResource(GRAPHSON_NAME);
-  private static final URL EXPECTED_GYRO_FILE = DocumentGraphFileTest.class.getResource(GYRO_NAME);
+  private static final URL EXPECTED_GRYO_FILE = DocumentGraphFileTest.class.getResource(GRYO_NAME);
 
   private Path tempDirectory;
 
@@ -109,20 +109,20 @@ public class DocumentGraphFileTest extends AbstractAnnotatorTest {
   }
 
   @Test
-  public void testGyro()
+  public void testGryo()
       throws AnalysisEngineProcessException, ResourceInitializationException, IOException,
           URISyntaxException {
     processJCas(
         DocumentGraph.PARAM_OUTPUT_DIRECTORY,
         tempDirectory.toString(),
         DocumentGraph.PARAM_GRAPH_FORMAT,
-        GraphFormat.GYRO.toString(),
+        GraphFormat.GRYO.toString(),
         DocumentGraph.PARAM_OUTPUT_RELATIONS_AS_LINKS,
         true);
 
     Path path = tempDirectory.resolve(tempDirectory.toFile().list()[0]);
 
-    Path expectedPath = createAndFailIfMissing(path, EXPECTED_GYRO_FILE, GYRO_NAME);
+    Path expectedPath = createAndFailIfMissing(path, EXPECTED_GRYO_FILE, GRYO_NAME);
     assertTrue(com.google.common.io.Files.equal(expectedPath.toFile(), path.toFile()));
 
     Files.delete(path);

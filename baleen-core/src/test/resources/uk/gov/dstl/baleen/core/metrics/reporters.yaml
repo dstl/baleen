@@ -1,12 +1,12 @@
 metrics:
   reporters:
-  - type: console
-    # Durations in ms (default is s)
-    durationUnit: milliseconds
-    # Durations in mins (default is s)
-    rateUnit: minutes
-    # Reports sent out each 120s (defaults to 60)
-    period: 1
+#  - type: console
+#    # Durations in ms (default is s)
+#    durationUnit: milliseconds
+#    # Durations in mins (default is s)
+#    rateUnit: minutes
+#    # Reports sent out each 120s (defaults to 60)
+#    period: 1
 
   - type: log
     # The name of the logger (defaults to metrics:reporter)

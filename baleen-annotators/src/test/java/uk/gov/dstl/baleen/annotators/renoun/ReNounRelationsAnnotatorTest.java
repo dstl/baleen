@@ -186,7 +186,6 @@ public class ReNounRelationsAnnotatorTest extends AbstractMultiAnnotatorTest {
                     + " "
                     + r.getTarget().getCoveredText())
         .forEach(System.out::println);
-    ;
 
     assertEquals(2, relations.size());
 

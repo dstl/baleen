@@ -147,7 +147,6 @@ public class ReNounCoreferenceSeedFactsTest extends AbstractMultiAnnotatorTest {
                     + " "
                     + r.getTarget().getCoveredText())
         .forEach(System.out::println);
-    ;
 
     assertTrue(relations.size() >= 4 && relations.size() < 8);
 

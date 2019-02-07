@@ -23,7 +23,6 @@ import uk.gov.dstl.baleen.entity.linking.EntityInformation;
 import uk.gov.dstl.baleen.entity.linking.InformationCollector;
 import uk.gov.dstl.baleen.entity.linking.collector.JCasInformationCollector;
 import uk.gov.dstl.baleen.entity.linking.collector.ProperNounInformationCollector;
-import uk.gov.dstl.baleen.entity.linking.ranker.BagOfWordsCandidateRanker;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
 import uk.gov.dstl.baleen.types.language.WordToken;
 import uk.gov.dstl.baleen.types.semantic.Entity;

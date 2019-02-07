@@ -48,7 +48,7 @@ public class MergedYamlTest {
     Map<String, Object> map = (Map) dataTree;
 
     assertTrue(map.containsKey("test"));
-    ;
+
     assertTrue(map.get("test") instanceof List);
     List<Object> value = (List<Object>) map.get("test");
     assertTrue(value.contains("value1"));

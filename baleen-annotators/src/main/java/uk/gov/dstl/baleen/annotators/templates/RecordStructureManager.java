@@ -14,7 +14,6 @@ import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.structure.Structure;
 import uk.gov.dstl.baleen.types.structure.TableBody;
 import uk.gov.dstl.baleen.types.templates.TemplateField;
-import uk.gov.dstl.baleen.types.templates.TemplateRecord;
 import uk.gov.dstl.baleen.uima.utils.SelectorPart;
 import uk.gov.dstl.baleen.uima.utils.SelectorPath;
 import uk.gov.dstl.baleen.uima.utils.select.ItemHierarchy;

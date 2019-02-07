@@ -228,9 +228,9 @@ public class MentionConverter {
           .filter(Optional::isPresent)
           .map(Optional::get)
           .findFirst();
-    } else {
-      // TODO: Could implement others here but Baleen currently only outputs the above ..
     }
+
+    // Else: Could implement others here but Baleen currently only outputs the above
 
     return Optional.empty();
   }

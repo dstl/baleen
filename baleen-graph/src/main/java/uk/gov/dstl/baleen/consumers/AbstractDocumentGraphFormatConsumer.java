@@ -18,7 +18,7 @@ public abstract class AbstractDocumentGraphFormatConsumer extends AbstractDocume
   /**
    * The graph format to output
    *
-   * @baleen.config GRAPHML, GRAPHSON or GYRO
+   * @baleen.config GRAPHML, GRAPHSON or GRYO
    */
   public static final String PARAM_GRAPH_FORMAT = "format";
 
@@ -29,7 +29,7 @@ public abstract class AbstractDocumentGraphFormatConsumer extends AbstractDocume
   protected void processGraph(String documentSourceName, Graph graph) {
     WriterBuilder<? extends GraphWriter> writer;
     switch (format) {
-      case GYRO:
+      case GRYO:
         writer = graph.io(IoCore.gryo()).writer();
         break;
       case GRAPHSON:

@@ -36,8 +36,8 @@ public class DocumentGraph extends AbstractDocumentGraphFormatConsumer {
     }
     String extension;
     switch (getGraphFormat()) {
-      case GYRO:
-        extension = ".kyro";
+      case GRYO:
+        extension = ".kryo";
         break;
       case GRAPHSON:
         extension = ".json";

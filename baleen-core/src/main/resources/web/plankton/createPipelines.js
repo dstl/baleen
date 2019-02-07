@@ -1,6 +1,20 @@
 //TODO: Duplicate annotator
 //TODO: Duplicate pipeline? Requires YAML parser
 
+function sanitizeName(name){
+	if(name == undefined || name == null){
+		return "";
+	}else{
+		return name.replace(".", "_");
+	}
+}
+
+function showNoResources(){
+	if($("#resources div").length == 0){
+		$("#resources").append("<p id=\"noResources\">There are currently no annotators that require external resources</p>");
+	}
+}
+
 var componentListLoadedCount = 0;
 function componentListLoaded(){
 	componentListLoadedCount++;
@@ -105,6 +119,71 @@ function loadConsumers(){
 		$("#alertCouldntLoad").removeClass("hidden");
 		$("#createPanel").addClass("hidden");
 	});
+}
+
+var resources = {}
+function addResource(resource){
+	resource.key = sanitizeName(resource.key);
+	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor"){
+		if(resources[resource.key] == undefined){
+			resources[resource.key] = 0
+		}
+		resources[resource.key]++;
+		
+		$("#noResources").remove();
+		
+		if(resources[resource.key] == 1){
+			//New resource - add it in
+			var resourceDiv = $("#resourceDivTemplate").clone();
+			resourceDiv.removeClass("hidden");
+			resourceDiv.attr("id", "resourceDiv-"+resource.key);
+
+			$(".panel-heading", resourceDiv).attr("data-target", "#resourcePanelBody-"+resource.key);
+			$("#resourcePanelBody", resourceDiv).attr("id", "resourcePanelBody-"+resource.key);
+			
+			$("#resource", resourceDiv).attr("id", "resource-"+resource.key).text(resource.class);
+			$("#resourceKey", resourceDiv).attr("id", "resourceKey-"+resource.key).text(resource.key);
+			$("#resourceUsage", resourceDiv).attr("id", "resourceUsage-"+resource.key).text(resources[resource.key]);
+			$("#resourceName", resourceDiv).attr("id", "resourceName-"+resource.key).text(resource.class + " ("+resource.key+")");
+			
+			var params = $("#resourceParameters", resourceDiv).attr("id", "resourceParameters-"+resource.key);		
+		
+			resource.parameters.forEach(function(el){
+				el.name = sanitizeName(el.name);
+				if(el.type == "parameter"){
+					var label = "<label for=\""+resource.key+"-"+el.name+"\">"+el.name+"</label>";
+					var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+resource.key+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
+					var input = "<input type=\"text\" id=\""+resource.key+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
+					var defaultValue = "<input type=\"hidden\" id=\""+resource.key+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
+						
+					params.append($("<p></p>").append(label, toTextArea, input, defaultValue));
+				}else{
+					console.log("Didn't understand data - unknown type '"+el.type+"'");
+				}
+			});
+			
+			$("#resources").append(resourceDiv);
+		}else{
+			//Existing resource - update usage
+			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
+		}
+	}
+}
+
+function removeResource(resource){
+	resource.key = sanitizeName(resource.key);
+	
+	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor" && resource.key != "" && resources[resource.key] != undefined && resources[resource.key] >= 1){
+		resources[resource.key]--;
+		
+		if(resources[resource.key] == 0){
+			$("#resourceDiv-"+resource.key).remove();
+		}else{
+			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
+		}
+		
+		showNoResources()
+	}
 }
 
 function getCollectionReader(name){
@@ -358,71 +437,6 @@ function addAllConsumers(){
 	$("#consumer option").each(function(index, el){
 		addConsumer($(el).text());
 	});
-}
-
-var resources = {}
-function addResource(resource){
-	resource.key = sanitizeName(resource.key);
-	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor"){
-		if(resources[resource.key] == undefined){
-			resources[resource.key] = 0
-		}
-		resources[resource.key]++;
-		
-		$("#noResources").remove();
-		
-		if(resources[resource.key] == 1){
-			//New resource - add it in
-			var resourceDiv = $("#resourceDivTemplate").clone();
-			resourceDiv.removeClass("hidden");
-			resourceDiv.attr("id", "resourceDiv-"+resource.key);
-
-			$(".panel-heading", resourceDiv).attr("data-target", "#resourcePanelBody-"+resource.key);
-			$("#resourcePanelBody", resourceDiv).attr("id", "resourcePanelBody-"+resource.key);
-			
-			$("#resource", resourceDiv).attr("id", "resource-"+resource.key).text(resource.class);
-			$("#resourceKey", resourceDiv).attr("id", "resourceKey-"+resource.key).text(resource.key);
-			$("#resourceUsage", resourceDiv).attr("id", "resourceUsage-"+resource.key).text(resources[resource.key]);
-			$("#resourceName", resourceDiv).attr("id", "resourceName-"+resource.key).text(resource.class + " ("+resource.key+")");
-			
-			var params = $("#resourceParameters", resourceDiv).attr("id", "resourceParameters-"+resource.key);		
-		
-			resource.parameters.forEach(function(el){
-				el.name = sanitizeName(el.name);
-				if(el.type == "parameter"){
-					var label = "<label for=\""+resource.key+"-"+el.name+"\">"+el.name+"</label>";
-					var toTextArea = " <a href=\"#\" onclick=\"toTextArea('"+resource.key+"-"+el.name+"'); $(this).remove(); return false;\"><span class=\"glyphicon glyphicon-edit\"></span></a>";
-					var input = "<input type=\"text\" id=\""+resource.key+"-"+el.name+"\" placeholder=\"Enter value here if you wish to set one\" class=\"form-control\" value=\""+el.defaultValue+"\">";
-					var defaultValue = "<input type=\"hidden\" id=\""+resource.key+"-"+el.name+"-default\" value=\""+el.defaultValue+"\">";
-						
-					params.append($("<p></p>").append(label, toTextArea, input, defaultValue));
-				}else{
-					console.log("Didn't understand data - unknown type '"+el.type+"'");
-				}
-			});
-			
-			$("#resources").append(resourceDiv);
-		}else{
-			//Existing resource - update usage
-			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
-		}
-	}
-}
-
-function removeResource(resource){
-	resource.key = sanitizeName(resource.key);
-	
-	if(resource.key != "__baleenHistory" && resource.key != "__contentExtractor" && resource.key != "" && resources[resource.key] != undefined && resources[resource.key] >= 1){
-		resources[resource.key]--;
-		
-		if(resources[resource.key] == 0){
-			$("#resourceDiv-"+resource.key).remove();
-		}else{
-			$("#resourceUsage-"+resource.key).text(resources[resource.key]);
-		}
-		
-		showNoResources()
-	}
 }
 
 function removeAnnotator(annotator){
@@ -683,14 +697,6 @@ function toTextArea(id){
 	$("#"+id).replaceWith(textarea);
 }
 
-function sanitizeName(name){
-	if(name == undefined || name == null){
-		return "";
-	}else{
-		return name.replace(".", "_");
-	}
-}
-
 function createPipelineName(){
 	var adjectives = ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet", "Black", "Grey", "White", "Fizzing", "Noisy", "Enormous", "Tiny", "Spinning", "Sleeping", "Peaceful", "Heavy", "Average", "Genuine", "Fake", "Peculiar", "Colossal", "Bewildered", "Clever", "Intense", "Fanciful", "Scrumptious", "Inspired", "Fluffy", "Tangy", "Fuzzy", "Selective", "Blurry", "Heroic", "Gooey", "Witty", "Brilliant", "Zealous", "Courageous", "Dynamic", "Valiant", "Rambunctious", "Confident", "Daring", "Opulent", "Sour", "Vivacious", "Murky", "Quaint", "Stupendous", "Sparkling", "Zany", "Ferocious", "Curious", "Determined", "Dubious", "Energetic", "Remarkable", "Wistful", "Exuberant", "Bold", "Inquisitive", "Mysterious", "Ecstatic", "Collapsible", "Disposable", "Disconnected", "Enchanted", "Disillusioned", "Unavailable", "Erroneous", "Challenging", "Adventurous", "Capable", "Mistaken", "Snotty", "Quenchable", "Delicious", "Destructive", "Bias", "Masked", "Musical", "Dodgy", "Magnanimous", "Shady", "Untouchable", "Indescribable", "Worthy"];
 	var nouns = ["Banana", "Apple", "Pear", "Strawberry", "Burger", "Pizza", "Cake", "Car", "Lorry", "Boat", "Submarine", "Helicopter", "Pyjamas", "Jumper", "Hat", "Wizard", "Witch", "Magician", "Programmer", "Coder", "River", "Pond", "Lake", "Sea", "Doctor", "Tardis", "King", "Queen", "Knight", "Bishop", "Castle", "Rook", "Pawn", "Raven", "Seagull", "Crow", "Pigeon", "Chicken", "Duck", "Flower", "Gnome", "Tree", "Garden", "Balloon", "Mountain", "Hill", "Train", "Frog", "Cauldron", "School", "Hut", "Flag", "Uniform", "Hotel", "Gulf", "Island", "Mouth", "Eye", "Ear", "Nose", "Cloud", "Sun", "Moon", "Zoo", "X-ray", "Quilt", "Duvet", "Pillow", "Telly", "Crocodile", "Alligator", "Goat", "Carbuncle", "Pimpernel", "Avenger", "Hiker", "Scout", "Trout", "Thirst", "Native", "Handset", "Monitor", "Angel", "Baby", "Wise Men", "Shepherd", "Donkey", "Egg", "Peasant", "Christmas Tree", "Bracelet", "Necklace", "Lanyard", "Bottle", "Footballer", "Cricketer", "Referee", "Conductor", "Opponent", "Lion", "Tiger", "Zebra", "Emperor", "Empress", "Pencil", "Sock"];
@@ -731,12 +737,6 @@ function createPipeline(){
 		$("#alertCouldntCreate").removeClass("hidden");
 		$(document).scrollTop($("#alertCouldntCreate").offset().top - 75);
 	});
-}
-
-function showNoResources(){
-	if($("#resources div").length == 0){
-		$("#resources").append("<p id=\"noResources\">There are currently no annotators that require external resources</p>");
-	}
 }
 
 $("#collectionReader").change(function(){

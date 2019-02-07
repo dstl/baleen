@@ -2,7 +2,6 @@
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.1/graphml.xsd">
     <key id="arguments" for="node" attr.name="arguments" attr.type="string"></key>
     <key id="docId" for="node" attr.name="docId" attr.type="string"></key>
-    <key id="entities" for="node" attr.name="entities" attr.type="string"></key>
     <key id="eventType" for="node" attr.name="eventType" attr.type="string"></key>
     <key id="gender" for="node" attr.name="gender" attr.type="string"></key>
     <key id="geoJson" for="node" attr.name="geoJson" attr.type="string"></key>
@@ -30,7 +29,6 @@
             <data key="labelV">Event</data>
             <data key="arguments">[argument, Other]</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
-            <data key="entities">[cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, 2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630]</data>
             <data key="eventType">[MEETING]</data>
             <data key="mentions">[{confidence=0.0, end=10, id=15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e, begin=0}]</data>
             <data key="type">Event</data>
@@ -85,10 +83,10 @@
             <data key="value">lives at</data>
             <data key="wordDistance">0</data>
         </edge>
-        <edge id="34" source="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+        <edge id="33" source="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
             <data key="labelE">participantIn</data>
         </edge>
-        <edge id="35" source="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+        <edge id="34" source="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
             <data key="labelE">participantIn</data>
         </edge>
         <edge id="3f94c0e8189cc0b78ba36414489b0ee7c2e57fc5d9424fff1bd0aa026bd38b66" source="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef" target="e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527">

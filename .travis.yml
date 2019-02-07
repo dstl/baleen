@@ -1,0 +1,9 @@
+language: java
+jdk:
+- openjdk8
+- openjdk11
+
+script:
+- mvn -B -Pdisable-logging clean package
+after_success:
+- mvn jacoco:report coveralls:report

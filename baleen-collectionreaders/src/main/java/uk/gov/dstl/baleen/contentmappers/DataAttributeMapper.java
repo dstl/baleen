@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.gov.dstl.baleen.contentmanipulators.ParagraphMarkedClassification;
-import uk.gov.dstl.baleen.contentmanipulators.helpers.ContentManipulator;
 import uk.gov.dstl.baleen.contentmanipulators.helpers.MarkupUtils;
 import uk.gov.dstl.baleen.contentmappers.helpers.AnnotationCollector;
 import uk.gov.dstl.baleen.contentmappers.helpers.ContentMapper;

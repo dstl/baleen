@@ -62,11 +62,11 @@ public class DependencyTreeTest {
     tree1.addDependency("other", "[regex]_CC");
     DependencyTree tree2 = new DependencyTree("pattern_NN:id");
     tree2.addDependency("test", "_VB").addDependency("prep", "_IN");
-    ;
+
     tree2.addDependency("other", "[regex]_CC");
     DependencyTree tree3 = new DependencyTree("pattern_NN:id");
     tree3.addDependency("other", "[regex]_CC").addDependency("prep", "_IN");
-    ;
+
     tree3.addDependency("test", "_VB");
     DependencyTree tree4 = new DependencyTree("pattern_NN:id");
     tree4.addDependency("test", "_VB");

@@ -25,9 +25,9 @@ import uk.gov.dstl.baleen.graph.JCasTestGraphUtil;
 
 public class EntityGraphFileTest extends AbstractAnnotatorTest {
 
-  private static final String GYRO_8_NAME = "entity8.kyro";
+  private static final String GRYO_8_NAME = "entity8.kryo";
   private static final String GRAPHSON_8_NAME = "entity8.json";
-  private static final String GYRO_NAME = "entity.kyro";
+  private static final String GYRO_NAME = "entity.kryo";
   private static final String GRAPHSON_NAME = "entity.json";
   private static final String GRAPHML_NAME = "entity.xml";
   private static final URL EXPECTED_GRAPHML_FILE =
@@ -37,8 +37,8 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
   private static final URL EXPECTED_GYRO_FILE = EntityGraphFileTest.class.getResource(GYRO_NAME);
   private static final URL EXPECTED_GRAPHSON_8_FILE =
       EntityGraphFileTest.class.getResource(GRAPHSON_8_NAME);
-  private static final URL EXPECTED_GYRO_8_FILE =
-      EntityGraphFileTest.class.getResource(GYRO_8_NAME);
+  private static final URL EXPECTED_GRYO_8_FILE =
+      EntityGraphFileTest.class.getResource(GRYO_8_NAME);
 
   private Path tempDirectory;
 
@@ -124,14 +124,14 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
     if (SystemUtils.JAVA_VERSION_FLOAT > 8) {
       expectedFile = EXPECTED_GYRO_FILE;
     } else {
-      expectedFile = EXPECTED_GYRO_8_FILE;
+      expectedFile = EXPECTED_GRYO_8_FILE;
     }
 
     processJCas(
         EntityGraph.PARAM_OUTPUT_DIRECTORY,
         tempDirectory.toString(),
         EntityGraph.PARAM_GRAPH_FORMAT,
-        GraphFormat.GYRO.toString());
+        GraphFormat.GRYO.toString());
 
     Path path = tempDirectory.resolve(tempDirectory.toFile().list()[0]);
 

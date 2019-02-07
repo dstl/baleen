@@ -5,7 +5,6 @@
     <key id="confidence" for="node" attr.name="confidence" attr.type="double"></key>
     <key id="docId" for="node" attr.name="docId" attr.type="string"></key>
     <key id="end" for="node" attr.name="end" attr.type="int"></key>
-    <key id="entities" for="node" attr.name="entities" attr.type="string"></key>
     <key id="eventType" for="node" attr.name="eventType" attr.type="string"></key>
     <key id="gender" for="node" attr.name="gender" attr.type="string"></key>
     <key id="geoJson" for="node" attr.name="geoJson" attr.type="string"></key>
@@ -35,7 +34,6 @@
             <data key="confidence">0.0</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
             <data key="end">10</data>
-            <data key="entities">[cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, 2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630]</data>
             <data key="eventType">[MEETING]</data>
             <data key="type">Event</data>
             <data key="value">test event</data>
@@ -141,11 +139,11 @@
             <data key="value">is related to</data>
             <data key="wordDistance">0</data>
         </edge>
-        <edge id="43" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+        <edge id="42" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
             <data key="labelE">participantIn</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
         </edge>
-        <edge id="44" source="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
+        <edge id="43" source="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
             <data key="labelE">participantIn</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
         </edge>
