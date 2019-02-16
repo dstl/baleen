@@ -3,6 +3,7 @@ package uk.gov.dstl.baleen.collectionreaders;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 import java.io.File;
@@ -59,6 +60,16 @@ public class CsvFolderReader extends BaleenCollectionReader {
     defaultValue = {}
   )
   private String[] folders;
+
+  /**
+   * Should files be reprocessed when modified?
+   *
+   * @baleen.config false
+   */
+  public static final String PARAM_REPROCESS_ON_MODIFY = "reprocess";
+
+  @ConfigurationParameter(name = PARAM_REPROCESS_ON_MODIFY, defaultValue = "false")
+  private boolean reprocessOnModify = false;
 
   /**
    * Should folders be processed recursively (i.e. should we watch subfolders too)?
@@ -163,7 +174,13 @@ public class CsvFolderReader extends BaleenCollectionReader {
   }
 
   private void registerDirectory(Path path) throws IOException {
-    WatchKey key = path.register(watcher, ENTRY_CREATE, ENTRY_DELETE);
+    WatchKey key;
+    if (reprocessOnModify) {
+      key = path.register(watcher, ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE);
+    } else {
+      key = path.register(watcher, ENTRY_CREATE, ENTRY_DELETE);
+    }
+
     watchKeys.put(key, path);
 
     getMonitor().counter("directories").inc();
