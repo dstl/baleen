@@ -57,6 +57,7 @@
     <extjwnl.version>1.9.4</extjwnl.version>
     <extjwnldata.version>1.2</extjwnldata.version>
     <fastclasspathscanner.version>2.18.1</fastclasspathscanner.version>
+    <geodesy.version>2.0.1</geodesy.version>
     <geojson-jackson.version>1.8.1</geojson-jackson.version>
     <gremlin.version>3.3.3</gremlin.version>
     <guava.version>24.0-jre</guava.version>

@@ -13,6 +13,9 @@ import uk.gov.dstl.baleen.types.language.Text;
 /** */
 public class MgrsTest extends AbstractAnnotatorTest {
 
+  private static final String GEOJSON =
+      "{\"type\":\"Polygon\",\"coordinates\":[[[-157.90975514490475,21.410749379555252],[-157.91946842978894,21.410749379555252],[-157.91946842978894,21.401778260360324],[-157.90975514490475,21.401778260360324],[-157.90975514490475,21.410749379555252]]]}";
+
   public MgrsTest() {
     super(Mgrs.class);
   }
@@ -23,7 +26,7 @@ public class MgrsTest extends AbstractAnnotatorTest {
     jCas.setDocumentText("James has almost certainly never been to 4QFJ1267");
     processJCas();
 
-    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", null));
+    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", GEOJSON));
   }
 
   @Test
@@ -46,6 +49,6 @@ public class MgrsTest extends AbstractAnnotatorTest {
     // jCas.getDocumentText().length()).addToIndexes();
     processJCas();
 
-    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", null));
+    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", GEOJSON));
   }
 }
