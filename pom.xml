@@ -116,6 +116,7 @@
     <maven-spotless.version>1.17.0</maven-spotless.version>
 	<jacoco.version>0.8.3</jacoco.version>
 	<coveralls.version>4.3.0</coveralls.version>
+    <license.version>1.18</license.version>
   </properties>
 
   <dependencies>
@@ -267,6 +268,12 @@
 		<artifactId>coveralls-maven-plugin</artifactId>
 		<version>${coveralls.version}</version>
 	  </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>${license.version}</version>
+      </plugin>
     </plugins>
 
   </build>
