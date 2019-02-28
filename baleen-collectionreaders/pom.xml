@@ -38,7 +38,7 @@
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>pop3</artifactId>
-      <version>${javamail.version}</version>
+      <version>${javamail-protocols.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -48,7 +48,7 @@
     <dependency>
       <groupId>com.sun.mail</groupId>
       <artifactId>imap</artifactId>
-      <version>${javamail.version}</version>
+      <version>${javamail-protocols.version}</version>
     </dependency>
     <dependency>
       <groupId>io.committed.krill</groupId>
