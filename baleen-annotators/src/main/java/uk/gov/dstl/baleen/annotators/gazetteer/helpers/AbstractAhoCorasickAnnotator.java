@@ -128,13 +128,6 @@ public abstract class AbstractAhoCorasickAnnotator extends BaleenTextAwareAnnota
       "Unable to assign property on entity - property will be skipped";
 
   /**
-   * Constructor
-   *
-   * @param logger The Logger to use for errors, etc.
-   */
-  public AbstractAhoCorasickAnnotator() {}
-
-  /**
    * Configure a gazetteer object and initialise it. Remember that the caseSensitive and type
    * properties may also need to be passed to the gazetteer, dependent on the gazetteer.
    *

@@ -237,7 +237,9 @@ public abstract class AbstractApiServlet extends HttpServlet {
    * @throws IOException
    */
   protected void get(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {}
+      throws ServletException, IOException {
+    // Do nothing if not overridden
+  }
 
   /**
    * Called for a POST method, logging and metrics have already been captured.
@@ -248,7 +250,9 @@ public abstract class AbstractApiServlet extends HttpServlet {
    * @throws IOException
    */
   protected void post(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {}
+      throws ServletException, IOException {
+    // Do nothing if not overridden
+  }
 
   /**
    * Called for a PUT method, logging and metrics have already been captured.
@@ -259,7 +263,9 @@ public abstract class AbstractApiServlet extends HttpServlet {
    * @throws IOException
    */
   protected void put(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {}
+      throws ServletException, IOException {
+    // Do nothing if not overridden
+  }
 
   /**
    * Called for a DELETE method, logging and metrics have already been captured.
@@ -270,5 +276,7 @@ public abstract class AbstractApiServlet extends HttpServlet {
    * @throws IOException
    */
   protected void delete(HttpServletRequest req, HttpServletResponse resp)
-      throws ServletException, IOException {}
+      throws ServletException, IOException {
+    // Do nothing if not overridden
+  }
 }

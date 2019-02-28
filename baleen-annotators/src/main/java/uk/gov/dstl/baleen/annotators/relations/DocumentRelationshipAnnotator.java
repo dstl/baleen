@@ -79,8 +79,8 @@ public class DocumentRelationshipAnnotator extends AbstractTypedRelationshipAnno
   @Override
   protected void extract(JCas jCas) throws AnalysisEngineProcessException {
 
-    Map<uk.gov.dstl.baleen.types.language.Sentence, Collection<Entity>> languageCovered =
-        JCasUtil.indexCovered(jCas, uk.gov.dstl.baleen.types.language.Sentence.class, Entity.class);
+    Map<Sentence, Collection<Entity>> languageCovered =
+        JCasUtil.indexCovered(jCas, Sentence.class, Entity.class);
 
     Map<uk.gov.dstl.baleen.types.structure.Sentence, Collection<Entity>> structureCovered =
         JCasUtil.indexCovered(
@@ -173,9 +173,7 @@ public class DocumentRelationshipAnnotator extends AbstractTypedRelationshipAnno
   public AnalysisEngineAction getAction() {
     return new AnalysisEngineAction(
         ImmutableSet.of(
-            Entity.class,
-            uk.gov.dstl.baleen.types.structure.Sentence.class,
-            uk.gov.dstl.baleen.types.language.Sentence.class),
+            Entity.class, uk.gov.dstl.baleen.types.structure.Sentence.class, Sentence.class),
         ImmutableSet.of(Relation.class));
   }
 }

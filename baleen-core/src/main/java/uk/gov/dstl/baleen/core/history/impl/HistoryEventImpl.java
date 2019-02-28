@@ -16,11 +16,6 @@ public class HistoryEventImpl implements HistoryEvent {
   private Map<String, String> parameters;
   private String action;
 
-  /** New instance. */
-  public HistoryEventImpl() {
-    // Empty constructor, do nothing
-  }
-
   @Override
   public long getTimestamp() {
     return timestamp;

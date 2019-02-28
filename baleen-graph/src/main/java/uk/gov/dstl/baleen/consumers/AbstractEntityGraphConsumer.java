@@ -120,7 +120,9 @@ public abstract class AbstractEntityGraphConsumer extends AbstractGraphConsumer 
    *
    * @param builder
    */
-  protected void addOptions(EntityGraphOptions.Builder builder) {}
+  protected void addOptions(EntityGraphOptions.Builder builder) {
+    // Do nothing if not overridden
+  }
 
   private ValueStrategy<?, ?> createValueStrategy(String valueStrategyType)
       throws ResourceInitializationException {

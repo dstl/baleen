@@ -82,7 +82,7 @@ public class DependencyRelationshipAnnotator extends AbstractTypedRelationshipAn
   @Override
   protected void extract(JCas jCas) throws AnalysisEngineProcessException {
 
-    Map<uk.gov.dstl.baleen.types.language.Sentence, Collection<Entity>> languageCovered =
+    Map<Sentence, Collection<Entity>> languageCovered =
         JCasUtil.indexCovered(jCas, uk.gov.dstl.baleen.types.language.Sentence.class, Entity.class);
 
     Map<uk.gov.dstl.baleen.types.structure.Sentence, Collection<Entity>> structureCovered =
@@ -176,8 +176,8 @@ public class DependencyRelationshipAnnotator extends AbstractTypedRelationshipAn
         ImmutableSet.of(
             Entity.class,
             uk.gov.dstl.baleen.types.structure.Sentence.class,
-            uk.gov.dstl.baleen.types.language.Sentence.class,
-            uk.gov.dstl.baleen.types.language.WordToken.class),
+            Sentence.class,
+            WordToken.class),
         ImmutableSet.of(Relation.class));
   }
 }

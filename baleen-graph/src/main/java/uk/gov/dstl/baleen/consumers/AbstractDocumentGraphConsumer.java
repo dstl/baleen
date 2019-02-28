@@ -113,7 +113,9 @@ public abstract class AbstractDocumentGraphConsumer extends AbstractGraphConsume
    *
    * @param builder
    */
-  protected void addOptions(DocumentGraphOptions.Builder builder) {}
+  protected void addOptions(DocumentGraphOptions.Builder builder) {
+    // Do nothing if not overridden
+  }
 
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {

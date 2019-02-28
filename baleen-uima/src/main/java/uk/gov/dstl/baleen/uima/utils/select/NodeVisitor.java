@@ -18,7 +18,9 @@ public interface NodeVisitor<T> {
    * @param depth the depth of the node, relative to the root node. E.g., the root node has depth 0,
    *     and a child node of that will have depth 1.
    */
-  default void head(Node<T> node, int depth) {}
+  default void head(Node<T> node, int depth) {
+    // Do nothing if not overridden
+  }
 
   /**
    * Callback for when a node is last visited, after all of its descendants have been visited.
@@ -27,5 +29,7 @@ public interface NodeVisitor<T> {
    * @param depth the depth of the node, relative to the root node. E.g., the root node has depth 0,
    *     and a child node of that will have depth 1.
    */
-  default void tail(Node<T> node, int depth) {}
+  default void tail(Node<T> node, int depth) {
+    // Do nothing if not overridden
+  }
 }

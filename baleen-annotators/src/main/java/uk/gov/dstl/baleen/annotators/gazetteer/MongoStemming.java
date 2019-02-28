@@ -53,11 +53,6 @@ public class MongoStemming extends AbstractStemmingAhoCorasickAnnotator {
   @ConfigurationParameter(name = PARAM_VALUE_FIELD, defaultValue = "value")
   private String valueField;
 
-  /** Constructor */
-  public MongoStemming() {
-    // Do nothing
-  }
-
   @Override
   public IGazetteer configureGazetteer() throws BaleenException {
     IGazetteer gaz = new MongoGazetteer();
