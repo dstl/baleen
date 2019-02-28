@@ -125,6 +125,8 @@ public class CsvFolderReader extends BaleenCollectionReader {
 
   private CSVParser csvParser;
 
+  private int currentLine = 0;
+
   @Override
   public void doInitialize(UimaContext context) throws ResourceInitializationException {
     if (folders == null || folders.length == 0) {
@@ -209,6 +211,7 @@ public class CsvFolderReader extends BaleenCollectionReader {
     if (currLines.isEmpty()) {
       // Read next file
       currPath = queue.remove(0);
+      currentLine = 0;
       getMonitor().info("Processing file {}", currPath.toString());
 
       List<String> lines;
@@ -224,6 +227,7 @@ public class CsvFolderReader extends BaleenCollectionReader {
 
     String line = currLines.remove(0);
     String[] cols = csvParser.parseLine(line);
+    currentLine++;
 
     StringJoiner sj = new StringJoiner("\n\n");
     Map<String, String> meta = new HashMap<>();
@@ -245,7 +249,7 @@ public class CsvFolderReader extends BaleenCollectionReader {
     }
 
     DocumentAnnotation doc = UimaSupport.getDocumentAnnotation(jCas);
-    doc.setSourceUri(currPath.toString());
+    doc.setSourceUri(currPath.toString() + "#" + currentLine);
     doc.setTimestamp(System.currentTimeMillis());
   }
 
