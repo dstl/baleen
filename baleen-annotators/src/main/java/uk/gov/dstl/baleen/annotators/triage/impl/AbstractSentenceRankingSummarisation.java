@@ -1,7 +1,6 @@
 package uk.gov.dstl.baleen.annotators.triage.impl;
 
 import com.google.common.collect.ImmutableSet;
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
