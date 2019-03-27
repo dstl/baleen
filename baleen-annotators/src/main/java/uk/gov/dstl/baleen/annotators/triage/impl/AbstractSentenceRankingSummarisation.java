@@ -52,6 +52,8 @@ public abstract class AbstractSentenceRankingSummarisation extends BaleenAnnotat
     @ConfigurationParameter(name = PARAM_KEY_NAME, defaultValue = "autoSummary")
     protected String keyName;
 
+    private static final List<String> END_OF_SENTENCE = Arrays.asList(".", "!", "?");
+
     @Override
     protected final void doProcess(JCas jCas) {
         Collection<Sentence> sentences = JCasUtil.select(jCas, Sentence.class);
@@ -65,18 +67,20 @@ public abstract class AbstractSentenceRankingSummarisation extends BaleenAnnotat
         if(documentOrder)
             topSentences.sort(Comparator.comparingInt(Annotation::getBegin));
 
-        StringJoiner summary = new StringJoiner(" ");
-        for(Sentence s : topSentences){
-            String sent = s.getCoveredText().trim();
-            if(!sent.matches(".*[.!?]"))    //Check it ends with punctuation
-                sent += ".";
+        String summary = topSentences.stream().map(s -> s.getCoveredText().trim())
+                .filter(s -> !s.isEmpty())
+                .map(s -> {
+                    String lastChar = s.substring(s.length() - 1);
+                    if(!END_OF_SENTENCE.contains(lastChar))
+                        return s + ".";
 
-            summary.add(sent);
-        }
+                    return s;
+                })
+                .collect(Collectors.joining(" "));
 
         Metadata metadata = new Metadata(jCas);
         metadata.setKey(keyName);
-        metadata.setValue(summary.toString());
+        metadata.setValue(summary);
 
         addToJCasIndex(metadata);
     }

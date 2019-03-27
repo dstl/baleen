@@ -16,6 +16,7 @@ import uk.gov.dstl.baleen.types.metadata.Metadata;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class TokenFrequencySummarisation extends AbstractSentenceRankingSummarisation {
 
@@ -31,45 +32,25 @@ public class TokenFrequencySummarisation extends AbstractSentenceRankingSummaris
 
     @Override
     protected Map<Sentence, Double> scoreSentences(Collection<Sentence> sentences) {
-        Map<String, Integer> tokenFrequency = new HashMap<>();
+        Map<String, Integer> tokenFrequency = new ConcurrentHashMap<>();
         Map<Sentence, Double> sentenceScores = new HashMap<>();
 
         //Loop over collection first time to count tokens and assign a frequency
-        for(Sentence sentence : sentences){
-            Collection<WordToken> tokens = JCasUtil.selectCovered(WordToken.class, sentence);
-            for(WordToken token : tokens){
-                //Ignore punctuation, just numbers, etc.
-                if(!token.getCoveredText().toLowerCase().matches("[a-z][-a-z0-9]*"))
-                    continue;
-
-                FSArray arr = token.getLemmas();
-                if(arr == null || arr.size() == 0){
-                    tokenFrequency.merge(token.getCoveredText().toLowerCase(), 1, (v1, v2) -> v1 + v2); //TODO: We should probably revert to stemming rather than just using the word?
-                }else{
-                    tokenFrequency.merge(token.getLemmas(0).getLemmaForm(), 1, (v1, v2) -> v1 + v2);
-                }
-            }
-        }
+        sentences.parallelStream().forEach(sentence -> {
+            JCasUtil.selectCovered(WordToken.class, sentence).parallelStream()
+                .filter(token -> token.getCoveredText().matches("[a-z][-a-z0-9]*"))     //Ignore punctuation, just numbers, etc.
+                .forEach(token -> tokenFrequency.merge(getRoot(token), 1, Integer::sum));
+        });
 
         //Loop over collection second time to score sentences, ignoring stop words
-        for(Sentence sentence : sentences){
-            int score = 0;
+        sentences.parallelStream().forEach(sentence -> {
+            double score = JCasUtil.selectCovered(WordToken.class, sentence).parallelStream()
+                .filter(token -> !StopwordUtils.isStopWord(token.getCoveredText(), stopwordResource.getStopwords(), false))
+                .mapToInt(token -> tokenFrequency.getOrDefault(getRoot(token), 0))
+                .sum();
 
-            Collection<WordToken> tokens = JCasUtil.selectCovered(WordToken.class, sentence);   //TODO: This could be more efficient if we save value above?
-            for(WordToken token : tokens){
-                if(StopwordUtils.isStopWord(token.getCoveredText(), stopwordResource.getStopwords(), false))
-                    continue;
-
-                FSArray arr = token.getLemmas();
-                if(arr == null || arr.size() == 0){
-                    score += tokenFrequency.getOrDefault(token.getCoveredText().toLowerCase(), 0);
-                }else{
-                    score += tokenFrequency.getOrDefault(token.getLemmas(0).getLemmaForm(), 0);
-                }
-            }
-
-            sentenceScores.put(sentence, (double) score);
-        }
+            sentenceScores.put(sentence, score);
+        });
 
         return sentenceScores;
     }
@@ -77,5 +58,15 @@ public class TokenFrequencySummarisation extends AbstractSentenceRankingSummaris
     @Override
     public AnalysisEngineAction getAction() {
         return new AnalysisEngineAction(ImmutableSet.of(Sentence.class, WordToken.class, WordLemma.class), ImmutableSet.of(Metadata.class));
+    }
+
+    private String getRoot(WordToken token){
+        FSArray arr = token.getLemmas();
+
+        if(arr == null || arr.size() == 0){
+            return token.getCoveredText().toLowerCase();    //TODO: Could we stem here instead of using the root word?
+        }else{
+            return token.getLemmas(0).getLemmaForm();
+        }
     }
 }
