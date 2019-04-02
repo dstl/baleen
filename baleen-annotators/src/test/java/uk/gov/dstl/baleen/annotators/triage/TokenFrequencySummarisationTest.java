@@ -98,7 +98,5 @@ public class TokenFrequencySummarisationTest extends AbstractMultiAnnotatorTest 
         Metadata md = JCasUtil.selectByIndex(jCas, Metadata.class, 0);
         assertEquals("autoSummary", md.getKey());
         assertNotNull(md.getValue());
-
-        System.out.println(md.getValue());
     }
 }
