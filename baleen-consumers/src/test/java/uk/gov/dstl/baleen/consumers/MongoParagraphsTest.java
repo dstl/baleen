@@ -1,7 +1,11 @@
 // Dstl (c) Crown Copyright 2019
 package uk.gov.dstl.baleen.consumers;
 
-import com.mongodb.client.MongoCollection;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Collections;
+
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.fit.factory.AnalysisEngineFactory;
@@ -14,13 +18,11 @@ import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.mongodb.client.MongoCollection;
+
 import uk.gov.dstl.baleen.resources.SharedFongoResource;
 import uk.gov.dstl.baleen.types.language.Paragraph;
-
-import java.util.Collections;
-
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertEquals;
 
 public class MongoParagraphsTest extends ConsumerTestBase {
 
@@ -39,9 +41,7 @@ public class MongoParagraphsTest extends ConsumerTestBase {
 
     // Create the analysis engine
     AnalysisEngineDescription aed =
-        AnalysisEngineFactory.createEngineDescription(
-            MongoParagraph.class,
-            MONGO, erd);
+        AnalysisEngineFactory.createEngineDescription(MongoParagraph.class, MONGO, erd);
     ae = AnalysisEngineFactory.createEngine(aed);
     ae.initialize(new CustomResourceSpecifier_impl(), Collections.emptyMap());
 
@@ -61,7 +61,8 @@ public class MongoParagraphsTest extends ConsumerTestBase {
 
   @Test
   public void test() throws Exception {
-    jCas.setDocumentText("Hello world! The time is midday on Friday, and it's sunny outside!\n\nThe forecast for the weekend is sunny, but cold.");
+    jCas.setDocumentText(
+        "Hello world! The time is midday on Friday, and it's sunny outside!\n\nThe forecast for the weekend is sunny, but cold.");
     Paragraph p1 = new Paragraph(jCas, 0, 66);
     Paragraph p2 = new Paragraph(jCas, 68, 116);
 
@@ -78,4 +79,3 @@ public class MongoParagraphsTest extends ConsumerTestBase {
     assertNotNull(d1.get(MongoSentences.FIELD_DOCUMENT_ID));
   }
 }
-

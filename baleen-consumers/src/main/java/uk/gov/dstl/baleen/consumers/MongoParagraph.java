@@ -1,8 +1,9 @@
 // Dstl (c) Crown Copyright 2019
 package uk.gov.dstl.baleen.consumers;
 
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -12,13 +13,14 @@ import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.tcas.DocumentAnnotation;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 import uk.gov.dstl.baleen.consumers.utils.ConsumerUtils;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.types.language.Paragraph;
 import uk.gov.dstl.baleen.uima.BaleenConsumer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Output paragraphs from a document as individual documents in Mongo
@@ -38,8 +40,8 @@ public class MongoParagraph extends BaleenConsumer {
   private SharedMongoResource mongoResource;
 
   /**
-   * Should a hash of the content be used to generate the Document ID? If false, then a hash of the Source
-   * URI is used instead.
+   * Should a hash of the content be used to generate the Document ID? If false, then a hash of the
+   * Source URI is used instead.
    *
    * @baleen.config true
    */
@@ -60,7 +62,6 @@ public class MongoParagraph extends BaleenConsumer {
 
   private MongoCollection<Document> paragraphsCollection;
 
-
   // Fields
   public static final String FIELD_DOCUMENT_ID = "docId";
   public static final String FIELD_CONTENT = "content";
@@ -76,7 +77,6 @@ public class MongoParagraph extends BaleenConsumer {
 
     paragraphsCollection.createIndex(new Document(FIELD_DOCUMENT_ID, 1));
     paragraphsCollection.createIndex(new Document(FIELD_BEGIN, 1));
-
   }
 
   @Override
@@ -94,17 +94,16 @@ public class MongoParagraph extends BaleenConsumer {
 
     List<Document> batchInsert = new ArrayList<>();
 
-    for(Paragraph paragraph : JCasUtil.select(jCas, Paragraph.class)){
+    for (Paragraph paragraph : JCasUtil.select(jCas, Paragraph.class)) {
       Document doc = new Document();
 
       DocumentAnnotation da = getDocumentAnnotation(jCas);
 
       doc.append(FIELD_DOCUMENT_ID, documentId)
-         .append(FIELD_CONTENT, paragraph.getCoveredText())
-         .append(FIELD_DOCUMENT_SOURCE, da.getSourceUri())
-         .append(FIELD_BEGIN, paragraph.getBegin())
-         .append(FIELD_END, paragraph.getEnd());
-
+          .append(FIELD_CONTENT, paragraph.getCoveredText())
+          .append(FIELD_DOCUMENT_SOURCE, da.getSourceUri())
+          .append(FIELD_BEGIN, paragraph.getBegin())
+          .append(FIELD_END, paragraph.getEnd());
 
       batchInsert.add(doc);
     }
