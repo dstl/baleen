@@ -1,9 +1,16 @@
 package uk.gov.dstl.baleen.annotators.triage;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.cas.FSArray;
+
+import com.google.common.collect.ImmutableSet;
+
 import uk.gov.dstl.baleen.annotators.triage.impl.AbstractSentenceRankingSummarisation;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
@@ -12,11 +19,6 @@ import uk.gov.dstl.baleen.types.language.Sentence;
 import uk.gov.dstl.baleen.types.language.WordLemma;
 import uk.gov.dstl.baleen.types.language.WordToken;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class TokenFrequencySummarisation extends AbstractSentenceRankingSummarisation {
 

@@ -1,5 +1,8 @@
 package uk.gov.dstl.baleen.annotators.triage;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -9,6 +12,7 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.resource.ExternalResourceDescription;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
+
 import uk.gov.dstl.baleen.annotators.language.OpenNLP;
 import uk.gov.dstl.baleen.annotators.language.WordNetLemmatizer;
 import uk.gov.dstl.baleen.annotators.testing.AbstractMultiAnnotatorTest;
@@ -16,9 +20,6 @@ import uk.gov.dstl.baleen.resources.SharedOpenNLPModel;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
 import uk.gov.dstl.baleen.resources.SharedWordNetResource;
 import uk.gov.dstl.baleen.types.metadata.Metadata;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class TokenFrequencySummarisationTest extends AbstractMultiAnnotatorTest {
 
