@@ -108,6 +108,6 @@ public class MongoParagraph extends BaleenConsumer {
       batchInsert.add(doc);
     }
 
-    paragraphsCollection.insertMany(batchInsert);
+    if (!batchInsert.isEmpty()) paragraphsCollection.insertMany(batchInsert);
   }
 }

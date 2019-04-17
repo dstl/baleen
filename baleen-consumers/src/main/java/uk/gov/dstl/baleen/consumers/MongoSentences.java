@@ -108,6 +108,6 @@ public class MongoSentences extends BaleenConsumer {
       batchInsert.add(doc);
     }
 
-    sentencesCollection.insertMany(batchInsert);
+    if (!batchInsert.isEmpty()) sentencesCollection.insertMany(batchInsert);
   }
 }
