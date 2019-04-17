@@ -128,8 +128,8 @@ public class RelationConstraint {
     final Entity sourceEntity = relation.getSource();
     final Entity targetEntity = relation.getTarget();
 
-    final String sourceType = sourceEntity.getTypeName();
-    final String targetType = targetEntity.getTypeName();
+    final String sourceType = sourceEntity.getType().getName();
+    final String targetType = targetEntity.getType().getName();
 
     final boolean relationType =
         type.equalsIgnoreCase(relation.getRelationshipType())

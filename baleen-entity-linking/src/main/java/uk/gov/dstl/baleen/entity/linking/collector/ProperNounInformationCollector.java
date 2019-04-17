@@ -3,11 +3,7 @@ package uk.gov.dstl.baleen.entity.linking.collector;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.uima.fit.util.JCasUtil;
@@ -35,8 +31,8 @@ public class ProperNounInformationCollector implements InformationCollector {
   public <T extends Entity> Set<EntityInformation<T>> getEntityInformation(
       JCas jCas, Class<T> clazz) {
     Multimap<ReferenceTarget, T> map = ReferentUtils.createReferentMap(jCas, clazz);
-    Map<T, Collection<Sentence>> index = JCasUtil.indexCovering(jCas, clazz, Sentence.class);
-    Map<T, Collection<WordToken>> tokens = JCasUtil.indexCovered(jCas, clazz, WordToken.class);
+    Map<T, List<Sentence>> index = JCasUtil.indexCovering(jCas, clazz, Sentence.class);
+    Map<T, List<WordToken>> tokens = JCasUtil.indexCovered(jCas, clazz, WordToken.class);
 
     Set<EntityInformation<T>> infos = new HashSet<>();
     for (Map.Entry<ReferenceTarget, Collection<T>> entry : map.asMap().entrySet()) {

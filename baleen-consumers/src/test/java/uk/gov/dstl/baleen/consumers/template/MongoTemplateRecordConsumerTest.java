@@ -44,7 +44,7 @@ public class MongoTemplateRecordConsumerTest extends AbstractTemplateRecordConsu
   public void beforeMongoRecordConsumerTest()
       throws ResourceInitializationException, ResourceAccessException {
     mongoExternalResourceDescription =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO, SharedFongoResource.class, "fongo.collection", "test", "fongo.data", "[]");
     analysisEngine =
         getAnalysisEngine("mongo", mongoExternalResourceDescription, "collection", "test");

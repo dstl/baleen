@@ -46,7 +46,7 @@ public class MongoRegexTest extends AnnotatorTestBase {
   @Test
   public void test() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO,
             SharedFongoResource.class,
             FONGO_COLLECTION,
@@ -81,7 +81,7 @@ public class MongoRegexTest extends AnnotatorTestBase {
   @Test
   public void testProperty() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO,
             SharedFongoResource.class,
             FONGO_COLLECTION,
@@ -118,7 +118,7 @@ public class MongoRegexTest extends AnnotatorTestBase {
   @Test
   public void testCoref() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO,
             SharedFongoResource.class,
             FONGO_COLLECTION,

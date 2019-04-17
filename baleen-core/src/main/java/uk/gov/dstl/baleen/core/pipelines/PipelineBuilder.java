@@ -3,15 +3,7 @@ package uk.gov.dstl.baleen.core.pipelines;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import org.apache.uima.UIMAException;
 import org.apache.uima.UIMAFramework;
@@ -351,7 +343,7 @@ public class PipelineBuilder {
 
     Object[] stringParams = BuilderUtils.convertToStringArray(params);
 
-    return ExternalResourceFactory.createExternalResourceDescription(
+    return ExternalResourceFactory.createNamedResourceDescription(
         BALEEN_HISTORY, clazz, stringParams);
   }
 
@@ -398,7 +390,7 @@ public class PipelineBuilder {
 
     Object[] stringParams = BuilderUtils.convertToStringArray(params);
 
-    return ExternalResourceFactory.createExternalResourceDescription(
+    return ExternalResourceFactory.createNamedResourceDescription(
         CONTENT_EXTRACTOR, clazz, stringParams);
   }
 
@@ -530,11 +522,11 @@ public class PipelineBuilder {
         } else {
           Map<String, ExternalResourceDescription> erds = getOrCreateResources(f.getType());
           Object[] params = BuilderUtils.extractParams(globalConfig, ignoreParams, erds);
-          // Since createExternalResourceDescription actually casts Objects to Strings we need to
+          // Since createNamedResourceDescription actually casts Objects to Strings we need to
           // convert
           Object[] stringParams = BuilderUtils.convertToStringArray(params);
           erd =
-              ExternalResourceFactory.createExternalResourceDescription(
+              ExternalResourceFactory.createNamedResourceDescription(
                   key, (Class<? extends Resource>) f.getType(), stringParams);
           resourceDescriptors.put(key, erd);
         }

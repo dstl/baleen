@@ -3,15 +3,8 @@ package uk.gov.dstl.baleen.odin;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 
 import org.apache.uima.cas.Type;
 import org.apache.uima.fit.util.JCasUtil;
@@ -27,11 +20,7 @@ import scala.collection.JavaConversions;
 import com.google.common.collect.ImmutableList;
 
 import uk.gov.dstl.baleen.annotators.language.MaltParser;
-import uk.gov.dstl.baleen.types.language.Dependency;
-import uk.gov.dstl.baleen.types.language.PhraseChunk;
-import uk.gov.dstl.baleen.types.language.Sentence;
-import uk.gov.dstl.baleen.types.language.WordLemma;
-import uk.gov.dstl.baleen.types.language.WordToken;
+import uk.gov.dstl.baleen.types.language.*;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /** A factory to create Odin {@link Sentence}s from the given {@link JCas}. */
@@ -40,11 +29,10 @@ public class SentenceFactory {
   /** The string used by Odin for missing values. */
   protected static final String MISSING_VALUE = OdinSentence.MISSING_VALUE;
 
-  private final Map<uk.gov.dstl.baleen.types.language.Sentence, Collection<WordToken>> indexWords;
-  private final Map<WordToken, Collection<Entity>> indexEntities;
-  private final Map<WordToken, Collection<PhraseChunk>> indexChunks;
-  private final Map<uk.gov.dstl.baleen.types.language.Sentence, Collection<Dependency>>
-      indexDependency;
+  private final Map<uk.gov.dstl.baleen.types.language.Sentence, List<WordToken>> indexWords;
+  private final Map<WordToken, List<Entity>> indexEntities;
+  private final Map<WordToken, List<PhraseChunk>> indexChunks;
+  private final Map<uk.gov.dstl.baleen.types.language.Sentence, List<Dependency>> indexDependency;
 
   /**
    * Construct the sentence factory for the given jCas.
@@ -70,10 +58,10 @@ public class SentenceFactory {
    * @param indexDependency sentence to dependency index
    */
   protected SentenceFactory(
-      Map<uk.gov.dstl.baleen.types.language.Sentence, Collection<WordToken>> indexWords,
-      Map<WordToken, Collection<Entity>> indexEntities,
-      Map<WordToken, Collection<PhraseChunk>> indexChunks,
-      Map<uk.gov.dstl.baleen.types.language.Sentence, Collection<Dependency>> indexDependency) {
+      Map<uk.gov.dstl.baleen.types.language.Sentence, List<WordToken>> indexWords,
+      Map<WordToken, List<Entity>> indexEntities,
+      Map<WordToken, List<PhraseChunk>> indexChunks,
+      Map<uk.gov.dstl.baleen.types.language.Sentence, List<Dependency>> indexDependency) {
     this.indexWords = indexWords;
     this.indexEntities = indexEntities;
     this.indexChunks = indexChunks;
@@ -87,7 +75,7 @@ public class SentenceFactory {
    */
   public List<OdinSentence> create() {
 
-    List<Entry<Sentence, Collection<WordToken>>> entrySet =
+    List<Entry<Sentence, List<WordToken>>> entrySet =
         indexWords
             .entrySet()
             .stream()
@@ -95,7 +83,7 @@ public class SentenceFactory {
             .collect(toList());
 
     List<OdinSentence> sentences = new ArrayList<>();
-    for (Entry<uk.gov.dstl.baleen.types.language.Sentence, Collection<WordToken>> e : entrySet) {
+    for (Entry<uk.gov.dstl.baleen.types.language.Sentence, List<WordToken>> e : entrySet) {
       sentences.add(create(sentences.size(), e.getKey(), e.getValue()));
     }
 

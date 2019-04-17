@@ -1,7 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.csv.internals;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.uima.UimaContext;
@@ -59,7 +59,7 @@ public class CsvRelation extends AbstractCsvConsumer {
   protected void write(JCas jCas) {
     final String source = getDocumentAnnotation(jCas).getSourceUri();
 
-    final Map<Relation, Collection<Sentence>> coveringSentence =
+    final Map<Relation, List<Sentence>> coveringSentence =
         JCasUtil.indexCovering(jCas, Relation.class, Sentence.class);
 
     JCasUtil.select(jCas, Relation.class)
@@ -67,7 +67,7 @@ public class CsvRelation extends AbstractCsvConsumer {
         .map(
             r -> {
               String sentence = "";
-              final Collection<Sentence> sentences = coveringSentence.get(r);
+              final List<Sentence> sentences = coveringSentence.get(r);
               if (!sentences.isEmpty()) {
                 sentence = sentences.iterator().next().getCoveredText();
               }

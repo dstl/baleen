@@ -1,13 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UimaContext;
@@ -174,8 +168,7 @@ public class MongoEvents extends BaleenConsumer {
 
   private <T extends Base> void saveEvents(String documentId, JCas jCas, Class<T> textClass) {
 
-    final Map<Event, Collection<T>> coveringText =
-        JCasUtil.indexCovering(jCas, Event.class, textClass);
+    final Map<Event, List<T>> coveringText = JCasUtil.indexCovering(jCas, Event.class, textClass);
 
     List<Document> eventDocuments =
         JCasUtil.select(jCas, Event.class)

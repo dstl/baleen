@@ -1,11 +1,16 @@
-/* First created by JCasGen Thu Jan 22 12:33:22 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:22 BST 2019 */
+
 package org.apache.uima.jcas.tcas;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.StringArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.core.utils.IdentityUtils;
 import uk.gov.dstl.baleen.exceptions.BaleenException;
@@ -13,12 +18,20 @@ import uk.gov.dstl.baleen.exceptions.BaleenException;
 /**
  * Overriding the base DocumentAnntation to add additional features. The JCasGen code generated from
  * this annotation replaces the default type in uima-document-annotation.jar (which should be
- * removed from the classpath). Updated by JCasGen Wed Apr 13 13:23:15 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * removed from the classpath). Updated by JCasGen Wed Apr 17 13:42:22 BST 2019 XML source:
+ * types/template_type_system.xml
  *
  * @generated
  */
 public class DocumentAnnotation extends Annotation {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "org.apache.uima.jcas.tcas.DocumentAnnotation";
+
   /**
    * @generated
    * @ordered
@@ -31,7 +44,6 @@ public class DocumentAnnotation extends Annotation {
    */
   @SuppressWarnings("hiding")
   public static final int type = typeIndexID;
-
   /**
    * @generated
    * @return index of the type
@@ -40,6 +52,43 @@ public class DocumentAnnotation extends Annotation {
   public int getTypeIndexID() {
     return typeIndexID;
   }
+
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_language = "language";
+  public static final String _FeatName_docType = "docType";
+  public static final String _FeatName_sourceUri = "sourceUri";
+  public static final String _FeatName_timestamp = "timestamp";
+  public static final String _FeatName_documentClassification = "documentClassification";
+  public static final String _FeatName_documentCaveats = "documentCaveats";
+  public static final String _FeatName_documentReleasability = "documentReleasability";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_language =
+      TypeSystemImpl.createCallSite(DocumentAnnotation.class, "language");
+  private static final MethodHandle _FH_language = _FC_language.dynamicInvoker();
+  private static final CallSite _FC_docType =
+      TypeSystemImpl.createCallSite(DocumentAnnotation.class, "docType");
+  private static final MethodHandle _FH_docType = _FC_docType.dynamicInvoker();
+  private static final CallSite _FC_sourceUri =
+      TypeSystemImpl.createCallSite(DocumentAnnotation.class, "sourceUri");
+  private static final MethodHandle _FH_sourceUri = _FC_sourceUri.dynamicInvoker();
+  private static final CallSite _FC_timestamp =
+      TypeSystemImpl.createCallSite(DocumentAnnotation.class, "timestamp");
+  private static final MethodHandle _FH_timestamp = _FC_timestamp.dynamicInvoker();
+  private static final CallSite _FC_documentClassification =
+      TypeSystemImpl.createCallSite(DocumentAnnotation.class, "documentClassification");
+  private static final MethodHandle _FH_documentClassification =
+      _FC_documentClassification.dynamicInvoker();
+  private static final CallSite _FC_documentCaveats =
+      TypeSystemImpl.createCallSite(DocumentAnnotation.class, "documentCaveats");
+  private static final MethodHandle _FH_documentCaveats = _FC_documentCaveats.dynamicInvoker();
+  private static final CallSite _FC_documentReleasability =
+      TypeSystemImpl.createCallSite(DocumentAnnotation.class, "documentReleasability");
+  private static final MethodHandle _FH_documentReleasability =
+      _FC_documentReleasability.dynamicInvoker();
 
   /**
    * Never called. Disable default constructor
@@ -54,11 +103,11 @@ public class DocumentAnnotation extends Annotation {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public DocumentAnnotation(int addr, TOP_Type type) {
-    super(addr, type);
+  public DocumentAnnotation(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -93,7 +142,7 @@ public class DocumentAnnotation extends Annotation {
    * @generated modifiable
    */
   private void readObject() {
-    /* default - does nothing empty block */
+    /*default - does nothing empty block */
   }
 
   // *--------------*
@@ -106,11 +155,7 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the feature
    */
   public String getLanguage() {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_language == null)
-      jcasType.jcas.throwFeatMissing("language", "uima.tcas.DocumentAnnotation");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_language);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_language));
   }
 
   /**
@@ -120,11 +165,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the feature
    */
   public void setLanguage(String v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_language == null)
-      jcasType.jcas.throwFeatMissing("language", "uima.tcas.DocumentAnnotation");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_language, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_language), v);
   }
 
   // *--------------*
@@ -137,11 +178,7 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the feature
    */
   public String getDocType() {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_docType == null)
-      jcasType.jcas.throwFeatMissing("docType", "uima.tcas.DocumentAnnotation");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_docType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_docType));
   }
 
   /**
@@ -151,11 +188,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the feature
    */
   public void setDocType(String v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_docType == null)
-      jcasType.jcas.throwFeatMissing("docType", "uima.tcas.DocumentAnnotation");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_docType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_docType), v);
   }
 
   // *--------------*
@@ -168,11 +201,7 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the feature
    */
   public String getSourceUri() {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_sourceUri == null)
-      jcasType.jcas.throwFeatMissing("sourceUri", "uima.tcas.DocumentAnnotation");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_sourceUri);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_sourceUri));
   }
 
   /**
@@ -182,11 +211,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the feature
    */
   public void setSourceUri(String v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_sourceUri == null)
-      jcasType.jcas.throwFeatMissing("sourceUri", "uima.tcas.DocumentAnnotation");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_sourceUri, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_sourceUri), v);
   }
 
   // *--------------*
@@ -199,11 +224,7 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the feature
    */
   public long getTimestamp() {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_timestamp == null)
-      jcasType.jcas.throwFeatMissing("timestamp", "uima.tcas.DocumentAnnotation");
-    return jcasType.ll_cas.ll_getLongValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_timestamp);
+    return _getLongValueNc(wrapGetIntCatchException(_FH_timestamp));
   }
 
   /**
@@ -213,11 +234,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the feature
    */
   public void setTimestamp(long v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_timestamp == null)
-      jcasType.jcas.throwFeatMissing("timestamp", "uima.tcas.DocumentAnnotation");
-    jcasType.ll_cas.ll_setLongValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_timestamp, v);
+    _setLongValueNfc(wrapGetIntCatchException(_FH_timestamp), v);
   }
 
   // *--------------*
@@ -230,11 +247,7 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the feature
    */
   public String getDocumentClassification() {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentClassification == null)
-      jcasType.jcas.throwFeatMissing("documentClassification", "uima.tcas.DocumentAnnotation");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentClassification);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_documentClassification));
   }
 
   /**
@@ -244,11 +257,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the feature
    */
   public void setDocumentClassification(String v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentClassification == null)
-      jcasType.jcas.throwFeatMissing("documentClassification", "uima.tcas.DocumentAnnotation");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentClassification, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_documentClassification), v);
   }
 
   // *--------------*
@@ -262,13 +271,7 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the feature
    */
   public StringArray getDocumentCaveats() {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentCaveats == null)
-      jcasType.jcas.throwFeatMissing("documentCaveats", "uima.tcas.DocumentAnnotation");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentCaveats)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_documentCaveats)));
   }
 
   /**
@@ -279,13 +282,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the feature
    */
   public void setDocumentCaveats(StringArray v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentCaveats == null)
-      jcasType.jcas.throwFeatMissing("documentCaveats", "uima.tcas.DocumentAnnotation");
-    jcasType.ll_cas.ll_setRefValue(
-        addr,
-        ((DocumentAnnotation_Type) jcasType).casFeatCode_documentCaveats,
-        jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_documentCaveats), v);
   }
 
   /**
@@ -297,17 +294,8 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the element at index i
    */
   public String getDocumentCaveats(int i) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentCaveats == null)
-      jcasType.jcas.throwFeatMissing("documentCaveats", "uima.tcas.DocumentAnnotation");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentCaveats),
-        i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentCaveats),
-        i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_documentCaveats))))
+        .get(i);
   }
 
   /**
@@ -319,18 +307,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the array
    */
   public void setDocumentCaveats(int i, String v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentCaveats == null)
-      jcasType.jcas.throwFeatMissing("documentCaveats", "uima.tcas.DocumentAnnotation");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentCaveats),
-        i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentCaveats),
-        i,
-        v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_documentCaveats)))).set(i, v);
   }
 
   // *--------------*
@@ -344,13 +321,7 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the feature
    */
   public StringArray getDocumentReleasability() {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentReleasability == null)
-      jcasType.jcas.throwFeatMissing("documentReleasability", "uima.tcas.DocumentAnnotation");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentReleasability)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_documentReleasability)));
   }
 
   /**
@@ -361,13 +332,7 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the feature
    */
   public void setDocumentReleasability(StringArray v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentReleasability == null)
-      jcasType.jcas.throwFeatMissing("documentReleasability", "uima.tcas.DocumentAnnotation");
-    jcasType.ll_cas.ll_setRefValue(
-        addr,
-        ((DocumentAnnotation_Type) jcasType).casFeatCode_documentReleasability,
-        jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_documentReleasability), v);
   }
 
   /**
@@ -379,17 +344,8 @@ public class DocumentAnnotation extends Annotation {
    * @return value of the element at index i
    */
   public String getDocumentReleasability(int i) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentReleasability == null)
-      jcasType.jcas.throwFeatMissing("documentReleasability", "uima.tcas.DocumentAnnotation");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentReleasability),
-        i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentReleasability),
-        i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_documentReleasability))))
+        .get(i);
   }
 
   /**
@@ -401,19 +357,10 @@ public class DocumentAnnotation extends Annotation {
    * @param v value to set into the array
    */
   public void setDocumentReleasability(int i, String v) {
-    if (DocumentAnnotation_Type.featOkTst
-        && ((DocumentAnnotation_Type) jcasType).casFeat_documentReleasability == null)
-      jcasType.jcas.throwFeatMissing("documentReleasability", "uima.tcas.DocumentAnnotation");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentReleasability),
-        i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((DocumentAnnotation_Type) jcasType).casFeatCode_documentReleasability),
-        i,
-        v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_documentReleasability))))
+        .set(i, v);
   }
+
   /** Get hash of current document text */
   public String getHash() {
     try {

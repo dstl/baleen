@@ -1,22 +1,34 @@
-/* First created by JCasGen Tue Feb 03 15:26:49 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:42 BST 2019 */
+
 package uk.gov.dstl.baleen.types.common;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.StringArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
  * User-defined key phrases or domain-specific terms, described by a type property. Updated by
- * JCasGen Wed Apr 13 13:23:15 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * JCasGen Wed Apr 17 13:41:42 BST 2019 XML source: types/common_type_system.xml
  *
  * @generated
  */
 public class Buzzword extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.common.Buzzword";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +50,16 @@ public class Buzzword extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_tags = "tags";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_tags = TypeSystemImpl.createCallSite(Buzzword.class, "tags");
+  private static final MethodHandle _FH_tags = _FC_tags.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +73,11 @@ public class Buzzword extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Buzzword(int addr, TOP_Type type) {
-    super(addr, type);
+  public Buzzword(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,11 +125,7 @@ public class Buzzword extends Entity {
    * @return value of the feature
    */
   public StringArray getTags() {
-    if (Buzzword_Type.featOkTst && ((Buzzword_Type) jcasType).casFeat_tags == null)
-      jcasType.jcas.throwFeatMissing("tags", "uk.gov.dstl.baleen.types.common.Buzzword");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Buzzword_Type) jcasType).casFeatCode_tags)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_tags)));
   }
 
   /**
@@ -117,10 +135,7 @@ public class Buzzword extends Entity {
    * @param v value to set into the feature
    */
   public void setTags(StringArray v) {
-    if (Buzzword_Type.featOkTst && ((Buzzword_Type) jcasType).casFeat_tags == null)
-      jcasType.jcas.throwFeatMissing("tags", "uk.gov.dstl.baleen.types.common.Buzzword");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Buzzword_Type) jcasType).casFeatCode_tags, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_tags), v);
   }
 
   /**
@@ -132,12 +147,7 @@ public class Buzzword extends Entity {
    * @return value of the element at index i
    */
   public String getTags(int i) {
-    if (Buzzword_Type.featOkTst && ((Buzzword_Type) jcasType).casFeat_tags == null)
-      jcasType.jcas.throwFeatMissing("tags", "uk.gov.dstl.baleen.types.common.Buzzword");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Buzzword_Type) jcasType).casFeatCode_tags), i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Buzzword_Type) jcasType).casFeatCode_tags), i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_tags)))).get(i);
   }
 
   /**
@@ -149,11 +159,6 @@ public class Buzzword extends Entity {
    * @param v value to set into the array
    */
   public void setTags(int i, String v) {
-    if (Buzzword_Type.featOkTst && ((Buzzword_Type) jcasType).casFeat_tags == null)
-      jcasType.jcas.throwFeatMissing("tags", "uk.gov.dstl.baleen.types.common.Buzzword");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Buzzword_Type) jcasType).casFeatCode_tags), i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Buzzword_Type) jcasType).casFeatCode_tags), i, v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_tags)))).set(i, v);
   }
 }

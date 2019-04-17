@@ -38,7 +38,7 @@ public class TopicModelTest extends AbstractAnnotatorTest {
   @Test
   public void testSingleFileToTopic() throws Exception {
     ExternalResourceDescription stopWordsErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             TopicModelTrainer.KEY_STOPWORDS, SharedStopwordResource.class);
 
     jCas.setDocumentText("Baleen is amazing!.");

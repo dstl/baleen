@@ -30,7 +30,7 @@ public class NationalityToLocationTest extends AnnotatorTestBase {
     super.beforeTest();
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "country", SharedCountryResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(NationalityToLocation.class, "country", erd);

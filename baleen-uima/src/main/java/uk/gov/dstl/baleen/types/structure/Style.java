@@ -1,21 +1,32 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:16 BST 2019 */
 
-/* First created by JCasGen Fri Oct 14 12:12:15 BST 2016 */
 package uk.gov.dstl.baleen.types.structure;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.StringArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
- * To capture the style applied to a span of text. Updated by JCasGen Thu Dec 22 22:42:18 CET 2016
- * XML source:
- * /Users/chrisflatley/Projects/railroad/baleen/baleen/baleen-uima/src/main/resources/types/structure_type_system.xml
+ * To capture the style applied to a span of text. Updated by JCasGen Wed Apr 17 13:42:16 BST 2019
+ * XML source: types/structure_type_system.xml
  *
  * @generated
  */
 public class Style extends Structure {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.structure.Style";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +48,26 @@ public class Style extends Structure {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_font = "font";
+  public static final String _FeatName_color = "color";
+  public static final String _FeatName_decoration = "decoration";
+  public static final String _FeatName_size = "size";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_font = TypeSystemImpl.createCallSite(Style.class, "font");
+  private static final MethodHandle _FH_font = _FC_font.dynamicInvoker();
+  private static final CallSite _FC_color = TypeSystemImpl.createCallSite(Style.class, "color");
+  private static final MethodHandle _FH_color = _FC_color.dynamicInvoker();
+  private static final CallSite _FC_decoration =
+      TypeSystemImpl.createCallSite(Style.class, "decoration");
+  private static final MethodHandle _FH_decoration = _FC_decoration.dynamicInvoker();
+  private static final CallSite _FC_size = TypeSystemImpl.createCallSite(Style.class, "size");
+  private static final MethodHandle _FH_size = _FC_size.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +81,11 @@ public class Style extends Structure {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Style(int addr, TOP_Type type) {
-    super(addr, type);
+  public Style(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,9 +133,7 @@ public class Style extends Structure {
    * @return value of the feature
    */
   public String getFont() {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_font == null)
-      jcasType.jcas.throwFeatMissing("font", "uk.gov.dstl.baleen.types.structure.Style");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Style_Type) jcasType).casFeatCode_font);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_font));
   }
 
   /**
@@ -114,9 +143,7 @@ public class Style extends Structure {
    * @param v value to set into the feature
    */
   public void setFont(String v) {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_font == null)
-      jcasType.jcas.throwFeatMissing("font", "uk.gov.dstl.baleen.types.structure.Style");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Style_Type) jcasType).casFeatCode_font, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_font), v);
   }
 
   // *--------------*
@@ -129,9 +156,7 @@ public class Style extends Structure {
    * @return value of the feature
    */
   public String getColor() {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_color == null)
-      jcasType.jcas.throwFeatMissing("color", "uk.gov.dstl.baleen.types.structure.Style");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Style_Type) jcasType).casFeatCode_color);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_color));
   }
 
   /**
@@ -141,9 +166,7 @@ public class Style extends Structure {
    * @param v value to set into the feature
    */
   public void setColor(String v) {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_color == null)
-      jcasType.jcas.throwFeatMissing("color", "uk.gov.dstl.baleen.types.structure.Style");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Style_Type) jcasType).casFeatCode_color, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_color), v);
   }
 
   // *--------------*
@@ -157,11 +180,7 @@ public class Style extends Structure {
    * @return value of the feature
    */
   public StringArray getDecoration() {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_decoration == null)
-      jcasType.jcas.throwFeatMissing("decoration", "uk.gov.dstl.baleen.types.structure.Style");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Style_Type) jcasType).casFeatCode_decoration)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_decoration)));
   }
 
   /**
@@ -172,44 +191,31 @@ public class Style extends Structure {
    * @param v value to set into the feature
    */
   public void setDecoration(StringArray v) {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_decoration == null)
-      jcasType.jcas.throwFeatMissing("decoration", "uk.gov.dstl.baleen.types.structure.Style");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Style_Type) jcasType).casFeatCode_decoration, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_decoration), v);
   }
 
   /**
    * indexed getter for decoration - gets an indexed value - Decoration applied to the text. For
-   * example, [italic, bold, underline].
+   * example, [italic, bold, underline, strikethrough, small, superscript, subscript].
    *
    * @generated
    * @param i index in the array to get
    * @return value of the element at index i
    */
   public String getDecoration(int i) {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_decoration == null)
-      jcasType.jcas.throwFeatMissing("decoration", "uk.gov.dstl.baleen.types.structure.Style");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Style_Type) jcasType).casFeatCode_decoration), i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Style_Type) jcasType).casFeatCode_decoration), i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_decoration)))).get(i);
   }
 
   /**
    * indexed setter for decoration - sets an indexed value - Decoration applied to the text. For
-   * example, [italic, bold, underline].
+   * example, [italic, bold, underline, strikethrough, small, superscript, subscript].
    *
    * @generated
    * @param i index in the array to set
    * @param v value to set into the array
    */
   public void setDecoration(int i, String v) {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_decoration == null)
-      jcasType.jcas.throwFeatMissing("decoration", "uk.gov.dstl.baleen.types.structure.Style");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Style_Type) jcasType).casFeatCode_decoration), i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Style_Type) jcasType).casFeatCode_decoration), i, v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_decoration)))).set(i, v);
   }
 
   // *--------------*
@@ -222,9 +228,7 @@ public class Style extends Structure {
    * @return value of the feature
    */
   public String getSize() {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_size == null)
-      jcasType.jcas.throwFeatMissing("size", "uk.gov.dstl.baleen.types.structure.Style");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Style_Type) jcasType).casFeatCode_size);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_size));
   }
 
   /**
@@ -234,8 +238,6 @@ public class Style extends Structure {
    * @param v value to set into the feature
    */
   public void setSize(String v) {
-    if (Style_Type.featOkTst && ((Style_Type) jcasType).casFeat_size == null)
-      jcasType.jcas.throwFeatMissing("size", "uk.gov.dstl.baleen.types.structure.Style");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Style_Type) jcasType).casFeatCode_size, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_size), v);
   }
 }

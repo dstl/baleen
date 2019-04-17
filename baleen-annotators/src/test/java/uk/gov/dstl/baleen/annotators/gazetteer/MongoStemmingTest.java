@@ -53,7 +53,7 @@ public class MongoStemmingTest extends AbstractAnnotatorTest {
   @BeforeClass
   public static void setup() throws JsonProcessingException {
     erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO,
             SharedFongoResource.class,
             FONGO_COLLECTION,

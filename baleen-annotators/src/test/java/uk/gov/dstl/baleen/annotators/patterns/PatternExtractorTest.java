@@ -31,7 +31,7 @@ public class PatternExtractorTest extends AnnotatorTestBase {
     super.beforeTest();
 
     ExternalResourceDescription stopwordsDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             PatternExtractor.KEY_STOPWORDS, SharedStopwordResource.class);
 
     final AnalysisEngineDescription desc =

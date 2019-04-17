@@ -1,19 +1,31 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:16 BST 2019 */
 
-/* First created by JCasGen Thu Oct 13 13:31:25 BST 2016 */
 package uk.gov.dstl.baleen.types.structure;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
- * A caption of a Figure. Updated by JCasGen Thu Dec 22 22:42:17 CET 2016 XML source:
- * /Users/chrisflatley/Projects/railroad/baleen/baleen/baleen-uima/src/main/resources/types/structure_type_system.xml
+ * A caption of a Figure. Updated by JCasGen Wed Apr 17 13:42:16 BST 2019 XML source:
+ * types/structure_type_system.xml
  *
  * @generated
  */
 public class Caption extends Structure {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.structure.Caption";
+
   /**
    * @generated
    * @ordered
@@ -35,6 +47,16 @@ public class Caption extends Structure {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_figure = "figure";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_figure = TypeSystemImpl.createCallSite(Caption.class, "figure");
+  private static final MethodHandle _FH_figure = _FC_figure.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -48,11 +70,11 @@ public class Caption extends Structure {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Caption(int addr, TOP_Type type) {
-    super(addr, type);
+  public Caption(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -100,11 +122,7 @@ public class Caption extends Structure {
    * @return value of the feature
    */
   public Figure getFigure() {
-    if (Caption_Type.featOkTst && ((Caption_Type) jcasType).casFeat_figure == null)
-      jcasType.jcas.throwFeatMissing("figure", "uk.gov.dstl.baleen.types.structure.Caption");
-    return (Figure)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Caption_Type) jcasType).casFeatCode_figure)));
+    return (Figure) (_getFeatureValueNc(wrapGetIntCatchException(_FH_figure)));
   }
 
   /**
@@ -114,9 +132,6 @@ public class Caption extends Structure {
    * @param v value to set into the feature
    */
   public void setFigure(Figure v) {
-    if (Caption_Type.featOkTst && ((Caption_Type) jcasType).casFeat_figure == null)
-      jcasType.jcas.throwFeatMissing("figure", "uk.gov.dstl.baleen.types.structure.Caption");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Caption_Type) jcasType).casFeatCode_figure, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_figure), v);
   }
 }

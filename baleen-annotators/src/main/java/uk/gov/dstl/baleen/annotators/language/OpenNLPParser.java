@@ -2,10 +2,7 @@
 // Modified by Committed Software Copy 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.language;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import opennlp.tools.parser.*;
 import opennlp.tools.util.Span;
@@ -100,7 +97,7 @@ public class OpenNLPParser extends BaleenAnnotator {
     // For each sentence (in the JCas)e, we recreate the spans from our
     // WordTokens.
 
-    final Map<Sentence, Collection<WordToken>> sentences =
+    final Map<Sentence, List<WordToken>> sentences =
         JCasUtil.indexCovered(jCas, Sentence.class, WordToken.class);
 
     sentences

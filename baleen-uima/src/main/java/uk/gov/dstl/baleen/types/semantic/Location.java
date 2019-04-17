@@ -1,20 +1,32 @@
-/* First created by JCasGen Wed Jan 21 11:22:53 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.semantic;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
  * A reference to a place, country, administrative region or geo-political entity within the source
  * document. This is a general purpose type that is extended in "geo" types. Updated by JCasGen Wed
- * Apr 13 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Apr 17 13:42:08 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class Location extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.semantic.Location";
+
   /**
    * @generated
    * @ordered
@@ -36,6 +48,17 @@ public class Location extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_geoJson = "geoJson";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_geoJson =
+      TypeSystemImpl.createCallSite(Location.class, "geoJson");
+  private static final MethodHandle _FH_geoJson = _FC_geoJson.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -49,11 +72,11 @@ public class Location extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Location(int addr, TOP_Type type) {
-    super(addr, type);
+  public Location(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,9 +125,7 @@ public class Location extends Entity {
    * @return value of the feature
    */
   public String getGeoJson() {
-    if (Location_Type.featOkTst && ((Location_Type) jcasType).casFeat_geoJson == null)
-      jcasType.jcas.throwFeatMissing("geoJson", "uk.gov.dstl.baleen.types.semantic.Location");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Location_Type) jcasType).casFeatCode_geoJson);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_geoJson));
   }
 
   /**
@@ -115,8 +136,6 @@ public class Location extends Entity {
    * @param v value to set into the feature
    */
   public void setGeoJson(String v) {
-    if (Location_Type.featOkTst && ((Location_Type) jcasType).casFeat_geoJson == null)
-      jcasType.jcas.throwFeatMissing("geoJson", "uk.gov.dstl.baleen.types.semantic.Location");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Location_Type) jcasType).casFeatCode_geoJson, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_geoJson), v);
   }
 }

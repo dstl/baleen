@@ -95,6 +95,6 @@ public class TemplateFieldToEntityAnnnotatorTest extends AbstractAnnotatorTest {
         "report",
         TemplateFieldToEntityAnnotator.PARAM_SOURCE,
         "ketchup");
-    assertFalse(JCasUtil.iterator(jCas, Person.class).hasNext());
+    assertFalse(JCasUtil.select(jCas, Person.class).iterator().hasNext());
   }
 }

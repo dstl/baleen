@@ -30,7 +30,7 @@ public class AssignTypeToInteractionTest extends AbstractAnnotatorTest {
   @BeforeClass
   public static void before() {
     fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "mongo",
             SharedFongoResource.class,
             "fongo.collection",

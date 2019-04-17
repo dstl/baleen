@@ -1,8 +1,8 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.interactions;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -21,7 +21,7 @@ public class RemoveInteractionInEntities extends BaleenAnnotator {
 
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-    Map<Interaction, Collection<Entity>> covering =
+    Map<Interaction, List<Entity>> covering =
         JCasUtil.indexCovering(jCas, Interaction.class, Entity.class);
 
     removeFromJCasIndex(covering.keySet());

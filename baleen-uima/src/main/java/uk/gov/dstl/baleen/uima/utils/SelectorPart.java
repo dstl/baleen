@@ -4,7 +4,7 @@ package uk.gov.dstl.baleen.uima.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /** Class to represent part of a selector (eg between the &gt; operator). */
 public class SelectorPart {
@@ -27,7 +27,7 @@ public class SelectorPart {
   /**
    * Instantiates a new selector part.
    *
-   * @param structureType the structure type
+   * @param type the structure type
    */
   public SelectorPart(Class<?> type) {
     this(type, null);

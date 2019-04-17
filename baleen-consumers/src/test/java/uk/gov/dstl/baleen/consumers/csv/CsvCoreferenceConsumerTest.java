@@ -27,7 +27,7 @@ import uk.gov.dstl.baleen.types.semantic.ReferenceTarget;
 public class CsvCoreferenceConsumerTest extends AbstractAnnotatorTest {
 
   ExternalResourceDescription stopwordsDesc =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           Coreference.KEY_STOPWORDS, SharedStopwordResource.class);
 
   public CsvCoreferenceConsumerTest() {

@@ -45,7 +45,7 @@ public class EntityLinkingAnnotatorTest extends AbstractAnnotatorTest {
   public void setup() throws ResourceInitializationException {
 
     stopwords =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             EntityLinkingAnnotator.KEY_STOPWORDS, SharedStopwordResource.class);
 
     Set<EntityInformation<Person>> entityInformationSet = new HashSet<>();

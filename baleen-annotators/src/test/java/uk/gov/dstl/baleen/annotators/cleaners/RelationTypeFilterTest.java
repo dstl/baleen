@@ -30,7 +30,7 @@ public class RelationTypeFilterTest extends AbstractAnnotatorTest {
   @Before
   public void before() {
     fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "mongo",
             SharedFongoResource.class,
             "fongo.collection",

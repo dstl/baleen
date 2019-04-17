@@ -1,10 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.relations;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -17,11 +14,7 @@ import com.google.common.collect.Multimap;
 
 import uk.gov.dstl.baleen.annotators.relations.helpers.AbstractInteractionBasedRelationshipAnnotator;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
-import uk.gov.dstl.baleen.types.language.Dependency;
-import uk.gov.dstl.baleen.types.language.Interaction;
-import uk.gov.dstl.baleen.types.language.PhraseChunk;
-import uk.gov.dstl.baleen.types.language.Sentence;
-import uk.gov.dstl.baleen.types.language.WordToken;
+import uk.gov.dstl.baleen.types.language.*;
 import uk.gov.dstl.baleen.types.semantic.Entity;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.uima.grammar.DependencyGraph;
@@ -94,11 +87,11 @@ public class UbmreDependency extends AbstractInteractionBasedRelationshipAnnotat
   @Override
   protected void extract(JCas jCas) {
 
-    final Map<WordToken, Collection<Interaction>> tokenToInteraction =
+    final Map<WordToken, List<Interaction>> tokenToInteraction =
         JCasUtil.indexCovered(jCas, WordToken.class, Interaction.class);
-    final Map<Entity, Collection<Dependency>> entityToDependency =
+    final Map<Entity, List<Dependency>> entityToDependency =
         JCasUtil.indexCovered(jCas, Entity.class, Dependency.class);
-    final Map<Interaction, Collection<WordToken>> interactionToDependencies =
+    final Map<Interaction, List<WordToken>> interactionToDependencies =
         JCasUtil.indexCovered(jCas, Interaction.class, WordToken.class);
 
     final Collection<Entity> entities = JCasUtil.select(jCas, Entity.class);
@@ -158,7 +151,7 @@ public class UbmreDependency extends AbstractInteractionBasedRelationshipAnnotat
    * @return the traverse predicate
    */
   private TraversePredicate traverseToVerb(
-      final Map<WordToken, Collection<Interaction>> tokenToInteraction,
+      final Map<WordToken, List<Interaction>> tokenToInteraction,
       final Multimap<Interaction, Entity> interactionToEntities,
       final Entity entity) {
     return (d, f, t, h) -> {

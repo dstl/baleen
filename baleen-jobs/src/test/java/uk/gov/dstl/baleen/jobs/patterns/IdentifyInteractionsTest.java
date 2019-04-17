@@ -31,7 +31,7 @@ public class IdentifyInteractionsTest extends AbstractBaleenTaskTest {
   @Before
   public void before() {
     fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "mongo",
             SharedFongoResource.class,
             "fongo.collection",
@@ -40,7 +40,7 @@ public class IdentifyInteractionsTest extends AbstractBaleenTaskTest {
             "[ { \"_id\":\"1\", \"words\": [ { \"lemma\":\"went\", \"pos\":\"VERB\"}], \"source\":{\"type\":\"Person\"}, \"target\":{\"type\":\"Location\"}}, { \"_id\":\"2\", \"words\": [ { \"lemma\":\"went\", \"pos\":\"VERB\"}, { \"lemma\":\"after\", \"pos\":\"VERB\"} ], \"source\":{ \"type\":\"Person\" }, \"target\":{\"type\":\"Person\" } } ]");
 
     wordnetErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "wordnet", SharedWordNetResource.class);
   }
 

@@ -1,24 +1,35 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
 
-/* First created by JCasGen Tue Apr 12 12:06:25 BST 2016 */
 package uk.gov.dstl.baleen.types.language;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.FSArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * The text pattern between two annotations (usually entities) which has been processed to be more
- * meaningful than simply the covered text between them Updated by JCasGen Wed Apr 13 13:23:16 BST
- * 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * meaningful than simply the covered text between them Updated by JCasGen Wed Apr 17 13:42:08 BST
+ * 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class Pattern extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.language.Pattern";
+
   /**
    * @generated
    * @ordered
@@ -40,6 +51,22 @@ public class Pattern extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_source = "source";
+  public static final String _FeatName_target = "target";
+  public static final String _FeatName_words = "words";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_source = TypeSystemImpl.createCallSite(Pattern.class, "source");
+  private static final MethodHandle _FH_source = _FC_source.dynamicInvoker();
+  private static final CallSite _FC_target = TypeSystemImpl.createCallSite(Pattern.class, "target");
+  private static final MethodHandle _FH_target = _FC_target.dynamicInvoker();
+  private static final CallSite _FC_words = TypeSystemImpl.createCallSite(Pattern.class, "words");
+  private static final MethodHandle _FH_words = _FC_words.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -53,11 +80,11 @@ public class Pattern extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Pattern(int addr, TOP_Type type) {
-    super(addr, type);
+  public Pattern(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -105,11 +132,7 @@ public class Pattern extends Base {
    * @return value of the feature
    */
   public Base getSource() {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.language.Pattern");
-    return (Base)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Pattern_Type) jcasType).casFeatCode_source)));
+    return (Base) (_getFeatureValueNc(wrapGetIntCatchException(_FH_source)));
   }
 
   /**
@@ -119,10 +142,7 @@ public class Pattern extends Base {
    * @param v value to set into the feature
    */
   public void setSource(Base v) {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.language.Pattern");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Pattern_Type) jcasType).casFeatCode_source, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_source), v);
   }
 
   // *--------------*
@@ -135,11 +155,7 @@ public class Pattern extends Base {
    * @return value of the feature
    */
   public Base getTarget() {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_target == null)
-      jcasType.jcas.throwFeatMissing("target", "uk.gov.dstl.baleen.types.language.Pattern");
-    return (Base)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Pattern_Type) jcasType).casFeatCode_target)));
+    return (Base) (_getFeatureValueNc(wrapGetIntCatchException(_FH_target)));
   }
 
   /**
@@ -149,10 +165,7 @@ public class Pattern extends Base {
    * @param v value to set into the feature
    */
   public void setTarget(Base v) {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_target == null)
-      jcasType.jcas.throwFeatMissing("target", "uk.gov.dstl.baleen.types.language.Pattern");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Pattern_Type) jcasType).casFeatCode_target, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_target), v);
   }
 
   // *--------------*
@@ -165,11 +178,7 @@ public class Pattern extends Base {
    * @return value of the feature
    */
   public FSArray getWords() {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_words == null)
-      jcasType.jcas.throwFeatMissing("words", "uk.gov.dstl.baleen.types.language.Pattern");
-    return (FSArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Pattern_Type) jcasType).casFeatCode_words)));
+    return (FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_words)));
   }
 
   /**
@@ -179,10 +188,7 @@ public class Pattern extends Base {
    * @param v value to set into the feature
    */
   public void setWords(FSArray v) {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_words == null)
-      jcasType.jcas.throwFeatMissing("words", "uk.gov.dstl.baleen.types.language.Pattern");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Pattern_Type) jcasType).casFeatCode_words, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_words), v);
   }
 
   /**
@@ -194,15 +200,8 @@ public class Pattern extends Base {
    * @return value of the element at index i
    */
   public WordToken getWords(int i) {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_words == null)
-      jcasType.jcas.throwFeatMissing("words", "uk.gov.dstl.baleen.types.language.Pattern");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Pattern_Type) jcasType).casFeatCode_words), i);
     return (WordToken)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefArrayValue(
-                jcasType.ll_cas.ll_getRefValue(addr, ((Pattern_Type) jcasType).casFeatCode_words),
-                i)));
+        (((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_words)))).get(i));
   }
 
   /**
@@ -214,13 +213,6 @@ public class Pattern extends Base {
    * @param v value to set into the array
    */
   public void setWords(int i, WordToken v) {
-    if (Pattern_Type.featOkTst && ((Pattern_Type) jcasType).casFeat_words == null)
-      jcasType.jcas.throwFeatMissing("words", "uk.gov.dstl.baleen.types.language.Pattern");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Pattern_Type) jcasType).casFeatCode_words), i);
-    jcasType.ll_cas.ll_setRefArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Pattern_Type) jcasType).casFeatCode_words),
-        i,
-        jcasType.ll_cas.ll_getFSRef(v));
+    ((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_words)))).set(i, v);
   }
 }

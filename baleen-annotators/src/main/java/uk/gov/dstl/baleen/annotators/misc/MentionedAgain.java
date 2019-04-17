@@ -56,8 +56,8 @@ public class MentionedAgain extends BaleenTextAwareAnnotator {
     list.stream()
         .forEach(
             e -> {
-              existingSpans.add(e.getBegin() + "//" + e.getEnd() + "//" + e.getTypeName());
-              if (existingEntities.add(e.getTypeName() + "//" + e.getValue())) {
+              existingSpans.add(e.getBegin() + "//" + e.getEnd() + "//" + e.getType().getName());
+              if (existingEntities.add(e.getType().getName() + "//" + e.getValue())) {
                 // Only add entities of a new type and value
                 entities.add(e);
               }
@@ -81,8 +81,8 @@ public class MentionedAgain extends BaleenTextAwareAnnotator {
   }
 
   private void foundMatch(TextBlock block, Matcher matcher, Entity e, Set<String> existingSpans) {
-    if (existingSpans.contains(matcher.start() + "//" + matcher.end() + "//" + e.getTypeName()))
-      return;
+    if (existingSpans.contains(
+        matcher.start() + "//" + matcher.end() + "//" + e.getType().getName())) return;
 
     try {
       Entity newEntity = e.getClass().getConstructor(JCas.class).newInstance(block.getJCas());

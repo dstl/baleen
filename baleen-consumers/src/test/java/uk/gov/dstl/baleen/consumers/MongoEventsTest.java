@@ -56,7 +56,7 @@ public class MongoEventsTest extends ConsumerTestBase {
     // Create a description of an external resource - a fongo instance, in the same way we would
     // have created a shared mongo resource
     erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO, SharedFongoResource.class, "fongo.collection", "test", "fongo.data", "[]");
   }
 

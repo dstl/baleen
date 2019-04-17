@@ -4,12 +4,7 @@ package uk.gov.dstl.baleen.uima.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.apache.uima.UIMAException;
@@ -98,8 +93,8 @@ public class ReferentUtilsTest {
     // NB: HashMultimap doesn't preserve the order of elements, so testing for exact elements may
     // fail.
     // Instead, we'll just check the type here.
-    assertEquals(chris.getTypeName(), map.get(chrisRT).getTypeName());
-    assertEquals(london.getTypeName(), map.get(londonRT).getTypeName());
+    assertEquals(chris.getType().getName(), map.get(chrisRT).getType().getName());
+    assertEquals(london.getType().getName(), map.get(londonRT).getType().getName());
   }
 
   @Test

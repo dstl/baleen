@@ -1,11 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.common.structure;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -20,19 +16,7 @@ import com.google.common.collect.Sets;
 
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.language.Text;
-import uk.gov.dstl.baleen.types.structure.Aside;
-import uk.gov.dstl.baleen.types.structure.Caption;
-import uk.gov.dstl.baleen.types.structure.DefinitionDescription;
-import uk.gov.dstl.baleen.types.structure.DefinitionItem;
-import uk.gov.dstl.baleen.types.structure.Details;
-import uk.gov.dstl.baleen.types.structure.Heading;
-import uk.gov.dstl.baleen.types.structure.ListItem;
-import uk.gov.dstl.baleen.types.structure.Paragraph;
-import uk.gov.dstl.baleen.types.structure.Preformatted;
-import uk.gov.dstl.baleen.types.structure.Quotation;
-import uk.gov.dstl.baleen.types.structure.Structure;
-import uk.gov.dstl.baleen.types.structure.Summary;
-import uk.gov.dstl.baleen.types.structure.TableCell;
+import uk.gov.dstl.baleen.types.structure.*;
 import uk.gov.dstl.baleen.uima.BaleenAnnotator;
 import uk.gov.dstl.baleen.uima.utils.StructureUtil;
 
@@ -133,7 +117,7 @@ public class TextBlocks extends BaleenAnnotator {
           .forEach(this::addToJCasIndex);
 
       // Now remove any that cover others, so we keep only biggest/most detailed as per request
-      final Map<Text, Collection<Text>> cover;
+      final Map<Text, List<Text>> cover;
       if (keepSmallest) {
         cover = JCasUtil.indexCovering(jCas, Text.class, Text.class);
       } else {

@@ -49,7 +49,7 @@ public class ElasticsearchTemplateRecordConsumerTest extends AbstractTemplateRec
     elasticsearch = new EmbeddedElasticsearch5();
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             RESOURCE_KEY,
             SharedElasticsearchRestResource.class,
             PARAM_URL,

@@ -1,21 +1,29 @@
-/* First created by JCasGen Wed Jan 14 12:58:18 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.language;
 
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
- * Defines a sentence from the source document. Updated by JCasGen Wed Apr 13 13:23:16 BST 2016 XML
- * source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Defines a sentence from the source document. Updated by JCasGen Wed Apr 17 13:42:08 BST 2019 XML
+ * source: types/military_type_system.xml
  *
  * @generated
  */
 public class Sentence extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.language.Sentence";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +45,12 @@ public class Sentence extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  /* Feature Adjusted Offsets */
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +64,11 @@ public class Sentence extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Sentence(int addr, TOP_Type type) {
-    super(addr, type);
+  public Sentence(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 

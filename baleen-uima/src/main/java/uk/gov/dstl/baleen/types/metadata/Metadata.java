@@ -1,20 +1,33 @@
-/* First created by JCasGen Tue Feb 03 15:17:25 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:56 BST 2019 */
+
 package uk.gov.dstl.baleen.types.metadata;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
 /**
- * Metadata associated with the document Updated by JCasGen Tue Apr 12 12:06:57 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/metadata_type_system.xml
+ * Metadata associated with the document Updated by JCasGen Wed Apr 17 13:41:56 BST 2019 XML source:
+ * types/metadata_type_system.xml
  *
  * @generated
  */
 public class Metadata extends BaleenAnnotation {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.metadata.Metadata";
+
   /**
    * @generated
    * @ordered
@@ -36,6 +49,19 @@ public class Metadata extends BaleenAnnotation {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_key = "key";
+  public static final String _FeatName_value = "value";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_key = TypeSystemImpl.createCallSite(Metadata.class, "key");
+  private static final MethodHandle _FH_key = _FC_key.dynamicInvoker();
+  private static final CallSite _FC_value = TypeSystemImpl.createCallSite(Metadata.class, "value");
+  private static final MethodHandle _FH_value = _FC_value.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -49,11 +75,11 @@ public class Metadata extends BaleenAnnotation {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Metadata(int addr, TOP_Type type) {
-    super(addr, type);
+  public Metadata(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -101,9 +127,7 @@ public class Metadata extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getKey() {
-    if (Metadata_Type.featOkTst && ((Metadata_Type) jcasType).casFeat_key == null)
-      jcasType.jcas.throwFeatMissing("key", "uk.gov.dstl.baleen.types.metadata.Metadata");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Metadata_Type) jcasType).casFeatCode_key);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_key));
   }
 
   /**
@@ -113,9 +137,7 @@ public class Metadata extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setKey(String v) {
-    if (Metadata_Type.featOkTst && ((Metadata_Type) jcasType).casFeat_key == null)
-      jcasType.jcas.throwFeatMissing("key", "uk.gov.dstl.baleen.types.metadata.Metadata");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Metadata_Type) jcasType).casFeatCode_key, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_key), v);
   }
 
   // *--------------*
@@ -128,9 +150,7 @@ public class Metadata extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getValue() {
-    if (Metadata_Type.featOkTst && ((Metadata_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.metadata.Metadata");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Metadata_Type) jcasType).casFeatCode_value);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_value));
   }
 
   /**
@@ -140,8 +160,6 @@ public class Metadata extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setValue(String v) {
-    if (Metadata_Type.featOkTst && ((Metadata_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.metadata.Metadata");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Metadata_Type) jcasType).casFeatCode_value, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_value), v);
   }
 }

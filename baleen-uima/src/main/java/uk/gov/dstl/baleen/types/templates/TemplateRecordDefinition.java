@@ -1,23 +1,35 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:22 BST 2019 */
 
-/* First created by JCasGen Tue Apr 18 12:23:04 BST 2017 */
 package uk.gov.dstl.baleen.types.templates;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * Beginning / end marker of a record (multiple fields) in a template document, used to create
- * record definitions for subsequent annotation of real documents. Updated by JCasGen Tue Apr 18
- * 12:23:04 BST 2017 XML source:
- * /Users/stuarthendren/git/tenode/baleen/baleen/baleen-uima/src/main/resources/types/template_type_system.xml
+ * record definitions for subsequent annotation of real documents. Updated by JCasGen Wed Apr 17
+ * 13:42:22 BST 2019 XML source: types/template_type_system.xml
  *
  * @generated
  */
 public class TemplateRecordDefinition extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName =
+      "uk.gov.dstl.baleen.types.templates.TemplateRecordDefinition";
+
   /**
    * @generated
    * @ordered
@@ -39,6 +51,21 @@ public class TemplateRecordDefinition extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_name = "name";
+  public static final String _FeatName_repeat = "repeat";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_name =
+      TypeSystemImpl.createCallSite(TemplateRecordDefinition.class, "name");
+  private static final MethodHandle _FH_name = _FC_name.dynamicInvoker();
+  private static final CallSite _FC_repeat =
+      TypeSystemImpl.createCallSite(TemplateRecordDefinition.class, "repeat");
+  private static final MethodHandle _FH_repeat = _FC_repeat.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -52,11 +79,11 @@ public class TemplateRecordDefinition extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public TemplateRecordDefinition(int addr, TOP_Type type) {
-    super(addr, type);
+  public TemplateRecordDefinition(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -104,12 +131,7 @@ public class TemplateRecordDefinition extends Base {
    * @return value of the feature
    */
   public String getName() {
-    if (TemplateRecordDefinition_Type.featOkTst
-        && ((TemplateRecordDefinition_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing(
-          "name", "uk.gov.dstl.baleen.types.templates.TemplateRecordDefinition");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateRecordDefinition_Type) jcasType).casFeatCode_name);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_name));
   }
 
   /**
@@ -119,12 +141,7 @@ public class TemplateRecordDefinition extends Base {
    * @param v value to set into the feature
    */
   public void setName(String v) {
-    if (TemplateRecordDefinition_Type.featOkTst
-        && ((TemplateRecordDefinition_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing(
-          "name", "uk.gov.dstl.baleen.types.templates.TemplateRecordDefinition");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((TemplateRecordDefinition_Type) jcasType).casFeatCode_name, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_name), v);
   }
 
   // *--------------*
@@ -138,12 +155,7 @@ public class TemplateRecordDefinition extends Base {
    * @return value of the feature
    */
   public boolean getRepeat() {
-    if (TemplateRecordDefinition_Type.featOkTst
-        && ((TemplateRecordDefinition_Type) jcasType).casFeat_repeat == null)
-      jcasType.jcas.throwFeatMissing(
-          "repeat", "uk.gov.dstl.baleen.types.templates.TemplateRecordDefinition");
-    return jcasType.ll_cas.ll_getBooleanValue(
-        addr, ((TemplateRecordDefinition_Type) jcasType).casFeatCode_repeat);
+    return _getBooleanValueNc(wrapGetIntCatchException(_FH_repeat));
   }
 
   /**
@@ -154,11 +166,6 @@ public class TemplateRecordDefinition extends Base {
    * @param v value to set into the feature
    */
   public void setRepeat(boolean v) {
-    if (TemplateRecordDefinition_Type.featOkTst
-        && ((TemplateRecordDefinition_Type) jcasType).casFeat_repeat == null)
-      jcasType.jcas.throwFeatMissing(
-          "repeat", "uk.gov.dstl.baleen.types.templates.TemplateRecordDefinition");
-    jcasType.ll_cas.ll_setBooleanValue(
-        addr, ((TemplateRecordDefinition_Type) jcasType).casFeatCode_repeat, v);
+    _setBooleanValueNfc(wrapGetIntCatchException(_FH_repeat), v);
   }
 }

@@ -1,21 +1,33 @@
-/* First created by JCasGen Wed Jan 21 11:21:05 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:42 BST 2019 */
+
 package uk.gov.dstl.baleen.types.common;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
- * Nationality denonym (e.g. French, British, Spanish) Updated by JCasGen Wed Apr 13 13:23:15 BST
- * 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Nationality denonym (e.g. French, British, Spanish) Updated by JCasGen Wed Apr 17 13:41:42 BST
+ * 2019 XML source: types/common_type_system.xml
  *
  * @generated
  */
 public class Nationality extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.common.Nationality";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +49,17 @@ public class Nationality extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_countryCode = "countryCode";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_countryCode =
+      TypeSystemImpl.createCallSite(Nationality.class, "countryCode");
+  private static final MethodHandle _FH_countryCode = _FC_countryCode.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +73,11 @@ public class Nationality extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Nationality(int addr, TOP_Type type) {
-    super(addr, type);
+  public Nationality(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,10 +126,7 @@ public class Nationality extends Entity {
    * @return value of the feature
    */
   public String getCountryCode() {
-    if (Nationality_Type.featOkTst && ((Nationality_Type) jcasType).casFeat_countryCode == null)
-      jcasType.jcas.throwFeatMissing("countryCode", "uk.gov.dstl.baleen.types.common.Nationality");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Nationality_Type) jcasType).casFeatCode_countryCode);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_countryCode));
   }
 
   /**
@@ -117,9 +137,6 @@ public class Nationality extends Entity {
    * @param v value to set into the feature
    */
   public void setCountryCode(String v) {
-    if (Nationality_Type.featOkTst && ((Nationality_Type) jcasType).casFeat_countryCode == null)
-      jcasType.jcas.throwFeatMissing("countryCode", "uk.gov.dstl.baleen.types.common.Nationality");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Nationality_Type) jcasType).casFeatCode_countryCode, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_countryCode), v);
   }
 }

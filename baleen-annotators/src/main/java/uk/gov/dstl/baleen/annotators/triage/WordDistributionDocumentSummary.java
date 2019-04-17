@@ -1,15 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.triage;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -78,10 +70,10 @@ public class WordDistributionDocumentSummary extends BaleenTextAwareAnnotator {
     int summaryCharacterCount = 0;
     StringBuilder summaryBuilder = new StringBuilder();
 
-    Map<Sentence, Collection<WordToken>> sentenceToWordsMap =
+    Map<Sentence, List<WordToken>> sentenceToWordsMap =
         JCasUtil.indexCovered(jCas, Sentence.class, WordToken.class);
 
-    Map<String, Collection<String>> sentenceToWordsStringMap =
+    Map<String, List<String>> sentenceToWordsStringMap =
         getSentenceToWordsStringMap(sentenceToWordsMap);
 
     List<String> wordList = getWordList(jCas);
@@ -131,10 +123,10 @@ public class WordDistributionDocumentSummary extends BaleenTextAwareAnnotator {
     addSummaryToMetadata(jCas, summary);
   }
 
-  private Map<String, Collection<String>> getSentenceToWordsStringMap(
-      Map<Sentence, Collection<WordToken>> sentenceToWordsMap) {
+  private Map<String, List<String>> getSentenceToWordsStringMap(
+      Map<Sentence, List<WordToken>> sentenceToWordsMap) {
 
-    Map<String, Collection<String>> sentenceToWordsStringMap = new HashMap<>();
+    Map<String, List<String>> sentenceToWordsStringMap = new HashMap<>();
 
     sentenceToWordsMap.forEach(
         (key, value) -> {

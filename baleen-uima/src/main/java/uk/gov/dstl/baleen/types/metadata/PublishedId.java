@@ -1,21 +1,33 @@
-/* First created by JCasGen Wed Jan 14 12:58:31 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:56 BST 2019 */
+
 package uk.gov.dstl.baleen.types.metadata;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
 /**
- * The published ID of the document, e.g. the Document Reference Updated by JCasGen Tue Apr 12
- * 12:06:57 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/metadata_type_system.xml
+ * The published ID of the document, e.g. the Document Reference Updated by JCasGen Wed Apr 17
+ * 13:41:56 BST 2019 XML source: types/metadata_type_system.xml
  *
  * @generated
  */
 public class PublishedId extends BaleenAnnotation {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.metadata.PublishedId";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +49,21 @@ public class PublishedId extends BaleenAnnotation {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_value = "value";
+  public static final String _FeatName_publishedIdType = "publishedIdType";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_value =
+      TypeSystemImpl.createCallSite(PublishedId.class, "value");
+  private static final MethodHandle _FH_value = _FC_value.dynamicInvoker();
+  private static final CallSite _FC_publishedIdType =
+      TypeSystemImpl.createCallSite(PublishedId.class, "publishedIdType");
+  private static final MethodHandle _FH_publishedIdType = _FC_publishedIdType.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +77,11 @@ public class PublishedId extends BaleenAnnotation {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public PublishedId(int addr, TOP_Type type) {
-    super(addr, type);
+  public PublishedId(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,9 +129,7 @@ public class PublishedId extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getValue() {
-    if (PublishedId_Type.featOkTst && ((PublishedId_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.metadata.PublishedId");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((PublishedId_Type) jcasType).casFeatCode_value);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_value));
   }
 
   /**
@@ -114,9 +139,7 @@ public class PublishedId extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setValue(String v) {
-    if (PublishedId_Type.featOkTst && ((PublishedId_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.metadata.PublishedId");
-    jcasType.ll_cas.ll_setStringValue(addr, ((PublishedId_Type) jcasType).casFeatCode_value, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_value), v);
   }
 
   // *--------------*
@@ -130,11 +153,7 @@ public class PublishedId extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getPublishedIdType() {
-    if (PublishedId_Type.featOkTst && ((PublishedId_Type) jcasType).casFeat_publishedIdType == null)
-      jcasType.jcas.throwFeatMissing(
-          "publishedIdType", "uk.gov.dstl.baleen.types.metadata.PublishedId");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((PublishedId_Type) jcasType).casFeatCode_publishedIdType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_publishedIdType));
   }
 
   /**
@@ -145,10 +164,6 @@ public class PublishedId extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setPublishedIdType(String v) {
-    if (PublishedId_Type.featOkTst && ((PublishedId_Type) jcasType).casFeat_publishedIdType == null)
-      jcasType.jcas.throwFeatMissing(
-          "publishedIdType", "uk.gov.dstl.baleen.types.metadata.PublishedId");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((PublishedId_Type) jcasType).casFeatCode_publishedIdType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_publishedIdType), v);
   }
 }

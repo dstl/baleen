@@ -62,7 +62,7 @@ public class ActiveMQTest extends ConsumerTestBase {
 
     // Create descriptors
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             ACTIVEMQ, SharedActiveMQResource.class, configArr);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(

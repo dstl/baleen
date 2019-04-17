@@ -1,21 +1,33 @@
-/* First created by JCasGen Wed Jan 21 11:21:05 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:42 BST 2019 */
+
 package uk.gov.dstl.baleen.types.common;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
  * A Person named entitiy, as defined by an explict name reference within the source document.
- * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Updated by JCasGen Wed Apr 17 13:41:42 BST 2019 XML source: types/common_type_system.xml
  *
  * @generated
  */
 public class Person extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.common.Person";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +49,19 @@ public class Person extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_title = "title";
+  public static final String _FeatName_gender = "gender";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_title = TypeSystemImpl.createCallSite(Person.class, "title");
+  private static final MethodHandle _FH_title = _FC_title.dynamicInvoker();
+  private static final CallSite _FC_gender = TypeSystemImpl.createCallSite(Person.class, "gender");
+  private static final MethodHandle _FH_gender = _FC_gender.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +75,11 @@ public class Person extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Person(int addr, TOP_Type type) {
-    super(addr, type);
+  public Person(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,9 +127,7 @@ public class Person extends Entity {
    * @return value of the feature
    */
   public String getTitle() {
-    if (Person_Type.featOkTst && ((Person_Type) jcasType).casFeat_title == null)
-      jcasType.jcas.throwFeatMissing("title", "uk.gov.dstl.baleen.types.common.Person");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Person_Type) jcasType).casFeatCode_title);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_title));
   }
 
   /**
@@ -114,9 +137,7 @@ public class Person extends Entity {
    * @param v value to set into the feature
    */
   public void setTitle(String v) {
-    if (Person_Type.featOkTst && ((Person_Type) jcasType).casFeat_title == null)
-      jcasType.jcas.throwFeatMissing("title", "uk.gov.dstl.baleen.types.common.Person");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Person_Type) jcasType).casFeatCode_title, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_title), v);
   }
 
   // *--------------*
@@ -131,9 +152,7 @@ public class Person extends Entity {
    * @return value of the feature
    */
   public String getGender() {
-    if (Person_Type.featOkTst && ((Person_Type) jcasType).casFeat_gender == null)
-      jcasType.jcas.throwFeatMissing("gender", "uk.gov.dstl.baleen.types.common.Person");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Person_Type) jcasType).casFeatCode_gender);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_gender));
   }
 
   /**
@@ -145,8 +164,6 @@ public class Person extends Entity {
    * @param v value to set into the feature
    */
   public void setGender(String v) {
-    if (Person_Type.featOkTst && ((Person_Type) jcasType).casFeat_gender == null)
-      jcasType.jcas.throwFeatMissing("gender", "uk.gov.dstl.baleen.types.common.Person");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Person_Type) jcasType).casFeatCode_gender, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_gender), v);
   }
 }

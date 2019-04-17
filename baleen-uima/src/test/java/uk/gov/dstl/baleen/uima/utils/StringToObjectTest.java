@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
 /** */

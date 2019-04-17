@@ -40,11 +40,11 @@ public class ActiveMQReaderTest extends AbstractReaderTest {
         BROKERARGS_VALUE
       };
   final ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           ACTIVEMQ, SharedActiveMQResource.class, configArr);
 
   final ExternalResourceDescription cerd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           KEY_CONTENT_EXTRACTOR, PlainTextContentExtractor.class);
 
   public ActiveMQReaderTest() {

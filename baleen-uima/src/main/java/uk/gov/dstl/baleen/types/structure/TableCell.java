@@ -1,19 +1,31 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:16 BST 2019 */
 
-/* First created by JCasGen Thu Oct 13 13:31:25 BST 2016 */
 package uk.gov.dstl.baleen.types.structure;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
- * A cell in a Table. Updated by JCasGen Thu Dec 22 22:42:18 CET 2016 XML source:
- * /Users/chrisflatley/Projects/railroad/baleen/baleen/baleen-uima/src/main/resources/types/structure_type_system.xml
+ * A cell in a Table. Updated by JCasGen Wed Apr 17 13:42:16 BST 2019 XML source:
+ * types/structure_type_system.xml
  *
  * @generated
  */
 public class TableCell extends TablePart {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.structure.TableCell";
+
   /**
    * @generated
    * @ordered
@@ -35,6 +47,28 @@ public class TableCell extends TablePart {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_row = "row";
+  public static final String _FeatName_column = "column";
+  public static final String _FeatName_rowSpan = "rowSpan";
+  public static final String _FeatName_columnSpan = "columnSpan";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_row = TypeSystemImpl.createCallSite(TableCell.class, "row");
+  private static final MethodHandle _FH_row = _FC_row.dynamicInvoker();
+  private static final CallSite _FC_column =
+      TypeSystemImpl.createCallSite(TableCell.class, "column");
+  private static final MethodHandle _FH_column = _FC_column.dynamicInvoker();
+  private static final CallSite _FC_rowSpan =
+      TypeSystemImpl.createCallSite(TableCell.class, "rowSpan");
+  private static final MethodHandle _FH_rowSpan = _FC_rowSpan.dynamicInvoker();
+  private static final CallSite _FC_columnSpan =
+      TypeSystemImpl.createCallSite(TableCell.class, "columnSpan");
+  private static final MethodHandle _FH_columnSpan = _FC_columnSpan.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -48,11 +82,11 @@ public class TableCell extends TablePart {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public TableCell(int addr, TOP_Type type) {
-    super(addr, type);
+  public TableCell(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -100,9 +134,7 @@ public class TableCell extends TablePart {
    * @return value of the feature
    */
   public int getRow() {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_row == null)
-      jcasType.jcas.throwFeatMissing("row", "uk.gov.dstl.baleen.types.structure.TableCell");
-    return jcasType.ll_cas.ll_getIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_row);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_row));
   }
 
   /**
@@ -112,9 +144,7 @@ public class TableCell extends TablePart {
    * @param v value to set into the feature
    */
   public void setRow(int v) {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_row == null)
-      jcasType.jcas.throwFeatMissing("row", "uk.gov.dstl.baleen.types.structure.TableCell");
-    jcasType.ll_cas.ll_setIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_row, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_row), v);
   }
 
   // *--------------*
@@ -127,9 +157,7 @@ public class TableCell extends TablePart {
    * @return value of the feature
    */
   public int getColumn() {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_column == null)
-      jcasType.jcas.throwFeatMissing("column", "uk.gov.dstl.baleen.types.structure.TableCell");
-    return jcasType.ll_cas.ll_getIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_column);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_column));
   }
 
   /**
@@ -139,9 +167,7 @@ public class TableCell extends TablePart {
    * @param v value to set into the feature
    */
   public void setColumn(int v) {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_column == null)
-      jcasType.jcas.throwFeatMissing("column", "uk.gov.dstl.baleen.types.structure.TableCell");
-    jcasType.ll_cas.ll_setIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_column, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_column), v);
   }
 
   // *--------------*
@@ -155,9 +181,7 @@ public class TableCell extends TablePart {
    * @return value of the feature
    */
   public int getRowSpan() {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_rowSpan == null)
-      jcasType.jcas.throwFeatMissing("rowSpan", "uk.gov.dstl.baleen.types.structure.TableCell");
-    return jcasType.ll_cas.ll_getIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_rowSpan);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_rowSpan));
   }
 
   /**
@@ -168,9 +192,7 @@ public class TableCell extends TablePart {
    * @param v value to set into the feature
    */
   public void setRowSpan(int v) {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_rowSpan == null)
-      jcasType.jcas.throwFeatMissing("rowSpan", "uk.gov.dstl.baleen.types.structure.TableCell");
-    jcasType.ll_cas.ll_setIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_rowSpan, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_rowSpan), v);
   }
 
   // *--------------*
@@ -184,9 +206,7 @@ public class TableCell extends TablePart {
    * @return value of the feature
    */
   public int getColumnSpan() {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_columnSpan == null)
-      jcasType.jcas.throwFeatMissing("columnSpan", "uk.gov.dstl.baleen.types.structure.TableCell");
-    return jcasType.ll_cas.ll_getIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_columnSpan);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_columnSpan));
   }
 
   /**
@@ -197,8 +217,6 @@ public class TableCell extends TablePart {
    * @param v value to set into the feature
    */
   public void setColumnSpan(int v) {
-    if (TableCell_Type.featOkTst && ((TableCell_Type) jcasType).casFeat_columnSpan == null)
-      jcasType.jcas.throwFeatMissing("columnSpan", "uk.gov.dstl.baleen.types.structure.TableCell");
-    jcasType.ll_cas.ll_setIntValue(addr, ((TableCell_Type) jcasType).casFeatCode_columnSpan, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_columnSpan), v);
   }
 }

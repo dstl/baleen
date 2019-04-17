@@ -32,7 +32,7 @@ public class MongoReaderTest extends AbstractReaderTest {
   private static final String COLLECTION = "documents";
 
   private ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class);
+      ExternalResourceFactory.createNamedResourceDescription(MONGO, SharedFongoResource.class);
 
   public MongoReaderTest() {
     super(MongoReader.class);

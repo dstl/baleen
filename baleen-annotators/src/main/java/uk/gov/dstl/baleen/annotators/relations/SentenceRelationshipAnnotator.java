@@ -1,14 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.relations;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -121,15 +114,14 @@ public class SentenceRelationshipAnnotator extends AbstractTypedRelationshipAnno
   @Override
   protected void extract(JCas jCas) throws AnalysisEngineProcessException {
 
-    Map<Sentence, Collection<Entity>> languageCovered =
+    Map<Sentence, List<Entity>> languageCovered =
         JCasUtil.indexCovered(jCas, Sentence.class, Entity.class);
 
-    Map<uk.gov.dstl.baleen.types.structure.Sentence, Collection<Entity>> structureCovered =
+    Map<uk.gov.dstl.baleen.types.structure.Sentence, List<Entity>> structureCovered =
         JCasUtil.indexCovered(
             jCas, uk.gov.dstl.baleen.types.structure.Sentence.class, Entity.class);
 
-    Map<Offset, Collection<Entity>> sentences =
-        cleanSentencesByOffset(languageCovered, structureCovered);
+    Map<Offset, List<Entity>> sentences = cleanSentencesByOffset(languageCovered, structureCovered);
 
     addRelationsToIndex(
         sentences
@@ -233,10 +225,10 @@ public class SentenceRelationshipAnnotator extends AbstractTypedRelationshipAnno
         getShortestPath(offset, source, target).map(List::size).orElse(Integer.valueOf(-1)));
   }
 
-  private Map<Offset, Collection<Entity>> cleanSentencesByOffset(
-      Map<Sentence, Collection<Entity>> languageCovered,
-      Map<uk.gov.dstl.baleen.types.structure.Sentence, Collection<Entity>> structureCovered) {
-    HashMap<Offset, Collection<Entity>> sentences = new HashMap<>();
+  private Map<Offset, List<Entity>> cleanSentencesByOffset(
+      Map<Sentence, List<Entity>> languageCovered,
+      Map<uk.gov.dstl.baleen.types.structure.Sentence, List<Entity>> structureCovered) {
+    HashMap<Offset, List<Entity>> sentences = new HashMap<>();
     languageCovered.forEach((s, c) -> sentences.put(new Offset(s.getBegin(), s.getEnd()), c));
     structureCovered.forEach((s, c) -> sentences.put(new Offset(s.getBegin(), s.getEnd()), c));
     return sentences;

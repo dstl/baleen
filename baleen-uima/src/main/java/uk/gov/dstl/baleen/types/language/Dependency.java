@@ -1,22 +1,33 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:07 BST 2019 */
 
-/* First created by JCasGen Tue Apr 12 12:06:25 BST 2016 */
 package uk.gov.dstl.baleen.types.language;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * Grammatical dependencies between wordtokens, as output from a Dependency Grammar Parser Updated
- * by JCasGen Wed Apr 13 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * by JCasGen Wed Apr 17 13:42:07 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class Dependency extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.language.Dependency";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +49,25 @@ public class Dependency extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_governor = "governor";
+  public static final String _FeatName_dependent = "dependent";
+  public static final String _FeatName_dependencyType = "dependencyType";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_governor =
+      TypeSystemImpl.createCallSite(Dependency.class, "governor");
+  private static final MethodHandle _FH_governor = _FC_governor.dynamicInvoker();
+  private static final CallSite _FC_dependent =
+      TypeSystemImpl.createCallSite(Dependency.class, "dependent");
+  private static final MethodHandle _FH_dependent = _FC_dependent.dynamicInvoker();
+  private static final CallSite _FC_dependencyType =
+      TypeSystemImpl.createCallSite(Dependency.class, "dependencyType");
+  private static final MethodHandle _FH_dependencyType = _FC_dependencyType.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +81,11 @@ public class Dependency extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Dependency(int addr, TOP_Type type) {
-    super(addr, type);
+  public Dependency(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,12 +133,7 @@ public class Dependency extends Base {
    * @return value of the feature
    */
   public WordToken getGovernor() {
-    if (Dependency_Type.featOkTst && ((Dependency_Type) jcasType).casFeat_governor == null)
-      jcasType.jcas.throwFeatMissing("governor", "uk.gov.dstl.baleen.types.language.Dependency");
-    return (WordToken)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((Dependency_Type) jcasType).casFeatCode_governor)));
+    return (WordToken) (_getFeatureValueNc(wrapGetIntCatchException(_FH_governor)));
   }
 
   /**
@@ -118,10 +143,7 @@ public class Dependency extends Base {
    * @param v value to set into the feature
    */
   public void setGovernor(WordToken v) {
-    if (Dependency_Type.featOkTst && ((Dependency_Type) jcasType).casFeat_governor == null)
-      jcasType.jcas.throwFeatMissing("governor", "uk.gov.dstl.baleen.types.language.Dependency");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Dependency_Type) jcasType).casFeatCode_governor, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_governor), v);
   }
 
   // *--------------*
@@ -134,12 +156,7 @@ public class Dependency extends Base {
    * @return value of the feature
    */
   public WordToken getDependent() {
-    if (Dependency_Type.featOkTst && ((Dependency_Type) jcasType).casFeat_dependent == null)
-      jcasType.jcas.throwFeatMissing("dependent", "uk.gov.dstl.baleen.types.language.Dependency");
-    return (WordToken)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((Dependency_Type) jcasType).casFeatCode_dependent)));
+    return (WordToken) (_getFeatureValueNc(wrapGetIntCatchException(_FH_dependent)));
   }
 
   /**
@@ -149,10 +166,7 @@ public class Dependency extends Base {
    * @param v value to set into the feature
    */
   public void setDependent(WordToken v) {
-    if (Dependency_Type.featOkTst && ((Dependency_Type) jcasType).casFeat_dependent == null)
-      jcasType.jcas.throwFeatMissing("dependent", "uk.gov.dstl.baleen.types.language.Dependency");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Dependency_Type) jcasType).casFeatCode_dependent, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_dependent), v);
   }
 
   // *--------------*
@@ -165,11 +179,7 @@ public class Dependency extends Base {
    * @return value of the feature
    */
   public String getDependencyType() {
-    if (Dependency_Type.featOkTst && ((Dependency_Type) jcasType).casFeat_dependencyType == null)
-      jcasType.jcas.throwFeatMissing(
-          "dependencyType", "uk.gov.dstl.baleen.types.language.Dependency");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Dependency_Type) jcasType).casFeatCode_dependencyType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_dependencyType));
   }
 
   /**
@@ -179,10 +189,6 @@ public class Dependency extends Base {
    * @param v value to set into the feature
    */
   public void setDependencyType(String v) {
-    if (Dependency_Type.featOkTst && ((Dependency_Type) jcasType).casFeat_dependencyType == null)
-      jcasType.jcas.throwFeatMissing(
-          "dependencyType", "uk.gov.dstl.baleen.types.language.Dependency");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Dependency_Type) jcasType).casFeatCode_dependencyType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_dependencyType), v);
   }
 }

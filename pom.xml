@@ -92,7 +92,7 @@
     <spatial4j.version>0.6</spatial4j.version>
     <snakeyaml.version>1.24</snakeyaml.version>
     <trove4j.version>3.0.3</trove4j.version>
-    <uimafit.version>2.4.0</uimafit.version>
+    <uimafit.version>3.0.0</uimafit.version>
 
 
     <!-- Testing -->

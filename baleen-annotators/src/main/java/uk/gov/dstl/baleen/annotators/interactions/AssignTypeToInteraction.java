@@ -1,12 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.interactions;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 import opennlp.tools.stemmer.snowball.SnowballStemmer;
@@ -208,7 +203,7 @@ public class AssignTypeToInteraction extends BaleenAnnotator {
 
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-    Map<Interaction, Collection<WordToken>> interactionToWords =
+    Map<Interaction, List<WordToken>> interactionToWords =
         JCasUtil.indexCovered(jCas, Interaction.class, WordToken.class);
 
     Collection<Interaction> allInteractions =

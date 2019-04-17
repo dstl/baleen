@@ -137,7 +137,7 @@ public interface Node<T> {
   /**
    * Check if this node matches the given evaluator.
    *
-   * @param evaluator a node evaluator
+   * @param eval a node evaluator
    * @return if this element matches
    */
   boolean is(Evaluator<T> eval);

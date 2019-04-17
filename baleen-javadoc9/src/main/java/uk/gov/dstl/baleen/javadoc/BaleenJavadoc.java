@@ -1,20 +1,13 @@
 // NCA (c) Crown Copyright 2018
 package uk.gov.dstl.baleen.javadoc;
 
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.TreeMap;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.VariableElement;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 
 import com.sun.source.doctree.DocTree;
 

@@ -1,21 +1,33 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:22 BST 2019 */
 
-/* First created by JCasGen Tue Apr 18 12:23:04 BST 2017 */
 package uk.gov.dstl.baleen.types.templates;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
- * An field identified from a template Updated by JCasGen Tue Apr 18 12:23:04 BST 2017 XML source:
- * /Users/stuarthendren/git/tenode/baleen/baleen/baleen-uima/src/main/resources/types/template_type_system.xml
+ * An field identified from a template Updated by JCasGen Wed Apr 17 13:42:22 BST 2019 XML source:
+ * types/template_type_system.xml
  *
  * @generated
  */
 public class TemplateField extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.templates.TemplateField";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +49,25 @@ public class TemplateField extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_name = "name";
+  public static final String _FeatName_value = "value";
+  public static final String _FeatName_source = "source";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_name =
+      TypeSystemImpl.createCallSite(TemplateField.class, "name");
+  private static final MethodHandle _FH_name = _FC_name.dynamicInvoker();
+  private static final CallSite _FC_value =
+      TypeSystemImpl.createCallSite(TemplateField.class, "value");
+  private static final MethodHandle _FH_value = _FC_value.dynamicInvoker();
+  private static final CallSite _FC_source =
+      TypeSystemImpl.createCallSite(TemplateField.class, "source");
+  private static final MethodHandle _FH_source = _FC_source.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +81,11 @@ public class TemplateField extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public TemplateField(int addr, TOP_Type type) {
-    super(addr, type);
+  public TemplateField(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,10 +133,7 @@ public class TemplateField extends Base {
    * @return value of the feature
    */
   public String getName() {
-    if (TemplateField_Type.featOkTst && ((TemplateField_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing("name", "uk.gov.dstl.baleen.types.templates.TemplateField");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateField_Type) jcasType).casFeatCode_name);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_name));
   }
 
   /**
@@ -115,9 +143,7 @@ public class TemplateField extends Base {
    * @param v value to set into the feature
    */
   public void setName(String v) {
-    if (TemplateField_Type.featOkTst && ((TemplateField_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing("name", "uk.gov.dstl.baleen.types.templates.TemplateField");
-    jcasType.ll_cas.ll_setStringValue(addr, ((TemplateField_Type) jcasType).casFeatCode_name, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_name), v);
   }
 
   // *--------------*
@@ -131,10 +157,7 @@ public class TemplateField extends Base {
    * @return value of the feature
    */
   public String getValue() {
-    if (TemplateField_Type.featOkTst && ((TemplateField_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.templates.TemplateField");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateField_Type) jcasType).casFeatCode_value);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_value));
   }
 
   /**
@@ -145,9 +168,7 @@ public class TemplateField extends Base {
    * @param v value to set into the feature
    */
   public void setValue(String v) {
-    if (TemplateField_Type.featOkTst && ((TemplateField_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.templates.TemplateField");
-    jcasType.ll_cas.ll_setStringValue(addr, ((TemplateField_Type) jcasType).casFeatCode_value, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_value), v);
   }
 
   // *--------------*
@@ -160,10 +181,7 @@ public class TemplateField extends Base {
    * @return value of the feature
    */
   public String getSource() {
-    if (TemplateField_Type.featOkTst && ((TemplateField_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.templates.TemplateField");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateField_Type) jcasType).casFeatCode_source);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_source));
   }
 
   /**
@@ -173,8 +191,6 @@ public class TemplateField extends Base {
    * @param v value to set into the feature
    */
   public void setSource(String v) {
-    if (TemplateField_Type.featOkTst && ((TemplateField_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.templates.TemplateField");
-    jcasType.ll_cas.ll_setStringValue(addr, ((TemplateField_Type) jcasType).casFeatCode_source, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_source), v);
   }
 }

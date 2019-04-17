@@ -1,12 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.coreference.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -155,7 +150,7 @@ public class MentionDetector {
         .flatMap(Collection::stream)
         .forEach(phrases::remove);
 
-    final Map<PhraseChunk, Collection<WordToken>> phraseToWord =
+    final Map<PhraseChunk, List<WordToken>> phraseToWord =
         JCasUtil.indexCovered(jCas, PhraseChunk.class, WordToken.class);
 
     // Create an index for head words

@@ -74,7 +74,7 @@ public class MalletClassifierTrainerTest extends AbstractBaleenTaskTest {
     }
 
     fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SharedMongoResource.RESOURCE_KEY,
             SharedFongoResource.class,
             "fongo.collection",
@@ -83,7 +83,7 @@ public class MalletClassifierTrainerTest extends AbstractBaleenTaskTest {
             data.toString());
 
     stopWordsErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MaxEntClassifierTrainer.KEY_STOPWORDS, SharedStopwordResource.class);
   }
 

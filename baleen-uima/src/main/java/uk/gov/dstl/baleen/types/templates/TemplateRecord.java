@@ -1,22 +1,33 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:22 BST 2019 */
 
-/* First created by JCasGen Tue Apr 18 12:23:04 BST 2017 */
 package uk.gov.dstl.baleen.types.templates;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * A covering annotation that marks the extent of a record within an annotated document. Updated by
- * JCasGen Tue Apr 18 12:23:04 BST 2017 XML source:
- * /Users/stuarthendren/git/tenode/baleen/baleen/baleen-uima/src/main/resources/types/template_type_system.xml
+ * JCasGen Wed Apr 17 13:42:22 BST 2019 XML source: types/template_type_system.xml
  *
  * @generated
  */
 public class TemplateRecord extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.templates.TemplateRecord";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +49,21 @@ public class TemplateRecord extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_name = "name";
+  public static final String _FeatName_source = "source";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_name =
+      TypeSystemImpl.createCallSite(TemplateRecord.class, "name");
+  private static final MethodHandle _FH_name = _FC_name.dynamicInvoker();
+  private static final CallSite _FC_source =
+      TypeSystemImpl.createCallSite(TemplateRecord.class, "source");
+  private static final MethodHandle _FH_source = _FC_source.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +77,11 @@ public class TemplateRecord extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public TemplateRecord(int addr, TOP_Type type) {
-    super(addr, type);
+  public TemplateRecord(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,10 +129,7 @@ public class TemplateRecord extends Base {
    * @return value of the feature
    */
   public String getName() {
-    if (TemplateRecord_Type.featOkTst && ((TemplateRecord_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing("name", "uk.gov.dstl.baleen.types.templates.TemplateRecord");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateRecord_Type) jcasType).casFeatCode_name);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_name));
   }
 
   /**
@@ -116,9 +139,7 @@ public class TemplateRecord extends Base {
    * @param v value to set into the feature
    */
   public void setName(String v) {
-    if (TemplateRecord_Type.featOkTst && ((TemplateRecord_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing("name", "uk.gov.dstl.baleen.types.templates.TemplateRecord");
-    jcasType.ll_cas.ll_setStringValue(addr, ((TemplateRecord_Type) jcasType).casFeatCode_name, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_name), v);
   }
 
   // *--------------*
@@ -131,10 +152,7 @@ public class TemplateRecord extends Base {
    * @return value of the feature
    */
   public String getSource() {
-    if (TemplateRecord_Type.featOkTst && ((TemplateRecord_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.templates.TemplateRecord");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateRecord_Type) jcasType).casFeatCode_source);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_source));
   }
 
   /**
@@ -144,8 +162,6 @@ public class TemplateRecord extends Base {
    * @param v value to set into the feature
    */
   public void setSource(String v) {
-    if (TemplateRecord_Type.featOkTst && ((TemplateRecord_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.templates.TemplateRecord");
-    jcasType.ll_cas.ll_setStringValue(addr, ((TemplateRecord_Type) jcasType).casFeatCode_source, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_source), v);
   }
 }

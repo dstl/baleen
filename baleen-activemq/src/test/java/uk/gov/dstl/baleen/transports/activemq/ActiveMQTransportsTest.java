@@ -26,7 +26,7 @@ public class ActiveMQTransportsTest {
   private static String BROKERARGS_VALUE = "broker.persistent=false";
 
   private final ExternalResourceDescription mqerd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           SharedActiveMQResource.RESOURCE_KEY,
           SharedActiveMQResource.class,
           SharedActiveMQResource.PARAM_PROTOCOL,
@@ -35,7 +35,7 @@ public class ActiveMQTransportsTest {
           BROKERARGS_VALUE);
 
   private final ExternalResourceDescription ceerd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class);
 
   @Test

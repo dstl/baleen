@@ -1,9 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.resources;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +22,7 @@ public class SharedStopwordResourceTest {
   @Before
   public void beforeTest() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "stopwords", SharedStopwordResource.class);
     ssr = new SharedStopwordResource();
     ssr.initialize(erd.getResourceSpecifier(), Collections.emptyMap());

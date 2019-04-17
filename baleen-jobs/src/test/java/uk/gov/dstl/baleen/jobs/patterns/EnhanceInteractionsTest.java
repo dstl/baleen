@@ -30,7 +30,7 @@ public class EnhanceInteractionsTest extends AbstractBaleenTaskTest {
   @Before
   public void before() {
     wordnetErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "wordnet", SharedWordNetResource.class);
   }
 

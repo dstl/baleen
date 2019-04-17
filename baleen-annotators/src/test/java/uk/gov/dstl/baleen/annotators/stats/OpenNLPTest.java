@@ -34,16 +34,14 @@ public class OpenNLPTest extends AnnotatorTestBase {
     super.beforeTest();
 
     ExternalResourceDescription tokensDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "tokens", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("tokens", SharedOpenNLPModel.class);
     ExternalResourceDescription sentencesDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "sentences", SharedOpenNLPModel.class);
     ExternalResourceDescription posDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "posTags", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("posTags", SharedOpenNLPModel.class);
     ExternalResourceDescription chunksDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "phraseChunks", SharedOpenNLPModel.class);
 
     AnalysisEngineDescription descLanguage =

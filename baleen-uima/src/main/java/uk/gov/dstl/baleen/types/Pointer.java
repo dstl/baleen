@@ -1,21 +1,33 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:22 BST 2019 */
 
-/* First created by JCasGen Tue Apr 12 12:06:19 BST 2016 */
 package uk.gov.dstl.baleen.types;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
  * A pointer to another annotation in the same document. Designed for general use (eg temporary
  * working inside annotator) rather than having some specific semantic meaning (eg like
- * coreference). Updated by JCasGen Wed Apr 13 13:23:15 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * coreference). Updated by JCasGen Wed Apr 17 13:42:22 BST 2019 XML source:
+ * types/template_type_system.xml
  *
  * @generated
  */
 public class Pointer extends BaleenAnnotation {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.Pointer";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +49,20 @@ public class Pointer extends BaleenAnnotation {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_target = "target";
+  public static final String _FeatName_targetId = "targetId";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_target = TypeSystemImpl.createCallSite(Pointer.class, "target");
+  private static final MethodHandle _FH_target = _FC_target.dynamicInvoker();
+  private static final CallSite _FC_targetId =
+      TypeSystemImpl.createCallSite(Pointer.class, "targetId");
+  private static final MethodHandle _FH_targetId = _FC_targetId.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +76,11 @@ public class Pointer extends BaleenAnnotation {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Pointer(int addr, TOP_Type type) {
-    super(addr, type);
+  public Pointer(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,11 +128,7 @@ public class Pointer extends BaleenAnnotation {
    * @return value of the feature
    */
   public BaleenAnnotation getTarget() {
-    if (Pointer_Type.featOkTst && ((Pointer_Type) jcasType).casFeat_target == null)
-      jcasType.jcas.throwFeatMissing("target", "uk.gov.dstl.baleen.types.Pointer");
-    return (BaleenAnnotation)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Pointer_Type) jcasType).casFeatCode_target)));
+    return (BaleenAnnotation) (_getFeatureValueNc(wrapGetIntCatchException(_FH_target)));
   }
 
   /**
@@ -116,10 +138,7 @@ public class Pointer extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setTarget(BaleenAnnotation v) {
-    if (Pointer_Type.featOkTst && ((Pointer_Type) jcasType).casFeat_target == null)
-      jcasType.jcas.throwFeatMissing("target", "uk.gov.dstl.baleen.types.Pointer");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Pointer_Type) jcasType).casFeatCode_target, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_target), v);
   }
 
   // *--------------*
@@ -133,9 +152,7 @@ public class Pointer extends BaleenAnnotation {
    * @return value of the feature
    */
   public long getTargetId() {
-    if (Pointer_Type.featOkTst && ((Pointer_Type) jcasType).casFeat_targetId == null)
-      jcasType.jcas.throwFeatMissing("targetId", "uk.gov.dstl.baleen.types.Pointer");
-    return jcasType.ll_cas.ll_getLongValue(addr, ((Pointer_Type) jcasType).casFeatCode_targetId);
+    return _getLongValueNc(wrapGetIntCatchException(_FH_targetId));
   }
 
   /**
@@ -146,8 +163,6 @@ public class Pointer extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setTargetId(long v) {
-    if (Pointer_Type.featOkTst && ((Pointer_Type) jcasType).casFeat_targetId == null)
-      jcasType.jcas.throwFeatMissing("targetId", "uk.gov.dstl.baleen.types.Pointer");
-    jcasType.ll_cas.ll_setLongValue(addr, ((Pointer_Type) jcasType).casFeatCode_targetId, v);
+    _setLongValueNfc(wrapGetIntCatchException(_FH_targetId), v);
   }
 }

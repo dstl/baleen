@@ -135,11 +135,11 @@ public class SimpleEventExtractor extends BaleenAnnotator {
 
   private <T extends Base> void extractEventsFrom(JCas jCas, Collection<T> sections) {
 
-    Map<? extends Base, Collection<Location>> locationIndex =
+    Map<? extends Base, List<Location>> locationIndex =
         JCasUtil.indexCovered(jCas, sectionClass, Location.class);
-    Map<? extends Base, Collection<Temporal>> temporalIndex =
+    Map<? extends Base, List<Temporal>> temporalIndex =
         JCasUtil.indexCovered(jCas, sectionClass, Temporal.class);
-    Map<? extends Base, Collection<Entity>> entityIndex =
+    Map<? extends Base, List<Entity>> entityIndex =
         JCasUtil.indexCovered(jCas, sectionClass, Entity.class);
 
     for (T t : sections) {

@@ -1,21 +1,33 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:16 BST 2019 */
 
-/* First created by JCasGen Thu Oct 13 13:09:13 BST 2016 */
 package uk.gov.dstl.baleen.types.structure;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
- * A base type for all Structure types. Updated by JCasGen Thu Apr 20 16:06:09 BST 2017 XML source:
- * /Users/stuarthendren/git/tenode/baleen/baleen/baleen-uima/src/main/resources/types/structure_type_system.xml
+ * A base type for all Structure types. Updated by JCasGen Wed Apr 17 13:42:16 BST 2019 XML source:
+ * types/structure_type_system.xml
  *
  * @generated
  */
 public class Structure extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.structure.Structure";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +49,24 @@ public class Structure extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_depth = "depth";
+  public static final String _FeatName_elementClass = "elementClass";
+  public static final String _FeatName_elementId = "elementId";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_depth = TypeSystemImpl.createCallSite(Structure.class, "depth");
+  private static final MethodHandle _FH_depth = _FC_depth.dynamicInvoker();
+  private static final CallSite _FC_elementClass =
+      TypeSystemImpl.createCallSite(Structure.class, "elementClass");
+  private static final MethodHandle _FH_elementClass = _FC_elementClass.dynamicInvoker();
+  private static final CallSite _FC_elementId =
+      TypeSystemImpl.createCallSite(Structure.class, "elementId");
+  private static final MethodHandle _FH_elementId = _FC_elementId.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +80,11 @@ public class Structure extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Structure(int addr, TOP_Type type) {
-    super(addr, type);
+  public Structure(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,9 +132,7 @@ public class Structure extends Base {
    * @return value of the feature
    */
   public int getDepth() {
-    if (Structure_Type.featOkTst && ((Structure_Type) jcasType).casFeat_depth == null)
-      jcasType.jcas.throwFeatMissing("depth", "uk.gov.dstl.baleen.types.structure.Structure");
-    return jcasType.ll_cas.ll_getIntValue(addr, ((Structure_Type) jcasType).casFeatCode_depth);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_depth));
   }
 
   /**
@@ -114,9 +142,7 @@ public class Structure extends Base {
    * @param v value to set into the feature
    */
   public void setDepth(int v) {
-    if (Structure_Type.featOkTst && ((Structure_Type) jcasType).casFeat_depth == null)
-      jcasType.jcas.throwFeatMissing("depth", "uk.gov.dstl.baleen.types.structure.Structure");
-    jcasType.ll_cas.ll_setIntValue(addr, ((Structure_Type) jcasType).casFeatCode_depth, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_depth), v);
   }
 
   // *--------------*
@@ -130,11 +156,7 @@ public class Structure extends Base {
    * @return value of the feature
    */
   public String getElementClass() {
-    if (Structure_Type.featOkTst && ((Structure_Type) jcasType).casFeat_elementClass == null)
-      jcasType.jcas.throwFeatMissing(
-          "elementClass", "uk.gov.dstl.baleen.types.structure.Structure");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Structure_Type) jcasType).casFeatCode_elementClass);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_elementClass));
   }
 
   /**
@@ -145,11 +167,7 @@ public class Structure extends Base {
    * @param v value to set into the feature
    */
   public void setElementClass(String v) {
-    if (Structure_Type.featOkTst && ((Structure_Type) jcasType).casFeat_elementClass == null)
-      jcasType.jcas.throwFeatMissing(
-          "elementClass", "uk.gov.dstl.baleen.types.structure.Structure");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Structure_Type) jcasType).casFeatCode_elementClass, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_elementClass), v);
   }
 
   // *--------------*
@@ -162,10 +180,7 @@ public class Structure extends Base {
    * @return value of the feature
    */
   public String getElementId() {
-    if (Structure_Type.featOkTst && ((Structure_Type) jcasType).casFeat_elementId == null)
-      jcasType.jcas.throwFeatMissing("elementId", "uk.gov.dstl.baleen.types.structure.Structure");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Structure_Type) jcasType).casFeatCode_elementId);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_elementId));
   }
 
   /**
@@ -175,8 +190,6 @@ public class Structure extends Base {
    * @param v value to set into the feature
    */
   public void setElementId(String v) {
-    if (Structure_Type.featOkTst && ((Structure_Type) jcasType).casFeat_elementId == null)
-      jcasType.jcas.throwFeatMissing("elementId", "uk.gov.dstl.baleen.types.structure.Structure");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Structure_Type) jcasType).casFeatCode_elementId, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_elementId), v);
   }
 }

@@ -1,25 +1,33 @@
-/* First created by JCasGen Wed Jan 14 12:58:27 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.semantic;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
-import uk.gov.dstl.baleen.core.history.Recordable;
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * Records a relationship between named entities, explicitly mentioned within the source document.
- * Updated by JCasGen Wed Apr 13 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Updated by JCasGen Wed Apr 17 13:42:08 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
-// ***************************************************************************************
-// WARNING Edited generated class to add Recordable interface, be careful on regeneration.
-// ***************************************************************************************
-public class Relation extends Base implements Recordable {
+public class Relation extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.semantic.Relation";
+
   /**
    * @generated
    * @ordered
@@ -41,6 +49,45 @@ public class Relation extends Base implements Recordable {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_relationshipType = "relationshipType";
+  public static final String _FeatName_source = "source";
+  public static final String _FeatName_target = "target";
+  public static final String _FeatName_value = "value";
+  public static final String _FeatName_relationSubType = "relationSubType";
+  public static final String _FeatName_sentenceDistance = "sentenceDistance";
+  public static final String _FeatName_wordDistance = "wordDistance";
+  public static final String _FeatName_dependencyDistance = "dependencyDistance";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_relationshipType =
+      TypeSystemImpl.createCallSite(Relation.class, "relationshipType");
+  private static final MethodHandle _FH_relationshipType = _FC_relationshipType.dynamicInvoker();
+  private static final CallSite _FC_source =
+      TypeSystemImpl.createCallSite(Relation.class, "source");
+  private static final MethodHandle _FH_source = _FC_source.dynamicInvoker();
+  private static final CallSite _FC_target =
+      TypeSystemImpl.createCallSite(Relation.class, "target");
+  private static final MethodHandle _FH_target = _FC_target.dynamicInvoker();
+  private static final CallSite _FC_value = TypeSystemImpl.createCallSite(Relation.class, "value");
+  private static final MethodHandle _FH_value = _FC_value.dynamicInvoker();
+  private static final CallSite _FC_relationSubType =
+      TypeSystemImpl.createCallSite(Relation.class, "relationSubType");
+  private static final MethodHandle _FH_relationSubType = _FC_relationSubType.dynamicInvoker();
+  private static final CallSite _FC_sentenceDistance =
+      TypeSystemImpl.createCallSite(Relation.class, "sentenceDistance");
+  private static final MethodHandle _FH_sentenceDistance = _FC_sentenceDistance.dynamicInvoker();
+  private static final CallSite _FC_wordDistance =
+      TypeSystemImpl.createCallSite(Relation.class, "wordDistance");
+  private static final MethodHandle _FH_wordDistance = _FC_wordDistance.dynamicInvoker();
+  private static final CallSite _FC_dependencyDistance =
+      TypeSystemImpl.createCallSite(Relation.class, "dependencyDistance");
+  private static final MethodHandle _FH_dependencyDistance =
+      _FC_dependencyDistance.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -54,11 +101,11 @@ public class Relation extends Base implements Recordable {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Relation(int addr, TOP_Type type) {
-    super(addr, type);
+  public Relation(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -110,11 +157,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public String getRelationshipType() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_relationshipType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationshipType", "uk.gov.dstl.baleen.types.semantic.Relation");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_relationshipType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_relationshipType));
   }
 
   /**
@@ -128,11 +171,7 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setRelationshipType(String v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_relationshipType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationshipType", "uk.gov.dstl.baleen.types.semantic.Relation");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_relationshipType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_relationshipType), v);
   }
 
   // *--------------*
@@ -145,11 +184,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public Entity getSource() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.semantic.Relation");
-    return (Entity)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Relation_Type) jcasType).casFeatCode_source)));
+    return (Entity) (_getFeatureValueNc(wrapGetIntCatchException(_FH_source)));
   }
 
   /**
@@ -159,10 +194,7 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setSource(Entity v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_source == null)
-      jcasType.jcas.throwFeatMissing("source", "uk.gov.dstl.baleen.types.semantic.Relation");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_source, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_source), v);
   }
 
   // *--------------*
@@ -175,11 +207,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public Entity getTarget() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_target == null)
-      jcasType.jcas.throwFeatMissing("target", "uk.gov.dstl.baleen.types.semantic.Relation");
-    return (Entity)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Relation_Type) jcasType).casFeatCode_target)));
+    return (Entity) (_getFeatureValueNc(wrapGetIntCatchException(_FH_target)));
   }
 
   /**
@@ -189,10 +217,7 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setTarget(Entity v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_target == null)
-      jcasType.jcas.throwFeatMissing("target", "uk.gov.dstl.baleen.types.semantic.Relation");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_target, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_target), v);
   }
 
   // *--------------*
@@ -206,9 +231,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public String getValue() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Relation");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Relation_Type) jcasType).casFeatCode_value);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_value));
   }
 
   /**
@@ -219,9 +242,7 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setValue(String v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Relation");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Relation_Type) jcasType).casFeatCode_value, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_value), v);
   }
 
   // *--------------*
@@ -235,11 +256,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public String getRelationSubType() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_relationSubType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationSubType", "uk.gov.dstl.baleen.types.semantic.Relation");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_relationSubType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_relationSubType));
   }
 
   /**
@@ -250,11 +267,7 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setRelationSubType(String v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_relationSubType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationSubType", "uk.gov.dstl.baleen.types.semantic.Relation");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_relationSubType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_relationSubType), v);
   }
 
   // *--------------*
@@ -268,12 +281,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public int getSentenceDistance() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_sentenceDistance == null) {
-      jcasType.jcas.throwFeatMissing(
-          "sentenceDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
-    }
-    return jcasType.ll_cas.ll_getIntValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_sentenceDistance);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_sentenceDistance));
   }
 
   /**
@@ -284,12 +292,7 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setSentenceDistance(int v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_sentenceDistance == null) {
-      jcasType.jcas.throwFeatMissing(
-          "sentenceDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
-    }
-    jcasType.ll_cas.ll_setIntValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_sentenceDistance, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_sentenceDistance), v);
   }
 
   // *--------------*
@@ -303,11 +306,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public int getWordDistance() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_wordDistance == null) {
-      jcasType.jcas.throwFeatMissing("wordDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
-    }
-    return jcasType.ll_cas.ll_getIntValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_wordDistance);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_wordDistance));
   }
 
   /**
@@ -318,10 +317,7 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setWordDistance(int v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_wordDistance == null) {
-      jcasType.jcas.throwFeatMissing("wordDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
-    }
-    jcasType.ll_cas.ll_setIntValue(addr, ((Relation_Type) jcasType).casFeatCode_wordDistance, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_wordDistance), v);
   }
 
   // *--------------*
@@ -336,12 +332,7 @@ public class Relation extends Base implements Recordable {
    * @return value of the feature
    */
   public int getDependencyDistance() {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_dependencyDistance == null) {
-      jcasType.jcas.throwFeatMissing(
-          "dependencyDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
-    }
-    return jcasType.ll_cas.ll_getIntValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_dependencyDistance);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_dependencyDistance));
   }
 
   /**
@@ -353,11 +344,6 @@ public class Relation extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setDependencyDistance(int v) {
-    if (Relation_Type.featOkTst && ((Relation_Type) jcasType).casFeat_dependencyDistance == null) {
-      jcasType.jcas.throwFeatMissing(
-          "dependencyDistance", "uk.gov.dstl.baleen.types.semantic.Relation");
-    }
-    jcasType.ll_cas.ll_setIntValue(
-        addr, ((Relation_Type) jcasType).casFeatCode_dependencyDistance, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_dependencyDistance), v);
   }
 }

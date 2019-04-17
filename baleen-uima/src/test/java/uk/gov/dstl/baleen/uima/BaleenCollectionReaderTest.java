@@ -1,10 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static uk.gov.dstl.baleen.uima.BaleenCollectionReader.KEY_CONTENT_EXTRACTOR;
 
 import java.io.IOException;
@@ -28,7 +25,7 @@ public class BaleenCollectionReaderTest {
   public void testHasNextLooping() throws Exception {
 
     ExternalResourceDescription contentExtractor =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class);
 
     DummyBaleenCollectionReader cr =
@@ -50,7 +47,7 @@ public class BaleenCollectionReaderTest {
   public void test() throws Exception {
 
     ExternalResourceDescription contentExtractor =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class);
 
     FakeCollectionReader cr =

@@ -27,7 +27,7 @@ import uk.gov.dstl.baleen.uima.utils.JCasMetadata;
 public class CommonKeywordsTest extends AbstractAnnotatorTest {
 
   private ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           KEY_STOPWORDS, SharedStopwordResource.class);
 
   public CommonKeywordsTest() {

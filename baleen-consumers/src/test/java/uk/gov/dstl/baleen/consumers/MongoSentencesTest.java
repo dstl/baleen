@@ -36,7 +36,7 @@ public class MongoSentencesTest extends ConsumerTestBase {
     // Create a description of an external resource - a fongo instance, in the same way we would
     // have created a shared mongo resource
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO, SharedFongoResource.class, "fongo.collection", "sentences", "fongo.data", "[]");
 
     // Create the analysis engine
