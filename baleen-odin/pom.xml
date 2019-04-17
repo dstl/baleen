@@ -10,7 +10,7 @@
   <name>Baleen Odin</name>
 
   <properties>
-    <odin.version>7.4.4</odin.version>
+    <odin.version>7.5.1</odin.version>
   </properties>
 
   <dependencies>

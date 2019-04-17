@@ -63,3 +63,4 @@ target/
 
 # Baleen specific
 testing.log
+derby.log
