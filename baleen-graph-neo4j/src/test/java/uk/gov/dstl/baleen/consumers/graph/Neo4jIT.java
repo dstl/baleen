@@ -1,8 +1,29 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers.graph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.jodah.failsafe.Failsafe;
+import net.jodah.failsafe.RetryPolicy;
+import org.apache.http.HttpResponse;
+import org.apache.http.NoHttpResponseException;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.junit.ClassRule;
+import org.junit.Test;
+import org.testcontainers.containers.GenericContainer;
+import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
+import uk.gov.dstl.baleen.graph.JCasTestGraphUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,31 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.RetryPolicy;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.NoHttpResponseException;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.resource.ResourceInitializationException;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.testcontainers.containers.GenericContainer;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import uk.gov.dstl.baleen.annotators.testing.AbstractAnnotatorTest;
-import uk.gov.dstl.baleen.graph.JCasTestGraphUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /** Integration Test requires Docker */
 public class Neo4jIT extends AbstractAnnotatorTest {
@@ -88,7 +86,7 @@ public class Neo4jIT extends AbstractAnnotatorTest {
 
     String json = "{ \"query\" : \"MATCH (x) WHERE x.value = 'John Smith' RETURN x\" }";
 
-    StringEntity entity = new StringEntity(json);
+    StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
     post.setEntity(entity);
 
     HttpResponse response = client.execute(post);
@@ -140,7 +138,7 @@ public class Neo4jIT extends AbstractAnnotatorTest {
     req.setHeader("Content-Type", "application/json");
     String body = "{ \"password\" : \"" + PASS + "\" }";
 
-    StringEntity entity = new StringEntity(body);
+    StringEntity entity = new StringEntity(body, ContentType.APPLICATION_JSON);
     req.setEntity(entity);
 
     client.execute(req);

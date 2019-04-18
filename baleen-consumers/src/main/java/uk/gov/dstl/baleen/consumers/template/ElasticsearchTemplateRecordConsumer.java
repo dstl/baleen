@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -123,7 +124,7 @@ public class ElasticsearchTemplateRecordConsumer extends AbstractTemplateRecordC
       }
 
       try {
-        HttpEntity entity = new StringEntity(json);
+        HttpEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
 
         esrResource
             .getClient()
@@ -190,7 +191,7 @@ public class ElasticsearchTemplateRecordConsumer extends AbstractTemplateRecordC
   /** Add a mapping to Elasticsearch. This will only be called if a new index has been created */
   public void addMapping(XContentBuilder mapping) {
     try {
-      HttpEntity entity = new StringEntity(mapping.string());
+      HttpEntity entity = new StringEntity(mapping.string(), ContentType.APPLICATION_JSON);
 
       esrResource
           .getClient()

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.elasticsearch.client.Response;
@@ -61,7 +62,7 @@ public class ElasticsearchRest extends AbstractElasticsearchConsumer {
   @Override
   public void addMapping(XContentBuilder mapping) {
     try {
-      HttpEntity entity = new StringEntity(mapping.string());
+      HttpEntity entity = new StringEntity(mapping.string(), ContentType.APPLICATION_JSON);
 
       esrResource
           .getClient()
@@ -74,7 +75,8 @@ public class ElasticsearchRest extends AbstractElasticsearchConsumer {
   @Override
   public void addDocument(String id, Map<String, Object> json) {
     try {
-      HttpEntity entity = new StringEntity(objectMapper.writeValueAsString(json));
+      HttpEntity entity =
+          new StringEntity(objectMapper.writeValueAsString(json), ContentType.APPLICATION_JSON);
 
       esrResource
           .getClient()
