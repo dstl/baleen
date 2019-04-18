@@ -1,6 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Test;
@@ -15,6 +16,8 @@ public class MgrsTest extends AbstractAnnotatorTest {
 
   private static final String GEOJSON =
       "{\"type\":\"Polygon\",\"coordinates\":[[[-157.90975514490475,21.410749379555252],[-157.91946842978894,21.410749379555252],[-157.91946842978894,21.401778260360324],[-157.90975514490475,21.401778260360324],[-157.90975514490475,21.410749379555252]]]}";
+  private static final String GEOJSON_8 =
+      "{\"type\":\"Polygon\",\"coordinates\":[[[-157.90975514490475,21.41074937955525],[-157.91946842978894,21.41074937955525],[-157.91946842978894,21.401778260360324],[-157.90975514490475,21.401778260360324],[-157.90975514490475,21.41074937955525]]]}";
 
   public MgrsTest() {
     super(Mgrs.class);
@@ -26,7 +29,14 @@ public class MgrsTest extends AbstractAnnotatorTest {
     jCas.setDocumentText("James has almost certainly never been to 4QFJ1267");
     processJCas();
 
-    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", GEOJSON));
+    String geoJson;
+    if (SystemUtils.IS_JAVA_1_8) {
+      geoJson = GEOJSON_8;
+    } else {
+      geoJson = GEOJSON;
+    }
+
+    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", geoJson));
   }
 
   @Test
@@ -49,6 +59,12 @@ public class MgrsTest extends AbstractAnnotatorTest {
     // jCas.getDocumentText().length()).addToIndexes();
     processJCas();
 
-    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", GEOJSON));
+    String geoJson;
+    if (SystemUtils.IS_JAVA_1_8) {
+      geoJson = GEOJSON_8;
+    } else {
+      geoJson = GEOJSON;
+    }
+    assertAnnotations(1, Coordinate.class, new TestCoordinate(0, "4QFJ1267", "mgrs", geoJson));
   }
 }
