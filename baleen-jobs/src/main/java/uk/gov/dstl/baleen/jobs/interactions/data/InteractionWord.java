@@ -54,8 +54,7 @@ public class InteractionWord {
    * @return the stream
    */
   public Stream<InteractionDefinition> toRelations(String type, String subType) {
-    return pairs
-        .stream()
+    return pairs.stream()
         .map(p -> new InteractionDefinition(type, subType, word, p.getSource(), p.getTarget()));
   }
 

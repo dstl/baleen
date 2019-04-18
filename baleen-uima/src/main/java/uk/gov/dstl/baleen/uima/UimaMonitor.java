@@ -189,7 +189,7 @@ public class UimaMonitor {
    * Log a warning level message, with an exception.
    *
    * @param message the formatted message
-   * @param args parameters to substitute
+   * @param e the root exception
    */
   public void warn(String message, Throwable e) {
     logger.error(message, e);
@@ -209,7 +209,7 @@ public class UimaMonitor {
    * Log a error level message, with an exception.
    *
    * @param message the formatted message
-   * @param args parameters to substitute
+   * @param e the root exception
    */
   public void error(String message, Throwable e) {
     logger.error(message, e);

@@ -64,9 +64,8 @@ public class Odin extends BaleenAnnotator {
   public static final String PARAM_TYPE_NAMES = "types";
 
   @ConfigurationParameter(
-    name = PARAM_TYPE_NAMES,
-    defaultValue = {"Entity", "Event"}
-  )
+      name = PARAM_TYPE_NAMES,
+      defaultValue = {"Entity", "Event"})
   private String[] includedTypeNames;
 
   private ExtractorEngine ee;

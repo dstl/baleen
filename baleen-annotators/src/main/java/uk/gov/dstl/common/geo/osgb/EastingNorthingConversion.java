@@ -112,8 +112,8 @@ public class EastingNorthingConversion {
    * @param n0 Northing of true origin
    * @param e0 Easting of true origin
    * @param f0 Scale factor on central meridian
-   * @param lat0 Latitude of true origin
-   * @param lon0 Longitude of true origin
+   * @param lat0Degrees Latitude of true origin
+   * @param lon0Degrees Longitude of true origin
    * @return Array of coordinates [lat, lon]
    */
   public static double[] toLatLon(

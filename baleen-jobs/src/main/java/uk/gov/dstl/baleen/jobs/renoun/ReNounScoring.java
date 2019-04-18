@@ -102,9 +102,8 @@ public class ReNounScoring extends BaleenTask {
   public static final String PARAM_PATTERN_SCORE_COLLECTION = "patternScoreCollection";
 
   @ConfigurationParameter(
-    name = PARAM_PATTERN_SCORE_COLLECTION,
-    defaultValue = "renoun_pattern_scores"
-  )
+      name = PARAM_PATTERN_SCORE_COLLECTION,
+      defaultValue = "renoun_pattern_scores")
   private String patternScoreCollectionName;
 
   /**

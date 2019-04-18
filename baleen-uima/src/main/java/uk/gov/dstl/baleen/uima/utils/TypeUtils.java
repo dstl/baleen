@@ -3,11 +3,7 @@ package uk.gov.dstl.baleen.uima.utils;
 
 import static java.util.stream.Collectors.toList;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.uima.cas.Type;
 import org.apache.uima.cas.TypeSystem;
@@ -159,18 +155,18 @@ public class TypeUtils {
   /**
    * Get the sub types of the given baleen annotation type
    *
-   * @param annotaitonType the parent type name
+   * @param annotationType the parent type name
    * @return the annotation classes
    */
   public static <T extends BaleenAnnotation> Set<Class<? extends T>> getAnnotationClasses(
-      Class<T> annotaitonType) {
-    return ImmutableSet.copyOf(ReflectionUtils.getSubTypes(DEFAULT_TYPE_PACKAGE, annotaitonType));
+      Class<T> annotationType) {
+    return ImmutableSet.copyOf(ReflectionUtils.getSubTypes(DEFAULT_TYPE_PACKAGE, annotationType));
   }
 
   /**
    * Get the given type classes by name or return all classes if null or empty
    *
-   * @param basePackage the base type package to search in
+   * @param parentClass the parent class
    * @param typeNames the types to get
    * @return the structure classes
    * @throws BaleenException
@@ -185,8 +181,7 @@ public class TypeUtils {
       for (String type : typeNames) {
         try {
           annotationClasses.add(
-              allAnnotationClasses
-                  .stream()
+              allAnnotationClasses.stream()
                   .filter(a -> a.getName().endsWith("." + type))
                   .findFirst()
                   .orElseThrow(

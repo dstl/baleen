@@ -130,8 +130,7 @@ public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
     if (annotation instanceof Structure) {
       String classes = ((Structure) annotation).getElementClass();
       if (StringUtils.isNotBlank(classes)) {
-        return Arrays.asList(classes.split("\\s"))
-            .stream()
+        return Arrays.asList(classes.split("\\s")).stream()
             .map(String::toLowerCase)
             .collect(Collectors.toList());
       }

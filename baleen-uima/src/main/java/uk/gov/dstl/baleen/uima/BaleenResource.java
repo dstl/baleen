@@ -48,8 +48,6 @@ public abstract class BaleenResource extends Resource_ImplBase {
   /**
    * Called when the analysis engine is being initialized. Any required resources, for example,
    * should be opened at this point.
-   *
-   * @param aContext UimaContext object passed by the Collection Processing Engine
    */
   protected boolean doInitialize(ResourceSpecifier specifier, Map<String, Object> additionalParams)
       throws ResourceInitializationException {

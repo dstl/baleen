@@ -145,8 +145,7 @@ public class PreciseConstructsSieve extends AbstractCoreferenceSieve {
   }
 
   private boolean coversLocation(ParseTreeNode a) {
-    return findMentionsUnder(a.getChunk().getBegin(), a.getChunk().getEnd())
-        .stream()
+    return findMentionsUnder(a.getChunk().getBegin(), a.getChunk().getEnd()).stream()
         .anyMatch(m -> m.getAnnotation() instanceof Location);
   }
 }

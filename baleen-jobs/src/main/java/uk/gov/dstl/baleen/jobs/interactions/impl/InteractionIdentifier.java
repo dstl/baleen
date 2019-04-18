@@ -109,23 +109,18 @@ public class InteractionIdentifier {
    * @return the stream of interaction words
    */
   private Stream<InteractionWord> extractInteractionWords(List<ClusteredPatterns> clusters) {
-    return clusters
-        .stream()
+    return clusters.stream()
         .flatMap(
             cluster -> {
               // TODO: Should we use token or terms here?
               final Map<Word, Long> wordCount =
-                  cluster
-                      .getPatterns()
-                      .stream()
+                  cluster.getPatterns().stream()
                       .flatMap(p -> p.getTokens().stream())
                       .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
               final Set<RelationPair> relationPairs = cluster.getPairs();
 
-              return wordCount
-                  .entrySet()
-                  .stream()
+              return wordCount.entrySet().stream()
                   .filter(e -> e.getValue() >= minWordOccurances)
                   .map(e -> new InteractionWord(e.getKey(), relationPairs));
             })

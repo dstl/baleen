@@ -500,8 +500,7 @@ public class PartOfSpeechRelationshipAnnotator extends AbstractTypedRelationship
       String[] split = valueTokens.split("\\s");
 
       String value =
-          Arrays.asList(split)
-              .stream()
+          Arrays.asList(split).stream()
               .map(idMap::get)
               .map(WordToken::getCoveredText)
               .collect(Collectors.joining(" "));

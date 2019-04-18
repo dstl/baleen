@@ -15,7 +15,7 @@ import uk.gov.dstl.baleen.core.logging.RecentLog;
 /**
  * Collects a limited number of log events in memory.
  *
- * @param <Event> (will likely always be ILogEvent)
+ * @param <E> (will likely always be ILogEvent)
  */
 public class EvictingQueueAppender<E extends ILoggingEvent> extends AppenderBase<E> {
 
@@ -49,20 +49,12 @@ public class EvictingQueueAppender<E extends ILoggingEvent> extends AppenderBase
     events.clear();
   }
 
-  /**
-   * Get all events (contains a copy of the current buffer).
-   *
-   * @return
-   */
+  /** Get all events (contains a copy of the current buffer). */
   public List<RecentLog> getAll() {
     return new ArrayList<>(events);
   }
 
-  /**
-   * Get the number of current events stored.
-   *
-   * @return
-   */
+  /** Get the number of current events stored. */
   public int size() {
     return events.size();
   }

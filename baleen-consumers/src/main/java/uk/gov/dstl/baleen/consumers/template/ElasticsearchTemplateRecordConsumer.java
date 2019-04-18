@@ -101,15 +101,11 @@ public class ElasticsearchTemplateRecordConsumer extends AbstractTemplateRecordC
       throws AnalysisEngineProcessException {
     String externalId = getUniqueId(jCas);
     List<ElasticsearchExtractedRecord> elasticSearchRecords =
-        extractedRecords
-            .entrySet()
-            .stream()
+        extractedRecords.entrySet().stream()
             .flatMap(
                 entry -> {
                   String sourceUri = entry.getKey();
-                  return entry
-                      .getValue()
-                      .stream()
+                  return entry.getValue().stream()
                       .map(r -> new ElasticsearchExtractedRecord(externalId, sourceUri, r));
                 })
             .collect(Collectors.toList());

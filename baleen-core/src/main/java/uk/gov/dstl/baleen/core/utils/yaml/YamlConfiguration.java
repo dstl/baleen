@@ -5,11 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -45,7 +41,7 @@ public class YamlConfiguration implements Configuration {
   /**
    * Construct configuration the root data tree.
    *
-   * @param root data tree
+   * @param yaml YAML object
    * @throws Exception
    */
   public YamlConfiguration(Yaml yaml) throws IOException {
@@ -96,8 +92,7 @@ public class YamlConfiguration implements Configuration {
   /**
    * Construct configuration from raw yaml string.
    *
-   * @param clazz
-   * @param resourcePath
+   * @param inputStream
    * @throws Exception
    */
   public YamlConfiguration(InputStream inputStream) throws IOException {

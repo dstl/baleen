@@ -65,8 +65,7 @@ public class AnimacyEnhancer implements MentionEnhancer {
             "whose")
         .stream()
         .forEach(s -> PRONOUN_MAP.put(s, Animacy.ANIMATE));
-    Arrays.asList("it", "its", "itself", "when", "where", "there", "here")
-        .stream()
+    Arrays.asList("it", "its", "itself", "when", "where", "there", "here").stream()
         .forEach(s -> PRONOUN_MAP.put(s, Animacy.INANIMATE));
 
     Arrays.asList(

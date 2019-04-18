@@ -55,8 +55,7 @@ public class MentionDetector {
 
   private void setup() {
     pronouns =
-        JCasUtil.select(jCas, WordToken.class)
-            .stream()
+        JCasUtil.select(jCas, WordToken.class).stream()
             .filter(
                 w ->
                     w.getPartOfSpeech().startsWith("PP")
@@ -68,8 +67,7 @@ public class MentionDetector {
   }
 
   private void detectPronouns(List<Mention> mentions) {
-    pronouns
-        .stream()
+    pronouns.stream()
         .map(Mention::new)
         .map(
             m -> {
@@ -81,8 +79,7 @@ public class MentionDetector {
   }
 
   private void detectEntities(Collection<Mention> mentions) {
-    entities
-        .stream()
+    entities.stream()
         .map(Mention::new)
         .map(
             m -> {
@@ -138,15 +135,12 @@ public class MentionDetector {
 
     // Limit to noun phrases
     final List<PhraseChunk> phrases =
-        JCasUtil.select(jCas, PhraseChunk.class)
-            .stream()
+        JCasUtil.select(jCas, PhraseChunk.class).stream()
             .filter(p -> p.getChunkType().startsWith("N"))
             .collect(Collectors.toList());
 
     // Remove any noun phrases which cover entities
-    JCasUtil.indexCovering(jCas, Entity.class, PhraseChunk.class)
-        .values()
-        .stream()
+    JCasUtil.indexCovering(jCas, Entity.class, PhraseChunk.class).values().stream()
         .flatMap(Collection::stream)
         .forEach(phrases::remove);
 
@@ -155,8 +149,7 @@ public class MentionDetector {
 
     // Create an index for head words
     final Multimap<WordToken, PhraseChunk> headToChunk = HashMultimap.create();
-    phrases
-        .stream()
+    phrases.stream()
         .forEach(
             p -> {
               final Collection<WordToken> collection = phraseToWord.get(p);
@@ -168,10 +161,7 @@ public class MentionDetector {
             });
 
     // Paper: keep the largest noun phrase which has the same head word.
-    headToChunk
-        .asMap()
-        .entrySet()
-        .stream()
+    headToChunk.asMap().entrySet().stream()
         .filter(e -> e.getValue().size() == 1)
         .forEach(
             e -> {
@@ -196,9 +186,7 @@ public class MentionDetector {
             });
 
     // Remove all phrases based on their single content
-    JCasUtil.indexCovering(jCas, PhraseChunk.class, WordToken.class)
-        .entrySet()
-        .stream()
+    JCasUtil.indexCovering(jCas, PhraseChunk.class, WordToken.class).entrySet().stream()
         .filter(e -> e.getValue().size() == 1)
         .filter(e -> filterBySingleContent(e.getValue().iterator().next()))
         .map(Entry::getKey)
@@ -209,8 +197,7 @@ public class MentionDetector {
     // TODO: Paper removes static list of stop words (but we should determine that ourselves)
     // TODO: Paper removes partivit or quantifier (millions of people). Unsure why though.
 
-    phrases
-        .stream()
+    phrases.stream()
         .map(Mention::new)
         .map(
             m -> {

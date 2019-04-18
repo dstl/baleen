@@ -43,9 +43,8 @@ public class GremlinConsumer extends BaleenConsumer {
   public static final String PARAM_MERGE_TYPES = "mergeTypes";
 
   @ConfigurationParameter(
-    name = PARAM_MERGE_TYPES,
-    defaultValue = {"Buzzword", "CommsIdentifier", "FinancialAccount", "Frequency", "Url"}
-  )
+      name = PARAM_MERGE_TYPES,
+      defaultValue = {"Buzzword", "CommsIdentifier", "FinancialAccount", "Frequency", "Url"})
   private String[] mergeTypes;
 
   /**

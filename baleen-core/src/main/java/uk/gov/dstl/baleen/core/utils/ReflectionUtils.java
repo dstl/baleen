@@ -41,15 +41,11 @@ public class ReflectionUtils {
     }
 
     if (superType.isInterface()) {
-      return scanResult
-          .getClassesImplementing(superType.getName())
-          .stream()
+      return scanResult.getClassesImplementing(superType.getName()).stream()
           .map(c -> c.loadClass(superType, true))
           .collect(Collectors.toSet());
     } else {
-      return scanResult
-          .getSubclasses(superType.getName())
-          .stream()
+      return scanResult.getSubclasses(superType.getName()).stream()
           .map(c -> c.loadClass(superType, true))
           .collect(Collectors.toSet());
     }
@@ -70,9 +66,7 @@ public class ReflectionUtils {
     //    and filtering ourselves, it should be quicker
 
     if (superType.isInterface()) {
-      return scanResult
-          .getClassesImplementing(superType.getName())
-          .stream()
+      return scanResult.getClassesImplementing(superType.getName()).stream()
           .filter(
               c ->
                   c.getPackageName().equals(packageName)
@@ -80,9 +74,7 @@ public class ReflectionUtils {
           .map(c -> c.loadClass(superType, true))
           .collect(Collectors.toSet());
     } else {
-      return scanResult
-          .getSubclasses(superType.getName())
-          .stream()
+      return scanResult.getSubclasses(superType.getName()).stream()
           .filter(
               c ->
                   c.getPackageName().equals(packageName)

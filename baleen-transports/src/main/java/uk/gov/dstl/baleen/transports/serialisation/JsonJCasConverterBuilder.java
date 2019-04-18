@@ -12,7 +12,6 @@ import org.apache.uima.resource.ResourceInitializationException;
 
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
 import uk.gov.dstl.baleen.uima.UimaMonitor;
-import uk.gov.dstl.baleen.uima.UimaSupport;
 import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
@@ -30,9 +29,8 @@ public class JsonJCasConverterBuilder {
   /**
    * Construct the builder with the mandatory arguments
    *
-   * @param support the {@link UimaSupport}
    * @param monitor the {@link UimaMonitor}
-   * @throws UIMAException if unable to initialise
+   * @throws ResourceInitializationException if unable to initialise
    */
   public JsonJCasConverterBuilder(UimaMonitor monitor) throws ResourceInitializationException {
     jCas = createJas();
@@ -77,7 +75,6 @@ public class JsonJCasConverterBuilder {
    * Build the {@link JsonJCasConverter}
    *
    * @return the {@link JsonJCasConverter}
-   * @throws UIMAException if unable to build
    */
   public JsonJCasConverter build() {
     Collection<Class<? extends BaleenAnnotation>> white = createList(whitelist);

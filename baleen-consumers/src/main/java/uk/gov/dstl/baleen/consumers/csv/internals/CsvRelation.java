@@ -62,8 +62,7 @@ public class CsvRelation extends AbstractCsvConsumer {
     final Map<Relation, List<Sentence>> coveringSentence =
         JCasUtil.indexCovering(jCas, Relation.class, Sentence.class);
 
-    JCasUtil.select(jCas, Relation.class)
-        .stream()
+    JCasUtil.select(jCas, Relation.class).stream()
         .map(
             r -> {
               String sentence = "";

@@ -20,8 +20,7 @@ public class PersonEnhancer implements MentionEnhancer {
     Arrays.asList("i", "me", "mine", "my", "myself", "we", "us", "our", "ours", "ourselves")
         .stream()
         .forEach(s -> MAP.put(s, Person.FIRST));
-    Arrays.asList("yourself", "yourselves", "you", "your", "yours")
-        .stream()
+    Arrays.asList("yourself", "yourselves", "you", "your", "yours").stream()
         .forEach(s -> MAP.put(s, Person.SECOND));
     Arrays.asList(
             "he",

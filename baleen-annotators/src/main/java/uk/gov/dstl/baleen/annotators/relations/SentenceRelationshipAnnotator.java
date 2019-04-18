@@ -124,9 +124,7 @@ public class SentenceRelationshipAnnotator extends AbstractTypedRelationshipAnno
     Map<Offset, List<Entity>> sentences = cleanSentencesByOffset(languageCovered, structureCovered);
 
     addRelationsToIndex(
-        sentences
-            .entrySet()
-            .stream()
+        sentences.entrySet().stream()
             .flatMap(e -> createMeshedRelations(jCas, e.getValue(), e.getKey())));
   }
 

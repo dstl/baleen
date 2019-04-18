@@ -147,9 +147,7 @@ public class TemplateValidator extends AbstractTemplateAnnotator {
    * @return stream of the names of the require fields
    */
   private Stream<String> streamNamesOfRequiredFields(TemplateRecordConfiguration recordDefinition) {
-    return recordDefinition
-        .getFields()
-        .stream()
+    return recordDefinition.getFields().stream()
         .filter(TemplateFieldConfiguration::isRequired)
         .map(TemplateFieldConfiguration::getName);
   }
@@ -173,8 +171,7 @@ public class TemplateValidator extends AbstractTemplateAnnotator {
    */
   private Collection<TemplateField> getTemplateFieldsForRecord(
       String source, TemplateRecord record) {
-    return JCasUtil.selectCovered(TemplateField.class, record)
-        .stream()
+    return JCasUtil.selectCovered(TemplateField.class, record).stream()
         .filter(t -> source.equals(t.getSource()))
         .collect(Collectors.toList());
   }

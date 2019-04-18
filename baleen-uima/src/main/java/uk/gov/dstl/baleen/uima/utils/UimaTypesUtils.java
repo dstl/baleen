@@ -1,11 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.uima.cas.FeatureStructure;
 import org.apache.uima.jcas.JCas;
@@ -39,8 +35,7 @@ public final class UimaTypesUtils {
   /**
    * Create a new string array from a stringarray
    *
-   * @param jCas the jCas which will own the StringArray
-   * @param stringarray the string aray
+   * @param array the string aray
    * @return the string array (non-null)
    */
   public static String[] toArray(StringArray array) {

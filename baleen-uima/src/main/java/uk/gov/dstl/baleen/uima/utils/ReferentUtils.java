@@ -79,8 +79,7 @@ public class ReferentUtils {
       final JCas jCas, final Collection<T> mentions, final boolean filterEmptyReference) {
     final Multimap<ReferenceTarget, T> targets = HashMultimap.create();
 
-    mentions
-        .stream()
+    mentions.stream()
         .filter(p -> !filterEmptyReference || p.getReferent() != null)
         .forEach(
             e -> {
@@ -106,10 +105,7 @@ public class ReferentUtils {
       Multimap<ReferenceTarget, T> referentMap, Function<Collection<T>, T> convert) {
     final Map<ReferenceTarget, T> singleMap = new HashMap<>(referentMap.size());
 
-    referentMap
-        .asMap()
-        .entrySet()
-        .stream()
+    referentMap.asMap().entrySet().stream()
         .forEach(
             e -> {
               final T t = convert.apply(e.getValue());
@@ -173,8 +169,7 @@ public class ReferentUtils {
    */
   public static <T extends Base> Stream<Base> streamReferent(
       JCas jCas, Map<ReferenceTarget, T> referentMap) {
-    return JCasUtil.select(jCas, Base.class)
-        .stream()
+    return JCasUtil.select(jCas, Base.class).stream()
         // Filter out anything we can't reference
         .filter(p -> p.getReferent() != null && referentMap.get(p.getReferent()) != null);
   }

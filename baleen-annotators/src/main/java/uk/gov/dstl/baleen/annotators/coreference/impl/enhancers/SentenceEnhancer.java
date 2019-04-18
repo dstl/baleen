@@ -38,42 +38,33 @@ public class SentenceEnhancer {
     // Create a map (mention annotation) to sentence
 
     final Set<WordToken> pronounAnnotation =
-        mentions
-            .stream()
+        mentions.stream()
             .filter(p -> p.getType() == MentionType.PRONOUN)
             .map(p -> (WordToken) p.getAnnotation())
             .collect(Collectors.toSet());
 
     final Set<Entity> entityAnnotation =
-        mentions
-            .stream()
+        mentions.stream()
             .filter(p -> p.getType() == MentionType.ENTITY)
             .map(p -> (Entity) p.getAnnotation())
             .collect(Collectors.toSet());
 
     final Set<PhraseChunk> npAnnotation =
-        mentions
-            .stream()
+        mentions.stream()
             .filter(p -> p.getType() == MentionType.NP)
             .map(p -> (PhraseChunk) p.getAnnotation())
             .collect(Collectors.toSet());
 
     final Map<WordToken, Collection<Sentence>> wordToSentence =
-        JCasUtil.indexCovering(jCas, WordToken.class, Sentence.class)
-            .entrySet()
-            .stream()
+        JCasUtil.indexCovering(jCas, WordToken.class, Sentence.class).entrySet().stream()
             .filter(e -> pronounAnnotation.contains(e.getKey()))
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     final Map<Entity, Collection<Sentence>> entityToSentence =
-        JCasUtil.indexCovering(jCas, Entity.class, Sentence.class)
-            .entrySet()
-            .stream()
+        JCasUtil.indexCovering(jCas, Entity.class, Sentence.class).entrySet().stream()
             .filter(e -> entityAnnotation.contains(e.getKey()))
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     final Map<PhraseChunk, Collection<Sentence>> npToSentence =
-        JCasUtil.indexCovering(jCas, PhraseChunk.class, Sentence.class)
-            .entrySet()
-            .stream()
+        JCasUtil.indexCovering(jCas, PhraseChunk.class, Sentence.class).entrySet().stream()
             .filter(e -> npAnnotation.contains(e.getKey()))
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 

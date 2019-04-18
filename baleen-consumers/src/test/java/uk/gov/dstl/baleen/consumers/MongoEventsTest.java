@@ -134,8 +134,7 @@ public class MongoEventsTest extends ConsumerTestBase {
     assertEquals("Event should contain 3 entities", 3, entities.size());
 
     Document jamesDocument =
-        entities
-            .stream()
+        entities.stream()
             .filter(
                 entity -> {
                   Document nestedEntity = (Document) entity.get("entity");
@@ -145,8 +144,7 @@ public class MongoEventsTest extends ConsumerTestBase {
             .get(0);
 
     Document temporalDocument =
-        entities
-            .stream()
+        entities.stream()
             .filter(
                 entity -> {
                   Document nestedEntity = (Document) entity.get(MongoEvents.FIELD_ENTITY);
@@ -254,8 +252,7 @@ public class MongoEventsTest extends ConsumerTestBase {
     assertEquals("Event should contain 3 entities", 3, entities.size());
 
     Document jamesDocument =
-        entities
-            .stream()
+        entities.stream()
             .filter(
                 entity -> {
                   Document nestedEntity = (Document) entity.get(MongoEvents.FIELD_ENTITY);
@@ -265,8 +262,7 @@ public class MongoEventsTest extends ConsumerTestBase {
             .get(0);
 
     Document temporalDocument =
-        entities
-            .stream()
+        entities.stream()
             .filter(
                 entity -> {
                   Document nestedEntity = (Document) entity.get(MongoEvents.FIELD_ENTITY);

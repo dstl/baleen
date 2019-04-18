@@ -2,13 +2,7 @@
 package uk.gov.dstl.baleen.annotators.gazetteer.helpers;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.ahocorasick.trie.Emit;
@@ -333,7 +327,7 @@ public abstract class AbstractAhoCorasickAnnotator extends BaleenTextAwareAnnota
   /**
    * Create reference targets for entities with the same keys
    *
-   * @param jCas UIMA JCas Object
+   * @param block TextBlock object
    * @param entities A collection of lists of entities to coreference
    */
   protected void createReferenceTargets(

@@ -39,9 +39,8 @@ public class TearlineContentExtractor extends AbstractContentExtractor {
   public static final String PARAM_BOILERPLATE = "boilerplate";
 
   @ConfigurationParameter(
-    name = PARAM_BOILERPLATE,
-    defaultValue = {}
-  )
+      name = PARAM_BOILERPLATE,
+      defaultValue = {})
   List<String> boilerplate;
 
   /**
@@ -53,9 +52,8 @@ public class TearlineContentExtractor extends AbstractContentExtractor {
   public static final String PARAM_TEARLINE = "tearline";
 
   @ConfigurationParameter(
-    name = PARAM_TEARLINE,
-    defaultValue = "[\\h]*[\\p{Pc}\\p{Pd}]+[\\h]*tear[\\h]*line[\\h]*[\\p{Pc}\\p{Pd}]+[\\h]*"
-  )
+      name = PARAM_TEARLINE,
+      defaultValue = "[\\h]*[\\p{Pc}\\p{Pd}]+[\\h]*tear[\\h]*line[\\h]*[\\p{Pc}\\p{Pd}]+[\\h]*")
   String tearline;
 
   @Override

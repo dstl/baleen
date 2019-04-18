@@ -79,8 +79,7 @@ public class ProperHeadMatchSieve extends AbstractCoreferenceSieve {
   }
 
   private Set<String> getSpatialAndPNModifier(Mention a) {
-    return a.getWords()
-        .stream()
+    return a.getWords().stream()
         .filter(
             w ->
                 w.getPartOfSpeech().startsWith("NP")

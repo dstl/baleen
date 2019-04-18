@@ -171,8 +171,7 @@ public class SieveCoreferenceTest extends AnnotatorTestBase {
 
     // Check all the he and his connect to Chris
     boolean allMatch =
-        words
-            .stream()
+        words.stream()
             .filter(
                 p ->
                     p.getCoveredText().equalsIgnoreCase("his")

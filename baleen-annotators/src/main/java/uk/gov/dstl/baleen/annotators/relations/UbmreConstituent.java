@@ -130,8 +130,7 @@ public class UbmreConstituent extends AbstractInteractionBasedSentenceRelationsh
     final Collection<WordToken> tokens = interactionCoveringTokens.get(i);
 
     final Set<ParseTreeNode> nodes =
-        tokens
-            .stream()
+        tokens.stream()
             .map(parseTree::getParent)
             .filter(Objects::nonNull)
             .collect(Collectors.toSet());

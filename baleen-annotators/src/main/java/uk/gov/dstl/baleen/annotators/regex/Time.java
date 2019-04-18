@@ -53,8 +53,7 @@ public class Time extends AbstractRegexAnnotator<Temporal> {
 
   private static final String TIME_ZONES =
       StringUtils.join(
-          Arrays.asList(TimeZone.getAvailableIDs())
-              .stream()
+          Arrays.asList(TimeZone.getAvailableIDs()).stream()
               .filter(s -> StringUtils.isAllUpperCase(s) && s.length() <= 3)
               .collect(Collectors.toList()),
           "|");

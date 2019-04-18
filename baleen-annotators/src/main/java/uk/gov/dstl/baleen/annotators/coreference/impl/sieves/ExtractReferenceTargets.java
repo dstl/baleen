@@ -24,8 +24,7 @@ public class ExtractReferenceTargets extends AbstractCoreferenceSieve {
 
     Map<Long, Cluster> map = new HashMap<>();
 
-    getMentions()
-        .stream()
+    getMentions().stream()
         .forEach(
             m -> {
               ReferenceTarget referent = m.getAnnotation().getReferent();

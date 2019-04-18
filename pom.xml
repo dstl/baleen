@@ -114,10 +114,10 @@
     <maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
     <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>${maven-surefire-plugin.version}</maven-failsafe-plugin.version>
-    <maven-spotless.version>1.17.0</maven-spotless.version>
+    <maven-spotless.version>1.22.0</maven-spotless.version>
 	<jacoco.version>0.8.3</jacoco.version>
 	<coveralls.version>4.3.0</coveralls.version>
-    <license.version>1.18</license.version>
+    <license.version>1.19</license.version>
   </properties>
 
   <dependencies>
@@ -188,7 +188,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
         <configuration>
-          <additionalparam>-Xdoclint:none</additionalparam>
+          <additionalOptions>-Xdoclint:none</additionalOptions>
           <doclint>none</doclint>
           <taglets>
             <taglet>

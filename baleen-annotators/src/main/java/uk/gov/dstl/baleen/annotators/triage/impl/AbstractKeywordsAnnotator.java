@@ -1,11 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.triage.impl;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,7 +62,7 @@ public abstract class AbstractKeywordsAnnotator extends BaleenTextAwareAnnotator
 
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the
@@ -154,8 +150,7 @@ public abstract class AbstractKeywordsAnnotator extends BaleenTextAwareAnnotator
   }
 
   private void addKeywordsToMetadata(JCas jCas, List<String> keywords) {
-    keywords
-        .stream()
+    keywords.stream()
         .limit(maxKeywords)
         .forEach(
             k -> {

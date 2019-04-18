@@ -9,7 +9,6 @@ public interface MongoFactory extends AutoCloseable {
   /**
    * Create a MongoDatabase connection
    *
-   * @param argumentsMap Map of key value pairs
    * @return MongoDatabase instance
    */
   MongoDatabase createDatabase();

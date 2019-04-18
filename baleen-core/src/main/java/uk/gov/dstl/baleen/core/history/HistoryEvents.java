@@ -39,7 +39,6 @@ public class HistoryEvents {
    * @param recordable the recordable which was remains
    * @param referrer the object which merged the entities
    * @param mergedId the item which was merged into the recordable
-   * @return
    */
   public static HistoryEvent createMerged(Recordable recordable, String referrer, long mergedId) {
     return createMerged(System.currentTimeMillis(), recordable, referrer, mergedId);

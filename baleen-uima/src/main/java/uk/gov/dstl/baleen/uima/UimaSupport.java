@@ -350,8 +350,7 @@ public class UimaSupport {
       JCas jCas = e.getCAS().getJCas();
       Collection<Relation> relations = JCasUtil.select(jCas, Relation.class);
 
-      return relations
-          .stream()
+      return relations.stream()
           .filter(r -> r.getSource() == e || r.getTarget() == e)
           .collect(Collectors.toList());
     } catch (UIMAException ue) {

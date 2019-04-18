@@ -164,14 +164,11 @@ public class MongoRelations extends BaleenConsumer {
         JCasUtil.indexCovering(jCas, Relation.class, Sentence.class);
 
     List<Document> rels =
-        JCasUtil.select(jCas, Relation.class)
-            .stream()
+        JCasUtil.select(jCas, Relation.class).stream()
             .map(
                 r -> {
                   String sentence =
-                      coveringSentence
-                          .get(r)
-                          .stream()
+                      coveringSentence.get(r).stream()
                           .map(Sentence::getCoveredText)
                           .collect(Collectors.joining(". "));
 

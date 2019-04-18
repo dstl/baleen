@@ -30,7 +30,7 @@ public class LoggingServlet extends AbstractApiServlet {
   /**
    * New instance, which will report on the supplied logging.
    *
-   * @param registry the logging to access the data from
+   * @param logging the logging to access the data from
    */
   public LoggingServlet(BaleenLogging logging) {
     super(LOGGER, LoggingServlet.class);

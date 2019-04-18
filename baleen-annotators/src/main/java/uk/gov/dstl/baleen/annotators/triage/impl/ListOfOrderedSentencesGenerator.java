@@ -61,9 +61,7 @@ public class ListOfOrderedSentencesGenerator<T> {
       sentenceNetWeights.put(sentence, netWeight);
     }
 
-    return sentenceNetWeights
-        .entrySet()
-        .stream()
+    return sentenceNetWeights.entrySet().stream()
         .sorted(Map.Entry.<T, Double>comparingByValue().reversed())
         .map(Entry::getKey)
         .collect(Collectors.toCollection(LinkedList::new));

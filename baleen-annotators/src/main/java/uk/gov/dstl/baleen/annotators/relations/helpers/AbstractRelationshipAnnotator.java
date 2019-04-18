@@ -1,12 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.relations.helpers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -133,7 +128,7 @@ public abstract class AbstractRelationshipAnnotator extends BaleenAnnotator {
    * @param type the type of the relation
    * @param subType the sub type of the relation
    * @param value the value of the relation
-   * @param confidence the confidence of the relation
+   * @param assignedConfidence the confidence of the relation
    * @return the relation
    */
   protected Relation createRelation(
@@ -214,12 +209,10 @@ public abstract class AbstractRelationshipAnnotator extends BaleenAnnotator {
       String subType,
       String value,
       Float confidence) {
-    return sources
-        .stream()
+    return sources.stream()
         .flatMap(
             l ->
-                targets
-                    .stream()
+                targets.stream()
                     .map(
                         r ->
                             createRelation(

@@ -45,8 +45,7 @@ public class DateTime extends BaleenTextAwareAnnotator {
   private static final String DATE_SUFFIXES = "(st|nd|rd|th)";
   private static final String TIME_ZONES =
       StringUtils.join(
-          Arrays.asList(TimeZone.getAvailableIDs())
-              .stream()
+          Arrays.asList(TimeZone.getAvailableIDs()).stream()
               .filter(s -> StringUtils.isAllUpperCase(s) && s.length() <= 3)
               .collect(Collectors.toList()),
           "|");

@@ -55,10 +55,9 @@ public class SimpleEventExtractor extends BaleenAnnotator {
   public static final String PARAM_TYPE_NAMES = "typeNames";
 
   @ConfigurationParameter(
-    name = PARAM_TYPE_NAMES,
-    mandatory = false,
-    defaultValue = {CHEMICAL, MONEY, ORGANISATION, PERSON, VEHICLE, WEAPON}
-  )
+      name = PARAM_TYPE_NAMES,
+      mandatory = false,
+      defaultValue = {CHEMICAL, MONEY, ORGANISATION, PERSON, VEHICLE, WEAPON})
   protected String[] typeNames;
 
   /**
@@ -70,10 +69,9 @@ public class SimpleEventExtractor extends BaleenAnnotator {
   public static final String PARAM_BLOCKS_TO_EXTRACT_FROM = "extractFrom";
 
   @ConfigurationParameter(
-    name = PARAM_BLOCKS_TO_EXTRACT_FROM,
-    mandatory = false,
-    defaultValue = SENTENCES
-  )
+      name = PARAM_BLOCKS_TO_EXTRACT_FROM,
+      mandatory = false,
+      defaultValue = SENTENCES)
   private String extractFrom;
 
   private static final String SENTENCES = "sentences";
@@ -191,8 +189,7 @@ public class SimpleEventExtractor extends BaleenAnnotator {
 
   private Set<Entity> filterEntities(Collection<Entity> allEntitiesInSection) {
 
-    return allEntitiesInSection
-        .stream()
+    return allEntitiesInSection.stream()
         .filter(entity -> entityClasses.contains(entity.getClass()))
         .collect(Collectors.toSet());
   }

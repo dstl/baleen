@@ -2,20 +2,7 @@
 // Modified by Committed Software Copyright (c) 2018, opensource@committed.io
 package uk.gov.dstl.baleen.uima.grammar;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,11 +13,7 @@ import org.apache.uima.jcas.JCas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.*;
 
 import uk.gov.dstl.baleen.types.language.Dependency;
 import uk.gov.dstl.baleen.types.language.WordToken;
@@ -267,9 +250,7 @@ public class DependencyGraph {
     // so this could be more efficient.
 
     final List<WordToken> set =
-        edges
-            .get(token)
-            .stream()
+        edges.get(token).stream()
             .filter(e -> predicate.test(e.getDependency()))
             .map(e -> e.getOther(token))
             .collect(Collectors.toList());
@@ -287,34 +268,26 @@ public class DependencyGraph {
   /** Log the dependency graph to the logger for debugging. */
   public void log() {
     final StringBuilder sb = new StringBuilder();
-    edges
-        .asMap()
-        .entrySet()
-        .stream()
+    edges.asMap().entrySet().stream()
         .forEach(
             e -> {
               sb.append("\t");
               sb.append(e.getKey().getCoveredText());
               sb.append(": ");
-              e.getValue()
-                  .stream()
+              e.getValue().stream()
                   .map(x -> x.getOther(e.getKey()))
                   .forEach(w -> sb.append(" " + w.getCoveredText()));
               sb.append("\n");
             });
 
     final StringBuilder governorSb = new StringBuilder();
-    governors
-        .asMap()
-        .entrySet()
-        .stream()
+    governors.asMap().entrySet().stream()
         .forEach(
             e -> {
               governorSb.append("\t");
               governorSb.append(e.getKey().getCoveredText());
               governorSb.append(": ");
-              e.getValue()
-                  .stream()
+              e.getValue().stream()
                   .forEach(
                       w ->
                           governorSb.append(
@@ -323,9 +296,7 @@ public class DependencyGraph {
             });
 
     final StringBuilder dependentSb = new StringBuilder();
-    dependents
-        .entrySet()
-        .stream()
+    dependents.entrySet().stream()
         .forEach(
             e -> {
               dependentSb.append("\t");
@@ -355,40 +326,29 @@ public class DependencyGraph {
     final SetMultimap<WordToken, Dependency> filteredGovernor = HashMultimap.create();
     final SetMultimap<String, WordToken> filteredPartOfSpeech = HashMultimap.create();
 
-    edges
-        .asMap()
-        .entrySet()
-        .stream()
+    edges.asMap().entrySet().stream()
         .filter(w -> predicate.test(w.getKey()))
         .forEach(
             e -> {
               final WordToken key = e.getKey();
-              e.getValue()
-                  .stream()
+              e.getValue().stream()
                   .filter(edge -> predicate.test(edge.getOther(key)))
                   .forEach(v -> filteredEdges.put(key, v));
             });
 
-    governors
-        .asMap()
-        .keySet()
-        .stream()
+    governors.asMap().keySet().stream()
         .filter(predicate)
         .forEach(
             k -> {
               final List<Dependency> filtered =
-                  governors
-                      .get(k)
-                      .stream()
+                  governors.get(k).stream()
                       .filter(
                           d -> predicate.test(d.getGovernor()) && predicate.test(d.getDependent()))
                       .collect(Collectors.toList());
               filteredGovernor.putAll(k, filtered);
             });
 
-    dependents
-        .keySet()
-        .stream()
+    dependents.keySet().stream()
         .filter(predicate)
         .forEach(
             k -> {
@@ -471,14 +431,11 @@ public class DependencyGraph {
 
       if (wd.getDistance() < maxDistance) {
         final Set<WordToken> nextWords =
-            edges
-                .get(wd.getWord())
-                .stream()
+            edges.get(wd.getWord()).stream()
                 .map(w -> w.getOther(wd.getWord()))
                 .collect(Collectors.toSet());
         nextWords.removeAll(visited);
-        nextWords
-            .stream()
+        nextWords.stream()
             .forEach(
                 t -> {
                   queue.add(new WordDistance(t, wd));
@@ -520,8 +477,7 @@ public class DependencyGraph {
   public static DependencyGraph build(final JCas jCas, AnnotationFS annnotation) {
     final DependencyGraph graph = new DependencyGraph();
 
-    JCasUtil.selectCovered(jCas, Dependency.class, annnotation)
-        .stream()
+    JCasUtil.selectCovered(jCas, Dependency.class, annnotation).stream()
         .forEach(graph::addDependency);
 
     return graph;
@@ -616,9 +572,7 @@ public class DependencyGraph {
 
     DependencyNode root = dependencyTree.getRoot();
     List<WordToken> rootCandidates =
-        partOfSpeech
-            .get(root.getType())
-            .stream()
+        partOfSpeech.get(root.getType()).stream()
             .filter(root::matches)
             .collect(Collectors.toList());
 
@@ -760,7 +714,7 @@ public class DependencyGraph {
    * <p>This is the highest word token in the dependency graph covered by the annotation, assumes
    * they are connected.
    *
-   * @param annotation
+   * @param covered
    * @return the head node
    */
   public Optional<WordToken> getHeadNode(List<WordToken> covered) {
@@ -811,8 +765,7 @@ public class DependencyGraph {
 
   private Set<WordToken> getCommonParents(Collection<WordToken> tokens) {
     final Iterator<Set<WordToken>> iterator =
-        tokens
-            .stream()
+        tokens.stream()
             .map(
                 t -> {
                   final Set<WordToken> path = new HashSet<>();

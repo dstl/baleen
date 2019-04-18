@@ -63,9 +63,8 @@ public class MergeAdjacent extends BaleenAnnotator {
   public static final String PARAM_TYPE = "types";
 
   @ConfigurationParameter(
-    name = PARAM_TYPE,
-    defaultValue = {}
-  )
+      name = PARAM_TYPE,
+      defaultValue = {})
   String[] types;
 
   List<Class<? extends Entity>> classTypes = new ArrayList<>();
@@ -107,8 +106,7 @@ public class MergeAdjacent extends BaleenAnnotator {
       int end = mergeable.get(mergeable.size() - 1).getEnd();
 
       Double lowestConfidence =
-          mergeable
-              .stream()
+          mergeable.stream()
               .min((e1, e2) -> Double.compare(e1.getConfidence(), e2.getConfidence()))
               .map(Entity::getConfidence)
               .orElse(Double.valueOf(0.0));

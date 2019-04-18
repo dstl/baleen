@@ -29,8 +29,8 @@ public class OffsetUtil {
    * @param offset
    * @return the text covered by the offset
    */
-  public static String getText(JCas jCas, Offset key) {
-    return getText(jCas, key.getBegin(), key.getEnd());
+  public static String getText(JCas jCas, Offset offset) {
+    return getText(jCas, offset.getBegin(), offset.getEnd());
   }
 
   /**

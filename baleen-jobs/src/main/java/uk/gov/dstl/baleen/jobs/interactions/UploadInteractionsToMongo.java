@@ -18,7 +18,7 @@ import uk.gov.dstl.baleen.uima.JobSettings;
  * Upload interaction data from CSV to Mongo.
  *
  * <p>The CSV will be in {@link CsvInteractionWriter} format and the Mongo output will be in {@link
- * Mongo} format.
+ * MongoInteractionWriter} format.
  *
  * <p>The upload job will typically look like:
  *

@@ -99,8 +99,7 @@ public abstract class BaleenTextAwareAnnotator extends BaleenAnnotator {
       // TODO: Perhaps this should be configurable as a parameter?
 
       if (!collection.isEmpty()) {
-        return JCasUtil.select(jCas, Text.class)
-            .stream()
+        return JCasUtil.select(jCas, Text.class).stream()
             .map(t -> new TextBlock(jCas, t))
             .collect(Collectors.toList());
       }

@@ -62,9 +62,7 @@ public abstract class AbstractSentenceRankingSummarisation extends BaleenAnnotat
     Map<Sentence, Double> sentenceScores = scoreSentences(sentences);
 
     List<Sentence> topSentences =
-        sentenceScores
-            .entrySet()
-            .stream()
+        sentenceScores.entrySet().stream()
             .sorted((e1, e2) -> -Double.compare(e1.getValue(), e2.getValue()))
             .limit(numSentences)
             .map(Map.Entry::getKey)
@@ -73,8 +71,7 @@ public abstract class AbstractSentenceRankingSummarisation extends BaleenAnnotat
     if (documentOrder) topSentences.sort(Comparator.comparingInt(Annotation::getBegin));
 
     String summary =
-        topSentences
-            .stream()
+        topSentences.stream()
             .map(s -> s.getCoveredText().trim())
             .filter(s -> !s.isEmpty())
             .map(

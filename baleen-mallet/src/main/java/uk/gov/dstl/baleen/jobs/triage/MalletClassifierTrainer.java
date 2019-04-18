@@ -6,11 +6,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UimaContext;
@@ -62,7 +58,7 @@ public class MalletClassifierTrainer extends BaleenTask {
 
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the
@@ -111,9 +107,8 @@ public class MalletClassifierTrainer extends BaleenTask {
   public static final String PARAM_CONTENT_FIELD = "field";
 
   @ConfigurationParameter(
-    name = PARAM_CONTENT_FIELD,
-    defaultValue = uk.gov.dstl.baleen.consumers.Mongo.FIELD_CONTENT
-  )
+      name = PARAM_CONTENT_FIELD,
+      defaultValue = uk.gov.dstl.baleen.consumers.Mongo.FIELD_CONTENT)
   private String contentField;
 
   /**
@@ -134,9 +129,8 @@ public class MalletClassifierTrainer extends BaleenTask {
   public static final String PARAM_CLASSIFIER_TRAINER = "trainer";
 
   @ConfigurationParameter(
-    name = PARAM_CLASSIFIER_TRAINER,
-    defaultValue = {"NaiveBayes"}
-  )
+      name = PARAM_CLASSIFIER_TRAINER,
+      defaultValue = {"NaiveBayes"})
   private String[] trainerDefinition;
 
   /**
@@ -162,7 +156,7 @@ public class MalletClassifierTrainer extends BaleenTask {
   /**
    * Test result file
    *
-   * <p>Outputs the trial results to file for reference. NB forTesting must be > 0.0 to perform
+   * <p>Outputs the trial results to file for reference. NB forTesting must be &gt; 0.0 to perform
    * trial.
    *
    * @baleen.config topicModel

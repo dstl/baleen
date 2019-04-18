@@ -79,10 +79,9 @@ public class MongoEvents extends BaleenConsumer {
   public static final String PARAM_TEXT_BLOCK_EXTRACTED_FROM = "extractedFrom";
 
   @ConfigurationParameter(
-    name = PARAM_TEXT_BLOCK_EXTRACTED_FROM,
-    mandatory = false,
-    defaultValue = SENTENCES
-  )
+      name = PARAM_TEXT_BLOCK_EXTRACTED_FROM,
+      mandatory = false,
+      defaultValue = SENTENCES)
   private String extractedFrom;
 
   private MongoCollection<Document> eventsCollection;
@@ -171,14 +170,11 @@ public class MongoEvents extends BaleenConsumer {
     final Map<Event, List<T>> coveringText = JCasUtil.indexCovering(jCas, Event.class, textClass);
 
     List<Document> eventDocuments =
-        JCasUtil.select(jCas, Event.class)
-            .stream()
+        JCasUtil.select(jCas, Event.class).stream()
             .map(
                 e -> {
                   String text =
-                      coveringText
-                          .get(e)
-                          .stream()
+                      coveringText.get(e).stream()
                           .map(T::getCoveredText)
                           .collect(Collectors.joining(" "));
 

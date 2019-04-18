@@ -1,12 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.coreference;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -21,35 +16,13 @@ import com.google.common.collect.ImmutableSet;
 import uk.gov.dstl.baleen.annotators.coreference.impl.MentionDetector;
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.Cluster;
 import uk.gov.dstl.baleen.annotators.coreference.impl.data.Mention;
-import uk.gov.dstl.baleen.annotators.coreference.impl.enhancers.AcronymEnhancer;
-import uk.gov.dstl.baleen.annotators.coreference.impl.enhancers.AnimacyEnhancer;
-import uk.gov.dstl.baleen.annotators.coreference.impl.enhancers.GenderEnhancer;
-import uk.gov.dstl.baleen.annotators.coreference.impl.enhancers.MentionEnhancer;
-import uk.gov.dstl.baleen.annotators.coreference.impl.enhancers.MultiplicityEnhancer;
-import uk.gov.dstl.baleen.annotators.coreference.impl.enhancers.PersonEnhancer;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.CoreferenceSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.ExactStringMatchSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.ExtractReferenceTargets;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.InSentencePronounSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.PreciseConstructsSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.PronounResolutionSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.ProperHeadMatchSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.RelaxedHeadMatchSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.RelaxedStringMatchSieve;
-import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.StrictHeadMatchSieve;
+import uk.gov.dstl.baleen.annotators.coreference.impl.enhancers.*;
+import uk.gov.dstl.baleen.annotators.coreference.impl.sieves.*;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.resources.SharedGenderMultiplicityResource;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
 import uk.gov.dstl.baleen.types.Base;
-import uk.gov.dstl.baleen.types.common.CommsIdentifier;
-import uk.gov.dstl.baleen.types.common.DocumentReference;
-import uk.gov.dstl.baleen.types.common.Frequency;
-import uk.gov.dstl.baleen.types.common.Money;
-import uk.gov.dstl.baleen.types.common.Nationality;
-import uk.gov.dstl.baleen.types.common.Organisation;
-import uk.gov.dstl.baleen.types.common.Person;
-import uk.gov.dstl.baleen.types.common.Url;
-import uk.gov.dstl.baleen.types.common.Vehicle;
+import uk.gov.dstl.baleen.types.common.*;
 import uk.gov.dstl.baleen.types.geo.Coordinate;
 import uk.gov.dstl.baleen.types.language.PhraseChunk;
 import uk.gov.dstl.baleen.types.language.Sentence;
@@ -150,7 +123,7 @@ public class SieveCoreference extends BaleenAnnotator {
 
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the

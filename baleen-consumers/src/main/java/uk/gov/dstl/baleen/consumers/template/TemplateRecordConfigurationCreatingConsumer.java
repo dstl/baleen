@@ -7,17 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.io.FilenameUtils;
@@ -54,7 +44,7 @@ import uk.gov.dstl.baleen.uima.utils.select.ItemHierarchy;
  * <p>See {@link TemplateAnnotator} for a description of the format.
  *
  * <p>This consumer should be used with {@link TemplateRecordDefinitionAnnotator} and {@link
- * TemplateFieldDefinitionAnnotator}.
+ * uk.gov.dstl.baleen.annotators.templates.TemplateFieldDefinitionAnnotator}.
  */
 public class TemplateRecordConfigurationCreatingConsumer extends BaleenConsumer {
 
@@ -280,8 +270,7 @@ public class TemplateRecordConfigurationCreatingConsumer extends BaleenConsumer 
   private List<String> generateCoveredPaths(
       ItemHierarchy<Structure> structureHierarchy, List<Structure> coveredStructures, int depth) {
     LinkedHashSet<String> collect =
-        coveredStructures
-            .stream()
+        coveredStructures.stream()
             .map(s -> structureHierarchy.getSelectorPath(s).toDepth(depth).toString())
             .collect(Collectors.toCollection(LinkedHashSet::new));
 
@@ -302,7 +291,7 @@ public class TemplateRecordConfigurationCreatingConsumer extends BaleenConsumer 
    * Make fields from definitions and look up the location in the structure
    *
    * @param structureHierarchy the structure hierarchy
-   * @param fields the fields
+   * @param definitions the definitions
    * @return the list of configurations
    */
   private List<TemplateFieldConfiguration> makeFields(
@@ -322,7 +311,7 @@ public class TemplateRecordConfigurationCreatingConsumer extends BaleenConsumer 
    * Make field from definition and path
    *
    * @param templateFieldDefinition the field definition
-   * @param fields the fields
+   * @param fieldPath the field path
    * @return the configuration
    */
   private TemplateFieldConfiguration makeField(

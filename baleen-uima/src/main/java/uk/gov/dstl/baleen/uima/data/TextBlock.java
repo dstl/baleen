@@ -136,8 +136,8 @@ public class TextBlock {
   // Creating annotation helpers
 
   /**
-   * Create a new annotation, correcting the being&end to be the document offset rather than within
-   * this text block.
+   * Create a new annotation, correcting the begin and end to be the document offset rather than
+   * within this text block.
    *
    * <p>Note this uses reflection, so may not be as performant as simply new Type().
    *

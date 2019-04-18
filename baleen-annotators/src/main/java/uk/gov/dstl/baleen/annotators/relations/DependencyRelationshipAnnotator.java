@@ -85,9 +85,7 @@ public class DependencyRelationshipAnnotator extends AbstractTypedRelationshipAn
     Map<Offset, List<Entity>> sentences = cleanSentencesByOffset(languageCovered, structureCovered);
 
     addRelationsToIndex(
-        sentences
-            .entrySet()
-            .stream()
+        sentences.entrySet().stream()
             .flatMap(e -> createDependantRelations(jCas, e.getValue(), e.getKey())));
   }
 

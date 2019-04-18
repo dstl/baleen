@@ -67,9 +67,8 @@ public class TableEntity extends BaleenAnnotator {
   public static final String PARAM_TYPE = "type";
 
   @ConfigurationParameter(
-    name = PARAM_TYPE,
-    defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity"
-  )
+      name = PARAM_TYPE,
+      defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity")
   private String type;
 
   /**

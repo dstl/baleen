@@ -80,9 +80,8 @@ public class SqlDbCellReader extends BaleenCollectionReader {
   public static final String PARAM_SQL_IGNORE_TABLES = "ignoreTables";
 
   @ConfigurationParameter(
-    name = PARAM_SQL_IGNORE_TABLES,
-    defaultValue = {}
-  )
+      name = PARAM_SQL_IGNORE_TABLES,
+      defaultValue = {})
   protected String[] ignoreTables;
 
   /**
@@ -93,9 +92,8 @@ public class SqlDbCellReader extends BaleenCollectionReader {
   public static final String PARAM_SQL_IGNORE_COLUMNS = "ignoreColumns";
 
   @ConfigurationParameter(
-    name = PARAM_SQL_IGNORE_COLUMNS,
-    defaultValue = {}
-  )
+      name = PARAM_SQL_IGNORE_COLUMNS,
+      defaultValue = {})
   protected String[] ignoreColumns;
 
   /**

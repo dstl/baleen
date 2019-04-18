@@ -21,8 +21,7 @@ public class Min implements ValueStrategy<Number, Number> {
       return Optional.empty();
     }
     return (Optional<Number>)
-        values
-            .stream()
+        values.stream()
             .min(
                 (Number n1, Number n2) -> {
                   BigDecimal b1 = BigDecimal.valueOf(n1.doubleValue());

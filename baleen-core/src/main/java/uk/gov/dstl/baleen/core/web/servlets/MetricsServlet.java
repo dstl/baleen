@@ -94,10 +94,7 @@ public class MetricsServlet extends AbstractApiServlet {
       metrics = registry.getMetrics();
     } else {
       metrics =
-          registry
-              .getMetrics()
-              .entrySet()
-              .stream()
+          registry.getMetrics().entrySet().stream()
               .filter(
                   e -> {
                     for (String s : filters) {

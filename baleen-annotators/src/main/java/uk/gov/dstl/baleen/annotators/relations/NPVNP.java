@@ -43,8 +43,7 @@ public class NPVNP extends BaleenAnnotator {
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
     List<PhraseChunk> nounPhrases =
-        JCasUtil.select(jCas, PhraseChunk.class)
-            .stream()
+        JCasUtil.select(jCas, PhraseChunk.class).stream()
             .filter(c -> "NP".equals(c.getChunkType()))
             .collect(Collectors.toList());
 

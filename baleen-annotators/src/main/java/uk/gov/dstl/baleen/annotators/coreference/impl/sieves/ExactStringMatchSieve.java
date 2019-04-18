@@ -29,8 +29,7 @@ public class ExactStringMatchSieve extends AbstractCoreferenceSieve {
   @Override
   public void sieve() {
     List<Mention> mentions =
-        getMentions(MentionType.ENTITY, MentionType.NP)
-            .stream()
+        getMentions(MentionType.ENTITY, MentionType.NP).stream()
             .filter(m -> m.getHead() != null)
             .filter(m -> !EXCLUDED.contains(m.getHead().toLowerCase()))
             .collect(Collectors.toList());

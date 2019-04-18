@@ -100,9 +100,7 @@ public class OpenNLPParser extends BaleenAnnotator {
     final Map<Sentence, List<WordToken>> sentences =
         JCasUtil.indexCovered(jCas, Sentence.class, WordToken.class);
 
-    sentences
-        .entrySet()
-        .stream()
+    sentences.entrySet().stream()
         .filter(e -> !e.getValue().isEmpty())
         .forEach(
             e -> {

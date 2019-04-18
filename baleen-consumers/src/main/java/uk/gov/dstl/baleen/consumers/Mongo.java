@@ -359,10 +359,7 @@ public class Mongo extends BaleenConsumer {
         ReferentUtils.createReferentMap(jCas, Entity.class, false);
 
     List<Document> ents =
-        targetted
-            .asMap()
-            .entrySet()
-            .stream()
+        targetted.asMap().entrySet().stream()
             .map(
                 e -> {
                   ReferenceTarget referenceTarget = e.getKey();
@@ -391,8 +388,7 @@ public class Mongo extends BaleenConsumer {
             fields);
 
     List<Document> rels =
-        JCasUtil.select(jCas, Relation.class)
-            .stream()
+        JCasUtil.select(jCas, Relation.class).stream()
             .map(converter::convertRelation)
             .map(Document::new)
             .peek(d -> d.append(FIELD_DOCUMENT_ID, documentId))

@@ -280,7 +280,7 @@ public abstract class Evaluator<T> {
      * Construct an matches evaluator for the given attribute value.
      *
      * @param key the attribute name to look for
-     * @param value the attribute value should match
+     * @param pattern the attribute value should match
      */
     public AttributeWithValueMatching(String key, Pattern pattern) {
       this.key = key.trim().toLowerCase();

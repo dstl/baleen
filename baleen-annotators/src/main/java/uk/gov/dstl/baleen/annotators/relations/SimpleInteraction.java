@@ -51,18 +51,15 @@ public class SimpleInteraction extends AbstractInteractionBasedSentenceRelations
       final Collection<Interaction> interactions,
       final Collection<Entity> entities) {
 
-    return interactions
-        .stream()
+    return interactions.stream()
         .flatMap(
             i -> {
               final List<Entity> leftOfInteraction =
-                  entities
-                      .stream()
+                  entities.stream()
                       .filter(e -> e.getEnd() < i.getBegin())
                       .collect(Collectors.toList());
               final List<Entity> rightOfInteraction =
-                  entities
-                      .stream()
+                  entities.stream()
                       .filter(e -> e.getBegin() > i.getEnd())
                       .collect(Collectors.toList());
 

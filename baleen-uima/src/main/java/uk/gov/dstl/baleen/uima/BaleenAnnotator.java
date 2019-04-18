@@ -143,7 +143,7 @@ public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
   /**
    * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
    *
-   * @param annot Annotation(s) to add
+   * @param annotations Annotation(s) to add
    */
   protected void addToJCasIndex(Annotation... annotations) {
     getSupport().add(annotations);
@@ -152,7 +152,7 @@ public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
   /**
    * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
    *
-   * @param annot Annotation(s) to add
+   * @param annotations Annotation(s) to add
    */
   protected void addToJCasIndex(Collection<? extends Annotation> annotations) {
     getSupport().add(annotations);
@@ -161,7 +161,7 @@ public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
   /**
    * Remove an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
    *
-   * @param annot Annotation(s) to remove
+   * @param annotations Annotation(s) to remove
    */
   protected void removeFromJCasIndex(Collection<? extends Annotation> annotations) {
     getSupport().remove(annotations);
@@ -170,7 +170,7 @@ public abstract class BaleenAnnotator extends JCasAnnotator_ImplBase {
   /**
    * Remove an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
    *
-   * @param annot Annotation(s) to remove
+   * @param annotations Annotation(s) to remove
    */
   protected void removeFromJCasIndex(Annotation... annotations) {
     getSupport().remove(annotations);

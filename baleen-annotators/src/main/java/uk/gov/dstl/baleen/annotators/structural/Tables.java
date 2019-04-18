@@ -78,13 +78,11 @@ public class Tables {
    * @return a stream of the filtered rows (ie list of TableCells)
    */
   public Stream<List<TableCell>> getFilteredRows() {
-    return nodes
-        .stream()
+    return nodes.stream()
         .flatMap(
             table -> {
               List<Nodes<Structure>> columns =
-                  columnPatterns
-                      .stream()
+                  columnPatterns.stream()
                       .map(p -> nodes.select("TableHeader TableCell:matches(" + p.pattern() + ")"))
                       .map(p -> p.get(0))
                       .map(Node::getSiblingIndex)
@@ -146,13 +144,10 @@ public class Tables {
    * @return a stream of the filtered table cells
    */
   public Stream<List<TableCell>> getRows() {
-    return nodes
-        .select("TableBody > TableRow")
-        .stream()
+    return nodes.select("TableBody > TableRow").stream()
         .map(
             tr ->
-                tr.getChildren()
-                    .stream()
+                tr.getChildren().stream()
                     .map(tc -> (TableCell) tc.getItem())
                     .collect(Collectors.toList()));
   }

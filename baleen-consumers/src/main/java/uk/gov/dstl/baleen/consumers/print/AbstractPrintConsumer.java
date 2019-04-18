@@ -44,8 +44,7 @@ public abstract class AbstractPrintConsumer<T extends Base> extends BaleenConsum
 
   @Override
   protected void doProcess(JCas jCas) throws AnalysisEngineProcessException {
-    JCasUtil.select(jCas, clazz)
-        .stream()
+    JCasUtil.select(jCas, clazz).stream()
         .map(this::print)
         .filter(Objects::nonNull)
         .forEach(s -> getMonitor().info("{}:\n{}", clazz.getName(), s));

@@ -6,16 +6,20 @@ import com.codahale.metrics.Histogram;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 
-/** Class specific metrics provider, access through {@link MetricsFactoryTest}. */
+/**
+ * Class specific metrics provider, access through {@link
+ * uk.gov.dstl.baleen.core.metrics.MetricsFactory}.
+ */
 public class Metrics {
   public static final String SEP = ":";
   private final MetricsFactory factory;
   private final String base;
 
   /**
-   * Better to use {@link MetricsFactoryTest} function to get an instance.
+   * Better to use {@link uk.gov.dstl.baleen.core.metrics.MetricsFactory} function to get an
+   * instance.
    *
-   * @param metrics
+   * @param factory
    * @param prefix
    * @param clazz
    */
@@ -25,52 +29,33 @@ public class Metrics {
   }
 
   /**
-   * Better to use {@link MetricsFactoryTest} function to get an instance.
+   * Better to use {@link uk.gov.dstl.baleen.core.metrics.MetricsFactory} function to get an
+   * instance.
    *
-   * @param metrics
+   * @param factory
    * @param clazz
    */
-  public Metrics(MetricsFactory metrics, Class<?> clazz) {
-    this.factory = metrics;
+  public Metrics(MetricsFactory factory, Class<?> clazz) {
+    this.factory = factory;
     this.base = clazz.getCanonicalName();
   }
 
-  /**
-   * Get or create a new timer.
-   *
-   * @param name
-   * @return
-   */
+  /** Get or create a new timer. */
   public Timer getTimer(String name) {
     return factory.getTimer(base, name);
   }
 
-  /**
-   * Get or create a new counter.
-   *
-   * @param name
-   * @return
-   */
+  /** Get or create a new counter. */
   public Counter getCounter(String name) {
     return factory.getCounter(base, name);
   }
 
-  /**
-   * Get or create a new histogram.
-   *
-   * @param name
-   * @return
-   */
+  /** Get or create a new histogram. */
   public Histogram getHistogram(String name) {
     return factory.getHistogram(base, name);
   }
 
-  /**
-   * Get or create a new meter.
-   *
-   * @param name
-   * @return
-   */
+  /** Get or create a new meter. */
   public Meter getMeter(String name) {
     return factory.getMeter(base, name);
   }

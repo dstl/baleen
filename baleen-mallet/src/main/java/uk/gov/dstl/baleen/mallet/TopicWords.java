@@ -35,10 +35,7 @@ public class TopicWords {
    * @return key words for topic
    */
   public List<String> forTopic(int topic, int number) {
-    return model
-        .getSortedWords()
-        .get(topic)
-        .stream()
+    return model.getSortedWords().get(topic).stream()
         .map(IDSorter::getID)
         .map(model.getAlphabet()::lookupObject)
         .map(Object::toString)

@@ -59,8 +59,7 @@ public class RelationConverter {
       final String baleenDocumentId,
       final Map<String, BaleenMention> mentions) {
 
-    return JCasUtil.select(jCas, Relation.class)
-        .stream()
+    return JCasUtil.select(jCas, Relation.class).stream()
         .map(e -> convertRelation(documentId, baleenDocumentId, e, mentions))
         .collect(
             Collectors.toMap(

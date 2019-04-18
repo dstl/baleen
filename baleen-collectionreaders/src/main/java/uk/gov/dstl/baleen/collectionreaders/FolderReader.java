@@ -54,9 +54,8 @@ public class FolderReader extends BaleenCollectionReader {
   public static final String PARAM_FOLDERS = "folders";
 
   @ConfigurationParameter(
-    name = PARAM_FOLDERS,
-    defaultValue = {}
-  )
+      name = PARAM_FOLDERS,
+      defaultValue = {})
   private String[] folders;
 
   /**
@@ -93,9 +92,8 @@ public class FolderReader extends BaleenCollectionReader {
   public static final String PARAM_ACCEPTED_PATTERNS = "acceptedFilenames";
 
   @ConfigurationParameter(
-    name = PARAM_ACCEPTED_PATTERNS,
-    defaultValue = {}
-  )
+      name = PARAM_ACCEPTED_PATTERNS,
+      defaultValue = {})
   private String[] acceptedFilenames;
 
   private List<Pattern> acceptedFilenamesSet = new ArrayList<>();

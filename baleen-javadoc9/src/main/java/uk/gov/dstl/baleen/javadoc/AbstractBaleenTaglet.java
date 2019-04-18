@@ -43,9 +43,7 @@ public abstract class AbstractBaleenTaglet implements Taglet {
 
     TypeElement currElement = (TypeElement) element;
     while (currElement != null) {
-      currElement
-          .getEnclosedElements()
-          .stream()
+      currElement.getEnclosedElements().stream()
           .filter(e -> e.getKind().isField()) // Check that it's a field
           .filter(
               e -> { // Check that it has the correct Javadoc tag

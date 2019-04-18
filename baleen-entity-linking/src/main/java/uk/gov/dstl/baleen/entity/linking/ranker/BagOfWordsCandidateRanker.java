@@ -65,9 +65,7 @@ public class BagOfWordsCandidateRanker<T extends Entity> implements CandidateRan
 
   private int getExactMatchScore(EntityInformation<T> information, Candidate candidate) {
     boolean hasExactMatch =
-        information
-            .getMentions()
-            .stream()
+        information.getMentions().stream()
             .map(Entity::getValue)
             .anyMatch(candidate.getName()::equals);
     return hasExactMatch ? BOOST : 0;

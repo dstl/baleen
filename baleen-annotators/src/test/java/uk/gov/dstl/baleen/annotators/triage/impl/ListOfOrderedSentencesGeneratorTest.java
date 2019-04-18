@@ -47,8 +47,7 @@ public class ListOfOrderedSentencesGeneratorTest {
     Set<String> wordSet = new HashSet<>(words);
 
     wordFrequencies =
-        wordSet
-            .stream()
+        wordSet.stream()
             .collect(Collectors.toMap(word -> word, word -> Collections.frequency(words, word)));
 
     listOfOrderedSentencesGenerator =

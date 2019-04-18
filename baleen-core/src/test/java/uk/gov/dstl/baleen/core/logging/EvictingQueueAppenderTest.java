@@ -46,17 +46,13 @@ public class EvictingQueueAppenderTest {
     appender.append(next);
     assertEquals(appender.getMaxSize(), appender.getAll().size());
     assertTrue(
-        appender
-                .getAll()
-                .stream()
+        appender.getAll().stream()
                 .filter(e -> e.getMessage().equals(next.getMessage()))
                 .toArray()
                 .length
             == 1);
     assertTrue(
-        appender
-                .getAll()
-                .stream()
+        appender.getAll().stream()
                 .filter(e -> e.getMessage().equals(f.getMessage()))
                 .toArray()
                 .length

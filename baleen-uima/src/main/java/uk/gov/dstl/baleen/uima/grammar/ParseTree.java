@@ -59,8 +59,7 @@ public class ParseTree {
   public Stream<WordToken> getChildWords(PhraseChunk chunk, Predicate<String> chunkFilter) {
     final ParseTreeNode node = chunkToNode.get(chunk);
     if (node.hasChildren()) {
-      return node.getChildren()
-          .stream()
+      return node.getChildren().stream()
           .filter(c -> chunkFilter.test(c.getChunk().getChunkType()))
           .flatMap(c -> c.getWords().stream());
     } else {
@@ -141,8 +140,7 @@ public class ParseTree {
 
                 // Remove the words which are covered by our children, leaving just our words
                 if (n.hasChildren()) {
-                  n.getChildren()
-                      .stream()
+                  n.getChildren().stream()
                       .map(t -> wordIndex.get(t.getChunk()))
                       .filter(Objects::nonNull)
                       .forEach(words::removeAll);
@@ -168,8 +166,7 @@ public class ParseTree {
    * @return the phrase chunk
    */
   private static PhraseChunk findSmallest(Collection<PhraseChunk> covering) {
-    return covering
-        .stream()
+    return covering.stream()
         .sorted(SHORTEST_FIRST)
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);

@@ -24,7 +24,7 @@ import uk.gov.dstl.baleen.types.structure.Structure;
  * <p>Example selectors:
  *
  * <ul>
- *   <li><code>Section > Heading</code>
+ *   <li><code>Section &gt; Heading</code>
  *   <li><code>Heading:nth-of-type(2)</code>
  *   <li><code>Section:nth-of-type(1) &gt; Paragraph</code>
  *   <li><code>

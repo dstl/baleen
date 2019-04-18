@@ -69,7 +69,7 @@ public abstract class AbstractTypedRelationshipAnnotator extends AbstractRelatio
    * @param begin the begin of the relation
    * @param end the end of the relation
    * @param value the value of the relation
-   * @param confidence the confidence of the relation
+   * @param assignedConfidence the confidence of the relation
    * @return the relation
    */
   protected Relation createRelation(
@@ -93,7 +93,7 @@ public abstract class AbstractTypedRelationshipAnnotator extends AbstractRelatio
    * @param targets the targets
    * @param begin the begin of the relation
    * @param end the end of the relation
-   * @param type the type of the relation
+   * @param value the value of the relation
    * @param confidence the confidence of the relation
    * @return the stream of relations
    */

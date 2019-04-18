@@ -27,8 +27,7 @@ public class RelaxedStringMatchSieve extends AbstractCoreferenceSieve {
   public void sieve() {
     // Text says nominal mention, we assume that to be mean Entity
     List<Mention> mentions =
-        getMentionsWithHead(MentionType.ENTITY)
-            .stream()
+        getMentionsWithHead(MentionType.ENTITY).stream()
             .filter(m -> !EXCLUDED.contains(m.getHead().toLowerCase()))
             .collect(Collectors.toList());
 

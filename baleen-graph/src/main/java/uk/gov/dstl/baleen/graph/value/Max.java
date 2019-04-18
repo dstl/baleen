@@ -21,8 +21,7 @@ public class Max implements ValueStrategy<Number, Number> {
       return Optional.empty();
     }
     return (Optional<Number>)
-        values
-            .stream()
+        values.stream()
             .max(
                 (Number n1, Number n2) -> {
                   BigDecimal b1 = BigDecimal.valueOf(n1.doubleValue());

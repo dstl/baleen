@@ -162,8 +162,7 @@ public class RelationConstraint {
       return typeMatch;
     } else {
       return typeMatch
-          && words
-              .stream()
+          && words.stream()
               .anyMatch(w -> posChar == Character.toLowerCase(w.getPartOfSpeech().charAt(0)));
     }
   }

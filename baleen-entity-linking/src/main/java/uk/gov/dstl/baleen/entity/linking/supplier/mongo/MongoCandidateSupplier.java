@@ -95,9 +95,7 @@ public class MongoCandidateSupplier<T extends Entity> implements CandidateSuppli
 
   private Optional<Bson> buildQuery(EntityInformation<T> entityInformation) {
     List<String> searchValues = new ArrayList<>();
-    entityInformation
-        .getMentions()
-        .stream()
+    entityInformation.getMentions().stream()
         .filter(m -> m.getValue() != null)
         .forEach(
             mention -> {

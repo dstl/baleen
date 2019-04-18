@@ -47,9 +47,8 @@ public class RemoveNestedEntities extends AbstractNestedEntities<Entity> {
   public static final String PARAM_EXCLUDED_TYPES = "excludedTypes";
 
   @ConfigurationParameter(
-    name = PARAM_EXCLUDED_TYPES,
-    defaultValue = {}
-  )
+      name = PARAM_EXCLUDED_TYPES,
+      defaultValue = {})
   private Set<String> excluded;
 
   Set<Class<? extends Annotation>> classTypes = new HashSet<>();

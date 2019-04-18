@@ -32,8 +32,7 @@ public class OdinDocument extends Document {
   }
 
   private static Map<Sentence, OdinSentence> mapSentences(List<OdinSentence> sentences) {
-    return sentences
-        .stream()
+    return sentences.stream()
         .collect(
             toMap(
                 OdinSentence::getBaleenSentence,

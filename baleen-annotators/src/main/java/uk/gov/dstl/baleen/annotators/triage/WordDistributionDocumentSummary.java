@@ -43,9 +43,8 @@ public class WordDistributionDocumentSummary extends BaleenTextAwareAnnotator {
    * @baleen.config 100
    */
   @ConfigurationParameter(
-    name = DESIRED_SUMMARY_CHARACTER_COUNT,
-    defaultValue = DEFAULT_DESIRED_SUMMARY_CHARACTER_COUNT
-  )
+      name = DESIRED_SUMMARY_CHARACTER_COUNT,
+      defaultValue = DEFAULT_DESIRED_SUMMARY_CHARACTER_COUNT)
   private int desiredSummaryCharacterCount;
 
   /**
@@ -88,9 +87,7 @@ public class WordDistributionDocumentSummary extends BaleenTextAwareAnnotator {
 
       int numberOfWordsAboveThreshold =
           (int)
-              wordFrequencies
-                  .entrySet()
-                  .stream()
+              wordFrequencies.entrySet().stream()
                   .filter(entry -> entry.getValue() > frequencyThreshold)
                   .count();
 
@@ -140,15 +137,13 @@ public class WordDistributionDocumentSummary extends BaleenTextAwareAnnotator {
   }
 
   private List<String> getWordList(JCas jCas) {
-    return JCasUtil.select(jCas, WordToken.class)
-        .stream()
+    return JCasUtil.select(jCas, WordToken.class).stream()
         .map(WordToken::getCoveredText)
         .collect(Collectors.toList());
   }
 
   private Map<String, Integer> getWordFrequencies(List<String> wordList, Set<String> wordSet) {
-    return wordSet
-        .stream()
+    return wordSet.stream()
         .collect(Collectors.toMap(word -> word, word -> Collections.frequency(wordList, word)));
   }
 

@@ -61,9 +61,8 @@ public class Mongo extends AbstractAnalysisConsumer {
   public static final String PARAM_DOCUMENTS_COLLECTION = "documentCollection";
 
   @ConfigurationParameter(
-    name = PARAM_DOCUMENTS_COLLECTION,
-    defaultValue = DEFAULT_DOCUMENTS_COLLECTION
-  )
+      name = PARAM_DOCUMENTS_COLLECTION,
+      defaultValue = DEFAULT_DOCUMENTS_COLLECTION)
   private String documentCollectionName;
 
   /**
@@ -84,9 +83,8 @@ public class Mongo extends AbstractAnalysisConsumer {
   public static final String PARAM_RELATION_COLLECTION = "relationCollection";
 
   @ConfigurationParameter(
-    name = PARAM_RELATION_COLLECTION,
-    defaultValue = DEFAULT_REALTION_COLLECTION
-  )
+      name = PARAM_RELATION_COLLECTION,
+      defaultValue = DEFAULT_REALTION_COLLECTION)
   private String relationCollectionName;
 
   /**
@@ -97,9 +95,8 @@ public class Mongo extends AbstractAnalysisConsumer {
   public static final String PARAM_MENTION_COLLECTION = "mentionCollection";
 
   @ConfigurationParameter(
-    name = PARAM_MENTION_COLLECTION,
-    defaultValue = DEFAULT_MENTION_COLLECTION
-  )
+      name = PARAM_MENTION_COLLECTION,
+      defaultValue = DEFAULT_MENTION_COLLECTION)
   private String mentionCollectionName;
 
   private MongoCollection<Document> entityCollection;
@@ -205,8 +202,7 @@ public class Mongo extends AbstractAnalysisConsumer {
   private List<Document> toBsonList(final Collection<? extends Object> collection)
       throws AnalysisEngineProcessException {
 
-    return collection
-        .stream()
+    return collection.stream()
         .map(
             o -> {
               try {

@@ -66,7 +66,7 @@ public class PatternExtractor extends BaleenAnnotator {
 
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the
@@ -106,9 +106,7 @@ public class PatternExtractor extends BaleenAnnotator {
   protected void doProcess(final JCas jCas) throws AnalysisEngineProcessException {
 
     final Set<WordToken> wordsCoveredByEntites =
-        JCasUtil.indexCovered(jCas, Entity.class, WordToken.class)
-            .values()
-            .stream()
+        JCasUtil.indexCovered(jCas, Entity.class, WordToken.class).values().stream()
             .flatMap(l -> l.stream())
             .collect(Collectors.toSet());
 
@@ -123,8 +121,7 @@ public class PatternExtractor extends BaleenAnnotator {
       // If we have "hello world" then we might can get "hello, world, " which variation POS
       // tags. This filter is a little bit of a mess as a result.
       final List<WordToken> wordIndexes =
-          words
-              .stream()
+          words.stream()
               .filter(
                   w ->
                       Character.isAlphabetic(w.getPartOfSpeech().charAt(0))
@@ -145,8 +142,7 @@ public class PatternExtractor extends BaleenAnnotator {
       // Filter out patterns which are too far way
       // Filter out patterns which contain no, not or neither
 
-      patterns
-          .stream()
+      patterns.stream()
           .filter(
               p -> {
                 final int count = countWordsBetween(p, wordIndexes);
@@ -232,13 +228,12 @@ public class PatternExtractor extends BaleenAnnotator {
    *
    * @param words
    * @param pe the pe
-   * @param tokens the tokens
+   * @param entityWords the tokens
    * @return the stream
    */
   private Stream<WordToken> removeAdditionalWords(
       List<WordToken> words, final PatternExtract pe, final Set<WordToken> entityWords) {
-    return words
-        .stream()
+    return words.stream()
         .filter(t -> t.getBegin() >= pe.getStart() && t.getEnd() <= pe.getEnd())
         .filter(t -> !entityWords.contains(t))
         .filter(

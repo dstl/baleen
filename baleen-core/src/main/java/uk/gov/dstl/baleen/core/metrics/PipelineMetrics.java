@@ -19,11 +19,7 @@ public class PipelineMetrics {
     this.pipelineName = pipelineName;
   }
 
-  /**
-   * Return the name of the pipeline associated with this PipelineMetrics instance
-   *
-   * @return
-   */
+  /** Return the name of the pipeline associated with this PipelineMetrics instance */
   public String getPipelineName() {
     return pipelineName;
   }

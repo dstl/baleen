@@ -212,8 +212,7 @@ public abstract class AbstractReNounRelationshipAnnotator
 
     Set<Dependency> governors = graph.getGovernors(rootToken);
     Stream<WordToken> dependants =
-        governors
-            .stream()
+        governors.stream()
             .filter(d -> ATTRIBUTE_DEPENDENCIES.contains(d.getDependencyType()))
             .map(Dependency::getDependent);
 

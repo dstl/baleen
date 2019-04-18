@@ -4,31 +4,17 @@ package uk.gov.dstl.baleen.graph;
 import static com.google.common.base.Predicates.isNull;
 import static com.google.common.base.Predicates.not;
 import static org.apache.tinkerpop.gremlin.structure.T.id;
-import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.ENTITY;
-import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.EVENT;
-import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.MENTION_OF;
-import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.PARTICIPANT_IN;
-import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.RELATION;
+import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversalSource;
-import org.apache.tinkerpop.gremlin.structure.Direction;
-import org.apache.tinkerpop.gremlin.structure.Edge;
-import org.apache.tinkerpop.gremlin.structure.Element;
-import org.apache.tinkerpop.gremlin.structure.Graph;
+import org.apache.tinkerpop.gremlin.structure.*;
 import org.apache.tinkerpop.gremlin.structure.Graph.Features;
-import org.apache.tinkerpop.gremlin.structure.Vertex;
-import org.apache.tinkerpop.gremlin.structure.VertexProperty;
 import org.apache.tinkerpop.gremlin.structure.VertexProperty.Cardinality;
 import org.apache.tinkerpop.gremlin.structure.util.ElementHelper;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
@@ -48,7 +34,7 @@ import uk.gov.dstl.baleen.uima.UimaMonitor;
  * aggregation options.
  *
  * <p>Events can be optionally included as nodes with links to their participants of type {@link
- * #PARTICIPANT_IN}
+ * DocumentGraphFactory#PARTICIPANT_IN}
  *
  * <p>Relations are also included between the entities by extension of the relation annotations in
  * the document between the mentions.
@@ -228,17 +214,15 @@ public class EntityGraphFactory {
                       .next();
 
               Map<String, List<Object>> valueMap =
-                  properties
-                      .entrySet()
-                      .stream()
+                  properties.entrySet().stream()
                       .collect(
                           Collectors.toMap(
                               e -> (String) e.getKey(),
                               e ->
                                   ((List<VertexProperty<?>>) e.getValue())
                                       .stream()
-                                      .map(VertexProperty::value)
-                                      .collect(Collectors.toList())));
+                                          .map(VertexProperty::value)
+                                          .collect(Collectors.toList())));
 
               List<String> aggregateProperties = options.getAggregateProperties();
 
@@ -251,9 +235,7 @@ public class EntityGraphFactory {
                         addProperty(features, entityVert, MENTIONS_PROPERTY, mentions);
                         setProperty(entityVert, LINKING, v.property(LINKING).value());
 
-                        valueMap
-                            .entrySet()
-                            .stream()
+                        valueMap.entrySet().stream()
                             .filter(e -> !aggregateProperties.contains(e.getKey()))
                             .forEach(
                                 e -> addProperty(features, entityVert, e.getKey(), e.getValue()));
@@ -297,9 +279,7 @@ public class EntityGraphFactory {
     addProperty(
         features, to, MENTIONS_PROPERTY, Collections.singletonList(aggregateProperties(from)));
     List<String> aggregateProperties = options.getAggregateProperties();
-    ElementHelper.propertyValueMap(from)
-        .entrySet()
-        .stream()
+    ElementHelper.propertyValueMap(from).entrySet().stream()
         .filter(e -> !aggregateProperties.contains(e.getKey()))
         .forEach(
             property -> {

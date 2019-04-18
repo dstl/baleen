@@ -48,7 +48,7 @@ public class DependencyTree {
   /**
    * Construct a DependencyTree with the given root and optional dependencies.
    *
-   * @see SimpleDependencyNode
+   * @see DependencyNode
    * @param rootNode in text format
    * @param dependencies edges to dependent nodes.
    */
@@ -130,7 +130,7 @@ public class DependencyTree {
    * Add a new edge to the tree, with the given type and sub tree.
    *
    * @param type of the edge
-   * @param tree to add
+   * @param child to add
    * @return the sub tree for this edge (for build chaining)
    */
   public DependencyTree addDependency(String type, DependencyTree child) {
@@ -151,7 +151,7 @@ public class DependencyTree {
   /**
    * Add a new edge to the tree with the given type and dependent root node.
    *
-   * @see SimpleDependencyNode
+   * @see DependencyNode
    * @param type of the edge
    * @param node the dependent node in text format
    * @return the sub tree for this edge (for build chaining)

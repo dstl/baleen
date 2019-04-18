@@ -32,7 +32,7 @@ import uk.gov.dstl.baleen.uima.utils.AnnotationUtils;
  * <p>Formally this is defined as two conditions in the paper:
  *
  * <ul>
- *   <li>RD1: dependency distance between interaction word and each entity should be <= 4.
+ *   <li>RD1: dependency distance between interaction word and each entity should be &lt;= 4.
  *   <li>RD2: if the interaction word is a verb it should be between the two entities (within the
  *       text of the sentence)
  * </ul>
@@ -114,18 +114,13 @@ public class UbmreDependency extends AbstractInteractionBasedRelationshipAnnotat
     // Now we can create all the relations
 
     final Stream<Relation> relations =
-        interactionToEntities
-            .asMap()
-            .entrySet()
-            .stream()
+        interactionToEntities.asMap().entrySet().stream()
             .flatMap(
                 e -> {
                   final Interaction i = e.getKey();
 
                   final boolean interactionIsVerb =
-                      interactionToDependencies
-                          .getOrDefault(i, Collections.emptyList())
-                          .stream()
+                      interactionToDependencies.getOrDefault(i, Collections.emptyList()).stream()
                           .anyMatch(p -> p.getPartOfSpeech().startsWith("V"));
 
                   final Collection<Entity> c = e.getValue();

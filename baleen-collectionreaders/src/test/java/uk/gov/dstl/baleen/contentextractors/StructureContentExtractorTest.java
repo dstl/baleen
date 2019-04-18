@@ -64,8 +64,7 @@ public class StructureContentExtractorTest {
     assertEquals(p.getEnd(), 13);
 
     List<Metadata> contentMeta =
-        JCasUtil.select(jCas, Metadata.class)
-            .stream()
+        JCasUtil.select(jCas, Metadata.class).stream()
             .filter(m -> m.getKey().startsWith("baleen:content-"))
             .collect(Collectors.toList());
     assertEquals(3, contentMeta.size());
@@ -84,8 +83,7 @@ public class StructureContentExtractorTest {
     contentExtractor.processStream(null, "source", jCas);
 
     long count =
-        JCasUtil.select(jCas, Metadata.class)
-            .stream()
+        JCasUtil.select(jCas, Metadata.class).stream()
             .filter(
                 m ->
                     m.getKey().equals("baleen:content-manipulators")
@@ -106,8 +104,7 @@ public class StructureContentExtractorTest {
     contentExtractor.processStream(null, "source", jCas);
 
     long count =
-        JCasUtil.select(jCas, Metadata.class)
-            .stream()
+        JCasUtil.select(jCas, Metadata.class).stream()
             .filter(
                 m ->
                     m.getKey().equals("baleen:content-mappers")

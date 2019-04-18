@@ -33,10 +33,7 @@ public class EntityConverter {
 
     final Multimap<String, BaleenMention> groupedMentions = collateMentionsIntoEntities(mentions);
 
-    return groupedMentions
-        .asMap()
-        .entrySet()
-        .stream()
+    return groupedMentions.asMap().entrySet().stream()
         .map(
             e -> {
               final String entityId = e.getKey();

@@ -56,9 +56,8 @@ public class CsvFolderReader extends BaleenCollectionReader {
   public static final String PARAM_FOLDERS = "folders";
 
   @ConfigurationParameter(
-    name = PARAM_FOLDERS,
-    defaultValue = {}
-  )
+      name = PARAM_FOLDERS,
+      defaultValue = {})
   private String[] folders;
 
   /**
@@ -110,9 +109,8 @@ public class CsvFolderReader extends BaleenCollectionReader {
   public static final String PARAM_TEXT_COLUMNS = "text";
 
   @ConfigurationParameter(
-    name = PARAM_TEXT_COLUMNS,
-    defaultValue = {"content"}
-  )
+      name = PARAM_TEXT_COLUMNS,
+      defaultValue = {"content"})
   private String[] textColumn;
 
   private WatchService watcher;

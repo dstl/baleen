@@ -127,8 +127,7 @@ public abstract class AbstractTemplateRecordConfigurationCreatingConsumerTest
 
   protected void assertDefaultRecord(List<TemplateRecordConfiguration> definitions) {
     TemplateRecordConfiguration defaultRecord =
-        definitions
-            .stream()
+        definitions.stream()
             .filter(p -> p.getKind().equals(Kind.DEFAULT))
             .collect(Collectors.toList())
             .get(0);
@@ -142,8 +141,7 @@ public abstract class AbstractTemplateRecordConfigurationCreatingConsumerTest
   protected TemplateRecordConfiguration assertNamedRecord(
       List<TemplateRecordConfiguration> definitions) {
     TemplateRecordConfiguration record =
-        definitions
-            .stream()
+        definitions.stream()
             .filter(p -> p.getKind().equals(Kind.NAMED) && p.getName().equals("record1"))
             .collect(Collectors.toList())
             .get(0);

@@ -72,7 +72,7 @@ public class MaxEntClassifierTrainer extends BaleenTask {
 
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the
@@ -111,9 +111,8 @@ public class MaxEntClassifierTrainer extends BaleenTask {
   public static final String PARAM_CONTENT_FIELD = "field";
 
   @ConfigurationParameter(
-    name = PARAM_CONTENT_FIELD,
-    defaultValue = uk.gov.dstl.baleen.consumers.Mongo.FIELD_CONTENT
-  )
+      name = PARAM_CONTENT_FIELD,
+      defaultValue = uk.gov.dstl.baleen.consumers.Mongo.FIELD_CONTENT)
   private String contentField;
 
   /**

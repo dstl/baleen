@@ -110,8 +110,7 @@ public class TextBlocks extends BaleenAnnotator {
     } else {
       // Otherwise add the types we want...
 
-      structures
-          .stream()
+      structures.stream()
           .filter(s -> structuralClasses.contains(s.getClass()))
           .map(s -> new Text(jCas, s.getBegin(), s.getEnd()))
           .forEach(this::addToJCasIndex);

@@ -45,8 +45,7 @@ public class CsvEvent extends AbstractCsvConsumer {
     final Map<Event, List<Sentence>> coveringSentence =
         JCasUtil.indexCovering(jCas, Event.class, Sentence.class);
 
-    JCasUtil.select(jCas, Event.class)
-        .stream()
+    JCasUtil.select(jCas, Event.class).stream()
         .map(e -> extracted(source, coveringSentence, e))
         .filter(s -> s.length > 0)
         .forEach(this::write);

@@ -2,12 +2,7 @@
 package uk.gov.dstl.baleen.transports.serialisation;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -40,7 +35,6 @@ public class JCasDeserialiser {
    *
    * <p>NB: a null or empty filter list implies no filtering.
    *
-   * @param support the {@link UimaSupport} to use
    * @param monitor the {@link UimaMonitor} to use
    * @param whiteList given annotation classes (optional)
    * @param blackList given annotation classes (optional)
@@ -209,8 +203,7 @@ public class JCasDeserialiser {
   }
 
   private Map<Long, BaleenAnnotation> buildAnnotationIndex(final JCas jCas) {
-    return JCasUtil.select(jCas, BaleenAnnotation.class)
-        .stream()
+    return JCasUtil.select(jCas, BaleenAnnotation.class).stream()
         .collect(Collectors.toMap(BaleenAnnotation::getInternalId, v -> v));
   }
 

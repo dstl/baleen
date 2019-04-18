@@ -8,7 +8,7 @@ public interface TIntProcedure {
   /**
    * Execute function
    *
-   * @param a int value
+   * @param value int value
    * @return true if successful
    */
   public boolean execute(int value);

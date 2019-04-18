@@ -217,8 +217,7 @@ public class DocumentConverter {
     // try ignoring case, but leave in order original of keys
 
     for (final String key : keys) {
-      documentMetadata
-          .stream()
+      documentMetadata.stream()
           .filter(e -> e.getKey().equalsIgnoreCase(key))
           .filter(e -> e.getValue() != null)
           .forEach(e -> ordered.add(e.getValue()));

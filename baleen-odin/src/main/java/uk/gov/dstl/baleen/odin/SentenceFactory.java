@@ -76,9 +76,7 @@ public class SentenceFactory {
   public List<OdinSentence> create() {
 
     List<Entry<Sentence, List<WordToken>>> entrySet =
-        indexWords
-            .entrySet()
-            .stream()
+        indexWords.entrySet().stream()
             .sorted(Comparator.comparing(e -> e.getKey().getBegin()))
             .collect(toList());
 
@@ -110,8 +108,7 @@ public class SentenceFactory {
 
     odinSentence.tags_$eq(
         Option.apply(
-            value
-                .stream()
+            value.stream()
                 .map(WordToken::getPartOfSpeech)
                 .collect(toList())
                 .toArray(new String[0])));
@@ -178,9 +175,7 @@ public class SentenceFactory {
     Set<Object> roots = new HashSet<>();
 
     List<Edge<String>> edges =
-        indexDependency
-            .get(key)
-            .stream()
+        indexDependency.get(key).stream()
             .peek(
                 d -> {
                   if (MaltParser.ROOT.equals(d.getDependencyType())) {

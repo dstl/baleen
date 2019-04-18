@@ -37,9 +37,7 @@ public class UimaLoggingTest {
       UIMAFramework.getLogger(DummyAnnotator1.class).log(Level.INFO, "Logging from uima");
 
       assertTrue(
-          appender
-                  .getAll()
-                  .stream()
+          appender.getAll().stream()
                   .filter(l -> l.getMessage().contains("Logging from uima"))
                   .count()
               > 0);

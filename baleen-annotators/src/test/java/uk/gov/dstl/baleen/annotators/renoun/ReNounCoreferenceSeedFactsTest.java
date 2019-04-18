@@ -135,8 +135,7 @@ public class ReNounCoreferenceSeedFactsTest extends AbstractMultiAnnotatorTest {
 
     final List<Relation> relations = new ArrayList<>(JCasUtil.select(jCas, Relation.class));
 
-    relations
-        .stream()
+    relations.stream()
         .map(
             r ->
                 r.getSource().getCoveredText()

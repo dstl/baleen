@@ -44,11 +44,7 @@ public interface Recordable {
    */
   int getEnd();
 
-  /**
-   * Get the UIMA type. Within history system this is only ever used through getTypeName().
-   *
-   * @return
-   */
+  /** Get the UIMA type. Within history system this is only ever used through getTypeName(). */
   @JsonIgnore
   Type getType();
 

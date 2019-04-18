@@ -15,7 +15,7 @@ import uk.gov.dstl.baleen.consumers.AbstractEntityGraphFormatConsumer;
 /**
  * Consume each document as a graph and output to file.
  *
- * @see EntityGraphFactory
+ * @see uk.gov.dstl.baleen.graph.EntityGraphFactory
  * @baleen.javadoc
  */
 public class EntityGraph extends AbstractEntityGraphFormatConsumer {

@@ -40,14 +40,10 @@ public class ProperNounInformationCollector implements InformationCollector {
           entry.getValue().stream().flatMap(m -> index.get(m).stream()).collect(Collectors.toSet());
 
       List<T> properNouns =
-          entry
-              .getValue()
-              .stream()
+          entry.getValue().stream()
               .filter(
                   e ->
-                      tokens
-                          .get(e)
-                          .stream()
+                      tokens.get(e).stream()
                           .map(WordToken::getPartOfSpeech)
                           .anyMatch("NNP"::equals))
               .collect(toList());

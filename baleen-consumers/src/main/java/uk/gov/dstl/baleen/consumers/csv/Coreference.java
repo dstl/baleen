@@ -46,7 +46,7 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 public class Coreference extends AbstractCsvConsumer {
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the
@@ -112,8 +112,7 @@ public class Coreference extends AbstractCsvConsumer {
     final Map<WordToken, List<Entity>> coveringEntity =
         JCasUtil.indexCovering(jCas, WordToken.class, Entity.class);
 
-    JCasUtil.select(jCas, Entity.class)
-        .stream()
+    JCasUtil.select(jCas, Entity.class).stream()
         .map(
             e ->
                 convertEntityToRow(
