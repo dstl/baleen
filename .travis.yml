@@ -4,6 +4,6 @@ jdk:
 - openjdk11
 
 script:
-- mvn -B -Pdisable-logging clean package
+- mvn -B -Pdisable-logging clean package -Dgpg.skip
 after_success:
 - mvn jacoco:report coveralls:report
