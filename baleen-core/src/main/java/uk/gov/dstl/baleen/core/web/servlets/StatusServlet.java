@@ -25,7 +25,7 @@ public class StatusServlet extends AbstractApiServlet {
   /** Short status message. */
   public static class BaleenStatus {
     private String name = "Baleen";
-    private String version = "2.7.0";
+    private String version = "2.8.0-SNAPSHOT";
     private String status = "ok";
     private LocalDateTime timestamp;
 

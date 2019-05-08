@@ -1,7 +1,11 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.odin;
 
-import com.google.common.collect.ImmutableList;
+import static java.util.stream.Collectors.toList;
+
+import java.util.*;
+import java.util.Map.Entry;
+
 import org.apache.uima.cas.Type;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -9,16 +13,15 @@ import org.apache.uima.jcas.cas.FSArray;
 import org.clulab.struct.DirectedGraph;
 import org.clulab.struct.Edge;
 import org.clulab.struct.GraphMap;
+
 import scala.Option;
 import scala.collection.JavaConversions;
+
+import com.google.common.collect.ImmutableList;
+
 import uk.gov.dstl.baleen.annotators.language.MaltParser;
 import uk.gov.dstl.baleen.types.language.*;
 import uk.gov.dstl.baleen.types.semantic.Entity;
-
-import java.util.*;
-import java.util.Map.Entry;
-
-import static java.util.stream.Collectors.toList;
 
 /** A factory to create Odin {@link Sentence}s from the given {@link JCas}. */
 public class SentenceFactory {
@@ -38,12 +41,10 @@ public class SentenceFactory {
    */
   public SentenceFactory(JCas jCas) {
     this(
-        JCasUtil.indexCovered(
-            jCas, Sentence.class, WordToken.class),
+        JCasUtil.indexCovered(jCas, Sentence.class, WordToken.class),
         JCasUtil.indexCovering(jCas, WordToken.class, Entity.class),
         JCasUtil.indexCovering(jCas, WordToken.class, PhraseChunk.class),
-        JCasUtil.indexCovered(
-            jCas, Sentence.class, Dependency.class));
+        JCasUtil.indexCovered(jCas, Sentence.class, Dependency.class));
   }
 
   /**
@@ -85,8 +86,7 @@ public class SentenceFactory {
     return sentences;
   }
 
-  private OdinSentence create(
-      int index, Sentence key, Collection<WordToken> value) {
+  private OdinSentence create(int index, Sentence key, Collection<WordToken> value) {
 
     List<WordToken> tokens = new ArrayList<>(value);
     tokens.sort(Comparator.comparing(WordToken::getBegin));

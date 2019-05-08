@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "Baleen is a Dstl developed text processing framework. It performs information extraction - for example, entity extraction and metadata extraction - on unstructured documents. This web service provides the ability to control Baleen via a REST API."
-  version: "2.7.0"
+  version: "2.8.0-SNAPSHOT"
   title: "Baleen"
   license:
     name: "Apache 2.0"
@@ -740,7 +740,7 @@ definitions:
       version:
         description: "The version of Baleen"
         type: "string"
-        example: "2.7.0"
+        example: "2.8.0-SNAPSHOT"
       status:
         description: "The current status"
         type: "string"
