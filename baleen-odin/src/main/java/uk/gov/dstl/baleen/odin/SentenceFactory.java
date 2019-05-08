@@ -1,11 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.odin;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.*;
-import java.util.Map.Entry;
-
+import com.google.common.collect.ImmutableList;
 import org.apache.uima.cas.Type;
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -13,15 +9,16 @@ import org.apache.uima.jcas.cas.FSArray;
 import org.clulab.struct.DirectedGraph;
 import org.clulab.struct.Edge;
 import org.clulab.struct.GraphMap;
-
 import scala.Option;
 import scala.collection.JavaConversions;
-
-import com.google.common.collect.ImmutableList;
-
 import uk.gov.dstl.baleen.annotators.language.MaltParser;
 import uk.gov.dstl.baleen.types.language.*;
 import uk.gov.dstl.baleen.types.semantic.Entity;
+
+import java.util.*;
+import java.util.Map.Entry;
+
+import static java.util.stream.Collectors.toList;
 
 /** A factory to create Odin {@link Sentence}s from the given {@link JCas}. */
 public class SentenceFactory {
@@ -29,10 +26,10 @@ public class SentenceFactory {
   /** The string used by Odin for missing values. */
   protected static final String MISSING_VALUE = OdinSentence.MISSING_VALUE;
 
-  private final Map<uk.gov.dstl.baleen.types.language.Sentence, List<WordToken>> indexWords;
+  private final Map<Sentence, List<WordToken>> indexWords;
   private final Map<WordToken, List<Entity>> indexEntities;
   private final Map<WordToken, List<PhraseChunk>> indexChunks;
-  private final Map<uk.gov.dstl.baleen.types.language.Sentence, List<Dependency>> indexDependency;
+  private final Map<Sentence, List<Dependency>> indexDependency;
 
   /**
    * Construct the sentence factory for the given jCas.
@@ -61,7 +58,7 @@ public class SentenceFactory {
       Map<uk.gov.dstl.baleen.types.language.Sentence, List<WordToken>> indexWords,
       Map<WordToken, List<Entity>> indexEntities,
       Map<WordToken, List<PhraseChunk>> indexChunks,
-      Map<uk.gov.dstl.baleen.types.language.Sentence, List<Dependency>> indexDependency) {
+      Map<Sentence, List<Dependency>> indexDependency) {
     this.indexWords = indexWords;
     this.indexEntities = indexEntities;
     this.indexChunks = indexChunks;
@@ -89,7 +86,7 @@ public class SentenceFactory {
   }
 
   private OdinSentence create(
-      int index, uk.gov.dstl.baleen.types.language.Sentence key, Collection<WordToken> value) {
+      int index, Sentence key, Collection<WordToken> value) {
 
     List<WordToken> tokens = new ArrayList<>(value);
     tokens.sort(Comparator.comparing(WordToken::getBegin));
@@ -169,7 +166,7 @@ public class SentenceFactory {
     }
   }
 
-  private DirectedGraph<String> getDependencies(uk.gov.dstl.baleen.types.language.Sentence key) {
+  private DirectedGraph<String> getDependencies(Sentence key) {
 
     List<WordToken> tokens = ImmutableList.copyOf(indexWords.get(key));
     Set<Object> roots = new HashSet<>();

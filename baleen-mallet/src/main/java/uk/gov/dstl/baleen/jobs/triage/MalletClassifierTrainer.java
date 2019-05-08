@@ -1,33 +1,22 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.jobs.triage;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.apache.uima.UimaContext;
-import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
-import org.apache.uima.fit.descriptor.ConfigurationParameter;
-import org.apache.uima.fit.descriptor.ExternalResource;
-import org.apache.uima.resource.ResourceInitializationException;
-import org.bson.Document;
-
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.Trial;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
-
 import com.google.common.collect.FluentIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-
+import org.apache.uima.UimaContext;
+import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
+import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.apache.uima.fit.descriptor.ExternalResource;
+import org.apache.uima.resource.ResourceInitializationException;
+import org.bson.Document;
 import uk.gov.dstl.baleen.consumers.Mongo;
 import uk.gov.dstl.baleen.mallet.ClassifierPipe;
 import uk.gov.dstl.baleen.mallet.ClassifierTrainerFactory;
@@ -37,6 +26,14 @@ import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
 import uk.gov.dstl.baleen.uima.BaleenTask;
 import uk.gov.dstl.baleen.uima.JobSettings;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * A task to train a classifier model from a set of documents stored in mongo with assigned labels
@@ -108,7 +105,7 @@ public class MalletClassifierTrainer extends BaleenTask {
 
   @ConfigurationParameter(
       name = PARAM_CONTENT_FIELD,
-      defaultValue = uk.gov.dstl.baleen.consumers.Mongo.FIELD_CONTENT)
+      defaultValue = Mongo.FIELD_CONTENT)
   private String contentField;
 
   /**

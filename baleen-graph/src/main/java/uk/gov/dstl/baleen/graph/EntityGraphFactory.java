@@ -1,14 +1,6 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.graph;
 
-import static com.google.common.base.Predicates.isNull;
-import static com.google.common.base.Predicates.not;
-import static org.apache.tinkerpop.gremlin.structure.T.id;
-import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.*;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.tinkerpop.gremlin.process.traversal.Path;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.GraphTraversal;
@@ -20,11 +12,18 @@ import org.apache.tinkerpop.gremlin.structure.util.ElementHelper;
 import org.apache.tinkerpop.gremlin.tinkergraph.structure.TinkerGraph;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.jcas.JCas;
-
 import uk.gov.dstl.baleen.graph.value.Longest;
 import uk.gov.dstl.baleen.graph.value.Mode;
 import uk.gov.dstl.baleen.graph.value.ValueStrategy;
 import uk.gov.dstl.baleen.uima.UimaMonitor;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Predicates.isNull;
+import static com.google.common.base.Predicates.not;
+import static org.apache.tinkerpop.gremlin.structure.T.id;
+import static uk.gov.dstl.baleen.graph.DocumentGraphFactory.*;
 
 /**
  * A factory for creating a graph representation of the entities mentioned in a document.
@@ -173,7 +172,7 @@ public class EntityGraphFactory {
 
     fromTraversal
         .V()
-        .hasLabel(DocumentGraphFactory.EVENT)
+        .hasLabel(EVENT)
         .sideEffect(
             tv -> {
               Vertex origEvent = tv.get();
@@ -198,7 +197,7 @@ public class EntityGraphFactory {
 
     fromTraversal
         .V()
-        .hasLabel(DocumentGraphFactory.REFERENCE_TARGET)
+        .hasLabel(REFERENCE_TARGET)
         .forEachRemaining(
             v -> {
               List<Map<String, Object>> mentions = new ArrayList<>();
