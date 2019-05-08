@@ -39,11 +39,11 @@ public class SentenceFactory {
   public SentenceFactory(JCas jCas) {
     this(
         JCasUtil.indexCovered(
-            jCas, uk.gov.dstl.baleen.types.language.Sentence.class, WordToken.class),
+            jCas, Sentence.class, WordToken.class),
         JCasUtil.indexCovering(jCas, WordToken.class, Entity.class),
         JCasUtil.indexCovering(jCas, WordToken.class, PhraseChunk.class),
         JCasUtil.indexCovered(
-            jCas, uk.gov.dstl.baleen.types.language.Sentence.class, Dependency.class));
+            jCas, Sentence.class, Dependency.class));
   }
 
   /**
@@ -55,7 +55,7 @@ public class SentenceFactory {
    * @param indexDependency sentence to dependency index
    */
   protected SentenceFactory(
-      Map<uk.gov.dstl.baleen.types.language.Sentence, List<WordToken>> indexWords,
+      Map<Sentence, List<WordToken>> indexWords,
       Map<WordToken, List<Entity>> indexEntities,
       Map<WordToken, List<PhraseChunk>> indexChunks,
       Map<Sentence, List<Dependency>> indexDependency) {
@@ -78,7 +78,7 @@ public class SentenceFactory {
             .collect(toList());
 
     List<OdinSentence> sentences = new ArrayList<>();
-    for (Entry<uk.gov.dstl.baleen.types.language.Sentence, List<WordToken>> e : entrySet) {
+    for (Entry<Sentence, List<WordToken>> e : entrySet) {
       sentences.add(create(sentences.size(), e.getKey(), e.getValue()));
     }
 
