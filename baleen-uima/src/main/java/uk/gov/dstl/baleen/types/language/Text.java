@@ -1,22 +1,29 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
 
-/* First created by JCasGen Fri Dec 30 21:43:29 CET 2016 */
 package uk.gov.dstl.baleen.types.language;
 
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * An area of block of text, to be considered independently over other blocks. Updated by JCasGen
- * Fri Dec 30 21:43:29 CET 2016 XML source:
- * /Users/chrisflatley/Projects/railroad/baleen/baleen/baleen-uima/src/main/resources/types/language_type_system.xml
+ * Wed Apr 17 13:42:08 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class Text extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.language.Text";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +45,12 @@ public class Text extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  /* Feature Adjusted Offsets */
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +64,11 @@ public class Text extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Text(int addr, TOP_Type type) {
-    super(addr, type);
+  public Text(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 

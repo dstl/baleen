@@ -7,7 +7,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.jcas.JCas;
 
@@ -53,8 +53,7 @@ public class Time extends AbstractRegexAnnotator<Temporal> {
 
   private static final String TIME_ZONES =
       StringUtils.join(
-          Arrays.asList(TimeZone.getAvailableIDs())
-              .stream()
+          Arrays.asList(TimeZone.getAvailableIDs()).stream()
               .filter(s -> StringUtils.isAllUpperCase(s) && s.length() <= 3)
               .collect(Collectors.toList()),
           "|");

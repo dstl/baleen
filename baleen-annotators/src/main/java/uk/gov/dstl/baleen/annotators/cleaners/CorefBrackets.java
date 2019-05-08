@@ -62,9 +62,8 @@ public class CorefBrackets extends BaleenAnnotator {
   public static final String PARAM_TYPE = "excludedTypes";
 
   @ConfigurationParameter(
-    name = PARAM_TYPE,
-    defaultValue = {}
-  )
+      name = PARAM_TYPE,
+      defaultValue = {})
   String[] excludedTypes;
 
   List<Class<? extends Entity>> classTypes = new ArrayList<>();
@@ -104,9 +103,7 @@ public class CorefBrackets extends BaleenAnnotator {
       while (m.find()) {
         final Integer end = offset + m.end(1);
         matched.addAll(
-            entityMap
-                .get(offset + m.start(1))
-                .stream()
+            entityMap.get(offset + m.start(1)).stream()
                 .filter(
                     f ->
                         f.getClass().isAssignableFrom(e.getClass())

@@ -51,32 +51,30 @@ public class SieveCoreferenceTest extends AnnotatorTestBase {
 
   protected static AnalysisEngine[] createAnalysisEngines() throws ResourceInitializationException {
     ExternalResourceDescription parserChunkingDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "parserChunking", SharedOpenNLPModel.class);
 
     ExternalResourceDescription wordnetDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "wordnet", SharedWordNetResource.class);
 
     ExternalResourceDescription tokensDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "tokens", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("tokens", SharedOpenNLPModel.class);
     ExternalResourceDescription sentencesDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "sentences", SharedOpenNLPModel.class);
     ExternalResourceDescription posDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "posTags", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("posTags", SharedOpenNLPModel.class);
     ExternalResourceDescription chunksDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "phraseChunks", SharedOpenNLPModel.class);
 
     stopwordsDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SieveCoreference.KEY_STOPWORDS, SharedStopwordResource.class);
 
     gMDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SieveCoreference.KEY_GENDER_MULTIPLICITY, SharedGenderMultiplicityResource.class);
 
     return asArray(
@@ -173,8 +171,7 @@ public class SieveCoreferenceTest extends AnnotatorTestBase {
 
     // Check all the he and his connect to Chris
     boolean allMatch =
-        words
-            .stream()
+        words.stream()
             .filter(
                 p ->
                     p.getCoveredText().equalsIgnoreCase("his")

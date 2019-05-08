@@ -2,19 +2,18 @@
 // Modified by NCA (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.utils;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
-import io.github.lukehutch.fastclasspathscanner.scanner.ScanResult;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ScanResult;
 
 /**
  * Utility class to hold a singleton classpath scanner, which will speed up use of reflection calls
  * by the Web API
  */
 public class ReflectionUtils {
-  private static FastClasspathScanner scanner = null;
+  private static ClassGraph scanner = null;
   private static ScanResult scanResult = null;
 
   private ReflectionUtils() {
@@ -24,11 +23,11 @@ public class ReflectionUtils {
   /** Return the singleton instance of the classpath scanner object */
   public static ScanResult getInstance() {
     if (scanner == null) {
-      scanner = new FastClasspathScanner("-scala");
+      scanner = new ClassGraph();
     }
 
     if (scanResult == null) {
-      scanResult = scanner.scan();
+      scanResult = scanner.enableClassInfo().scan();
     }
 
     return scanResult;
@@ -41,33 +40,47 @@ public class ReflectionUtils {
       getInstance();
     }
 
-    List<String> classNames;
     if (superType.isInterface()) {
-      classNames = scanResult.getNamesOfClassesImplementing(superType);
+      return scanResult.getClassesImplementing(superType.getName()).stream()
+          .map(c -> c.loadClass(superType, true))
+          .collect(Collectors.toSet());
     } else {
-      classNames = scanResult.getNamesOfSubclassesOf(superType);
+      return scanResult.getSubclasses(superType.getName()).stream()
+          .map(c -> c.loadClass(superType, true))
+          .collect(Collectors.toSet());
     }
-
-    Set<Class<? extends T>> ret = new HashSet<>();
-    scanResult.classNamesToClassRefs(classNames).forEach(c -> ret.add((Class<? extends T>) c));
-    return ret;
   }
 
-  /** Return a set of sub types for the given super type. Scans only the given package. */
+  /**
+   * Return a set of sub types for the given super type. Scans only the given package and
+   * subpackages.
+   */
   @SuppressWarnings("unchecked")
   public static <T> Set<Class<? extends T>> getSubTypes(String packageName, Class<T> superType) {
-    FastClasspathScanner scanner = new FastClasspathScanner(packageName);
-    ScanResult sr = scanner.scan();
-
-    List<String> classNames;
-    if (superType.isInterface()) {
-      classNames = sr.getNamesOfClassesImplementing(superType);
-    } else {
-      classNames = sr.getNamesOfSubclassesOf(superType);
+    if (scanResult == null) {
+      getInstance();
     }
 
-    Set<Class<? extends T>> ret = new HashSet<>();
-    sr.classNamesToClassRefs(classNames).forEach(c -> ret.add((Class<? extends T>) c));
-    return ret;
+    // We could use a new ClassGraph that is prefiltered to just the correct packages, but by
+    // reusing the existing one
+    //    and filtering ourselves, it should be quicker
+
+    if (superType.isInterface()) {
+      return scanResult.getClassesImplementing(superType.getName()).stream()
+          .filter(
+              c ->
+                  c.getPackageName().equals(packageName)
+                      || c.getPackageName().startsWith(packageName + "."))
+          .map(c -> c.loadClass(superType, true))
+          .collect(Collectors.toSet());
+    } else {
+      return scanResult.getSubclasses(superType.getName()).stream()
+          .filter(
+              c ->
+                  c.getPackageName().equals(packageName)
+                      || c.getPackageName().startsWith(packageName + "."))
+          .map(c -> c.loadClass(superType, true))
+          .collect(Collectors.toSet());
+    }
   }
 }

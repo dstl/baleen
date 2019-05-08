@@ -24,7 +24,7 @@ public class SharedWordNetResourceTest {
   @Before
   public void before() throws ResourceInitializationException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "wordnet", SharedWordNetResource.class);
 
     wnr = new SharedWordNetResource();

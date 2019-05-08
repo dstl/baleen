@@ -37,7 +37,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   public void testNoBuzzwords()
       throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -76,7 +76,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   public void testBuzzwords()
       throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -137,7 +137,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   public void testMaxNumber()
       throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -170,7 +170,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   public void testCharacters()
       throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -202,7 +202,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   public void testFoxStoplist()
       throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -242,7 +242,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   public void testCustomStoplist()
       throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -273,7 +273,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   @Test
   public void testStemmer() throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -341,7 +341,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   public void testBadStemmer()
       throws ResourceInitializationException, AnalysisEngineProcessException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -381,7 +381,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   @Test
   public void testLongDocument() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -410,7 +410,7 @@ public class RakeKeywordsTest extends AnnotatorTestBase {
   @Test
   public void testLongDocumentWithText() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             STOPWORDS, SharedStopwordResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(

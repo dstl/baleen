@@ -43,23 +43,20 @@ public abstract class AbstractCoreferenceSieve implements CoreferenceSieve {
   }
 
   protected List<Mention> getMentions(MentionType mentionType) {
-    return mentions
-        .stream()
+    return mentions.stream()
         .filter(m -> m.getType().equals(mentionType))
         .collect(Collectors.toList());
   }
 
   protected List<Mention> getMentions(MentionType... mentionTypes) {
     List<MentionType> mentionTypesList = Arrays.asList(mentionTypes);
-    return mentions
-        .stream()
+    return mentions.stream()
         .filter(m -> mentionTypesList.contains(m.getType()))
         .collect(Collectors.toList());
   }
 
   protected List<Mention> getMentionsWithHead(MentionType mentionType) {
-    return mentions
-        .stream()
+    return mentions.stream()
         .filter(m -> m.getType().equals(mentionType) && hasHead(m))
         .collect(Collectors.toList());
   }
@@ -67,8 +64,7 @@ public abstract class AbstractCoreferenceSieve implements CoreferenceSieve {
   protected List<Mention> getMentionsWithHead(MentionType... mentionTypes) {
     List<MentionType> mentionTypesList = Arrays.asList(mentionTypes);
 
-    return mentions
-        .stream()
+    return mentions.stream()
         .filter(m -> mentionTypesList.contains(m.getType()) && hasHead(m))
         .collect(Collectors.toList());
   }
@@ -123,22 +119,19 @@ public abstract class AbstractCoreferenceSieve implements CoreferenceSieve {
   }
 
   protected List<Mention> findMentionsExactly(int begin, int end) {
-    return getMentions()
-        .stream()
+    return getMentions().stream()
         .filter(m -> begin == m.getAnnotation().getBegin() && m.getAnnotation().getEnd() == end)
         .collect(Collectors.toList());
   }
 
   protected List<Mention> findMentionsUnder(int begin, int end) {
-    return getMentions()
-        .stream()
+    return getMentions().stream()
         .filter(m -> begin >= m.getAnnotation().getBegin() && m.getAnnotation().getEnd() <= end)
         .collect(Collectors.toList());
   }
 
   protected List<Mention> findMentionAbove(int begin, int end) {
-    return getMentions()
-        .stream()
+    return getMentions().stream()
         .filter(m -> m.getAnnotation().getBegin() <= begin && end <= m.getAnnotation().getEnd())
         .collect(Collectors.toList());
   }
@@ -147,8 +140,7 @@ public abstract class AbstractCoreferenceSieve implements CoreferenceSieve {
     // In the paper they say N and J (adjective) but we need cardinal too otherwise "200 people"
     // discards the 200
     // TODO: Modifiers up to head word? See paper
-    return a.getWords()
-        .stream()
+    return a.getWords().stream()
         .filter(
             w ->
                 w.getPartOfSpeech().startsWith("N")

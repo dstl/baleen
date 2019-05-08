@@ -32,7 +32,7 @@ public class UbmreConstituentRelationshipTest extends AbstractMultiAnnotatorTest
   @Override
   protected AnalysisEngine[] createAnalysisEngines() throws ResourceInitializationException {
     ExternalResourceDescription parserChunkingDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "parserChunking", SharedOpenNLPModel.class);
 
     // Add in the OpenNLP implementation too, as its a prerequisite
@@ -41,16 +41,14 @@ public class UbmreConstituentRelationshipTest extends AbstractMultiAnnotatorTest
     // so better test they work together)
 
     ExternalResourceDescription tokensDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "tokens", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("tokens", SharedOpenNLPModel.class);
     ExternalResourceDescription sentencesDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "sentences", SharedOpenNLPModel.class);
     ExternalResourceDescription posDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "posTags", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("posTags", SharedOpenNLPModel.class);
     ExternalResourceDescription chunksDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "phraseChunks", SharedOpenNLPModel.class);
 
     return asArray(

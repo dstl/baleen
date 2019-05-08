@@ -1,22 +1,34 @@
-/* First created by JCasGen Wed Jan 14 12:58:31 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:56 BST 2019 */
+
 package uk.gov.dstl.baleen.types.metadata;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.StringArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
 /**
  * The protective marking of the text span defined by the begin and end properties. Updated by
- * JCasGen Tue Apr 12 12:06:57 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/metadata_type_system.xml
+ * JCasGen Wed Apr 17 13:41:56 BST 2019 XML source: types/metadata_type_system.xml
  *
  * @generated
  */
 public class ProtectiveMarking extends BaleenAnnotation {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +50,25 @@ public class ProtectiveMarking extends BaleenAnnotation {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_classification = "classification";
+  public static final String _FeatName_caveats = "caveats";
+  public static final String _FeatName_releasability = "releasability";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_classification =
+      TypeSystemImpl.createCallSite(ProtectiveMarking.class, "classification");
+  private static final MethodHandle _FH_classification = _FC_classification.dynamicInvoker();
+  private static final CallSite _FC_caveats =
+      TypeSystemImpl.createCallSite(ProtectiveMarking.class, "caveats");
+  private static final MethodHandle _FH_caveats = _FC_caveats.dynamicInvoker();
+  private static final CallSite _FC_releasability =
+      TypeSystemImpl.createCallSite(ProtectiveMarking.class, "releasability");
+  private static final MethodHandle _FH_releasability = _FC_releasability.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +82,11 @@ public class ProtectiveMarking extends BaleenAnnotation {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public ProtectiveMarking(int addr, TOP_Type type) {
-    super(addr, type);
+  public ProtectiveMarking(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,12 +134,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getClassification() {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_classification == null)
-      jcasType.jcas.throwFeatMissing(
-          "classification", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_classification);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_classification));
   }
 
   /**
@@ -118,12 +144,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setClassification(String v) {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_classification == null)
-      jcasType.jcas.throwFeatMissing(
-          "classification", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_classification, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_classification), v);
   }
 
   // *--------------*
@@ -137,14 +158,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
    * @return value of the feature
    */
   public StringArray getCaveats() {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_caveats == null)
-      jcasType.jcas.throwFeatMissing(
-          "caveats", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_caveats)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_caveats)));
   }
 
   /**
@@ -155,61 +169,31 @@ public class ProtectiveMarking extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setCaveats(StringArray v) {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_caveats == null)
-      jcasType.jcas.throwFeatMissing(
-          "caveats", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    jcasType.ll_cas.ll_setRefValue(
-        addr,
-        ((ProtectiveMarking_Type) jcasType).casFeatCode_caveats,
-        jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_caveats), v);
   }
 
   /**
    * indexed getter for caveats - gets an indexed value - An array of string values specifying
-   * handling caveats for the document.
+   * handling caveats for this protective marking
    *
    * @generated
    * @param i index in the array to get
    * @return value of the element at index i
    */
   public String getCaveats(int i) {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_caveats == null)
-      jcasType.jcas.throwFeatMissing(
-          "caveats", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_caveats),
-        i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_caveats),
-        i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_caveats)))).get(i);
   }
 
   /**
    * indexed setter for caveats - sets an indexed value - An array of string values specifying
-   * handling caveats for the document.
+   * handling caveats for this protective marking
    *
    * @generated
    * @param i index in the array to set
    * @param v value to set into the array
    */
   public void setCaveats(int i, String v) {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_caveats == null)
-      jcasType.jcas.throwFeatMissing(
-          "caveats", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_caveats),
-        i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_caveats),
-        i,
-        v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_caveats)))).set(i, v);
   }
 
   // *--------------*
@@ -223,14 +207,7 @@ public class ProtectiveMarking extends BaleenAnnotation {
    * @return value of the feature
    */
   public StringArray getReleasability() {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_releasability == null)
-      jcasType.jcas.throwFeatMissing(
-          "releasability", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_releasability)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_releasability)));
   }
 
   /**
@@ -241,60 +218,30 @@ public class ProtectiveMarking extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setReleasability(StringArray v) {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_releasability == null)
-      jcasType.jcas.throwFeatMissing(
-          "releasability", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    jcasType.ll_cas.ll_setRefValue(
-        addr,
-        ((ProtectiveMarking_Type) jcasType).casFeatCode_releasability,
-        jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_releasability), v);
   }
 
   /**
    * indexed getter for releasability - gets an indexed value - Array of country designators to
-   * which the document is releasable.
+   * which this protective marking is releasable.
    *
    * @generated
    * @param i index in the array to get
    * @return value of the element at index i
    */
   public String getReleasability(int i) {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_releasability == null)
-      jcasType.jcas.throwFeatMissing(
-          "releasability", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_releasability),
-        i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_releasability),
-        i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_releasability)))).get(i);
   }
 
   /**
    * indexed setter for releasability - sets an indexed value - Array of country designators to
-   * which the document is releasable.
+   * which this protective marking is releasable.
    *
    * @generated
    * @param i index in the array to set
    * @param v value to set into the array
    */
   public void setReleasability(int i, String v) {
-    if (ProtectiveMarking_Type.featOkTst
-        && ((ProtectiveMarking_Type) jcasType).casFeat_releasability == null)
-      jcasType.jcas.throwFeatMissing(
-          "releasability", "uk.gov.dstl.baleen.types.metadata.ProtectiveMarking");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_releasability),
-        i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((ProtectiveMarking_Type) jcasType).casFeatCode_releasability),
-        i,
-        v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_releasability)))).set(i, v);
   }
 }

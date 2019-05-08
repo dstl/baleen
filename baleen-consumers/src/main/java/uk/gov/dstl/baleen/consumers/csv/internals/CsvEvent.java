@@ -1,11 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.consumers.csv.internals;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UimaContext;
@@ -46,18 +42,17 @@ public class CsvEvent extends AbstractCsvConsumer {
   protected void write(JCas jCas) {
     final String source = getDocumentAnnotation(jCas).getSourceUri();
 
-    final Map<Event, Collection<Sentence>> coveringSentence =
+    final Map<Event, List<Sentence>> coveringSentence =
         JCasUtil.indexCovering(jCas, Event.class, Sentence.class);
 
-    JCasUtil.select(jCas, Event.class)
-        .stream()
+    JCasUtil.select(jCas, Event.class).stream()
         .map(e -> extracted(source, coveringSentence, e))
         .filter(s -> s.length > 0)
         .forEach(this::write);
   }
 
   private String[] extracted(
-      final String source, final Map<Event, Collection<Sentence>> coveringSentence, Event e) {
+      final String source, final Map<Event, List<Sentence>> coveringSentence, Event e) {
     String sentence = "";
     final Collection<Sentence> sentences = coveringSentence.get(e);
     if (!sentences.isEmpty()) {

@@ -1,9 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers.file;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

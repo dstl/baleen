@@ -56,11 +56,6 @@ public class File extends AbstractAhoCorasickAnnotator {
   @ConfigurationParameter(name = PARAM_TERM_SEPARATOR, defaultValue = ",")
   private String termSeparator;
 
-  /** Constructor */
-  public File() {
-    // Do nothing
-  }
-
   @Override
   public IGazetteer configureGazetteer() throws BaleenException {
     Map<String, Object> config = new HashMap<>();

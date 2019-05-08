@@ -1,15 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.grammar;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -33,9 +25,9 @@ public class ParseTree {
   private static final Logger LOGGER = LoggerFactory.getLogger(ParseTree.class);
 
   private static final Comparator<? super ParseTreeNode> SENTENCE_ORDER =
-      (a, b) -> Integer.compare(a.getChunk().getBegin(), b.getChunk().getBegin());
+      Comparator.comparingInt(a -> a.getChunk().getBegin());
   private static final Comparator<? super AnnotationFS> SHORTEST_FIRST =
-      (a, b) -> Integer.compare(a.getEnd() - a.getBegin(), b.getEnd() - b.getBegin());
+      Comparator.comparingInt(a -> a.getEnd() - a.getBegin());
 
   private final ParseTreeNode root;
   private final Map<PhraseChunk, ParseTreeNode> chunkToNode;
@@ -67,8 +59,7 @@ public class ParseTree {
   public Stream<WordToken> getChildWords(PhraseChunk chunk, Predicate<String> chunkFilter) {
     final ParseTreeNode node = chunkToNode.get(chunk);
     if (node.hasChildren()) {
-      return node.getChildren()
-          .stream()
+      return node.getChildren().stream()
           .filter(c -> chunkFilter.test(c.getChunk().getChunkType()))
           .flatMap(c -> c.getWords().stream());
     } else {
@@ -96,7 +87,7 @@ public class ParseTree {
 
     // Build a tree phrase to phrase
 
-    final Map<PhraseChunk, Collection<PhraseChunk>> index =
+    final Map<PhraseChunk, List<PhraseChunk>> index =
         JCasUtil.indexCovering(jCas, PhraseChunk.class, PhraseChunk.class);
 
     final Collection<PhraseChunk> phrases = JCasUtil.select(jCas, PhraseChunk.class);
@@ -129,7 +120,7 @@ public class ParseTree {
 
     // Add words to the tree
 
-    final Map<PhraseChunk, Collection<WordToken>> wordIndex =
+    final Map<PhraseChunk, List<WordToken>> wordIndex =
         JCasUtil.indexCovered(jCas, PhraseChunk.class, WordToken.class);
 
     final Map<WordToken, ParseTreeNode> wordToNode = new HashMap<>();
@@ -149,8 +140,7 @@ public class ParseTree {
 
                 // Remove the words which are covered by our children, leaving just our words
                 if (n.hasChildren()) {
-                  n.getChildren()
-                      .stream()
+                  n.getChildren().stream()
                       .map(t -> wordIndex.get(t.getChunk()))
                       .filter(Objects::nonNull)
                       .forEach(words::removeAll);
@@ -176,8 +166,7 @@ public class ParseTree {
    * @return the phrase chunk
    */
   private static PhraseChunk findSmallest(Collection<PhraseChunk> covering) {
-    return covering
-        .stream()
+    return covering.stream()
         .sorted(SHORTEST_FIRST)
         .findFirst()
         .orElseThrow(IllegalArgumentException::new);

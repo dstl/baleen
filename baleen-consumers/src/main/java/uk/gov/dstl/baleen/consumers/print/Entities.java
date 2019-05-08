@@ -16,7 +16,7 @@ public class Entities extends AbstractPrintConsumer<Entity> {
     final StringBuilder sb = new StringBuilder();
 
     writeLine(sb, "Value", t.getValue());
-    writeLine(sb, "Type", t.getTypeName());
+    writeLine(sb, "Type", t.getType().getName());
     writeLine(sb, "Span", String.format("%d -> %d", t.getBegin(), t.getEnd()));
 
     return sb.toString();

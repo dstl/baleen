@@ -112,15 +112,19 @@
             <data key="value">lives at</data>
             <data key="wordDistance">0</data>
         </edge>
-        <edge id="24" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
+        <edge id="15" source="cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23" target="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
             <data key="labelE">mentionOf</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
         </edge>
-        <edge id="25" source="32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b" target="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
+        <edge id="16" source="32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b" target="3794f579617a933e63dd65ef9697e4eb3d8083cef332742444fa10b5eca739ef">
             <data key="labelE">mentionOf</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
         </edge>
-        <edge id="34" source="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" target="e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527">
+        <edge id="25" source="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" target="e89f0b8b11e1010dfd36616705b2e3143f27ee2ba4d4dc84225041d8519e4527">
+            <data key="labelE">mentionOf</data>
+            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
+        </edge>
+        <edge id="34" source="a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2" target="a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8">
             <data key="labelE">mentionOf</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
         </edge>
@@ -145,10 +149,6 @@
         </edge>
         <edge id="43" source="2001078f9cf3d7e3025d8a3722f904077eeab9e74d467c536fc0d5c95ded8630" target="15078cdbb5bbaf365179b306d3a4070d1d4cf2ad680c31094fbc633e02b05b3e">
             <data key="labelE">participantIn</data>
-            <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
-        </edge>
-        <edge id="8" source="a4c815e6f4a55afd579e93eae16090ab7f268acf7edd748600247280e45bc1e2" target="a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8">
-            <data key="labelE">mentionOf</data>
             <data key="docId">8b408a0c7163fdfff06ced3e80d7d2b3acd9db900905c4783c28295b8c996165</data>
         </edge>
     </graph>

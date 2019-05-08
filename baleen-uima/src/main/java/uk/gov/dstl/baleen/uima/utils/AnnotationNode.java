@@ -3,14 +3,10 @@ package uk.gov.dstl.baleen.uima.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.jcas.tcas.Annotation;
 
 import com.google.common.collect.ImmutableList;
@@ -134,8 +130,7 @@ public class AnnotationNode<T extends Annotation> extends AbstractNode<T> {
     if (annotation instanceof Structure) {
       String classes = ((Structure) annotation).getElementClass();
       if (StringUtils.isNotBlank(classes)) {
-        return Arrays.asList(classes.split("\\s"))
-            .stream()
+        return Arrays.asList(classes.split("\\s")).stream()
             .map(String::toLowerCase)
             .collect(Collectors.toList());
       }

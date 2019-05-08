@@ -1,20 +1,27 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:16 BST 2019 */
 
-/* First created by JCasGen Thu Dec 01 15:08:29 GMT 2016 */
 package uk.gov.dstl.baleen.types.structure;
 
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
- * An item of an ordered or unordered list. Updated by JCasGen Thu Dec 22 22:42:17 CET 2016 XML
- * source:
- * /Users/chrisflatley/Projects/railroad/baleen/baleen/baleen-uima/src/main/resources/types/structure_type_system.xml
+ * An item of an ordered or unordered list. Updated by JCasGen Wed Apr 17 13:42:16 BST 2019 XML
+ * source: types/structure_type_system.xml
  *
  * @generated
  */
 public class ListItem extends Structure {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.structure.ListItem";
+
   /**
    * @generated
    * @ordered
@@ -36,6 +43,12 @@ public class ListItem extends Structure {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  /* Feature Adjusted Offsets */
+
   /**
    * Never called. Disable default constructor
    *
@@ -49,11 +62,11 @@ public class ListItem extends Structure {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public ListItem(int addr, TOP_Type type) {
-    super(addr, type);
+  public ListItem(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 

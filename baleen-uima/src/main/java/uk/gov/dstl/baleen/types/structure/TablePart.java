@@ -1,19 +1,31 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:16 BST 2019 */
 
-/* First created by JCasGen Thu Oct 13 13:37:40 BST 2016 */
 package uk.gov.dstl.baleen.types.structure;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
- * A header of a Table. Updated by JCasGen Thu Dec 22 22:42:18 CET 2016 XML source:
- * /Users/chrisflatley/Projects/railroad/baleen/baleen/baleen-uima/src/main/resources/types/structure_type_system.xml
+ * A part of a Table. Updated by JCasGen Wed Apr 17 13:42:16 BST 2019 XML source:
+ * types/structure_type_system.xml
  *
  * @generated
  */
 public class TablePart extends Structure {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.structure.TablePart";
+
   /**
    * @generated
    * @ordered
@@ -35,6 +47,16 @@ public class TablePart extends Structure {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_table = "table";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_table = TypeSystemImpl.createCallSite(TablePart.class, "table");
+  private static final MethodHandle _FH_table = _FC_table.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -48,11 +70,11 @@ public class TablePart extends Structure {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public TablePart(int addr, TOP_Type type) {
-    super(addr, type);
+  public TablePart(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -100,11 +122,7 @@ public class TablePart extends Structure {
    * @return value of the feature
    */
   public Table getTable() {
-    if (TablePart_Type.featOkTst && ((TablePart_Type) jcasType).casFeat_table == null)
-      jcasType.jcas.throwFeatMissing("table", "uk.gov.dstl.baleen.types.structure.TablePart");
-    return (Table)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((TablePart_Type) jcasType).casFeatCode_table)));
+    return (Table) (_getFeatureValueNc(wrapGetIntCatchException(_FH_table)));
   }
 
   /**
@@ -114,9 +132,6 @@ public class TablePart extends Structure {
    * @param v value to set into the feature
    */
   public void setTable(Table v) {
-    if (TablePart_Type.featOkTst && ((TablePart_Type) jcasType).casFeat_table == null)
-      jcasType.jcas.throwFeatMissing("table", "uk.gov.dstl.baleen.types.structure.TablePart");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((TablePart_Type) jcasType).casFeatCode_table, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_table), v);
   }
 }

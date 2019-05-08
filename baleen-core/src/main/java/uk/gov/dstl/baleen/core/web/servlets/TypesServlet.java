@@ -86,7 +86,7 @@ public class TypesServlet extends AbstractApiServlet {
    * the list.
    */
   public List<String> getTypes(Class<? extends Annotation> baseClass) {
-    return ReflectionUtils.getInstance().getNamesOfSubclassesOf(baseClass);
+    return ReflectionUtils.getInstance().getSuperclasses(baseClass.getName()).getAsStrings();
   }
 
   @Override

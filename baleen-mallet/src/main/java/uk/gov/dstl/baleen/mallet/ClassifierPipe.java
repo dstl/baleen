@@ -11,7 +11,7 @@ import uk.gov.dstl.baleen.jobs.triage.MalletClassifierTrainer;
  * The processing pipe used for classifiers
  *
  * @see MalletClassifierTrainer
- * @see MalletClassifier
+ * @see uk.gov.dstl.baleen.annotators.triage.MalletClassifier
  */
 public class ClassifierPipe extends AbstractClassifierPipe {
 

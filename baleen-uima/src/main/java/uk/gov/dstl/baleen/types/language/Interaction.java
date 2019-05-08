@@ -1,22 +1,33 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
 
-/* First created by JCasGen Tue Apr 12 12:06:25 BST 2016 */
 package uk.gov.dstl.baleen.types.language;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
 /**
  * A word which acts as a relation in a sentence (eg 'saw' in the 'John saw the car'). Updated by
- * JCasGen Wed Apr 13 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * JCasGen Wed Apr 17 13:42:08 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class Interaction extends BaleenAnnotation {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.language.Interaction";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +49,25 @@ public class Interaction extends BaleenAnnotation {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_value = "value";
+  public static final String _FeatName_relationshipType = "relationshipType";
+  public static final String _FeatName_relationSubType = "relationSubType";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_value =
+      TypeSystemImpl.createCallSite(Interaction.class, "value");
+  private static final MethodHandle _FH_value = _FC_value.dynamicInvoker();
+  private static final CallSite _FC_relationshipType =
+      TypeSystemImpl.createCallSite(Interaction.class, "relationshipType");
+  private static final MethodHandle _FH_relationshipType = _FC_relationshipType.dynamicInvoker();
+  private static final CallSite _FC_relationSubType =
+      TypeSystemImpl.createCallSite(Interaction.class, "relationSubType");
+  private static final MethodHandle _FH_relationSubType = _FC_relationSubType.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +81,11 @@ public class Interaction extends BaleenAnnotation {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Interaction(int addr, TOP_Type type) {
-    super(addr, type);
+  public Interaction(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -104,9 +134,7 @@ public class Interaction extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getValue() {
-    if (Interaction_Type.featOkTst && ((Interaction_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.language.Interaction");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Interaction_Type) jcasType).casFeatCode_value);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_value));
   }
 
   /**
@@ -117,9 +145,7 @@ public class Interaction extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setValue(String v) {
-    if (Interaction_Type.featOkTst && ((Interaction_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.language.Interaction");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Interaction_Type) jcasType).casFeatCode_value, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_value), v);
   }
 
   // *--------------*
@@ -133,12 +159,7 @@ public class Interaction extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getRelationshipType() {
-    if (Interaction_Type.featOkTst
-        && ((Interaction_Type) jcasType).casFeat_relationshipType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationshipType", "uk.gov.dstl.baleen.types.language.Interaction");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Interaction_Type) jcasType).casFeatCode_relationshipType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_relationshipType));
   }
 
   /**
@@ -149,12 +170,7 @@ public class Interaction extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setRelationshipType(String v) {
-    if (Interaction_Type.featOkTst
-        && ((Interaction_Type) jcasType).casFeat_relationshipType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationshipType", "uk.gov.dstl.baleen.types.language.Interaction");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Interaction_Type) jcasType).casFeatCode_relationshipType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_relationshipType), v);
   }
 
   // *--------------*
@@ -168,11 +184,7 @@ public class Interaction extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getRelationSubType() {
-    if (Interaction_Type.featOkTst && ((Interaction_Type) jcasType).casFeat_relationSubType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationSubType", "uk.gov.dstl.baleen.types.language.Interaction");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Interaction_Type) jcasType).casFeatCode_relationSubType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_relationSubType));
   }
 
   /**
@@ -183,10 +195,6 @@ public class Interaction extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setRelationSubType(String v) {
-    if (Interaction_Type.featOkTst && ((Interaction_Type) jcasType).casFeat_relationSubType == null)
-      jcasType.jcas.throwFeatMissing(
-          "relationSubType", "uk.gov.dstl.baleen.types.language.Interaction");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Interaction_Type) jcasType).casFeatCode_relationSubType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_relationSubType), v);
   }
 }

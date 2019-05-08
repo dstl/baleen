@@ -51,12 +51,11 @@ public class TemplateRecordConfiguration {
    * Instantiates a new named record definition configuration.
    *
    * @param name the name of record
-   * @param kind the kind
    * @param precedingPath the preceding path
    * @param coveredPaths the covered paths
-   * @param repeatingUnit the repeating unit
+   * @param minimalRepeat the minimal possible repeat
    * @param followingPath the following path
-   * @param fieldPaths the field paths
+   * @param fields the field paths
    * @param order the order
    */
   public TemplateRecordConfiguration(
@@ -94,10 +93,9 @@ public class TemplateRecordConfiguration {
    * Instantiates a new named record definition configuration.
    *
    * @param name the name of record
-   * @param kind the kind
    * @param precedingPath the preceding path
    * @param followingPath the following path
-   * @param fieldPaths the field paths
+   * @param fields the field paths
    * @param order the order
    */
   public TemplateRecordConfiguration(

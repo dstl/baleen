@@ -56,8 +56,7 @@ public class ShannonEntropyAnnotator extends BaleenAnnotator {
         METADATA_WORD_BASED_ENTROPY_KEY, String.valueOf(shannonEntropyWordStrings), jCas);
 
     List<Character> characterList =
-        wordList
-            .stream()
+        wordList.stream()
             .flatMap(word -> word.chars().mapToObj(c -> (char) c))
             .collect(Collectors.toList());
 

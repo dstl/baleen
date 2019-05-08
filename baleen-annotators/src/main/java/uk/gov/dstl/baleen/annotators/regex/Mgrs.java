@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
+import org.opensextant.geodesy.MGRS;
 
 import com.google.common.collect.ImmutableSet;
 
@@ -94,13 +95,41 @@ public class Mgrs extends BaleenTextAwareAnnotator {
   }
 
   /**
-   * Allows child classes to implement additional extraction to enhance the coordinate (eg to add
-   * lat lon)
-   *
-   * @param matcher
-   * @param loc
+   * Enhances the coordinate by parsing the MGRS coordinate and adding additional information (i.e.
+   * the GeoJson polygon representing the MGRS square)
    */
-  protected void enhanceCoordinate(Matcher matcher, Coordinate loc) {
-    // Do nothing
+  private void enhanceCoordinate(Matcher matcher, Coordinate loc) {
+    try {
+      MGRS mgrs = new MGRS(matcher.group(2));
+      loc.setGeoJson(
+          "{\"type\":\"Polygon\",\"coordinates\":[["
+              + "["
+              + mgrs.getBoundingBox().getEastLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getNorthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getWestLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getNorthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getWestLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getSouthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getEastLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getSouthLat().inDegrees()
+              + "],"
+              + "["
+              + mgrs.getBoundingBox().getEastLon().inDegrees()
+              + ","
+              + mgrs.getBoundingBox().getNorthLat().inDegrees()
+              + "]]]}");
+    } catch (IllegalArgumentException e) {
+      getMonitor().warn("Couldn't parse MGRS co-ordinate", e);
+    }
   }
 }

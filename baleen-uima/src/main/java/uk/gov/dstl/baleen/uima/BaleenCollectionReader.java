@@ -184,7 +184,7 @@ public abstract class BaleenCollectionReader extends JCasCollectionReader_ImplBa
   /**
    * Extract the content from the given inputStream and add it to the supplied jCas.
    *
-   * @param stream The InputStream of data to process
+   * @param inputStream The InputStream of data to process
    * @param source The source URI to set
    * @param jCas The JCas object to add data to
    * @throws IOException

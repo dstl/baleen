@@ -28,9 +28,7 @@ public class MergeNationalityIntoEntity extends BaleenTextAwareAnnotator {
     if (nationalities.isEmpty()) return;
 
     List<Entity> entities =
-        block
-            .select(Entity.class)
-            .stream()
+        block.select(Entity.class).stream()
             .filter(e -> !e.getClass().equals(Nationality.class))
             .collect(Collectors.toList());
     for (Nationality n : nationalities) {

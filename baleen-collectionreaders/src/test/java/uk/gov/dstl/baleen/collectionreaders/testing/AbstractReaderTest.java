@@ -32,7 +32,7 @@ public abstract class AbstractReaderTest {
     this.readerClass = readerClass;
 
     contentExtractor =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             KEY_CONTENT_EXTRACTOR, getContentExtractorClass());
   }
 

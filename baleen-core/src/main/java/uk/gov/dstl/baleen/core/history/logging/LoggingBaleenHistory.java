@@ -48,11 +48,6 @@ public class LoggingBaleenHistory extends AbstractBaleenHistory {
 
   private Logger historyLogger;
 
-  /** New instance */
-  public LoggingBaleenHistory() {
-    // Empty constructor, do nothing
-  }
-
   @Override
   protected void initialize() throws BaleenException {
     super.initialize();

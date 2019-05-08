@@ -2,13 +2,7 @@
 package uk.gov.dstl.baleen.annotators.gazetteer.helpers;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.ahocorasick.trie.Emit;
@@ -126,13 +120,6 @@ public abstract class AbstractAhoCorasickAnnotator extends BaleenTextAwareAnnota
 
   private static final String ERROR_CANT_ASSIGN_ENTITY_PROPERTY =
       "Unable to assign property on entity - property will be skipped";
-
-  /**
-   * Constructor
-   *
-   * @param logger The Logger to use for errors, etc.
-   */
-  public AbstractAhoCorasickAnnotator() {}
 
   /**
    * Configure a gazetteer object and initialise it. Remember that the caseSensitive and type
@@ -340,7 +327,7 @@ public abstract class AbstractAhoCorasickAnnotator extends BaleenTextAwareAnnota
   /**
    * Create reference targets for entities with the same keys
    *
-   * @param jCas UIMA JCas Object
+   * @param block TextBlock object
    * @param entities A collection of lists of entities to coreference
    */
   protected void createReferenceTargets(

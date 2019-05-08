@@ -10,12 +10,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.codahale.metrics.Counter;
-import com.codahale.metrics.Histogram;
-import com.codahale.metrics.Meter;
-import com.codahale.metrics.MetricRegistry;
-import com.codahale.metrics.ScheduledReporter;
-import com.codahale.metrics.Timer;
+import com.codahale.metrics.*;
 import com.codahale.metrics.jvm.GarbageCollectorMetricSet;
 import com.codahale.metrics.jvm.MemoryUsageGaugeSet;
 import com.codahale.metrics.jvm.ThreadStatesGaugeSet;
@@ -145,35 +140,19 @@ public class MetricsFactory implements BaleenComponent {
     return INSTANCE;
   }
 
-  /**
-   * Get a new metrics provider for a specific class.
-   *
-   * @param prefix
-   * @param clazz
-   * @return
-   */
+  /** Get a new metrics provider for a specific class. */
   public static Metrics getMetrics(String prefix, Class<?> clazz) {
     return new Metrics(getInstance(), prefix, clazz);
   }
 
-  /**
-   * Get a new metrics provider for a specific class, without a prefix.
-   *
-   * @param clazz
-   * @return
-   */
+  /** Get a new metrics provider for a specific class, without a prefix. */
   public static Metrics getMetrics(Class<?> clazz) {
     return new Metrics(getInstance(), clazz);
   }
 
   // Instance functions
 
-  /**
-   * Get an instance of PipelineMetrics for the given pipeline name
-   *
-   * @param pipelineName
-   * @return
-   */
+  /** Get an instance of PipelineMetrics for the given pipeline name */
   public PipelineMetrics getPipelineMetrics(String pipelineName) {
     if (!pipelineMetrics.containsKey(pipelineName)) {
       pipelineMetrics.put(pipelineName, new PipelineMetrics(pipelineName));
@@ -182,12 +161,7 @@ public class MetricsFactory implements BaleenComponent {
     return pipelineMetrics.get(pipelineName);
   }
 
-  /**
-   * Configure the instance.
-   *
-   * @param configuration (currently unused)
-   * @throws BaleenException
-   */
+  /** Configure the instance. */
   @Override
   public void configure(Configuration configuration) throws BaleenException {
     LOGGER.debug("Configuring metrics");
@@ -235,121 +209,57 @@ public class MetricsFactory implements BaleenComponent {
     LOGGER.info("Metrics have been configured");
   }
 
-  /**
-   * Get the underlying metrics registry.
-   *
-   * @return
-   */
+  /** Get the underlying metrics registry. */
   public MetricRegistry getRegistry() {
     return metricRegistry;
   }
 
-  /**
-   * Get or create a metric counter, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric counter, with default naming. */
   public Counter getCounter(Class<?> clazz, String name) {
     return metricRegistry.counter(makeName(clazz, name));
   }
 
-  /**
-   * Get or create a metric meter, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric meter, with default naming. */
   public Meter getMeter(Class<?> clazz, String name) {
     return metricRegistry.meter(makeName(clazz, name));
   }
 
-  /**
-   * Get or create a metric histogram, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric histogram, with default naming. */
   public Histogram getHistogram(Class<?> clazz, String name) {
     return metricRegistry.histogram(makeName(clazz, name));
   }
 
-  /**
-   * Get or create a metric timer, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric timer, with default naming. */
   public Timer getTimer(Class<?> clazz, String name) {
     return metricRegistry.timer(makeName(clazz, name));
   }
 
-  /**
-   * Get or create a metric counter, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric counter, with default naming. */
   public Counter getCounter(String base, String name) {
     return metricRegistry.counter(makeName(base, name));
   }
 
-  /**
-   * Get or create a metric meter, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric meter, with default naming. */
   public Meter getMeter(String base, String name) {
     return metricRegistry.meter(makeName(base, name));
   }
 
-  /**
-   * Get or create a metric histogram, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric histogram, with default naming. */
   public Histogram getHistogram(String base, String name) {
     return metricRegistry.histogram(makeName(base, name));
   }
 
-  /**
-   * Get or create a metric timer, with default naming.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Get or create a metric timer, with default naming. */
   public Timer getTimer(String base, String name) {
     return metricRegistry.timer(makeName(base, name));
   }
 
-  /**
-   * Create a name using the default scheme.
-   *
-   * @param base
-   * @param name
-   * @return
-   */
+  /** Create a name using the default scheme. */
   public String makeName(String base, String name) {
     return base + Metrics.SEP + name;
   }
 
-  /**
-   * Create a name using the default scheme.
-   *
-   * @param clazz
-   * @param name
-   * @return
-   */
+  /** Create a name using the default scheme. */
   public String makeName(Class<?> clazz, String name) {
     return makeName(clazz.getCanonicalName(), name);
   }

@@ -20,7 +20,7 @@ public class SharedGenderMultiplicityResourceTest {
   @Before
   public void beforeTest() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "genderMultiplicity", SharedGenderMultiplicityResource.class);
     sgmr = new SharedGenderMultiplicityResource();
     sgmr.initialize(erd.getResourceSpecifier(), Collections.emptyMap());

@@ -23,7 +23,7 @@ public class ElasticsearchRestTest extends ElasticsearchTestBase {
   public void setup() throws UIMAException, IOException {
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             ELASTICSEARCH,
             SharedElasticsearchRestResource.class,
             PARAM_URL,

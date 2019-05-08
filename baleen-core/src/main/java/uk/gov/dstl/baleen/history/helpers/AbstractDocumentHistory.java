@@ -45,8 +45,7 @@ public abstract class AbstractDocumentHistory<T extends BaleenHistory> implement
 
   @Override
   public Collection<HistoryEvent> getHistory(long recordableId) {
-    return getAllHistory()
-        .stream()
+    return getAllHistory().stream()
         .filter(e -> e.getRecordable().getInternalId() == recordableId)
         .collect(Collectors.toList());
   }

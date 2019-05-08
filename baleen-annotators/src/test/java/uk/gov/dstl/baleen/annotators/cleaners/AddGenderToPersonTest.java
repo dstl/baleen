@@ -18,7 +18,7 @@ import uk.gov.dstl.baleen.types.common.Person;
 
 public class AddGenderToPersonTest extends AbstractAnnotatorTest {
   private final ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           AddGenderToPerson.KEY_GENDER_MULTIPLICITY, SharedGenderMultiplicityResource.class);
 
   public AddGenderToPersonTest() {

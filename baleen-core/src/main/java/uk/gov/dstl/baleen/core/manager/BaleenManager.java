@@ -190,7 +190,7 @@ public class BaleenManager {
    *
    * <p>This is useful for full integration tests, or building simple tools.
    *
-   * @param runnable
+   * @param listener
    */
   public void run(BaleenManagerListener listener) {
     exit = false;
@@ -292,11 +292,7 @@ public class BaleenManager {
     return jobManager;
   }
 
-  /**
-   * Get the YAML used to configure this instance.
-   *
-   * @return
-   */
+  /** Get the YAML used to configure this instance. */
   public synchronized String getYaml() {
     return yaml;
   }

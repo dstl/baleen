@@ -47,7 +47,7 @@ public class MongoTest {
     // Create a description of an external resource - a fongo instance, in the same way we would
     // have created a shared mongo resource
     final ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO,
             SharedFongoResource.class,
             PARAM_FONGO_COLLECTION,
@@ -55,7 +55,7 @@ public class MongoTest {
             PARAM_FONGO_DATA,
             "[]");
     final ExternalResourceDescription idErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SharedIdGenerator.RESOURCE_KEY, SharedIdGenerator.class);
 
     // Create the analysis engine

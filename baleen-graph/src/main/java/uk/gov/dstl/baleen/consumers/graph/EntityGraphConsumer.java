@@ -17,7 +17,7 @@ import uk.gov.dstl.baleen.consumers.AbstractMigratingEntityGraphConsumer;
  * class path. See <a href="http://tinkerpop.apache.org/">http://tinkerpop.apache.org/</a> for
  * supported graph stores.
  *
- * @see EntityGraphFactory
+ * @see uk.gov.dstl.baleen.graph.EntityGraphFactory
  * @baleen.javadoc
  */
 public class EntityGraphConsumer extends AbstractMigratingEntityGraphConsumer {

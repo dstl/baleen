@@ -34,8 +34,8 @@ import uk.gov.dstl.baleen.uima.utils.UimaUtils;
  * <p>The scheduler will pass any parameters it has defined as settings (@see {@link BaleenTask}
  * which are effectively carried by the JCas.
  *
- * <p>To implement jobs that run periodically you m ay which to derive from the existing @see {@link
- * FixedRate} scheduler.
+ * <p>To implement jobs that run periodically you may wish to derive from the existing @see {@link
+ * uk.gov.dstl.baleen.schedules.FixedRate} scheduler.
  *
  * @baleen.javadoc
  */

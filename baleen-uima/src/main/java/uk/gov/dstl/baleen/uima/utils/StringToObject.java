@@ -20,7 +20,7 @@ public class StringToObject {
   }
 
   /**
-   * Convert a string to a Java object of the correct type with the same value (e.g. "1" -> 1).
+   * Convert a string to a Java object of the correct type with the same value (e.g. "1" &rarr; 1).
    *
    * <p>If a number has a preceding 0, it will be assumed not to be a number as it is likely to
    * represent a phone number
@@ -35,7 +35,7 @@ public class StringToObject {
   }
 
   /**
-   * Convert a string to a Java object of the correct type with the same value (e.g. "1" -> 1).
+   * Convert a string to a Java object of the correct type with the same value (e.g. "1" &rarr; 1).
    *
    * <p>If a number has a preceding 0, it will be assumed not to be a number as it is likely to
    * represent a phone number

@@ -16,10 +16,6 @@ public class LoggingMetricListener implements MetricRegistryListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LoggingMetricListener.class);
 
-  public LoggingMetricListener() {
-    // Do nothing
-  }
-
   private void log(boolean created, String type, String name) {
     LOGGER.debug("{} {} '{}'", created ? "Created" : "Deleted", type, name);
   }

@@ -25,7 +25,7 @@ import uk.gov.dstl.baleen.contentmappers.helpers.ContentMapper;
  * data-baleen- tags on the element.
  *
  * <p>Use MarkupUtils.additionallyAnnotateAsType and MarkupUtils.add/setAttribute within {@link
- * ContentManipulator} in order to pass information to this mapper.
+ * MarkupUtils} in order to pass information to this mapper.
  *
  * <p>Note the full Java type should be passed to additionallyAnnotateAsType. The attributes should
  * have the same key as the Java bean fields would be (eg if the UIMA value setter is

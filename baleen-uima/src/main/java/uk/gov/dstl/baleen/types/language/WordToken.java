@@ -1,22 +1,34 @@
-/* First created by JCasGen Wed Jan 14 12:58:18 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.language;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.FSArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
- * The output from some text tokenization process. Updated by JCasGen Wed Apr 13 13:23:16 BST 2016
- * XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * The output from some text tokenization process. Updated by JCasGen Wed Apr 17 13:42:08 BST 2019
+ * XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class WordToken extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.language.WordToken";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +50,25 @@ public class WordToken extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_partOfSpeech = "partOfSpeech";
+  public static final String _FeatName_sentenceOrder = "sentenceOrder";
+  public static final String _FeatName_lemmas = "lemmas";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_partOfSpeech =
+      TypeSystemImpl.createCallSite(WordToken.class, "partOfSpeech");
+  private static final MethodHandle _FH_partOfSpeech = _FC_partOfSpeech.dynamicInvoker();
+  private static final CallSite _FC_sentenceOrder =
+      TypeSystemImpl.createCallSite(WordToken.class, "sentenceOrder");
+  private static final MethodHandle _FH_sentenceOrder = _FC_sentenceOrder.dynamicInvoker();
+  private static final CallSite _FC_lemmas =
+      TypeSystemImpl.createCallSite(WordToken.class, "lemmas");
+  private static final MethodHandle _FH_lemmas = _FC_lemmas.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +82,11 @@ public class WordToken extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public WordToken(int addr, TOP_Type type) {
-    super(addr, type);
+  public WordToken(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,10 +134,7 @@ public class WordToken extends Base {
    * @return value of the feature
    */
   public String getPartOfSpeech() {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_partOfSpeech == null)
-      jcasType.jcas.throwFeatMissing("partOfSpeech", "uk.gov.dstl.baleen.types.language.WordToken");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((WordToken_Type) jcasType).casFeatCode_partOfSpeech);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_partOfSpeech));
   }
 
   /**
@@ -116,10 +144,7 @@ public class WordToken extends Base {
    * @param v value to set into the feature
    */
   public void setPartOfSpeech(String v) {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_partOfSpeech == null)
-      jcasType.jcas.throwFeatMissing("partOfSpeech", "uk.gov.dstl.baleen.types.language.WordToken");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((WordToken_Type) jcasType).casFeatCode_partOfSpeech, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_partOfSpeech), v);
   }
 
   // *--------------*
@@ -133,11 +158,7 @@ public class WordToken extends Base {
    * @return value of the feature
    */
   public int getSentenceOrder() {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_sentenceOrder == null)
-      jcasType.jcas.throwFeatMissing(
-          "sentenceOrder", "uk.gov.dstl.baleen.types.language.WordToken");
-    return jcasType.ll_cas.ll_getIntValue(
-        addr, ((WordToken_Type) jcasType).casFeatCode_sentenceOrder);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_sentenceOrder));
   }
 
   /**
@@ -148,10 +169,7 @@ public class WordToken extends Base {
    * @param v value to set into the feature
    */
   public void setSentenceOrder(int v) {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_sentenceOrder == null)
-      jcasType.jcas.throwFeatMissing(
-          "sentenceOrder", "uk.gov.dstl.baleen.types.language.WordToken");
-    jcasType.ll_cas.ll_setIntValue(addr, ((WordToken_Type) jcasType).casFeatCode_sentenceOrder, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_sentenceOrder), v);
   }
 
   // *--------------*
@@ -164,11 +182,7 @@ public class WordToken extends Base {
    * @return value of the feature
    */
   public FSArray getLemmas() {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_lemmas == null)
-      jcasType.jcas.throwFeatMissing("lemmas", "uk.gov.dstl.baleen.types.language.WordToken");
-    return (FSArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((WordToken_Type) jcasType).casFeatCode_lemmas)));
+    return (FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_lemmas)));
   }
 
   /**
@@ -178,10 +192,7 @@ public class WordToken extends Base {
    * @param v value to set into the feature
    */
   public void setLemmas(FSArray v) {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_lemmas == null)
-      jcasType.jcas.throwFeatMissing("lemmas", "uk.gov.dstl.baleen.types.language.WordToken");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((WordToken_Type) jcasType).casFeatCode_lemmas, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_lemmas), v);
   }
 
   /**
@@ -193,16 +204,8 @@ public class WordToken extends Base {
    * @return value of the element at index i
    */
   public WordLemma getLemmas(int i) {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_lemmas == null)
-      jcasType.jcas.throwFeatMissing("lemmas", "uk.gov.dstl.baleen.types.language.WordToken");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((WordToken_Type) jcasType).casFeatCode_lemmas), i);
     return (WordLemma)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefArrayValue(
-                jcasType.ll_cas.ll_getRefValue(
-                    addr, ((WordToken_Type) jcasType).casFeatCode_lemmas),
-                i)));
+        (((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_lemmas)))).get(i));
   }
 
   /**
@@ -214,13 +217,6 @@ public class WordToken extends Base {
    * @param v value to set into the array
    */
   public void setLemmas(int i, WordLemma v) {
-    if (WordToken_Type.featOkTst && ((WordToken_Type) jcasType).casFeat_lemmas == null)
-      jcasType.jcas.throwFeatMissing("lemmas", "uk.gov.dstl.baleen.types.language.WordToken");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((WordToken_Type) jcasType).casFeatCode_lemmas), i);
-    jcasType.ll_cas.ll_setRefArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((WordToken_Type) jcasType).casFeatCode_lemmas),
-        i,
-        jcasType.ll_cas.ll_getFSRef(v));
+    ((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_lemmas)))).set(i, v);
   }
 }

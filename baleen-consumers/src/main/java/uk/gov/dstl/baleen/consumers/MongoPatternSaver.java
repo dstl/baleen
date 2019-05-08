@@ -137,6 +137,6 @@ public class MongoPatternSaver extends BaleenConsumer {
   private Document saveEntity(final Entity entity) {
     return new Document()
         .append("text", entity.getCoveredText())
-        .append("type", entity.getTypeName());
+        .append("type", entity.getType().getName());
   }
 }

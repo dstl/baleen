@@ -46,9 +46,8 @@ public class Blacklist extends BaleenAnnotator {
   public static final String PARAM_BLACKLIST = "blacklist";
 
   @ConfigurationParameter(
-    name = PARAM_BLACKLIST,
-    defaultValue = {}
-  )
+      name = PARAM_BLACKLIST,
+      defaultValue = {})
   String[] terms;
 
   List<String> thingsToRemove = null;
@@ -72,9 +71,8 @@ public class Blacklist extends BaleenAnnotator {
   public static final String PARAM_TYPE = "type";
 
   @ConfigurationParameter(
-    name = PARAM_TYPE,
-    defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity"
-  )
+      name = PARAM_TYPE,
+      defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity")
   String type;
 
   Class<? extends Annotation> et = null;

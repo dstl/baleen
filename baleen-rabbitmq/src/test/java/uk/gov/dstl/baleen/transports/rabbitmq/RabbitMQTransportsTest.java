@@ -24,7 +24,7 @@ import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 public class RabbitMQTransportsTest {
 
   private final ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           SharedRabbitMQResource.RESOURCE_KEY, MockRabbitMQResource.class);
 
   @Test
@@ -68,7 +68,7 @@ public class RabbitMQTransportsTest {
             SharedRabbitMQResource.RESOURCE_KEY,
             erd,
             KEY_CONTENT_EXTRACTOR,
-            ExternalResourceFactory.createExternalResourceDescription(
+            ExternalResourceFactory.createNamedResourceDescription(
                 KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class));
   }
 

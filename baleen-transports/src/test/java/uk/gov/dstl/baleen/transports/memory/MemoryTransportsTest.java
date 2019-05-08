@@ -37,7 +37,7 @@ import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 public class MemoryTransportsTest {
 
   private final ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           SharedMemoryQueueResource.RESOURCE_KEY, SharedMemoryQueueResource.class);
 
   @Test
@@ -170,7 +170,7 @@ public class MemoryTransportsTest {
             MemoryTransportReceiver.class,
             TypeSystemSingleton.getTypeSystemDescriptionInstance(),
             KEY_CONTENT_EXTRACTOR,
-            ExternalResourceFactory.createExternalResourceDescription(
+            ExternalResourceFactory.createNamedResourceDescription(
                 KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class),
             SharedMemoryQueueResource.RESOURCE_KEY,
             erd);

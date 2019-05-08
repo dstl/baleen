@@ -2,6 +2,7 @@
 package uk.gov.dstl.baleen.annotators.relations.helpers;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -27,9 +28,9 @@ public abstract class AbstractInteractionBasedSentenceRelationshipAnnotator
   @Override
   protected final void extract(JCas jCas) {
 
-    final Map<Sentence, Collection<Interaction>> sentenceToInteraction =
+    final Map<Sentence, List<Interaction>> sentenceToInteraction =
         JCasUtil.indexCovered(jCas, Sentence.class, Interaction.class);
-    final Map<Sentence, Collection<Entity>> sentenceToEntities =
+    final Map<Sentence, List<Entity>> sentenceToEntities =
         JCasUtil.indexCovered(jCas, Sentence.class, Entity.class);
 
     for (final Sentence sentence : JCasUtil.select(jCas, Sentence.class)) {

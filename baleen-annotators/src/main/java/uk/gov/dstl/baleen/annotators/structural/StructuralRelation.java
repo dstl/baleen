@@ -103,8 +103,7 @@ public class StructuralRelation extends AbstractTypedRelationshipAnnotator {
         AnnotationHierarchyBuilder.build(jCas, annotationClasses).select(query);
 
     addRelationsToIndex(
-        select
-            .stream()
+        select.stream()
             .flatMap(
                 match -> {
                   Nodes<Annotation> sourceAnnotation = match.select(sourceQuery);

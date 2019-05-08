@@ -92,9 +92,8 @@ public abstract class AbstractSqlReader extends BaleenCollectionReader {
   public static final String PARAM_SQL_IGNORE = "ignore";
 
   @ConfigurationParameter(
-    name = PARAM_SQL_IGNORE,
-    defaultValue = {}
-  )
+      name = PARAM_SQL_IGNORE,
+      defaultValue = {})
   protected String[] ignore;
 
   /**

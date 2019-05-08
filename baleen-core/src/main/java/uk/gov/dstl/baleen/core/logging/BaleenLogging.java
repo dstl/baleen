@@ -101,11 +101,6 @@ public class BaleenLogging extends AbstractBaleenComponent {
 
   private EvictingQueueAppender<ILoggingEvent> recentLogAppender;
 
-  /** New instance */
-  public BaleenLogging() {
-    super();
-  }
-
   @Override
   public void configure(Configuration yaml) throws BaleenException {
     LOGGER.debug("Configuring logging");

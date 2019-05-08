@@ -31,7 +31,7 @@ public class FileTest extends AnnotatorTestBase {
   @Test
   public void test() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -61,7 +61,7 @@ public class FileTest extends AnnotatorTestBase {
   public void testmultipleHits() throws Exception {
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -91,7 +91,7 @@ public class FileTest extends AnnotatorTestBase {
   @Test
   public void testCaseSensitive() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -127,7 +127,7 @@ public class FileTest extends AnnotatorTestBase {
     // This test demonstrates pluralisation in the gazetteer
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -164,7 +164,7 @@ public class FileTest extends AnnotatorTestBase {
     // This test demonstrates the case where whitespace is preserved in gazetteer matching.
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -198,7 +198,7 @@ public class FileTest extends AnnotatorTestBase {
     // This test demonstrates the case where whitespace is preserved in gazetteer matching.
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -234,7 +234,7 @@ public class FileTest extends AnnotatorTestBase {
     // This test demonstrates the case where whitespace is preserved in gazetteer matching.
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(
@@ -270,7 +270,7 @@ public class FileTest extends AnnotatorTestBase {
   public void testmultipleHitsWithText() throws Exception {
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             FILE_GAZETTEER, SharedFileResource.class);
     AnalysisEngineDescription aed =
         AnalysisEngineFactory.createEngineDescription(

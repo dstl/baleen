@@ -65,7 +65,7 @@ public class WordNetLemmatizer extends BaleenAnnotator {
 
   private void copyExistingLemmas(final WordToken t, FSArray fsArray) {
     int i = 0;
-    for (FeatureStructure fs : t.getLemmas()) {
+    for (FeatureStructure fs : t.getLemmas().toArray()) {
       fsArray.set(i, fs);
       i++;
     }

@@ -28,9 +28,11 @@ function componentListLoaded(){
 var baleenDefaultValues;
 function getDefaults(){
     $.ajax({
-        url: baleenUrl + "api/1/defaults"
-    }).done(function(data){
-        baleenDefaultValues = data;
+        url: baleenUrl + "api/1/defaults",
+        async: false,        //Ensure we load the defaults before we try to load other information
+        success: function(data){
+            baleenDefaultValues = data;
+        }
     });
 }
 

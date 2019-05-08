@@ -38,9 +38,8 @@ public class NormalizeTemporal extends AbstractNormalizeEntities {
   public static final String PARAM_DATE_FORMAT = "correctFormat";
 
   @ConfigurationParameter(
-    name = PARAM_DATE_FORMAT,
-    defaultValue = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-  )
+      name = PARAM_DATE_FORMAT,
+      defaultValue = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'")
   String correctFormat;
 
   /**

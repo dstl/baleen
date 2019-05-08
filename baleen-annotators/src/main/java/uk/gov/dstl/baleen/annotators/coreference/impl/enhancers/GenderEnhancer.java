@@ -20,14 +20,11 @@ public class GenderEnhancer implements MentionEnhancer {
   private final SharedGenderMultiplicityResource genderResource;
 
   static {
-    Arrays.asList("he", "him", "his", "himself")
-        .stream()
+    Arrays.asList("he", "him", "his", "himself").stream()
         .forEach(s -> PRONOUN_MAP.put(s, Gender.M));
-    Arrays.asList("she", "her", "hers", "herself")
-        .stream()
+    Arrays.asList("she", "her", "hers", "herself").stream()
         .forEach(s -> PRONOUN_MAP.put(s, Gender.F));
-    Arrays.asList("it", "its", "itself", "when", "where", "there", "here")
-        .stream()
+    Arrays.asList("it", "its", "itself", "when", "where", "there", "here").stream()
         .forEach(s -> PRONOUN_MAP.put(s, Gender.N));
 
     Arrays.asList(

@@ -39,7 +39,7 @@ public class ElasticsearchTest {
     elasticsearch = new EmbeddedElasticsearch5();
 
     final ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             RESOURCE_KEY,
             SharedElasticsearchResource.class,
             PARAM_CLUSTER,
@@ -47,7 +47,7 @@ public class ElasticsearchTest {
             PARAM_PORT,
             Integer.toString(elasticsearch.getTransportPort()));
     final ExternalResourceDescription idErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SharedIdGenerator.RESOURCE_KEY, SharedIdGenerator.class);
 
     final AnalysisEngineDescription aed =

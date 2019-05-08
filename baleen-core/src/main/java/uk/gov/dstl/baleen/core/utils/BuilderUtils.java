@@ -1,16 +1,8 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.utils;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.uima.fit.internal.ExtendedExternalResourceDescription_impl;
 import org.apache.uima.resource.ExternalResourceDescription;
@@ -56,7 +48,6 @@ public final class BuilderUtils {
    * name as it is provided
    *
    * @param className The name of the class
-   * @param type The type that the class should extend
    * @param defaultPackage The package to look in if the className isn't a fully qualified name
    * @return The class specified
    */

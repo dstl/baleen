@@ -90,9 +90,8 @@ public class RelativeDate extends BaleenTextAwareAnnotator {
   public static final String PARAM_METADATA_FIELDS = "metadataFields";
 
   @ConfigurationParameter(
-    name = PARAM_METADATA_FIELDS,
-    defaultValue = {"date", "documentDate"}
-  )
+      name = PARAM_METADATA_FIELDS,
+      defaultValue = {"date", "documentDate"})
   private String[] metadataFields;
 
   private static final String DAYS =

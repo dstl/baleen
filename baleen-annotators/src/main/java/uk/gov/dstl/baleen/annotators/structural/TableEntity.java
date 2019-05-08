@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.UIMAException;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -67,9 +67,8 @@ public class TableEntity extends BaleenAnnotator {
   public static final String PARAM_TYPE = "type";
 
   @ConfigurationParameter(
-    name = PARAM_TYPE,
-    defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity"
-  )
+      name = PARAM_TYPE,
+      defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity")
   private String type;
 
   /**

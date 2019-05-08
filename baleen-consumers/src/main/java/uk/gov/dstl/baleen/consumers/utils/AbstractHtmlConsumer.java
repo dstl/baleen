@@ -64,8 +64,8 @@ public abstract class AbstractHtmlConsumer extends BaleenConsumer {
   public static final String PARAM_CONTENT_HASH_AS_ID = "contentHashAsId";
 
   /**
-   * Set the CSS file for the output to reference. The string, if provided, will be added as a <link
-   * ...> element in the document.
+   * Set the CSS file for the output to reference. The string, if provided, will be added as a
+   * &lt;link&gt; element in the document.
    *
    * @baleen.config
    */

@@ -1,20 +1,32 @@
-/* First created by JCasGen Wed Jan 21 11:20:35 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.semantic;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
  * Type to record all temporal references in the text and, where possible, information about them
- * (e.g. timestamp). This includes all times, dates, datetimes, periods, etc. Updated by JCasGen Thu
- * Oct 06 15:46:19 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/semantic_type_system.xml
+ * (e.g. timestamp). This includes all times, dates, datetimes, periods, etc. Updated by JCasGen Wed
+ * Apr 17 13:42:08 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class Temporal extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.semantic.Temporal";
+
   /**
    * @generated
    * @ordered
@@ -36,6 +48,32 @@ public class Temporal extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_timestampStart = "timestampStart";
+  public static final String _FeatName_timestampStop = "timestampStop";
+  public static final String _FeatName_scope = "scope";
+  public static final String _FeatName_temporalType = "temporalType";
+  public static final String _FeatName_precision = "precision";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_timestampStart =
+      TypeSystemImpl.createCallSite(Temporal.class, "timestampStart");
+  private static final MethodHandle _FH_timestampStart = _FC_timestampStart.dynamicInvoker();
+  private static final CallSite _FC_timestampStop =
+      TypeSystemImpl.createCallSite(Temporal.class, "timestampStop");
+  private static final MethodHandle _FH_timestampStop = _FC_timestampStop.dynamicInvoker();
+  private static final CallSite _FC_scope = TypeSystemImpl.createCallSite(Temporal.class, "scope");
+  private static final MethodHandle _FH_scope = _FC_scope.dynamicInvoker();
+  private static final CallSite _FC_temporalType =
+      TypeSystemImpl.createCallSite(Temporal.class, "temporalType");
+  private static final MethodHandle _FH_temporalType = _FC_temporalType.dynamicInvoker();
+  private static final CallSite _FC_precision =
+      TypeSystemImpl.createCallSite(Temporal.class, "precision");
+  private static final MethodHandle _FH_precision = _FC_precision.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -49,11 +87,11 @@ public class Temporal extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Temporal(int addr, TOP_Type type) {
-    super(addr, type);
+  public Temporal(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,11 +140,7 @@ public class Temporal extends Entity {
    * @return value of the feature
    */
   public long getTimestampStart() {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_timestampStart == null)
-      jcasType.jcas.throwFeatMissing(
-          "timestampStart", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    return jcasType.ll_cas.ll_getLongValue(
-        addr, ((Temporal_Type) jcasType).casFeatCode_timestampStart);
+    return _getLongValueNc(wrapGetIntCatchException(_FH_timestampStart));
   }
 
   /**
@@ -117,10 +151,7 @@ public class Temporal extends Entity {
    * @param v value to set into the feature
    */
   public void setTimestampStart(long v) {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_timestampStart == null)
-      jcasType.jcas.throwFeatMissing(
-          "timestampStart", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    jcasType.ll_cas.ll_setLongValue(addr, ((Temporal_Type) jcasType).casFeatCode_timestampStart, v);
+    _setLongValueNfc(wrapGetIntCatchException(_FH_timestampStart), v);
   }
 
   // *--------------*
@@ -134,10 +165,7 @@ public class Temporal extends Entity {
    * @return value of the feature
    */
   public long getTimestampStop() {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_timestampStop == null)
-      jcasType.jcas.throwFeatMissing("timestampStop", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    return jcasType.ll_cas.ll_getLongValue(
-        addr, ((Temporal_Type) jcasType).casFeatCode_timestampStop);
+    return _getLongValueNc(wrapGetIntCatchException(_FH_timestampStop));
   }
 
   /**
@@ -148,9 +176,7 @@ public class Temporal extends Entity {
    * @param v value to set into the feature
    */
   public void setTimestampStop(long v) {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_timestampStop == null)
-      jcasType.jcas.throwFeatMissing("timestampStop", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    jcasType.ll_cas.ll_setLongValue(addr, ((Temporal_Type) jcasType).casFeatCode_timestampStop, v);
+    _setLongValueNfc(wrapGetIntCatchException(_FH_timestampStop), v);
   }
 
   // *--------------*
@@ -166,9 +192,7 @@ public class Temporal extends Entity {
    * @return value of the feature
    */
   public String getScope() {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_scope == null)
-      jcasType.jcas.throwFeatMissing("scope", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Temporal_Type) jcasType).casFeatCode_scope);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_scope));
   }
 
   /**
@@ -181,9 +205,7 @@ public class Temporal extends Entity {
    * @param v value to set into the feature
    */
   public void setScope(String v) {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_scope == null)
-      jcasType.jcas.throwFeatMissing("scope", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Temporal_Type) jcasType).casFeatCode_scope, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_scope), v);
   }
 
   // *--------------*
@@ -199,10 +221,7 @@ public class Temporal extends Entity {
    * @return value of the feature
    */
   public String getTemporalType() {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_temporalType == null)
-      jcasType.jcas.throwFeatMissing("temporalType", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Temporal_Type) jcasType).casFeatCode_temporalType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_temporalType));
   }
 
   /**
@@ -215,9 +234,7 @@ public class Temporal extends Entity {
    * @param v value to set into the feature
    */
   public void setTemporalType(String v) {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_temporalType == null)
-      jcasType.jcas.throwFeatMissing("temporalType", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Temporal_Type) jcasType).casFeatCode_temporalType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_temporalType), v);
   }
 
   // *--------------*
@@ -238,10 +255,7 @@ public class Temporal extends Entity {
    * @return value of the feature
    */
   public String getPrecision() {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_precision == null)
-      jcasType.jcas.throwFeatMissing("precision", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Temporal_Type) jcasType).casFeatCode_precision);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_precision));
   }
 
   /**
@@ -259,8 +273,6 @@ public class Temporal extends Entity {
    * @param v value to set into the feature
    */
   public void setPrecision(String v) {
-    if (Temporal_Type.featOkTst && ((Temporal_Type) jcasType).casFeat_precision == null)
-      jcasType.jcas.throwFeatMissing("precision", "uk.gov.dstl.baleen.types.semantic.Temporal");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Temporal_Type) jcasType).casFeatCode_precision, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_precision), v);
   }
 }

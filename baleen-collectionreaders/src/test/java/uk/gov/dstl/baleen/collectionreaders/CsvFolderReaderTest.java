@@ -92,7 +92,7 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
     assertEquals("1", meta1.get("id"));
     assertEquals("2017-10-11 14:58:00", meta1.get("date"));
     assertEquals("Y", meta1.get("evaluated"));
-    assertEquals(p1.toRealPath().toString(), getSource(jCas));
+    assertEquals(p1.toRealPath().toString() + "#1", getSource(jCas));
 
     jCas.reset();
 
@@ -107,7 +107,7 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
     assertEquals("2", meta2.get("id"));
     assertEquals("2017-10-11 14:58:18", meta2.get("date"));
     assertEquals("N", meta2.get("evaluated"));
-    assertEquals(p1.toRealPath().toString(), getSource(jCas));
+    assertEquals(p1.toRealPath().toString() + "#2", getSource(jCas));
 
     jCas.reset();
 
@@ -134,7 +134,7 @@ public class CsvFolderReaderTest extends AbstractReaderTest {
     assertEquals("1", meta3.get("id"));
     assertEquals("2017-10-12 15:13:23", meta3.get("date"));
     assertEquals("N", meta3.get("validated"));
-    assertEquals(p2.toRealPath().toString(), getSource(jCas));
+    assertEquals(p2.toRealPath().toString() + "#1", getSource(jCas));
 
     jCas.reset();
 

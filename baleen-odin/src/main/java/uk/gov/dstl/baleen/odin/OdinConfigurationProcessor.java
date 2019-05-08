@@ -69,8 +69,7 @@ public class OdinConfigurationProcessor {
 
   private void addEntityRules(Map<String, Object> map) {
     List<Object> entityRules =
-        getAllEntities()
-            .stream()
+        getAllEntities().stream()
             .map(tree -> toRule(tree, tree.get(tree.size() - 1)))
             .collect(toList());
     updateKey(map, RULES_KEY, entityRules);

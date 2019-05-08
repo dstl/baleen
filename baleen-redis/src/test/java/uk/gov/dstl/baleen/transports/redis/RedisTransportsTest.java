@@ -24,7 +24,7 @@ import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 public class RedisTransportsTest {
 
   private final ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
+      ExternalResourceFactory.createNamedResourceDescription(
           SharedRedisResource.RESOURCE_KEY, MockRedisResource.class);
 
   @Test
@@ -66,7 +66,7 @@ public class RedisTransportsTest {
             SharedRedisResource.RESOURCE_KEY,
             erd,
             KEY_CONTENT_EXTRACTOR,
-            ExternalResourceFactory.createExternalResourceDescription(
+            ExternalResourceFactory.createNamedResourceDescription(
                 KEY_CONTENT_EXTRACTOR, FakeBaleenContentExtractor.class));
   }
 

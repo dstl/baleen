@@ -79,8 +79,7 @@ public class MentionConverter {
       final JCas jCas, final String documentId, final String baleenDocumentId) {
 
     final Map<String, BaleenMention> mentions =
-        JCasUtil.select(jCas, Entity.class)
-            .stream()
+        JCasUtil.select(jCas, Entity.class).stream()
             .map(e -> convertEntityToMention(documentId, baleenDocumentId, e))
             .collect(
                 Collectors.toMap(
@@ -118,9 +117,7 @@ public class MentionConverter {
 
     // Some mentions are not in a reference target, if that is the case we set their entityId =
     // mentionId
-    mentions
-        .values()
-        .stream()
+    mentions.values().stream()
         .filter(m -> m.getEntityId() == null)
         // add a prefix to differentiate from mention m
         .forEach(
@@ -222,12 +219,11 @@ public class MentionConverter {
       return toGeoLocation((MultiPolygon) object);
     } else if (object instanceof MultiPoint) {
       return ((MultiPoint) object)
-          .getCoordinates()
-          .stream()
-          .map(this::toGeoLocation)
-          .filter(Optional::isPresent)
-          .map(Optional::get)
-          .findFirst();
+          .getCoordinates().stream()
+              .map(this::toGeoLocation)
+              .filter(Optional::isPresent)
+              .map(Optional::get)
+              .findFirst();
     }
 
     // Else: Could implement others here but Baleen currently only outputs the above

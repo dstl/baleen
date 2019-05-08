@@ -31,7 +31,6 @@ public abstract class AbstractMetadataRegexAnnotator extends AbstractRegexAnnota
    * @param regex
    * @param matcherGroup
    * @param caseSensitive
-   * @param confidence
    * @param key
    * @param valueGroup
    */

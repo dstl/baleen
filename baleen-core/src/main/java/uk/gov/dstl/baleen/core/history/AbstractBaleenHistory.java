@@ -39,5 +39,7 @@ public abstract class AbstractBaleenHistory extends Resource_ImplBase implements
    *
    * @throws BaleenException
    */
-  protected void initialize() throws BaleenException {}
+  protected void initialize() throws BaleenException {
+    // Do nothing if not overridden
+  }
 }

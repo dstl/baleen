@@ -30,7 +30,7 @@ import uk.gov.dstl.baleen.uima.utils.TypeSystemSingleton;
 import uk.gov.dstl.baleen.uima.utils.TypeUtils;
 
 /**
- * Extract relations form {@link Table}s.
+ * Extract relations form {@link uk.gov.dstl.baleen.types.structure.Table}s.
  *
  * <p>This annotator looks for tables with columns matching the provided source and target headings.
  * The rows of those tables are processed to add a relation per row of the provided type (and
@@ -79,9 +79,8 @@ public class TableRelation extends AbstractTypedRelationshipAnnotator {
   public static final String SOURCE_TYPE = "sourceType";
 
   @ConfigurationParameter(
-    name = SOURCE_TYPE,
-    defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity"
-  )
+      name = SOURCE_TYPE,
+      defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity")
   private String sourceType;
 
   /**
@@ -92,9 +91,8 @@ public class TableRelation extends AbstractTypedRelationshipAnnotator {
   public static final String TARGET_TYPE = "targetType";
 
   @ConfigurationParameter(
-    name = TARGET_TYPE,
-    defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity"
-  )
+      name = TARGET_TYPE,
+      defaultValue = "uk.gov.dstl.baleen.types.semantic.Entity")
   private String targetType;
 
   private Constructor<? extends Entity> sourceConstructor = null;

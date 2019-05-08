@@ -167,8 +167,7 @@ public class DependencyRelationshipTest extends AbstractAnnotatorTest {
 
   private Relation findRelationBetween(
       final List<Relation> relations, final Entity e1, final Entity e2) {
-    return relations
-        .stream()
+    return relations.stream()
         .filter(r -> r.getSource().equals(e1) && r.getTarget().equals(e2))
         .findFirst()
         .get();

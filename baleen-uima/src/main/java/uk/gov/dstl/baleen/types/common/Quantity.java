@@ -1,21 +1,33 @@
-/* First created by JCasGen Wed Jan 21 11:21:05 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:42 BST 2019 */
+
 package uk.gov.dstl.baleen.types.common;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
- * Type to annotate references to quantities within text Updated by JCasGen Wed Apr 13 13:23:16 BST
- * 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Type to annotate references to quantities within text Updated by JCasGen Wed Apr 17 13:41:42 BST
+ * 2019 XML source: types/common_type_system.xml
  *
  * @generated
  */
 public class Quantity extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.common.Quantity";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +49,29 @@ public class Quantity extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_normalizedUnit = "normalizedUnit";
+  public static final String _FeatName_normalizedQuantity = "normalizedQuantity";
+  public static final String _FeatName_unit = "unit";
+  public static final String _FeatName_quantity = "quantity";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_normalizedUnit =
+      TypeSystemImpl.createCallSite(Quantity.class, "normalizedUnit");
+  private static final MethodHandle _FH_normalizedUnit = _FC_normalizedUnit.dynamicInvoker();
+  private static final CallSite _FC_normalizedQuantity =
+      TypeSystemImpl.createCallSite(Quantity.class, "normalizedQuantity");
+  private static final MethodHandle _FH_normalizedQuantity =
+      _FC_normalizedQuantity.dynamicInvoker();
+  private static final CallSite _FC_unit = TypeSystemImpl.createCallSite(Quantity.class, "unit");
+  private static final MethodHandle _FH_unit = _FC_unit.dynamicInvoker();
+  private static final CallSite _FC_quantity =
+      TypeSystemImpl.createCallSite(Quantity.class, "quantity");
+  private static final MethodHandle _FH_quantity = _FC_quantity.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +85,11 @@ public class Quantity extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Quantity(int addr, TOP_Type type) {
-    super(addr, type);
+  public Quantity(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,10 +137,7 @@ public class Quantity extends Entity {
    * @return value of the feature
    */
   public String getNormalizedUnit() {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_normalizedUnit == null)
-      jcasType.jcas.throwFeatMissing("normalizedUnit", "uk.gov.dstl.baleen.types.common.Quantity");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Quantity_Type) jcasType).casFeatCode_normalizedUnit);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_normalizedUnit));
   }
 
   /**
@@ -115,10 +147,7 @@ public class Quantity extends Entity {
    * @param v value to set into the feature
    */
   public void setNormalizedUnit(String v) {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_normalizedUnit == null)
-      jcasType.jcas.throwFeatMissing("normalizedUnit", "uk.gov.dstl.baleen.types.common.Quantity");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Quantity_Type) jcasType).casFeatCode_normalizedUnit, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_normalizedUnit), v);
   }
 
   // *--------------*
@@ -131,11 +160,7 @@ public class Quantity extends Entity {
    * @return value of the feature
    */
   public double getNormalizedQuantity() {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_normalizedQuantity == null)
-      jcasType.jcas.throwFeatMissing(
-          "normalizedQuantity", "uk.gov.dstl.baleen.types.common.Quantity");
-    return jcasType.ll_cas.ll_getDoubleValue(
-        addr, ((Quantity_Type) jcasType).casFeatCode_normalizedQuantity);
+    return _getDoubleValueNc(wrapGetIntCatchException(_FH_normalizedQuantity));
   }
 
   /**
@@ -145,11 +170,7 @@ public class Quantity extends Entity {
    * @param v value to set into the feature
    */
   public void setNormalizedQuantity(double v) {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_normalizedQuantity == null)
-      jcasType.jcas.throwFeatMissing(
-          "normalizedQuantity", "uk.gov.dstl.baleen.types.common.Quantity");
-    jcasType.ll_cas.ll_setDoubleValue(
-        addr, ((Quantity_Type) jcasType).casFeatCode_normalizedQuantity, v);
+    _setDoubleValueNfc(wrapGetIntCatchException(_FH_normalizedQuantity), v);
   }
 
   // *--------------*
@@ -162,9 +183,7 @@ public class Quantity extends Entity {
    * @return value of the feature
    */
   public String getUnit() {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_unit == null)
-      jcasType.jcas.throwFeatMissing("unit", "uk.gov.dstl.baleen.types.common.Quantity");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Quantity_Type) jcasType).casFeatCode_unit);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_unit));
   }
 
   /**
@@ -174,9 +193,7 @@ public class Quantity extends Entity {
    * @param v value to set into the feature
    */
   public void setUnit(String v) {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_unit == null)
-      jcasType.jcas.throwFeatMissing("unit", "uk.gov.dstl.baleen.types.common.Quantity");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Quantity_Type) jcasType).casFeatCode_unit, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_unit), v);
   }
 
   // *--------------*
@@ -189,9 +206,7 @@ public class Quantity extends Entity {
    * @return value of the feature
    */
   public double getQuantity() {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_quantity == null)
-      jcasType.jcas.throwFeatMissing("quantity", "uk.gov.dstl.baleen.types.common.Quantity");
-    return jcasType.ll_cas.ll_getDoubleValue(addr, ((Quantity_Type) jcasType).casFeatCode_quantity);
+    return _getDoubleValueNc(wrapGetIntCatchException(_FH_quantity));
   }
 
   /**
@@ -201,8 +216,6 @@ public class Quantity extends Entity {
    * @param v value to set into the feature
    */
   public void setQuantity(double v) {
-    if (Quantity_Type.featOkTst && ((Quantity_Type) jcasType).casFeat_quantity == null)
-      jcasType.jcas.throwFeatMissing("quantity", "uk.gov.dstl.baleen.types.common.Quantity");
-    jcasType.ll_cas.ll_setDoubleValue(addr, ((Quantity_Type) jcasType).casFeatCode_quantity, v);
+    _setDoubleValueNfc(wrapGetIntCatchException(_FH_quantity), v);
   }
 }

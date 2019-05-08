@@ -88,8 +88,7 @@ public class AcronymEnhancer implements MentionEnhancer {
 
     Set<String> acronyms = new HashSet<>();
 
-    words
-        .stream()
+    words.stream()
         .filter(p -> "NNP".equalsIgnoreCase(p.getPartOfSpeech()))
         .map(w -> w.getCoveredText().charAt(0))
         .forEach(

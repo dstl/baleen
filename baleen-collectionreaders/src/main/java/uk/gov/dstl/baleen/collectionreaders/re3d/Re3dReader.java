@@ -180,8 +180,7 @@ public class Re3dReader extends BaleenCollectionReader {
 
   private <T> void addAllFromFile(
       final File file, final Class<T> valueType, final List<T> container) throws IOException {
-    Files.readAllLines(file.toPath())
-        .stream()
+    Files.readAllLines(file.toPath()).stream()
         .map(
             line -> {
               try {
@@ -257,9 +256,7 @@ public class Re3dReader extends BaleenCollectionReader {
 
   private Optional<Entity> findEntity(
       Multimap<Offset, Entity> entityIndex, int begin, int end, String value) {
-    return entityIndex
-        .get(new Offset(begin, end))
-        .stream()
+    return entityIndex.get(new Offset(begin, end)).stream()
         .filter(e -> value.equals(e.getValue()))
         .findFirst();
   }

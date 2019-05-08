@@ -1,28 +1,36 @@
-/* First created by JCasGen Wed Jan 21 11:22:53 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.semantic;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.FSArray;
 import org.apache.uima.jcas.cas.StringArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
-import uk.gov.dstl.baleen.core.history.Recordable;
 import uk.gov.dstl.baleen.types.Base;
 import uk.gov.dstl.baleen.types.language.WordToken;
 
 /**
- * An event relates one or more entities with an associated action. Updated by JCasGen Wed Apr 13
- * 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * An event relates one or more entities with an associated action. Updated by JCasGen Wed Apr 17
+ * 13:42:08 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
-// ***************************************************************************************
-// WARNING Edited generated class to add Recordable interface, be careful on regeneration.
-// ***************************************************************************************
-public class Event extends Base implements Recordable {
+public class Event extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.semantic.Event";
+
   /**
    * @generated
    * @ordered
@@ -44,6 +52,31 @@ public class Event extends Base implements Recordable {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_eventType = "eventType";
+  public static final String _FeatName_value = "value";
+  public static final String _FeatName_entities = "entities";
+  public static final String _FeatName_arguments = "arguments";
+  public static final String _FeatName_tokens = "tokens";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_eventType =
+      TypeSystemImpl.createCallSite(Event.class, "eventType");
+  private static final MethodHandle _FH_eventType = _FC_eventType.dynamicInvoker();
+  private static final CallSite _FC_value = TypeSystemImpl.createCallSite(Event.class, "value");
+  private static final MethodHandle _FH_value = _FC_value.dynamicInvoker();
+  private static final CallSite _FC_entities =
+      TypeSystemImpl.createCallSite(Event.class, "entities");
+  private static final MethodHandle _FH_entities = _FC_entities.dynamicInvoker();
+  private static final CallSite _FC_arguments =
+      TypeSystemImpl.createCallSite(Event.class, "arguments");
+  private static final MethodHandle _FH_arguments = _FC_arguments.dynamicInvoker();
+  private static final CallSite _FC_tokens = TypeSystemImpl.createCallSite(Event.class, "tokens");
+  private static final MethodHandle _FH_tokens = _FC_tokens.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -57,11 +90,11 @@ public class Event extends Base implements Recordable {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Event(int addr, TOP_Type type) {
-    super(addr, type);
+  public Event(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -112,11 +145,7 @@ public class Event extends Base implements Recordable {
    * @return value of the feature
    */
   public StringArray getEventType() {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_eventType == null)
-      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_eventType)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_eventType)));
   }
 
   /**
@@ -129,10 +158,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setEventType(StringArray v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_eventType == null)
-      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Event_Type) jcasType).casFeatCode_eventType, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_eventType), v);
   }
 
   /**
@@ -147,12 +173,7 @@ public class Event extends Base implements Recordable {
    * @return value of the element at index i
    */
   public String getEventType(int i) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_eventType == null)
-      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_eventType), i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_eventType), i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_eventType)))).get(i);
   }
 
   /**
@@ -167,12 +188,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the array
    */
   public void setEventType(int i, String v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_eventType == null)
-      jcasType.jcas.throwFeatMissing("eventType", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_eventType), i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_eventType), i, v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_eventType)))).set(i, v);
   }
 
   // *--------------*
@@ -186,9 +202,7 @@ public class Event extends Base implements Recordable {
    * @return value of the feature
    */
   public String getValue() {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Event");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Event_Type) jcasType).casFeatCode_value);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_value));
   }
 
   /**
@@ -199,9 +213,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setValue(String v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Event_Type) jcasType).casFeatCode_value, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_value), v);
   }
 
   // *--------------*
@@ -215,11 +227,7 @@ public class Event extends Base implements Recordable {
    * @return value of the feature
    */
   public FSArray getEntities() {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_entities == null)
-      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
-    return (FSArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_entities)));
+    return (FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_entities)));
   }
 
   /**
@@ -230,10 +238,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setEntities(FSArray v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_entities == null)
-      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Event_Type) jcasType).casFeatCode_entities, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_entities), v);
   }
 
   /**
@@ -245,15 +250,8 @@ public class Event extends Base implements Recordable {
    * @return value of the element at index i
    */
   public Entity getEntities(int i) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_entities == null)
-      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_entities), i);
     return (Entity)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefArrayValue(
-                jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_entities),
-                i)));
+        (((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_entities)))).get(i));
   }
 
   /**
@@ -265,14 +263,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the array
    */
   public void setEntities(int i, Entity v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_entities == null)
-      jcasType.jcas.throwFeatMissing("entities", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_entities), i);
-    jcasType.ll_cas.ll_setRefArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_entities),
-        i,
-        jcasType.ll_cas.ll_getFSRef(v));
+    ((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_entities)))).set(i, v);
   }
 
   // *--------------*
@@ -286,11 +277,7 @@ public class Event extends Base implements Recordable {
    * @return value of the feature
    */
   public StringArray getArguments() {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_arguments == null)
-      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
-    return (StringArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_arguments)));
+    return (StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_arguments)));
   }
 
   /**
@@ -301,10 +288,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setArguments(StringArray v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_arguments == null)
-      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Event_Type) jcasType).casFeatCode_arguments, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_arguments), v);
   }
 
   /**
@@ -316,12 +300,7 @@ public class Event extends Base implements Recordable {
    * @return value of the element at index i
    */
   public String getArguments(int i) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_arguments == null)
-      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_arguments), i);
-    return jcasType.ll_cas.ll_getStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_arguments), i);
+    return ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_arguments)))).get(i);
   }
 
   /**
@@ -333,12 +312,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the array
    */
   public void setArguments(int i, String v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_arguments == null)
-      jcasType.jcas.throwFeatMissing("arguments", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_arguments), i);
-    jcasType.ll_cas.ll_setStringArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_arguments), i, v);
+    ((StringArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_arguments)))).set(i, v);
   }
 
   // *--------------*
@@ -351,11 +325,7 @@ public class Event extends Base implements Recordable {
    * @return value of the feature
    */
   public FSArray getTokens() {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
-    return (FSArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_tokens)));
+    return (FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_tokens)));
   }
 
   /**
@@ -365,10 +335,7 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setTokens(FSArray v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Event_Type) jcasType).casFeatCode_tokens, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_tokens), v);
   }
 
   /**
@@ -380,15 +347,8 @@ public class Event extends Base implements Recordable {
    * @return value of the element at index i
    */
   public WordToken getTokens(int i) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_tokens), i);
     return (WordToken)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefArrayValue(
-                jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_tokens),
-                i)));
+        (((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_tokens)))).get(i));
   }
 
   /**
@@ -400,13 +360,6 @@ public class Event extends Base implements Recordable {
    * @param v value to set into the array
    */
   public void setTokens(int i, WordToken v) {
-    if (Event_Type.featOkTst && ((Event_Type) jcasType).casFeat_tokens == null)
-      jcasType.jcas.throwFeatMissing("tokens", "uk.gov.dstl.baleen.types.semantic.Event");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_tokens), i);
-    jcasType.ll_cas.ll_setRefArrayValue(
-        jcasType.ll_cas.ll_getRefValue(addr, ((Event_Type) jcasType).casFeatCode_tokens),
-        i,
-        jcasType.ll_cas.ll_getFSRef(v));
+    ((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_tokens)))).set(i, v);
   }
 }

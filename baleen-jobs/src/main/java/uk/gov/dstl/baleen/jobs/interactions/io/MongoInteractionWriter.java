@@ -26,9 +26,10 @@ import uk.gov.dstl.baleen.jobs.interactions.data.InteractionDefinition;
  * words.
  *
  * <p>Secondly it saves information about relationship type constraints to the
- * relationTypeCollection. This is used by the {@link RelationTypeFilter} in order to remove any
- * invalid relationships between types. The relation (DateTime, said, Location) is likely to be
- * invalid for example. Valid options is derived directly from the
+ * relationTypeCollection. This is used by the {@link
+ * uk.gov.dstl.baleen.annotators.cleaners.RelationTypeFilter} in order to remove any invalid
+ * relationships between types. The relation (DateTime, said, Location) is likely to be invalid for
+ * example. Valid options is derived directly from the
  *
  * <p>See {@link UploadInteractionsToMongo} for more details.
  */

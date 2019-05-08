@@ -27,9 +27,7 @@ public class EntityConverterTest {
 
     // This is also a test really... we look for Jonathon (vs Jon)
     final BaleenEntity e =
-        entities
-            .values()
-            .stream()
+        entities.values().stream()
             .filter(p -> p.getValue().equalsIgnoreCase("Jonathon"))
             .findFirst()
             .get();

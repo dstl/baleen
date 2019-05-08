@@ -4,12 +4,7 @@ package uk.gov.dstl.baleen.mallet;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import cc.mallet.pipe.CharSequence2TokenSequence;
-import cc.mallet.pipe.CharSequenceLowercase;
-import cc.mallet.pipe.FeatureSequence2FeatureVector;
-import cc.mallet.pipe.Pipe;
-import cc.mallet.pipe.SerialPipes;
-import cc.mallet.pipe.TokenSequence2FeatureSequence;
+import cc.mallet.pipe.*;
 
 import com.google.common.collect.ImmutableList;
 
@@ -19,7 +14,7 @@ import uk.gov.dstl.baleen.jobs.triage.MaxEntClassifierTrainer;
  * The processing pipe used for topic modelling
  *
  * @see MaxEntClassifierTrainer
- * @see MalletClassifier
+ * @see uk.gov.dstl.baleen.annotators.triage.MalletClassifier
  */
 public abstract class AbstractClassifierPipe extends SerialPipes {
 
@@ -29,7 +24,7 @@ public abstract class AbstractClassifierPipe extends SerialPipes {
   /**
    * Construct classifier pipe with given labels and stopwords
    *
-   * @param initial pipe
+   * @param pipe initial pipe
    * @param stopwords to be removed
    */
   public AbstractClassifierPipe(Pipe pipe, Collection<String> stopwords) {

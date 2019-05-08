@@ -25,11 +25,6 @@ public class BaleenDocument {
   /** The content. */
   private String content;
 
-  /** Instantiates a new baleen document. */
-  public BaleenDocument() {
-    // Do nothing
-  }
-
   /**
    * Gets the external id.
    *

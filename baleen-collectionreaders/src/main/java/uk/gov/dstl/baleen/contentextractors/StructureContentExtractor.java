@@ -40,7 +40,7 @@ import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
  * Extracts metadata, structural annotations and text content from the supplied input.
  *
  * <p>Structural annotations are as defined under the Baleen type system with top level {@link
- * Structure} class.
+ * uk.gov.dstl.baleen.types.structure.Structure} class.
  *
  * <p>Structural extraction allows better understanding of the document by downstream annotators
  * which can use the information to segregate the document, rather than treating it as a whole. For
@@ -222,7 +222,6 @@ public class StructureContentExtractor extends AbstractContentExtractor {
    * @param <T> the generic type
    * @param clazz the clazz (of T)
    * @param defaultPackage the default package to look in
-   * @param context the context
    * @param classes the classes
    * @return the list
    * @throws InvalidParameterException the invalid parameter exception

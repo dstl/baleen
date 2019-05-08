@@ -1,16 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.relations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -439,10 +430,10 @@ public class PartOfSpeechRelationshipAnnotator extends AbstractTypedRelationship
   @Override
   protected void extract(JCas jCas) throws AnalysisEngineProcessException {
 
-    Map<WordToken, Collection<Entity>> coveredEntities =
+    Map<WordToken, List<Entity>> coveredEntities =
         JCasUtil.indexCovering(jCas, WordToken.class, Entity.class);
 
-    Map<Sentence, Collection<WordToken>> sentences =
+    Map<Sentence, List<WordToken>> sentences =
         JCasUtil.indexCovered(jCas, Sentence.class, WordToken.class);
 
     sentences.forEach((s, tokens) -> processSentence(jCas, s, sort(tokens), coveredEntities));
@@ -455,10 +446,7 @@ public class PartOfSpeechRelationshipAnnotator extends AbstractTypedRelationship
   }
 
   private void processSentence(
-      JCas jCas,
-      Sentence s,
-      List<WordToken> wordTokens,
-      Map<WordToken, Collection<Entity>> entities) {
+      JCas jCas, Sentence s, List<WordToken> wordTokens, Map<WordToken, List<Entity>> entities) {
 
     Map<String, WordToken> idMap = new HashMap<>();
 
@@ -512,8 +500,7 @@ public class PartOfSpeechRelationshipAnnotator extends AbstractTypedRelationship
       String[] split = valueTokens.split("\\s");
 
       String value =
-          Arrays.asList(split)
-              .stream()
+          Arrays.asList(split).stream()
               .map(idMap::get)
               .map(WordToken::getCoveredText)
               .collect(Collectors.joining(" "));

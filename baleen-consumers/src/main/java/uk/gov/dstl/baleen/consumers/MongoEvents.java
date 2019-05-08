@@ -1,13 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UimaContext;
@@ -85,10 +79,9 @@ public class MongoEvents extends BaleenConsumer {
   public static final String PARAM_TEXT_BLOCK_EXTRACTED_FROM = "extractedFrom";
 
   @ConfigurationParameter(
-    name = PARAM_TEXT_BLOCK_EXTRACTED_FROM,
-    mandatory = false,
-    defaultValue = SENTENCES
-  )
+      name = PARAM_TEXT_BLOCK_EXTRACTED_FROM,
+      mandatory = false,
+      defaultValue = SENTENCES)
   private String extractedFrom;
 
   private MongoCollection<Document> eventsCollection;
@@ -174,18 +167,14 @@ public class MongoEvents extends BaleenConsumer {
 
   private <T extends Base> void saveEvents(String documentId, JCas jCas, Class<T> textClass) {
 
-    final Map<Event, Collection<T>> coveringText =
-        JCasUtil.indexCovering(jCas, Event.class, textClass);
+    final Map<Event, List<T>> coveringText = JCasUtil.indexCovering(jCas, Event.class, textClass);
 
     List<Document> eventDocuments =
-        JCasUtil.select(jCas, Event.class)
-            .stream()
+        JCasUtil.select(jCas, Event.class).stream()
             .map(
                 e -> {
                   String text =
-                      coveringText
-                          .get(e)
-                          .stream()
+                      coveringText.get(e).stream()
                           .map(T::getCoveredText)
                           .collect(Collectors.joining(" "));
 

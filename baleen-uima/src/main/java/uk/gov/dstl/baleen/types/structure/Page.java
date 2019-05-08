@@ -1,19 +1,31 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:16 BST 2019 */
 
-/* First created by JCasGen Thu Oct 13 13:31:25 BST 2016 */
 package uk.gov.dstl.baleen.types.structure;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 /**
- * A page of a Document. Updated by JCasGen Thu Dec 22 22:42:17 CET 2016 XML source:
- * /Users/chrisflatley/Projects/railroad/baleen/baleen/baleen-uima/src/main/resources/types/structure_type_system.xml
+ * A page of a Document. Updated by JCasGen Wed Apr 17 13:42:16 BST 2019 XML source:
+ * types/structure_type_system.xml
  *
  * @generated
  */
 public class Page extends Structure {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.structure.Page";
+
   /**
    * @generated
    * @ordered
@@ -35,6 +47,17 @@ public class Page extends Structure {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_PageNumber = "PageNumber";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_PageNumber =
+      TypeSystemImpl.createCallSite(Page.class, "PageNumber");
+  private static final MethodHandle _FH_PageNumber = _FC_PageNumber.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -48,11 +71,11 @@ public class Page extends Structure {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Page(int addr, TOP_Type type) {
-    super(addr, type);
+  public Page(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -100,9 +123,7 @@ public class Page extends Structure {
    * @return value of the feature
    */
   public int getPageNumber() {
-    if (Page_Type.featOkTst && ((Page_Type) jcasType).casFeat_PageNumber == null)
-      jcasType.jcas.throwFeatMissing("PageNumber", "uk.gov.dstl.baleen.types.structure.Page");
-    return jcasType.ll_cas.ll_getIntValue(addr, ((Page_Type) jcasType).casFeatCode_PageNumber);
+    return _getIntValueNc(wrapGetIntCatchException(_FH_PageNumber));
   }
 
   /**
@@ -112,8 +133,6 @@ public class Page extends Structure {
    * @param v value to set into the feature
    */
   public void setPageNumber(int v) {
-    if (Page_Type.featOkTst && ((Page_Type) jcasType).casFeat_PageNumber == null)
-      jcasType.jcas.throwFeatMissing("PageNumber", "uk.gov.dstl.baleen.types.structure.Page");
-    jcasType.ll_cas.ll_setIntValue(addr, ((Page_Type) jcasType).casFeatCode_PageNumber, v);
+    _setIntValueNfc(wrapGetIntCatchException(_FH_PageNumber), v);
   }
 }

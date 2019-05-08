@@ -51,7 +51,7 @@ public class LocationElasticsearchTest extends ConsumerTestBase {
     elasticsearch = new EmbeddedElasticsearch5();
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             RESOURCE_KEY,
             SharedElasticsearchResource.class,
             PARAM_PORT,

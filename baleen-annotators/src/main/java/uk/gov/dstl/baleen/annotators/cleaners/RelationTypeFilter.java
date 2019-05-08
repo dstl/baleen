@@ -1,13 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.cleaners;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
@@ -48,8 +42,9 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  *    }
  * </pre>
  *
- * See {@link UploadInteractionsToMongo} and {@link MongoInteractionWriter} for information how to
- * create this collection.
+ * See {@link uk.gov.dstl.baleen.jobs.interactions.UploadInteractionsToMongo} and {@link
+ * uk.gov.dstl.baleen.jobs.interactions.io.MongoInteractionWriter} for information how to create
+ * this collection.
  *
  * @baleen.javadoc
  */

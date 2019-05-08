@@ -121,7 +121,7 @@ public class ReNounScoringTest extends AbstractBaleenTaskTest {
                 .toJson());
 
     fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SharedMongoResource.RESOURCE_KEY,
             SharedFongoResource.class,
             "fongo.collection",

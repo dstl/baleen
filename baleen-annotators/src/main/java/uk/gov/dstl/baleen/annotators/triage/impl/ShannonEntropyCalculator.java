@@ -37,9 +37,7 @@ public class ShannonEntropyCalculator<T> {
   public double calculateShannonEntropy() {
 
     Stream<Double> probabilitiesTimesLogProbabilities =
-        getItemProbabilities()
-            .values()
-            .stream()
+        getItemProbabilities().values().stream()
             .map(probability -> probability * MathUtils.logarithm(LOG_BASE, probability));
 
     return -probabilitiesTimesLogProbabilities.mapToDouble(Double::doubleValue).sum();
@@ -47,8 +45,7 @@ public class ShannonEntropyCalculator<T> {
 
   private Map<T, Double> getItemProbabilities() {
 
-    return items
-        .stream()
+    return items.stream()
         .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
         .entrySet()
         .stream()

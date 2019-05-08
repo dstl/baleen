@@ -71,9 +71,8 @@ public abstract class AbstractRdfEntityGraphConsumer extends AbstractEntityGraph
   public static final String PARAM_IGNORE = "ignoreProperties";
 
   @ConfigurationParameter(
-    name = PARAM_IGNORE,
-    defaultValue = {"internalId", "inNormalised"}
-  )
+      name = PARAM_IGNORE,
+      defaultValue = {"internalId", "inNormalised"})
   private String[] ignoreProperties;
 
   private OntModel documentOntology;
@@ -136,8 +135,7 @@ public abstract class AbstractRdfEntityGraphConsumer extends AbstractEntityGraph
       if (ENTITY.equals(label)) {
         Iterator<VertexProperty<Object>> properties = v.properties("type");
         List<?> types =
-            Lists.newArrayList(properties)
-                .stream()
+            Lists.newArrayList(properties).stream()
                 .filter(VertexProperty::isPresent)
                 .map(VertexProperty::value)
                 .collect(Collectors.toList());

@@ -39,7 +39,7 @@ import com.mongodb.client.MongoDatabase;
  * 		new Document("fake", "doc2"),
  * 		new Document("fake", "doc3"));
  *
- * ExternalResourceDescription erd = ExternalResourceFactory.createExternalResourceDescription("mongo",
+ * ExternalResourceDescription erd = ExternalResourceFactory.createNamedResourceDescription("mongo",
  * 		SharedFongoResource.class, SharedFongoResource.PARAM_FONGO_COLLECTION, "documents",
  * 		SharedFongoResource.PARAM_FONGO_DATA, JSON.serialize(DATA));
  *

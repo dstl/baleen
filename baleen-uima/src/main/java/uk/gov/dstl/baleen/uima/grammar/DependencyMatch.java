@@ -49,9 +49,7 @@ public class DependencyMatch {
    * @return optional of the found matched word token
    */
   public Optional<WordToken> getMatchedToId(String id) {
-    return matched
-        .entrySet()
-        .stream()
+    return matched.entrySet().stream()
         .filter(e -> id.equals(e.getKey().getId()))
         .map(Map.Entry::getValue)
         .findFirst();

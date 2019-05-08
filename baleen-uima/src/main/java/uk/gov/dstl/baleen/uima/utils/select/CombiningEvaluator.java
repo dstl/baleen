@@ -4,7 +4,7 @@ package uk.gov.dstl.baleen.uima.utils.select;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /** Base combining (and, or) evaluator. */
 abstract class CombiningEvaluator<T> extends Evaluator<T> {

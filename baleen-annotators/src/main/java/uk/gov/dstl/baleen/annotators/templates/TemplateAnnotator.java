@@ -1,14 +1,8 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.templates;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,8 +62,8 @@ import uk.gov.dstl.baleen.uima.utils.StructureUtil;
  * - name: "Description"
  * path: "Paragraph:nth-of-type(8)"
  * - name: "FullName"
- * path: "Table:nth-of-type(2) > TableBody > TableRow:nth-of-type(2) >\
- * \ TableCell:nth-of-type(2) > Paragraph"
+ * path: "Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(2) &gt;\
+ * \ TableCell:nth-of-type(2) &gt; Paragraph"
  * required: "true"
  * precedingPath: "Paragraph:nth-of-type(6)"
  * followingPath: "Paragraph:nth-of-type(10)"
@@ -78,23 +72,23 @@ import uk.gov.dstl.baleen.uima.utils.StructureUtil;
  * order: 2
  * fields:
  * - name: "title"
- * path: "Document > Table:nth-of-type(2) > TableBody > TableRow:nth-of-type(1) > TableCell:nth-of-type(1)"
+ * path: "Document &gt; Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(1) &gt; TableCell:nth-of-type(1)"
  * required: false
  * - name: "FirstName"
- * path: "Document > Table:nth-of-type(2) > TableBody > TableRow:nth-of-type(1) > TableCell:nth-of-type(2)"
+ * path: "Document &gt; Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(1) &gt; TableCell:nth-of-type(2)"
  * required: false
  * - name: "Surname"
- * path: "Document > Table:nth-of-type(2) > TableBody > TableRow:nth-of-type(1) > TableCell:nth-of-type(3)"
+ * path: "Document &gt; Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(1) &gt; TableCell:nth-of-type(3)"
  * required: false
  * - name: "DoB"
- * path: "Document > Table:nth-of-type(2) > TableBody > TableRow:nth-of-type(1) > TableCell:nth-of-type(4)"
+ * path: "Document &gt; Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(1) &gt; TableCell:nth-of-type(4)"
  * required: false
- * precedingPath: "Document > Heading:nth-of-type(4)"
- * followingPath: "Document > Paragraph:nth-of-type(4)"
+ * precedingPath: "Document &gt; Heading:nth-of-type(4)"
+ * followingPath: "Document &gt; Paragraph:nth-of-type(4)"
  * repeat: true
  * coveredPaths:
- * - "Document > Table:nth-of-type(2)"
- * minimalRepeat: "Document > Table:nth-of-type(2) > TableBody > TableRow:nth-of-type(1)"
+ * - "Document &gt; Table:nth-of-type(2)"
+ * minimalRepeat: "Document &gt; Table:nth-of-type(2) &gt; TableBody &gt; TableRow:nth-of-type(1)"
  * - kind: "DEFAULT"
  * order: 3
  * fields:

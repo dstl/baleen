@@ -53,11 +53,6 @@ public class MongoRegex extends AbstractRegexAhoCorasickAnnotator {
   @ConfigurationParameter(name = PARAM_VALUE_FIELD, defaultValue = "value")
   private String valueField;
 
-  /** Constructor */
-  public MongoRegex() {
-    // Do nothing
-  }
-
   @Override
   public IGazetteer configureGazetteer() throws BaleenException {
     IGazetteer gaz = new MongoGazetteer();

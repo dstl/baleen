@@ -1,22 +1,29 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
 
-/* First created by JCasGen Fri Sep 30 12:06:32 BST 2016 */
 package uk.gov.dstl.baleen.types.military;
 
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
- * A weapon; for example a rifle, knife, or shotgun Updated by JCasGen Fri Sep 30 12:08:00 BST 2016
- * XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/military_type_system.xml
+ * A weapon; for example a rifle, knife, or shotgun Updated by JCasGen Wed Apr 17 13:42:08 BST 2019
+ * XML source: types/military_type_system.xml
  *
  * @generated
  */
 public class Weapon extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.military.Weapon";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +45,12 @@ public class Weapon extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  /* Feature Adjusted Offsets */
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +64,11 @@ public class Weapon extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Weapon(int addr, TOP_Type type) {
-    super(addr, type);
+  public Weapon(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 

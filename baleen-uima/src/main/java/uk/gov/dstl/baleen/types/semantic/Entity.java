@@ -1,25 +1,38 @@
-/* First created by JCasGen Wed Jan 14 12:58:27 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.semantic;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.core.history.Recordable;
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * Type to represent named entities - values that are assigned a semantic type. Updated by JCasGen
- * Wed Apr 13 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * Wed Apr 17 13:42:08 BST 2019 XML source: types/military_type_system.xml
  *
  * @generated
  */
-// ***************************************************************************************
-// WARNING Edited generated class to add Recordable interface, be careful on regeneration.
-// ***************************************************************************************
 public class Entity extends Base implements Recordable {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.semantic.Entity";
+
+  /**
+   * @generated
+   * @ordered
+   */
   @SuppressWarnings("hiding")
   public static final int typeIndexID = JCasRegistry.register(Entity.class);
   /**
@@ -37,6 +50,28 @@ public class Entity extends Base implements Recordable {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_value = "value";
+  public static final String _FeatName_referent = "referent";
+  public static final String _FeatName_isNormalised = "isNormalised";
+  public static final String _FeatName_subType = "subType";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_value = TypeSystemImpl.createCallSite(Entity.class, "value");
+  private static final MethodHandle _FH_value = _FC_value.dynamicInvoker();
+  private static final CallSite _FC_referent =
+      TypeSystemImpl.createCallSite(Entity.class, "referent");
+  private static final MethodHandle _FH_referent = _FC_referent.dynamicInvoker();
+  private static final CallSite _FC_isNormalised =
+      TypeSystemImpl.createCallSite(Entity.class, "isNormalised");
+  private static final MethodHandle _FH_isNormalised = _FC_isNormalised.dynamicInvoker();
+  private static final CallSite _FC_subType =
+      TypeSystemImpl.createCallSite(Entity.class, "subType");
+  private static final MethodHandle _FH_subType = _FC_subType.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +85,11 @@ public class Entity extends Base implements Recordable {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Entity(int addr, TOP_Type type) {
-    super(addr, type);
+  public Entity(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,9 +138,7 @@ public class Entity extends Base implements Recordable {
    * @return value of the feature
    */
   public String getValue() {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Entity_Type) jcasType).casFeatCode_value);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_value));
   }
 
   /**
@@ -116,9 +149,7 @@ public class Entity extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setValue(String v) {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_value == null)
-      jcasType.jcas.throwFeatMissing("value", "uk.gov.dstl.baleen.types.semantic.Entity");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Entity_Type) jcasType).casFeatCode_value, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_value), v);
   }
 
   // *--------------*
@@ -131,14 +162,8 @@ public class Entity extends Base implements Recordable {
    * @generated
    * @return value of the feature
    */
-  @Override
   public ReferenceTarget getReferent() {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_referent == null) {
-      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
-    }
-    return (ReferenceTarget)
-        jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(addr, ((Entity_Type) jcasType).casFeatCode_referent));
+    return (ReferenceTarget) (_getFeatureValueNc(wrapGetIntCatchException(_FH_referent)));
   }
 
   /**
@@ -148,13 +173,8 @@ public class Entity extends Base implements Recordable {
    * @generated
    * @param v value to set into the feature
    */
-  @Override
   public void setReferent(ReferenceTarget v) {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_referent == null) {
-      jcasType.jcas.throwFeatMissing("referent", "uk.gov.dstl.baleen.types.semantic.Entity");
-    }
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((Entity_Type) jcasType).casFeatCode_referent, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_referent), v);
   }
 
   // *--------------*
@@ -168,10 +188,7 @@ public class Entity extends Base implements Recordable {
    * @return value of the feature
    */
   public boolean getIsNormalised() {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_isNormalised == null)
-      jcasType.jcas.throwFeatMissing("isNormalised", "uk.gov.dstl.baleen.types.semantic.Entity");
-    return jcasType.ll_cas.ll_getBooleanValue(
-        addr, ((Entity_Type) jcasType).casFeatCode_isNormalised);
+    return _getBooleanValueNc(wrapGetIntCatchException(_FH_isNormalised));
   }
 
   /**
@@ -182,9 +199,7 @@ public class Entity extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setIsNormalised(boolean v) {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_isNormalised == null)
-      jcasType.jcas.throwFeatMissing("isNormalised", "uk.gov.dstl.baleen.types.semantic.Entity");
-    jcasType.ll_cas.ll_setBooleanValue(addr, ((Entity_Type) jcasType).casFeatCode_isNormalised, v);
+    _setBooleanValueNfc(wrapGetIntCatchException(_FH_isNormalised), v);
   }
 
   // *--------------*
@@ -197,9 +212,7 @@ public class Entity extends Base implements Recordable {
    * @return value of the feature
    */
   public String getSubType() {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_subType == null)
-      jcasType.jcas.throwFeatMissing("subType", "uk.gov.dstl.baleen.types.semantic.Entity");
-    return jcasType.ll_cas.ll_getStringValue(addr, ((Entity_Type) jcasType).casFeatCode_subType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_subType));
   }
 
   /**
@@ -209,8 +222,6 @@ public class Entity extends Base implements Recordable {
    * @param v value to set into the feature
    */
   public void setSubType(String v) {
-    if (Entity_Type.featOkTst && ((Entity_Type) jcasType).casFeat_subType == null)
-      jcasType.jcas.throwFeatMissing("subType", "uk.gov.dstl.baleen.types.semantic.Entity");
-    jcasType.ll_cas.ll_setStringValue(addr, ((Entity_Type) jcasType).casFeatCode_subType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_subType), v);
   }
 }

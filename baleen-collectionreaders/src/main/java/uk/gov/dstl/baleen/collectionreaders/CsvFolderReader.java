@@ -56,9 +56,8 @@ public class CsvFolderReader extends BaleenCollectionReader {
   public static final String PARAM_FOLDERS = "folders";
 
   @ConfigurationParameter(
-    name = PARAM_FOLDERS,
-    defaultValue = {}
-  )
+      name = PARAM_FOLDERS,
+      defaultValue = {})
   private String[] folders;
 
   /**
@@ -110,9 +109,8 @@ public class CsvFolderReader extends BaleenCollectionReader {
   public static final String PARAM_TEXT_COLUMNS = "text";
 
   @ConfigurationParameter(
-    name = PARAM_TEXT_COLUMNS,
-    defaultValue = {"content"}
-  )
+      name = PARAM_TEXT_COLUMNS,
+      defaultValue = {"content"})
   private String[] textColumn;
 
   private WatchService watcher;
@@ -124,6 +122,8 @@ public class CsvFolderReader extends BaleenCollectionReader {
   private List<String> currLines = new ArrayList<>();
 
   private CSVParser csvParser;
+
+  private int currentLine = 0;
 
   @Override
   public void doInitialize(UimaContext context) throws ResourceInitializationException {
@@ -209,6 +209,7 @@ public class CsvFolderReader extends BaleenCollectionReader {
     if (currLines.isEmpty()) {
       // Read next file
       currPath = queue.remove(0);
+      currentLine = 0;
       getMonitor().info("Processing file {}", currPath.toString());
 
       List<String> lines;
@@ -224,6 +225,7 @@ public class CsvFolderReader extends BaleenCollectionReader {
 
     String line = currLines.remove(0);
     String[] cols = csvParser.parseLine(line);
+    currentLine++;
 
     StringJoiner sj = new StringJoiner("\n\n");
     Map<String, String> meta = new HashMap<>();
@@ -245,7 +247,7 @@ public class CsvFolderReader extends BaleenCollectionReader {
     }
 
     DocumentAnnotation doc = UimaSupport.getDocumentAnnotation(jCas);
-    doc.setSourceUri(currPath.toString());
+    doc.setSourceUri(currPath.toString() + "#" + currentLine);
     doc.setTimestamp(System.currentTimeMillis());
   }
 

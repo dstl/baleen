@@ -30,7 +30,7 @@ public class GenderEnhancerTest {
   @BeforeClass
   public static void setup() throws Exception {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "gender", SharedGenderMultiplicityResource.class);
     genderResource = new SharedGenderMultiplicityResource();
     genderResource.initialize(erd.getResourceSpecifier(), Collections.emptyMap());

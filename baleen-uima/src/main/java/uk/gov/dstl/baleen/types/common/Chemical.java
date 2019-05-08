@@ -1,21 +1,29 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:42 BST 2019 */
 
-/* First created by JCasGen Tue Apr 04 11:38:06 BST 2017 */
 package uk.gov.dstl.baleen.types.common;
 
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
- * A chemical or substance Updated by JCasGen Tue Apr 04 11:38:06 BST 2017 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * A chemical or substance Updated by JCasGen Wed Apr 17 13:41:42 BST 2019 XML source:
+ * types/common_type_system.xml
  *
  * @generated
  */
 public class Chemical extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.common.Chemical";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +45,12 @@ public class Chemical extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  /* Feature Adjusted Offsets */
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +64,11 @@ public class Chemical extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Chemical(int addr, TOP_Type type) {
-    super(addr, type);
+  public Chemical(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 

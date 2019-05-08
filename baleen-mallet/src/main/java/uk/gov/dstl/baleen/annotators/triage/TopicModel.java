@@ -33,7 +33,7 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  *
  * <p>Topic description is stored as a Metadata annotation.
  *
- * @see {@link TopicModelTrainer}
+ * @see {@link uk.gov.dstl.baleen.jobs.triage.TopicModelTrainer}
  */
 public class TopicModel extends BaleenAnnotator {
 
@@ -49,7 +49,7 @@ public class TopicModel extends BaleenAnnotator {
 
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the

@@ -41,10 +41,10 @@
             <data key="isNormalised">[false, false]</data>
             <data key="linking">testLinking</data>
             <data key="longestValue">John Smith</data>
-            <data key="mentions">[{confidence=0.9, end=35, id=cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, begin=25}, {confidence=0.9, end=62, id=32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b, begin=60}]</data>
+            <data key="mentions">[{confidence=0.9, end=62, id=32b70ea1a87dc3c4112aee41c6adfb95bd677e5bcb951e5ec6ebb2fc4f257f1b, begin=60}, {confidence=0.9, end=35, id=cb7ba8e02c88dcdc832f181c1336ce54334f9bb125bd90371a6d59d098844f23, begin=25}]</data>
             <data key="mostCommonValue">John Smith</data>
             <data key="type">[Person, Person]</data>
-            <data key="value">[John Smith, He]</data>
+            <data key="value">[He, John Smith]</data>
         </node>
         <node id="a2526c484702c9d0219155b3caa09d2c22017d0b7cf035e257d1cb0b454c97d8">
             <data key="labelV">Entity</data>

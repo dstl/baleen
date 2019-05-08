@@ -175,9 +175,6 @@ public class LatLon extends BaleenTextAwareAnnotator {
   @ConfigurationParameter(name = PARAM_MIN_DP, defaultValue = "2")
   private String minDPString;
 
-  // Parse the minDP config parameter into this variable to avoid issues with parameter types
-  private int minDP;
-
   /** Variable to hold the regular expression pattern for Digital Degrees */
   private Pattern llDDPattern;
 
@@ -203,7 +200,8 @@ public class LatLon extends BaleenTextAwareAnnotator {
   @Override
   public void doInitialize(UimaContext aContext) throws ResourceInitializationException {
 
-    minDP = ConfigUtils.stringToInteger(minDPString, 2);
+    // Parse the minDP config parameter into this variable to avoid issues with parameter types
+    int minDP = ConfigUtils.stringToInteger(minDPString, 2);
 
     if (minDP == 0) {
       // No word boundary characters as that excludes negative signs
@@ -263,7 +261,7 @@ public class LatLon extends BaleenTextAwareAnnotator {
    * the degree symbol. The pair is assumed to be in the order Latitude, Longitude unless the
    * resource lonlat has been set to true.
    *
-   * @param aJCas the JCas object to hold the created Coordinate annotation.
+   * @param block the TextBlock being processed
    * @param text the text string to search for coordinates.
    */
   private void processDD(TextBlock block, String text) {
@@ -306,7 +304,7 @@ public class LatLon extends BaleenTextAwareAnnotator {
    * its cardinal compass point, i.e. N, S, E, W. The cardinal point is used to determine which
    * value is latitude and which is longitude.
    *
-   * @param aJCas the JCas object to hold the created Coordinate annotation.
+   * @param block the TextBlock being processed.
    * @param text the text string to search for coordinates.
    */
   private void processDDCard(TextBlock block, String text) {

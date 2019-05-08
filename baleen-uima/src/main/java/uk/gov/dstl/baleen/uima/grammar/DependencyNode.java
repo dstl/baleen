@@ -1,7 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.uima.grammar;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import uk.gov.dstl.baleen.types.language.WordToken;
 
@@ -123,7 +123,7 @@ public class DependencyNode {
    * <p>To match, the word token must have the same root part of speech (eg NN will also match NNP,
    * NNS etc.) and the covered text must satisfy the content regular expression, if defined.
    *
-   * @param wt
+   * @param other
    * @return true if this matches
    */
   public boolean matches(DependencyNode other) {

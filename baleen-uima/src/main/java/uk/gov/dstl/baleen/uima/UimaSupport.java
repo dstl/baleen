@@ -4,6 +4,7 @@ package uk.gov.dstl.baleen.uima;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.uima.UIMAException;
@@ -82,7 +83,7 @@ public class UimaSupport {
   /**
    * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
    *
-   * @param annot Annotation(s) to add
+   * @param annotations Annotation(s) to add
    */
   public void add(Annotation... annotations) {
     add(Arrays.asList(annotations));
@@ -91,7 +92,7 @@ public class UimaSupport {
   /**
    * Add an annotation to the JCas index, notifying UimaMonitor of the fact we have done so
    *
-   * @param annot Annotation(s) to add
+   * @param annotations Annotation(s) to add
    */
   public void add(Collection<? extends Annotation> annotations) {
     for (Annotation annot : annotations) {
@@ -116,7 +117,7 @@ public class UimaSupport {
    *
    * <p>Relations that refer to the given annotation will also be removed.
    *
-   * @param annot Annotation(s) to remove
+   * @param annotations Annotation(s) to remove
    */
   public void remove(Collection<? extends Annotation> annotations) {
     for (Annotation annot : annotations) {
@@ -148,7 +149,7 @@ public class UimaSupport {
    *
    * <p>Relations that refer to the given annotation will also be removed.
    *
-   * @param annot Annotation(s) to remove
+   * @param annotations Annotation(s) to remove
    */
   public void remove(Annotation... annotations) {
     remove(Arrays.asList(annotations));
@@ -277,7 +278,7 @@ public class UimaSupport {
   }
 
   private boolean isSameTarget(ReferenceTarget rt1, ReferenceTarget rt2) {
-    return rt1 == rt2 || rt1 != null && rt1.equals(rt2);
+    return Objects.equals(rt1, rt2);
   }
 
   private void addMergeToHistory(Annotation keep, Annotation removed) {
@@ -349,8 +350,7 @@ public class UimaSupport {
       JCas jCas = e.getCAS().getJCas();
       Collection<Relation> relations = JCasUtil.select(jCas, Relation.class);
 
-      return relations
-          .stream()
+      return relations.stream()
           .filter(r -> r.getSource() == e || r.getTarget() == e)
           .collect(Collectors.toList());
     } catch (UIMAException ue) {

@@ -1,21 +1,34 @@
-/* First created by JCasGen Wed Jan 21 12:48:50 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:50 BST 2019 */
+
 package uk.gov.dstl.baleen.types.geo;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Location;
 
 /**
  * A well-formed coordinate value - MGRS or WGS84 DD or DMS coordinate system - explicitly defined
- * in source document. Updated by JCasGen Tue Apr 12 12:06:36 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/geo_type_system.xml
+ * in source document. Updated by JCasGen Wed Apr 17 13:41:50 BST 2019 XML source:
+ * types/geo_type_system.xml
  *
  * @generated
  */
 public class Coordinate extends Location {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.geo.Coordinate";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +50,17 @@ public class Coordinate extends Location {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_coordinateValue = "coordinateValue";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_coordinateValue =
+      TypeSystemImpl.createCallSite(Coordinate.class, "coordinateValue");
+  private static final MethodHandle _FH_coordinateValue = _FC_coordinateValue.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +74,11 @@ public class Coordinate extends Location {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Coordinate(int addr, TOP_Type type) {
-    super(addr, type);
+  public Coordinate(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -102,10 +126,7 @@ public class Coordinate extends Location {
    * @return value of the feature
    */
   public String getCoordinateValue() {
-    if (Coordinate_Type.featOkTst && ((Coordinate_Type) jcasType).casFeat_coordinateValue == null)
-      jcasType.jcas.throwFeatMissing("coordinateValue", "uk.gov.dstl.baleen.types.geo.Coordinate");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((Coordinate_Type) jcasType).casFeatCode_coordinateValue);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_coordinateValue));
   }
 
   /**
@@ -115,9 +136,6 @@ public class Coordinate extends Location {
    * @param v value to set into the feature
    */
   public void setCoordinateValue(String v) {
-    if (Coordinate_Type.featOkTst && ((Coordinate_Type) jcasType).casFeat_coordinateValue == null)
-      jcasType.jcas.throwFeatMissing("coordinateValue", "uk.gov.dstl.baleen.types.geo.Coordinate");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((Coordinate_Type) jcasType).casFeatCode_coordinateValue, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_coordinateValue), v);
   }
 }

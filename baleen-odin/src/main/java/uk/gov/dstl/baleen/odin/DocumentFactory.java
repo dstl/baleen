@@ -28,7 +28,7 @@ public class DocumentFactory {
 
   private final JCas jCas;
   private final SentenceFactory sentenceFactory;
-  private final Map<Entity, Collection<Sentence>> entityIndex;
+  private final Map<Entity, List<Sentence>> entityIndex;
   private final Multimap<ReferenceTarget, Entity> referentMap;
 
   /**
@@ -67,7 +67,7 @@ public class DocumentFactory {
    */
   public DocumentFactory(
       JCas jCas,
-      Map<Entity, Collection<Sentence>> entityIndex,
+      Map<Entity, List<Sentence>> entityIndex,
       Multimap<ReferenceTarget, Entity> referentMap,
       SentenceFactory sentenceFactory) {
     this.jCas = jCas;

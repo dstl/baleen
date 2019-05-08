@@ -184,9 +184,9 @@ public class Re3dDocument {
   }
 
   /**
-   * Adds the entity.
+   * Adds the relation.
    *
-   * @param e the entity
+   * @param r the relation
    */
   public void addRelation(final Re3dRelation r) {
     relations.add(r);

@@ -168,7 +168,7 @@ public class DependencyGraph implements IPipelineOrderer {
     return false;
   }
 
-  /** Find and remove simple loops (e.g. a -> b -> a) from a Jung graph */
+  /** Find and remove simple loops (e.g. a &rarr; b &rarr; a) from a Jung graph */
   public static <V, E> void removeLoops(Graph<V, E> graph) {
     for (V v : graph.getVertices()) {
       for (E e : graph.getOutEdges(v)) {

@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 
 import com.google.common.collect.ImmutableSet;
@@ -45,8 +45,7 @@ public class DateTime extends BaleenTextAwareAnnotator {
   private static final String DATE_SUFFIXES = "(st|nd|rd|th)";
   private static final String TIME_ZONES =
       StringUtils.join(
-          Arrays.asList(TimeZone.getAvailableIDs())
-              .stream()
+          Arrays.asList(TimeZone.getAvailableIDs()).stream()
               .filter(s -> StringUtils.isAllUpperCase(s) && s.length() <= 3)
               .collect(Collectors.toList()),
           "|");

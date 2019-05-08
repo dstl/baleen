@@ -25,7 +25,7 @@ public class OpenNLPParserTest extends AbstractMultiAnnotatorTest {
   protected AnalysisEngine[] createAnalysisEngines() throws ResourceInitializationException {
 
     final ExternalResourceDescription parserChunkingDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "parserChunking", SharedOpenNLPModel.class);
 
     // Add in the OpenNLP implementation too, as its a prerequisite
@@ -35,16 +35,14 @@ public class OpenNLPParserTest extends AbstractMultiAnnotatorTest {
     // so better test they work together)
 
     final ExternalResourceDescription tokensDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "tokens", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("tokens", SharedOpenNLPModel.class);
     final ExternalResourceDescription sentencesDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "sentences", SharedOpenNLPModel.class);
     final ExternalResourceDescription posDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "posTags", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("posTags", SharedOpenNLPModel.class);
     final ExternalResourceDescription chunksDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "phraseChunks", SharedOpenNLPModel.class);
 
     AnalysisEngineFactory.createEngineDescription();

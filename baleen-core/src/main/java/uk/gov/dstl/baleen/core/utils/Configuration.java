@@ -69,7 +69,6 @@ public interface Configuration {
    * @param clazz type to return
    * @param path
    * @param defaultValue
-   * @return
    */
   <T> T get(Class<T> clazz, String path, T defaultValue);
 

@@ -57,9 +57,8 @@ public class CsvContentExtractor extends AbstractContentExtractor {
   public static final String PARAM_COLUMNS = "columns";
 
   @ConfigurationParameter(
-    name = PARAM_COLUMNS,
-    defaultValue = {}
-  )
+      name = PARAM_COLUMNS,
+      defaultValue = {})
   List<String> columns;
 
   @Override

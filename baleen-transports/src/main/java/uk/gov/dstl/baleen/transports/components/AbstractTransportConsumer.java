@@ -21,7 +21,8 @@ import uk.gov.dstl.baleen.uima.BaleenConsumer;
  * This class provides basic functionality for a transport consumer. Such a consumer is responsible
  * for publishing the serialised JCas to a transport system, such as a message queue. This class
  * provides the common serialization, implementations should manage the transport by implementing
- * the abstract {@link #createQueue()} {@link #closeQueue()} and {@link #writeToQueue()}.
+ * the abstract {@link #createQueue()} {@link #closeQueue()} and {@link #writeToQueue(String,
+ * String)}.
  *
  * <p>It also supports providing an optional whitelist or blacklist of types to filter the
  * transported types.
@@ -37,14 +38,13 @@ public abstract class AbstractTransportConsumer extends BaleenConsumer {
   /**
    * The topic for transport use
    *
-   * @baleen.config {@link #PARAM_TOPIC_DEFAULT}
+   * @baleen.config {@link AbstractTransportCollectionReader#PARAM_TOPIC_DEFAULT}
    */
   public static final String PARAM_TOPIC = "topic";
 
   @ConfigurationParameter(
-    name = PARAM_TOPIC,
-    defaultValue = AbstractTransportCollectionReader.PARAM_TOPIC_DEFAULT
-  )
+      name = PARAM_TOPIC,
+      defaultValue = AbstractTransportCollectionReader.PARAM_TOPIC_DEFAULT)
   protected String topic;
 
   /**

@@ -21,8 +21,7 @@ public class GazetteerUtils {
    *
    * @param caseSensitive Should the gazetteer be case sensitive? If null, then the default value
    *     specified in {@link
-   *     uk.gov.dstl.baleen.resources.gazetteer.AbstractRadixTreeGazetteer#DEFAULT_CASE_SENSITIVE}
-   *     is assumed.
+   *     uk.gov.dstl.baleen.resources.gazetteer.MongoGazetteer#DEFAULT_CASE_SENSITIVE} is assumed.
    * @param collection The name of the collection that the gazetteer is stored in. If null, then the
    *     default value specified in {@link
    *     uk.gov.dstl.baleen.resources.gazetteer.MongoGazetteer#DEFAULT_COLLECTION} is assumed.
@@ -53,8 +52,7 @@ public class GazetteerUtils {
    *
    * @param caseSensitive Should the gazetteer be case sensitive? If null, then the default value
    *     specified in {@link
-   *     uk.gov.dstl.baleen.resources.gazetteer.AbstractRadixTreeGazetteer#DEFAULT_CASE_SENSITIVE}
-   *     is assumed.
+   *     uk.gov.dstl.baleen.resources.gazetteer.CountryGazetteer#DEFAULT_CASE_SENSITIVE} is assumed.
    * @return A map containing the passed (or default) configuration parameters
    */
   public static Map<String, Object> configureCountry(Boolean caseSensitive) {

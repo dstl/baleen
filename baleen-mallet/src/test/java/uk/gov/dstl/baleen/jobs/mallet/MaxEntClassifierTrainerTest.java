@@ -62,7 +62,7 @@ public class MaxEntClassifierTrainerTest extends AbstractBaleenTaskTest {
           ResourceAccessException {
 
     ExternalResourceDescription stopWordsErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MaxEntClassifierTrainer.KEY_STOPWORDS, SharedStopwordResource.class);
 
     List<String> data = new TestData().asList();
@@ -74,7 +74,7 @@ public class MaxEntClassifierTrainerTest extends AbstractBaleenTaskTest {
     }
 
     ExternalResourceDescription fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SharedMongoResource.RESOURCE_KEY,
             SharedFongoResource.class,
             "fongo.collection",

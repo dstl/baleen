@@ -1,21 +1,29 @@
-/* First created by JCasGen Wed Jan 21 11:21:05 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:41:42 BST 2019 */
+
 package uk.gov.dstl.baleen.types.common;
 
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.semantic.Entity;
 
 /**
- * A well-formed uniform resource location (URL) value Updated by JCasGen Wed Apr 13 13:23:16 BST
- * 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * A well-formed uniform resource location (URL) value Updated by JCasGen Wed Apr 17 13:41:42 BST
+ * 2019 XML source: types/common_type_system.xml
  *
  * @generated
  */
 public class Url extends Entity {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.common.Url";
+
   /**
    * @generated
    * @ordered
@@ -37,6 +45,12 @@ public class Url extends Entity {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  /* Feature Adjusted Offsets */
+
   /**
    * Never called. Disable default constructor
    *
@@ -50,11 +64,11 @@ public class Url extends Entity {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public Url(int addr, TOP_Type type) {
-    super(addr, type);
+  public Url(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 

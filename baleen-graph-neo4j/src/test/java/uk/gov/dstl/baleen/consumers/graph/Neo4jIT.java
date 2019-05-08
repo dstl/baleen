@@ -25,6 +25,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -88,7 +89,7 @@ public class Neo4jIT extends AbstractAnnotatorTest {
 
     String json = "{ \"query\" : \"MATCH (x) WHERE x.value = 'John Smith' RETURN x\" }";
 
-    StringEntity entity = new StringEntity(json);
+    StringEntity entity = new StringEntity(json, ContentType.APPLICATION_JSON);
     post.setEntity(entity);
 
     HttpResponse response = client.execute(post);
@@ -140,7 +141,7 @@ public class Neo4jIT extends AbstractAnnotatorTest {
     req.setHeader("Content-Type", "application/json");
     String body = "{ \"password\" : \"" + PASS + "\" }";
 
-    StringEntity entity = new StringEntity(body);
+    StringEntity entity = new StringEntity(body, ContentType.APPLICATION_JSON);
     req.setEntity(entity);
 
     client.execute(req);

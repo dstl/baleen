@@ -29,7 +29,7 @@ public class ElasticsearchTest extends ElasticsearchTestBase {
   @Before
   public void setup() throws UIMAException {
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             RESOURCE_KEY,
             SharedElasticsearchResource.class,
             PARAM_PORT,
@@ -58,7 +58,7 @@ public class ElasticsearchTest extends ElasticsearchTestBase {
     assertEquals(new Long(0), getCount());
 
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "country", SharedCountryResource.class);
     SharedCountryResource scr = new SharedCountryResource();
     scr.initialize(erd.getResourceSpecifier(), Collections.emptyMap());

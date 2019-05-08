@@ -40,16 +40,14 @@ public class ReNounNoAttributesSeedFactsTest extends AbstractMultiAnnotatorTest 
 
     // Use OpenNlp to generate the POS etc for us
     final ExternalResourceDescription tokensDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "tokens", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("tokens", SharedOpenNLPModel.class);
     final ExternalResourceDescription sentencesDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "sentences", SharedOpenNLPModel.class);
     final ExternalResourceDescription posDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
-            "posTags", SharedOpenNLPModel.class);
+        ExternalResourceFactory.createNamedResourceDescription("posTags", SharedOpenNLPModel.class);
     final ExternalResourceDescription chunksDesc =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "phraseChunks", SharedOpenNLPModel.class);
 
     return asArray(
@@ -102,8 +100,7 @@ public class ReNounNoAttributesSeedFactsTest extends AbstractMultiAnnotatorTest 
 
     final List<Relation> relations = new ArrayList<>(JCasUtil.select(jCas, Relation.class));
 
-    relations
-        .stream()
+    relations.stream()
         .map(
             r ->
                 r.getSource().getCoveredText()
@@ -162,8 +159,7 @@ public class ReNounNoAttributesSeedFactsTest extends AbstractMultiAnnotatorTest 
 
     final List<Relation> relations = new ArrayList<>(JCasUtil.select(jCas, Relation.class));
 
-    relations
-        .stream()
+    relations.stream()
         .map(
             r ->
                 r.getSource().getCoveredText()

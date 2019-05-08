@@ -29,9 +29,8 @@ public interface BaleenHistory extends Resource {
   public static final String MERGE_DISTINCT_ENTITIES = "history.mergeDistinctEntities";
 
   /**
-   * Get the document history for the specific document and pipeline.
+   * Get the document history for the specific document.
    *
-   * @param pipelineName unique representation of the pipeline processing the document.
    * @param documentId unique representation of the document (e.g. the document hash)
    * @return non-null document history
    */

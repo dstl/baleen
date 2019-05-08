@@ -16,11 +16,7 @@ import com.google.common.collect.ImmutableSet;
 
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.core.utils.BuilderUtils;
-import uk.gov.dstl.baleen.entity.linking.Candidate;
-import uk.gov.dstl.baleen.entity.linking.CandidateRanker;
-import uk.gov.dstl.baleen.entity.linking.CandidateSupplier;
-import uk.gov.dstl.baleen.entity.linking.EntityInformation;
-import uk.gov.dstl.baleen.entity.linking.InformationCollector;
+import uk.gov.dstl.baleen.entity.linking.*;
 import uk.gov.dstl.baleen.entity.linking.collector.JCasInformationCollector;
 import uk.gov.dstl.baleen.entity.linking.collector.ProperNounInformationCollector;
 import uk.gov.dstl.baleen.resources.SharedStopwordResource;
@@ -36,8 +32,8 @@ import uk.gov.dstl.baleen.uima.BaleenAnnotator;
  * a {@link CandidateRanker}. By default the {@link ProperNounInformationCollector} is used, however
  * this requires part of speech tagging to also be in the pipeline, so an implementation that does
  * not require this is also supplied by {@link JCasInformationCollector}. A {@link
- * BagOfWordsCandidateRanker} is also used by default. To configure, an entity type and a candidate
- * supplier must be configured e.g.
+ * uk.gov.dstl.baleen.entity.linking.ranker.BagOfWordsCandidateRanker} is also used by default. To
+ * configure, an entity type and a candidate supplier must be configured e.g.
  *
  * <pre>
  * - class: coreference.EntityLinkingAnnotator
@@ -67,7 +63,7 @@ public class EntityLinkingAnnotator<T extends Entity> extends BaleenAnnotator {
 
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * SharedStopwordResource#StopwordList}, then that list will be loaded.
+   * SharedStopwordResource.StopwordList}, then that list will be loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the
    * file is expected to be one stopword per line.
@@ -100,10 +96,9 @@ public class EntityLinkingAnnotator<T extends Entity> extends BaleenAnnotator {
   public static final String PARAM_INFORMATION_COLLECTOR = "informationCollector";
 
   @ConfigurationParameter(
-    name = PARAM_INFORMATION_COLLECTOR,
-    mandatory = false,
-    defaultValue = "ProperNounInformationCollector"
-  )
+      name = PARAM_INFORMATION_COLLECTOR,
+      mandatory = false,
+      defaultValue = "ProperNounInformationCollector")
   private String informationCollectorClassName;
 
   /**
@@ -128,10 +123,9 @@ public class EntityLinkingAnnotator<T extends Entity> extends BaleenAnnotator {
   public static final String PARAM_CANDIDATE_RANKER = "candidateRanker";
 
   @ConfigurationParameter(
-    name = PARAM_CANDIDATE_RANKER,
-    mandatory = false,
-    defaultValue = "BagOfWordsCandidateRanker"
-  )
+      name = PARAM_CANDIDATE_RANKER,
+      mandatory = false,
+      defaultValue = "BagOfWordsCandidateRanker")
   private String candidateRankerClassName;
 
   /**
@@ -146,10 +140,9 @@ public class EntityLinkingAnnotator<T extends Entity> extends BaleenAnnotator {
       "candidateSupplierArguments";
 
   @ConfigurationParameter(
-    name = PARAM_CANDIDATE_SUPPLIER_CONFIG_ARGUMENTS,
-    mandatory = false,
-    defaultValue = {}
-  )
+      name = PARAM_CANDIDATE_SUPPLIER_CONFIG_ARGUMENTS,
+      mandatory = false,
+      defaultValue = {})
   private String[] candidateSupplierOptions;
 
   private Class<T> entityClass;

@@ -31,9 +31,8 @@ public class YYYYMMDDAssigner extends BaleenAnnotator {
   public static final String PARAM_METADATA_KEY = "regex";
 
   @ConfigurationParameter(
-    name = PARAM_METADATA_KEY,
-    defaultValue = ".*(?<year>\\d{4})\\/(?<month>\\d{1,2})\\/(?<day>\\d{1,2}).*"
-  ) // ")
+      name = PARAM_METADATA_KEY,
+      defaultValue = ".*(?<year>\\d{4})\\/(?<month>\\d{1,2})\\/(?<day>\\d{1,2}).*") // ")
   private String regex;
 
   private Pattern pattern;

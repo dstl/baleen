@@ -42,10 +42,7 @@ public abstract class AbstractDiscardWithSameId<T extends BaleenAnnotation>
 
     final List<T> toDelete = new LinkedList<>();
 
-    annotations
-        .asMap()
-        .entrySet()
-        .stream()
+    annotations.asMap().entrySet().stream()
         .map(Map.Entry::getValue)
         .filter(e -> e.size() > 1)
         // Convert to a list of all annotations, BUT skip (drop) one...

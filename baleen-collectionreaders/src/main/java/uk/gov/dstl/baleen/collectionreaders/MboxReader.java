@@ -86,9 +86,8 @@ public class MboxReader extends BaleenCollectionReader {
   public static final String PARAM_IGNORE = "ignoreExtensions";
 
   @ConfigurationParameter(
-    name = PARAM_IGNORE,
-    defaultValue = {"zip", "tar", "rar", "jpg", "gif", "png"}
-  )
+      name = PARAM_IGNORE,
+      defaultValue = {"zip", "tar", "rar", "jpg", "gif", "png"})
   private String[] ignoreExtensions;
 
   private Iterator<CharBufferWrapper> mboxIterator;

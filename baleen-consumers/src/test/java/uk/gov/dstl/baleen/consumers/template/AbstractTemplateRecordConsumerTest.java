@@ -136,8 +136,7 @@ public abstract class AbstractTemplateRecordConsumerTest extends AbstractAnnotat
   protected void checkRecords(Map<String, Collection<ExtractedRecord>> recordMap) {
     Collection<ExtractedRecord> records = recordMap.get(annotatorClass.getSimpleName());
     Stream<ExtractedRecord> recordStream =
-        records
-            .stream()
+        records.stream()
             .filter(p -> p.getKind().equals(Kind.NAMED) && p.getName().equals("record1"));
     List<ExtractedRecord> collect = recordStream.collect(Collectors.toList());
     ExtractedRecord record1 = collect.get(0);
@@ -147,8 +146,7 @@ public abstract class AbstractTemplateRecordConsumerTest extends AbstractAnnotat
     assertEquals("fox jumped over", findFieldValue("record1Field2", record1.getFields()));
 
     ExtractedRecord record2 =
-        records
-            .stream()
+        records.stream()
             .filter(p -> p.getKind().equals(Kind.NAMED) && p.getName().equals("record2"))
             .collect(Collectors.toList())
             .get(0);
@@ -158,8 +156,7 @@ public abstract class AbstractTemplateRecordConsumerTest extends AbstractAnnotat
     assertEquals("cat jumped over", findFieldValue("record2Field2", record2.getFields()));
 
     ExtractedRecord defaultRecord =
-        records
-            .stream()
+        records.stream()
             .filter(p -> p.getKind().equals(Kind.DEFAULT))
             .collect(Collectors.toList())
             .get(0);

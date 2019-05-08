@@ -3,6 +3,7 @@ package uk.gov.dstl.baleen.core.history;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -82,6 +83,11 @@ class TypeTestRecordable implements Recordable {
     return new Type() {
 
       @Override
+      public Iterator<Feature> iterator() {
+        return null;
+      }
+
+      @Override
       public boolean isPrimitive() {
         return false;
       }
@@ -98,6 +104,16 @@ class TypeTestRecordable implements Recordable {
 
       @Override
       public boolean isArray() {
+        return false;
+      }
+
+      @Override
+      public boolean isStringSubtype() {
+        return false;
+      }
+
+      @Override
+      public boolean isStringOrStringSubtype() {
         return false;
       }
 

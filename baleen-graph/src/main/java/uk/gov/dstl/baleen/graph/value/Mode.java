@@ -20,8 +20,7 @@ public class Mode<T> implements ValueStrategy<T, T> {
     if (CollectionUtils.isEmpty(values)) {
       return Optional.empty();
     }
-    return values
-        .stream()
+    return values.stream()
         .collect(Collectors.groupingBy(t -> t, Collectors.counting()))
         .entrySet()
         .stream()

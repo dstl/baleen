@@ -62,9 +62,8 @@ public abstract class AbstractEntityGraphConsumer extends AbstractGraphConsumer 
   public static final String PARAM_AGGREGATE_PROPERTIES = "aggregate";
 
   @ConfigurationParameter(
-    name = PARAM_AGGREGATE_PROPERTIES,
-    defaultValue = {"begin", "end", "confidence"}
-  )
+      name = PARAM_AGGREGATE_PROPERTIES,
+      defaultValue = {"begin", "end", "confidence"})
   private String[] aggregate;
 
   /**
@@ -120,7 +119,9 @@ public abstract class AbstractEntityGraphConsumer extends AbstractGraphConsumer 
    *
    * @param builder
    */
-  protected void addOptions(EntityGraphOptions.Builder builder) {}
+  protected void addOptions(EntityGraphOptions.Builder builder) {
+    // Do nothing if not overridden
+  }
 
   private ValueStrategy<?, ?> createValueStrategy(String valueStrategyType)
       throws ResourceInitializationException {

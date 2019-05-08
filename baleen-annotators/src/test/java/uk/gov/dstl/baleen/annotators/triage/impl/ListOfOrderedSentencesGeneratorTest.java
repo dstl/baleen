@@ -3,14 +3,7 @@ package uk.gov.dstl.baleen.annotators.triage.impl;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -29,7 +22,7 @@ public class ListOfOrderedSentencesGeneratorTest {
 
   private static final String DOCUMENT = SENTENCE_1 + " " + SENTENCE_2 + " " + SENTENCE_3;
 
-  private Map<String, Collection<String>> sentenceToWordStringsMap;
+  private Map<String, List<String>> sentenceToWordStringsMap;
   private List<String> sentences;
   private List<String> words;
   private Map<String, Integer> wordFrequencies;
@@ -54,8 +47,7 @@ public class ListOfOrderedSentencesGeneratorTest {
     Set<String> wordSet = new HashSet<>(words);
 
     wordFrequencies =
-        wordSet
-            .stream()
+        wordSet.stream()
             .collect(Collectors.toMap(word -> word, word -> Collections.frequency(words, word)));
 
     listOfOrderedSentencesGenerator =
@@ -107,8 +99,8 @@ public class ListOfOrderedSentencesGeneratorTest {
     return sentences;
   }
 
-  private Collection<String> getWords(String sentence) {
-    Collection<String> words = new ArrayList<>();
+  private List<String> getWords(String sentence) {
+    List<String> words = new ArrayList<>();
     Pattern p = Pattern.compile(WORD_REGEX);
     Matcher m = p.matcher(sentence);
     while (m.find()) {

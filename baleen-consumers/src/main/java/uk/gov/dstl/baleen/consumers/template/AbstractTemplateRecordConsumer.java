@@ -48,8 +48,7 @@ public abstract class AbstractTemplateRecordConsumer extends BaleenConsumer {
       Collection<TemplateField> fieldAnnotations =
           JCasUtil.selectCovered(TemplateField.class, recordAnnotation);
       List<TemplateField> recordFieldAnnotations =
-          fieldAnnotations
-              .stream()
+          fieldAnnotations.stream()
               .filter(f -> recordAnnotation.getSource().equals(f.getSource()))
               .collect(Collectors.toList());
       allFields.removeAll(recordFieldAnnotations);

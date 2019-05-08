@@ -17,7 +17,7 @@ import uk.gov.dstl.baleen.types.common.Url;
  * https optional.
  *
  * <p>The regex used to perform this extraction is: <code>
- * \b(?<!@)(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?([?\/]\S*)?\b
+ * \b(?&lt;!@)(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?([?\/]\S*)?\b
  * </code>
  *
  * @baleen.javadoc

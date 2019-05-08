@@ -61,8 +61,7 @@ public class NPAtCoordinate extends BaleenAnnotator {
       boolean locFound = false;
 
       for (Location l :
-          JCasUtil.select(jCas, Location.class)
-              .stream()
+          JCasUtil.select(jCas, Location.class).stream()
               .filter(l -> substringStart == l.getEnd())
               .collect(Collectors.toList())) {
         locFound = true;
@@ -75,8 +74,7 @@ public class NPAtCoordinate extends BaleenAnnotator {
 
       // Get NP and create a Location
       for (PhraseChunk pc :
-          JCasUtil.select(jCas, PhraseChunk.class)
-              .stream()
+          JCasUtil.select(jCas, PhraseChunk.class).stream()
               .filter(pc -> "NP".equalsIgnoreCase(pc.getChunkType()))
               .filter(pc -> substringStart == pc.getEnd())
               .collect(Collectors.toList())) {
@@ -99,8 +97,7 @@ public class NPAtCoordinate extends BaleenAnnotator {
     } else {
       // Merge all references
       for (Location lRt :
-          JCasUtil.select(jCas, Location.class)
-              .stream()
+          JCasUtil.select(jCas, Location.class).stream()
               .filter(l2 -> l2.getReferent().equals(l.getReferent()))
               .collect(Collectors.toList())) {
         lRt.setReferent(c.getReferent());

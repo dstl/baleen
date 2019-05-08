@@ -40,11 +40,6 @@ public abstract class AbstractRegexAhoCorasickAnnotator extends AbstractAhoCoras
 
   Pattern regexPattern;
 
-  /** Constructor */
-  public AbstractRegexAhoCorasickAnnotator() {
-    // Do nothing
-  }
-
   @Override
   public abstract IGazetteer configureGazetteer() throws BaleenException;
 

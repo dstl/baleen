@@ -1,15 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.graph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -197,9 +189,7 @@ public class DocumentGraphFactory {
               .sideEffect(
                   tv -> {
                     Vertex documentVertex = tv.get();
-                    getGraphMetadata(jCas)
-                        .entrySet()
-                        .stream()
+                    getGraphMetadata(jCas).entrySet().stream()
                         .forEach(e -> setProperty(documentVertex, e.getKey(), e.getValue()));
                   })
               .next();
@@ -271,9 +261,7 @@ public class DocumentGraphFactory {
   private void loadGraphMetadata(JCas jCas, Graph graph, Optional<Vertex> document) {
     if (!document.isPresent()) {
       Variables variables = graph.variables();
-      getGraphMetadata(jCas)
-          .entrySet()
-          .stream()
+      getGraphMetadata(jCas).entrySet().stream()
           .forEach(e -> variables.set(e.getKey(), e.getValue()));
     }
   }
@@ -312,16 +300,12 @@ public class DocumentGraphFactory {
     Multimap<ReferenceTarget, Entity> targetted =
         ReferentUtils.createReferentMap(jCas, annotations, false);
 
-    targetted
-        .asMap()
-        .entrySet()
-        .stream()
+    targetted.asMap().entrySet().stream()
         .forEach(
             e -> {
               Set<String> types = new HashSet<>();
               List<Vertex> mentions =
-                  e.getValue()
-                      .stream()
+                  e.getValue().stream()
                       .map(converter::convertEntity)
                       .peek(mention -> types.add(mention.get(fields.getType()).toString()))
                       .filter(
@@ -363,9 +347,7 @@ public class DocumentGraphFactory {
 
   private void addMentionProperties(Map<String, Object> mention, Traverser<Vertex> vt) {
     Vertex vertex = vt.get();
-    mention
-        .entrySet()
-        .stream()
+    mention.entrySet().stream()
         .filter(property -> property.getValue() != null)
         .filter(property -> !property.getKey().equals(fields.getExternalId()))
         .forEach(property -> vertex.property(property.getKey(), coerce(property.getValue())));
@@ -373,8 +355,7 @@ public class DocumentGraphFactory {
 
   private void loadRelations(
       JCas jCas, GraphTraversalSource traversal, EntityRelationConverter converter) {
-    JCasUtil.select(jCas, Relation.class)
-        .stream()
+    JCasUtil.select(jCas, Relation.class).stream()
         .map(converter::convertRelation)
         .forEach(relation -> loadRelation(traversal, relation));
   }
@@ -417,9 +398,7 @@ public class DocumentGraphFactory {
   private void addRelationProperties(
       Map<String, Object> relation, Traverser<? extends Element> relationElement) {
     Element rel = relationElement.get();
-    relation
-        .entrySet()
-        .stream()
+    relation.entrySet().stream()
         .filter(property -> property.getValue() != null)
         .filter(property -> !property.getKey().equals(fields.getExternalId()))
         .forEach(property -> setProperty(rel, property.getKey(), property.getValue()));
@@ -429,8 +408,7 @@ public class DocumentGraphFactory {
   private void loadEvents(
       JCas jCas, GraphTraversalSource traversal, EntityRelationConverter converter) {
 
-    JCasUtil.select(jCas, Event.class)
-        .stream()
+    JCasUtil.select(jCas, Event.class).stream()
         .map(converter::convertEvent)
         .filter(e -> !traversal.V(coerce(e.get(fields.getExternalId()))).hasNext())
         .forEach(
@@ -441,8 +419,7 @@ public class DocumentGraphFactory {
                       .property(T.id, coerce(e.get(fields.getExternalId())))
                       .sideEffect(
                           vt ->
-                              e.entrySet()
-                                  .stream()
+                              e.entrySet().stream()
                                   .filter(property -> property.getValue() != null)
                                   .filter(
                                       property -> !property.getKey().equals(fields.getExternalId()))

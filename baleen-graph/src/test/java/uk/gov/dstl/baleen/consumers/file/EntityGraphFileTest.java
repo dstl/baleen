@@ -1,9 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers.file;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -13,7 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.junit.Before;
@@ -34,7 +32,7 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
       EntityGraphFileTest.class.getResource(GRAPHML_NAME);
   private static final URL EXPECTED_GRAPHSON_FILE =
       EntityGraphFileTest.class.getResource(GRAPHSON_NAME);
-  private static final URL EXPECTED_GYRO_FILE = EntityGraphFileTest.class.getResource(GYRO_NAME);
+  private static final URL EXPECTED_GRYO_FILE = EntityGraphFileTest.class.getResource(GYRO_NAME);
   private static final URL EXPECTED_GRAPHSON_8_FILE =
       EntityGraphFileTest.class.getResource(GRAPHSON_8_NAME);
   private static final URL EXPECTED_GRYO_8_FILE =
@@ -95,11 +93,11 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
       throws AnalysisEngineProcessException, ResourceInitializationException, IOException,
           URISyntaxException {
     // Due to serialisation order differences
-    URL expectedFile = null;
-    if (SystemUtils.JAVA_VERSION_FLOAT > 8) {
-      expectedFile = EXPECTED_GRAPHSON_FILE;
-    } else {
+    URL expectedFile;
+    if (SystemUtils.IS_JAVA_1_8) {
       expectedFile = EXPECTED_GRAPHSON_8_FILE;
+    } else {
+      expectedFile = EXPECTED_GRAPHSON_FILE;
     }
     processJCas(
         EntityGraph.PARAM_OUTPUT_DIRECTORY,
@@ -120,11 +118,11 @@ public class EntityGraphFileTest extends AbstractAnnotatorTest {
       throws AnalysisEngineProcessException, ResourceInitializationException, IOException,
           URISyntaxException {
     // Due to serialisation order differences
-    URL expectedFile = null;
-    if (SystemUtils.JAVA_VERSION_FLOAT > 8) {
-      expectedFile = EXPECTED_GYRO_FILE;
-    } else {
+    URL expectedFile;
+    if (SystemUtils.IS_JAVA_1_8) {
       expectedFile = EXPECTED_GRYO_8_FILE;
+    } else {
+      expectedFile = EXPECTED_GRYO_FILE;
     }
 
     processJCas(

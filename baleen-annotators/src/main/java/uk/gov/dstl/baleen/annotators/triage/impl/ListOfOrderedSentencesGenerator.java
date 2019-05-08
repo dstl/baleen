@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /** Class for computing calculations needed for document summarisation. */
 public class ListOfOrderedSentencesGenerator<T> {
 
-  private final Map<T, Collection<String>> sentenceToWordsStringMap;
+  private final Map<T, List<String>> sentenceToWordsStringMap;
   private final Map<String, Integer> wordFrequencies;
   private final int numberOfWordsAboveThreshold;
 
@@ -26,7 +26,7 @@ public class ListOfOrderedSentencesGenerator<T> {
    * @param numberOfWordsAboveThreshold The number of words above a pre-decided threshold
    */
   public ListOfOrderedSentencesGenerator(
-      Map<T, Collection<String>> sentenceToWordsStringMap,
+      Map<T, List<String>> sentenceToWordsStringMap,
       Map<String, Integer> wordFrequencies,
       int numberOfWordsAboveThreshold) {
 
@@ -61,9 +61,7 @@ public class ListOfOrderedSentencesGenerator<T> {
       sentenceNetWeights.put(sentence, netWeight);
     }
 
-    return sentenceNetWeights
-        .entrySet()
-        .stream()
+    return sentenceNetWeights.entrySet().stream()
         .sorted(Map.Entry.<T, Double>comparingByValue().reversed())
         .map(Entry::getKey)
         .collect(Collectors.toCollection(LinkedList::new));
@@ -94,7 +92,7 @@ public class ListOfOrderedSentencesGenerator<T> {
   private Map<T, Double> getSentenceSpans() {
 
     Map<T, Double> sentenceSpans = new HashMap<>();
-    for (Map.Entry<T, Collection<String>> entry : sentenceToWordsStringMap.entrySet()) {
+    for (Map.Entry<T, List<String>> entry : sentenceToWordsStringMap.entrySet()) {
       T sentence = entry.getKey();
       Collection<String> words = entry.getValue();
       int numberOfWordsInSentence = words.size();

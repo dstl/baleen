@@ -62,7 +62,7 @@ public class TopicModelTrainerTest extends AbstractBaleenTaskTest {
           ResourceAccessException {
 
     ExternalResourceDescription stopWordsErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             TopicModelTrainer.KEY_STOPWORDS, SharedStopwordResource.class);
 
     List<String> data = new TestData().asList();
@@ -74,7 +74,7 @@ public class TopicModelTrainerTest extends AbstractBaleenTaskTest {
     }
 
     ExternalResourceDescription fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             SharedMongoResource.RESOURCE_KEY,
             SharedFongoResource.class,
             "fongo.collection",

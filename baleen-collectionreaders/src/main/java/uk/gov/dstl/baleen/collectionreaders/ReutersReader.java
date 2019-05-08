@@ -44,10 +44,6 @@ public class ReutersReader extends AbstractStreamCollectionReader<String> {
   @ConfigurationParameter(name = KEY_PATH, mandatory = true)
   private String sgmPath;
 
-  public ReutersReader() {
-    // Do nothing
-  }
-
   @Override
   protected Stream<String> initializeStream(UimaContext context) throws BaleenException {
     final File[] files =

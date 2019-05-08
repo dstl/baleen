@@ -68,9 +68,8 @@ public abstract class AbstractRdfDocumentGraphConsumer extends AbstractDocumentG
   public static final String PARAM_IGNORE = "ignoreProperties";
 
   @ConfigurationParameter(
-    name = PARAM_IGNORE,
-    defaultValue = {"internalId", "inNormalised"}
-  )
+      name = PARAM_IGNORE,
+      defaultValue = {"internalId", "inNormalised"})
   private String[] ignoreProperties;
 
   protected OntModel documentOntology;

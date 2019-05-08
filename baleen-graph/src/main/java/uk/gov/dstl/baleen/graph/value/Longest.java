@@ -20,8 +20,7 @@ public class Longest implements ValueStrategy<Object, String> {
       return Optional.empty();
     }
     // Ensure string as could be accidentally assigned to non string value
-    return values
-        .stream()
+    return values.stream()
         .map(Object::toString)
         .max(Comparator.comparing(String::length))
         .map(Object::toString);

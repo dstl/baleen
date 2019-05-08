@@ -39,7 +39,7 @@ public class TopicModelPipe extends SerialPipes {
    * Construct topic model pipe with given stopwords and alphabets
    *
    * @param stopwords to be removed
-   * @param dataAlphabet to use
+   * @param alphabet to use
    */
   public TopicModelPipe(Collection<String> stopwords, Alphabet alphabet) {
     // @formatter:off

@@ -161,9 +161,7 @@ public abstract class AbstractPatternDataGenerator extends BaleenSentenceAnnotat
     DependencyTree minimalTree = graph.minimalTree(leafNodes.keySet());
 
     Map<String, String> idMap =
-        leafNodes
-            .entrySet()
-            .stream()
+        leafNodes.entrySet().stream()
             .collect(
                 Collectors.toMap(e -> Long.toString(e.getKey().getInternalId()), Entry::getValue));
 

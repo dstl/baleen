@@ -36,7 +36,7 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
       throws ResourceInitializationException, AnalysisEngineProcessException, IOException {
     // Due to limitations in the shared fongo resource we only test document count here!
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "mongo",
             SharedFongoResource.class,
             SharedFongoResource.PARAM_FONGO_COLLECTION,
@@ -71,7 +71,7 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
       throws ResourceInitializationException, AnalysisEngineProcessException, IOException {
     // Due to limitations in the shared fongo resource we only test document count here!
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "mongo",
             SharedFongoResource.class,
             SharedFongoResource.PARAM_FONGO_COLLECTION,
@@ -105,7 +105,7 @@ public class MongoStatsTest extends AbstractBaleenTaskTest {
       throws ResourceInitializationException, AnalysisEngineProcessException, IOException {
     // Due to limitations in the shared fongo resource we only test document count here!
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "mongo",
             SharedFongoResource.class,
             SharedFongoResource.PARAM_FONGO_COLLECTION,

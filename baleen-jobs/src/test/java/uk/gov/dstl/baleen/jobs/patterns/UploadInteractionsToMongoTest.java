@@ -32,7 +32,7 @@ public class UploadInteractionsToMongoTest extends AbstractBaleenTaskTest {
   @Before
   public void before() {
     fongoErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "mongo", SharedFongoResource.class, "fongo.collection", "na", "fongo.data", "[  ]");
   }
 

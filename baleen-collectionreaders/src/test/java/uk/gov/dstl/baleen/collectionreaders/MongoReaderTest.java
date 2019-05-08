@@ -32,7 +32,7 @@ public class MongoReaderTest extends AbstractReaderTest {
   private static final String COLLECTION = "documents";
 
   private ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(MONGO, SharedFongoResource.class);
+      ExternalResourceFactory.createNamedResourceDescription(MONGO, SharedFongoResource.class);
 
   public MongoReaderTest() {
     super(MongoReader.class);
@@ -74,8 +74,7 @@ public class MongoReaderTest extends AbstractReaderTest {
     assertEquals(TEXT, jCas.getDocumentText().trim());
     assertEquals(5, JCasUtil.select(jCas, Metadata.class).size());
     List<Metadata> metadata =
-        JCasUtil.select(jCas, Metadata.class)
-            .stream()
+        JCasUtil.select(jCas, Metadata.class).stream()
             .filter(m -> !m.getKey().equalsIgnoreCase("baleen:content-extractor"))
             .sorted((a, b) -> a.getKey().compareTo(b.getKey()))
             .collect(Collectors.toList());

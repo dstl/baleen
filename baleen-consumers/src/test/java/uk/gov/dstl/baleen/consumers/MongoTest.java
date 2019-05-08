@@ -4,11 +4,7 @@ package uk.gov.dstl.baleen.consumers;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.apache.uima.analysis_engine.AnalysisEngine;
 import org.apache.uima.analysis_engine.AnalysisEngineDescription;
@@ -96,10 +92,10 @@ public class MongoTest extends ConsumerTestBase {
     // Create a description of an external resource - a fongo instance, in the same way we would
     // have created a shared mongo resource
     ExternalResourceDescription erd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             MONGO, SharedFongoResource.class, "fongo.collection", "test", "fongo.data", "[]");
     ExternalResourceDescription historyErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             PipelineBuilder.BALEEN_HISTORY, InMemoryBaleenHistory.class);
 
     history = Mockito.mock(BaleenHistory.class);
@@ -377,7 +373,7 @@ public class MongoTest extends ConsumerTestBase {
     assertEquals(2, ((List<Object>) a.get(Mongo.FIELD_ENTITIES)).size());
     assertEquals(link, a.getString(Mongo.FIELD_LINKING));
     assertEquals(
-        ConsumerUtils.getExternalId(ImmutableList.of(p, q)), a.getString(fields.getExternalId()));
+        ConsumerUtils.getExternalId(ImmutableList.of(q, p)), a.getString(fields.getExternalId()));
   }
 
   @SuppressWarnings("unchecked")

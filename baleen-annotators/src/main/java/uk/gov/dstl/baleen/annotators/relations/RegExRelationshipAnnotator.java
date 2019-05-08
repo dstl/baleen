@@ -163,9 +163,7 @@ public class RegExRelationshipAnnotator extends AbstractTypedRelationshipAnnotat
 
     List<Entry<String, Entity>> sorted =
         (List<Entry<String, Entity>>)
-            idMap
-                .entrySet()
-                .stream()
+            idMap.entrySet().stream()
                 .sorted(
                     Entry.comparingByValue(
                         ComparatorUtils.reversedComparator(Comparator.comparing(Entity::getBegin))))

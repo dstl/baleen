@@ -1,14 +1,9 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.templates;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import uk.gov.dstl.baleen.exceptions.InvalidParameterException;
 import uk.gov.dstl.baleen.types.structure.Structure;
@@ -21,10 +16,11 @@ import uk.gov.dstl.baleen.uima.utils.select.Node;
 
 /**
  * This class is used to search for {@link SelectorPath}s for the creation of {@link
- * TemplateRecord}s and {@link TemplateField}s. It records matches found for repeating units,
- * subsequent calls compensate the path for these repeated structures. It is therefore important to
- * process the document in order so later items are correctly compensated for earlier repeating
- * annotations. The order property of the record definitions can be used for this.
+ * uk.gov.dstl.baleen.types.templates.TemplateRecord}s and {@link TemplateField}s. It records
+ * matches found for repeating units, subsequent calls compensate the path for these repeated
+ * structures. It is therefore important to process the document in order so later items are
+ * correctly compensated for earlier repeating annotations. The order property of the record
+ * definitions can be used for this.
  */
 public class RecordStructureManager {
 
@@ -62,7 +58,7 @@ public class RecordStructureManager {
    * Get the structure annotation for the given selector path if found
    *
    * @see SelectorPath
-   * @param selector path the selector path
+   * @param selectorPath path the selector path
    * @return optional of the structure annotation
    */
   public Optional<Structure> select(SelectorPath selectorPath) {
@@ -89,8 +85,7 @@ public class RecordStructureManager {
       adjustment = map.getOrDefault(current.getType(), Integer.valueOf(0));
     }
     Optional<Node<Structure>> found =
-        node.getChildren()
-            .stream()
+        node.getChildren().stream()
             .filter(c -> current.getType().equals(c.getItem().getClass()))
             .skip((long) adjustment + Math.max(0, current.getIndex() - 1))
             .findFirst();
@@ -118,7 +113,6 @@ public class RecordStructureManager {
   /**
    * Create the repeat unit
    *
-   * @param preceedingParts the preceding structure path
    * @param paths the path to generate the repeat
    * @return a list of the repeating paths
    * @throws InvalidParameterException if one of the paths is invalid
@@ -358,7 +352,7 @@ public class RecordStructureManager {
    * Record the repeating match of the given structure. These will be used to compensate future
    * calls to {@link #select(String)}.
    *
-   * @param structure the repeating structure
+   * @param record the repeating structure
    */
   public void recordMatch(Structure record) {
     if (record instanceof TableBody) {
@@ -375,7 +369,7 @@ public class RecordStructureManager {
    * Record the repeating match of the given structure. These will be used to compensate future
    * calls to {@link #select(String)}.
    *
-   * @param structure the repeating structure
+   * @param current the repeating structure
    */
   private void record(Structure current) {
     Optional<Structure> parent = structureHierarchy.getParent(current);
@@ -407,7 +401,7 @@ public class RecordStructureManager {
    * Record the missing first repeat of the given selector paths. These will be used to compensate
    * future calls to {@link #select(String)}.
    *
-   * @param paths the repeating structure
+   * @param path the repeating structure
    */
   public void recordMissing(SelectorPath path) {
     SelectorPath parentPath = path.toDepth(path.getDepth() - 1);

@@ -1,10 +1,15 @@
-/* First created by JCasGen Tue Feb 03 14:24:45 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:22 BST 2019 */
+
 package uk.gov.dstl.baleen.types.semantic;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.BaleenAnnotation;
 
@@ -12,12 +17,20 @@ import uk.gov.dstl.baleen.types.BaleenAnnotation;
  * A target type for the referent property, such that entities pointing to the same target are
  * assumed to be coreferences. The target can therefore be thought of as a super-entity, though it
  * has no properties or value of it's own. The span of this entity is taken to be the scope in which
- * this reference target is valid. Updated by JCasGen Wed Apr 13 13:23:16 BST 2016 XML source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * this reference target is valid. Updated by JCasGen Wed Apr 17 13:42:22 BST 2019 XML source:
+ * types/template_type_system.xml
  *
  * @generated
  */
 public class ReferenceTarget extends BaleenAnnotation {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.semantic.ReferenceTarget";
+
   /**
    * @generated
    * @ordered
@@ -39,6 +52,17 @@ public class ReferenceTarget extends BaleenAnnotation {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_linking = "linking";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_linking =
+      TypeSystemImpl.createCallSite(ReferenceTarget.class, "linking");
+  private static final MethodHandle _FH_linking = _FC_linking.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -52,11 +76,11 @@ public class ReferenceTarget extends BaleenAnnotation {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public ReferenceTarget(int addr, TOP_Type type) {
-    super(addr, type);
+  public ReferenceTarget(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -93,6 +117,7 @@ public class ReferenceTarget extends BaleenAnnotation {
   private void readObject() {
     /*default - does nothing empty block */
   }
+
   // *--------------*
   // * Feature: linking
 
@@ -105,11 +130,7 @@ public class ReferenceTarget extends BaleenAnnotation {
    * @return value of the feature
    */
   public String getLinking() {
-    if (ReferenceTarget_Type.featOkTst && ((ReferenceTarget_Type) jcasType).casFeat_linking == null)
-      jcasType.jcas.throwFeatMissing(
-          "linking", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((ReferenceTarget_Type) jcasType).casFeatCode_linking);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_linking));
   }
 
   /**
@@ -121,10 +142,6 @@ public class ReferenceTarget extends BaleenAnnotation {
    * @param v value to set into the feature
    */
   public void setLinking(String v) {
-    if (ReferenceTarget_Type.featOkTst && ((ReferenceTarget_Type) jcasType).casFeat_linking == null)
-      jcasType.jcas.throwFeatMissing(
-          "linking", "uk.gov.dstl.baleen.types.semantic.ReferenceTarget");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((ReferenceTarget_Type) jcasType).casFeatCode_linking, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_linking), v);
   }
 }

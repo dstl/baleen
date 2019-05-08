@@ -19,7 +19,7 @@ import uk.gov.dstl.baleen.types.common.Url;
  * the following URL regular expression:
  *
  * <pre>
- * \\b((https?|ftp)://|www.)(([-a-z0-9]+)\\.)?([-a-z0-9\\.]+\\.[a-z0-9]+)(:([1-9][0-9]{1,5}))?(/([-a-z0-9+&@#/%=~_|$!:,.]*\\?[-a-z0-9+&@#/%=~_|$!:,.]*)|/([-a-z0-9+&@#/%=~_|$!:,.]*[-a-z0-9+&@#/%=~_|$!:,])|/)?
+ * \\b((https?|ftp)://|www.)(([-a-z0-9]+)\\.)?([-a-z0-9\\.]+\\.[a-z0-9]+)(:([1-9][0-9]{1,5}))?(/([-a-z0-9+&amp;@#/%=~_|$!:,.]*\\?[-a-z0-9+&amp;@#/%=~_|$!:,.]*)|/([-a-z0-9+&amp;@#/%=~_|$!:,.]*[-a-z0-9+&amp;@#/%=~_|$!:,])|/)?
  * </pre>
  *
  * <p>Not all valid URLs as defined by RFC3986 will be captured by this regular expression and

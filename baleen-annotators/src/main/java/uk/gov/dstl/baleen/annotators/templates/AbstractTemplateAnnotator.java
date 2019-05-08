@@ -28,9 +28,8 @@ public abstract class AbstractTemplateAnnotator extends BaleenAnnotator {
 
   /** The record definitions directory. */
   @ConfigurationParameter(
-    name = PARAM_RECORD_DEFINITIONS_DIRECTORY,
-    defaultValue = "recordDefinitions"
-  )
+      name = PARAM_RECORD_DEFINITIONS_DIRECTORY,
+      defaultValue = "recordDefinitions")
   private String recordDefinitionsDirectory = "recordDefinitions";
 
   /** The object mapper, used to read YAML configurations */

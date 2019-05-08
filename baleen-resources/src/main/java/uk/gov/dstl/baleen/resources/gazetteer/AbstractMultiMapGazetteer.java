@@ -62,9 +62,7 @@ public abstract class AbstractMultiMapGazetteer<T> implements IGazetteer {
     String val = caseSensitive ? key : key.toLowerCase();
     T id = valueToId.get(val);
 
-    return idToValues
-        .get(id)
-        .stream()
+    return idToValues.get(id).stream()
         .filter(s -> !s.equals(val))
         .toArray(size -> new String[size]);
   }

@@ -5,19 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -121,7 +114,7 @@ public abstract class AbstractReNounRelationshipAnnotator
   @Override
   protected void extract(JCas jCas) throws AnalysisEngineProcessException {
 
-    Map<WordToken, Collection<Entity>> entities =
+    Map<WordToken, List<Entity>> entities =
         JCasUtil.indexCovering(jCas, WordToken.class, Entity.class);
 
     DependencyGraph dependencyGraph = DependencyGraph.build(jCas);
@@ -133,7 +126,7 @@ public abstract class AbstractReNounRelationshipAnnotator
       DependencyTreeMatcher matcher,
       JCas jCas,
       DependencyGraph graph,
-      Map<WordToken, Collection<Entity>> entities) {
+      Map<WordToken, List<Entity>> entities) {
 
     List<DependencyTreeMatcher.Matching> matches = matcher.match(graph);
 
@@ -170,7 +163,7 @@ public abstract class AbstractReNounRelationshipAnnotator
 
   private Optional<Relation> createRelation(
       JCas jCas,
-      Map<WordToken, Collection<Entity>> entities,
+      Map<WordToken, List<Entity>> entities,
       WordToken valueToken,
       Entity source,
       Entity target,
@@ -194,8 +187,8 @@ public abstract class AbstractReNounRelationshipAnnotator
     // DO NOTHING
   }
 
-  private Optional<Entity> getEntity(Map<WordToken, Collection<Entity>> entities, WordToken token) {
-    Collection<Entity> collection = entities.get(token);
+  private Optional<Entity> getEntity(Map<WordToken, List<Entity>> entities, WordToken token) {
+    List<Entity> collection = entities.get(token);
     if (collection.isEmpty()) {
       return Optional.empty();
     }
@@ -203,7 +196,7 @@ public abstract class AbstractReNounRelationshipAnnotator
   }
 
   private boolean checkCoreference(
-      Map<WordToken, Collection<Entity>> entities, WordToken valueToken, Entity target) {
+      Map<WordToken, List<Entity>> entities, WordToken valueToken, Entity target) {
     if (requireCoreference) {
       Optional<Entity> entity = getEntity(entities, valueToken);
       return !entity
@@ -219,8 +212,7 @@ public abstract class AbstractReNounRelationshipAnnotator
 
     Set<Dependency> governors = graph.getGovernors(rootToken);
     Stream<WordToken> dependants =
-        governors
-            .stream()
+        governors.stream()
             .filter(d -> ATTRIBUTE_DEPENDENCIES.contains(d.getDependencyType()))
             .map(Dependency::getDependent);
 

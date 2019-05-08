@@ -5,19 +5,13 @@ package uk.gov.dstl.baleen.core.web.servlets;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.fit.factory.ExternalResourceFactory;
@@ -225,7 +219,6 @@ public class AbstractComponentApiServlet extends AbstractApiServlet {
    * name as it is provided
    *
    * @param className The name of the class
-   * @param type The type that the class should extend
    * @param defaultPackage The package to look in if the className isn't a fully qualified name
    * @return The class specified
    */

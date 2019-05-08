@@ -1,12 +1,7 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.graph;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -171,34 +166,19 @@ public class EntityGraphOptions {
       return this;
     }
 
-    /**
-     * Use the given types, defaults to all {@link Entity} types
-     *
-     * @param typeClasses to be included
-     * @return this
-     */
+    /** Use the given types, defaults to all {@link Entity} types */
     public Builder withValueStrategy(String key, ValueStrategy strategy) {
       valueStrategies.put(key, strategy);
       return this;
     }
 
-    /**
-     * Use the given types, defaults to all {@link Entity} types
-     *
-     * @param typeClasses to be included
-     * @return this
-     */
+    /** Use the given types, defaults to all {@link Entity} types */
     public Builder withDefaultValueStrategy(ValueStrategy strategy) {
       defaultValueStrategy = strategy;
       return this;
     }
 
-    /**
-     * Use the given types, defaults to all {@link Entity} types
-     *
-     * @param typeClasses to be included
-     * @return this
-     */
+    /** Use the given types, defaults to all {@link Entity} types */
     public Builder withAggregateProperties(String... properties) {
       aggregateProperties = Arrays.asList(properties);
       return this;

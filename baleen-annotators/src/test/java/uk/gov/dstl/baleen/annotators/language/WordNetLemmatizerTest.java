@@ -26,7 +26,7 @@ public class WordNetLemmatizerTest extends AbstractAnnotatorTest {
   public WordNetLemmatizerTest() {
     super(WordNetLemmatizer.class);
     wordnetErd =
-        ExternalResourceFactory.createExternalResourceDescription(
+        ExternalResourceFactory.createNamedResourceDescription(
             "wordnet", SharedWordNetResource.class);
   }
 

@@ -20,8 +20,7 @@ public class MockInformationCollector implements InformationCollector {
   public <T extends Entity> Set<EntityInformation<T>> getEntityInformation(
       JCas jCas, Class<T> clazz) {
     return (Set)
-        JCasUtil.select(jCas, ReferenceTarget.class)
-            .stream()
+        JCasUtil.select(jCas, ReferenceTarget.class).stream()
             .map(EntityInformation::new)
             .collect(toSet());
   }

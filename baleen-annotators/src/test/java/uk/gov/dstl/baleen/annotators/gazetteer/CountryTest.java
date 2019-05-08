@@ -19,8 +19,7 @@ public class CountryTest extends AbstractAnnotatorTest {
   private static final String PREFIX = "Last month, Peter visited the coast of ";
 
   private final ExternalResourceDescription erd =
-      ExternalResourceFactory.createExternalResourceDescription(
-          COUNTRY, SharedCountryResource.class);
+      ExternalResourceFactory.createNamedResourceDescription(COUNTRY, SharedCountryResource.class);
 
   public CountryTest() {
     super(Country.class);

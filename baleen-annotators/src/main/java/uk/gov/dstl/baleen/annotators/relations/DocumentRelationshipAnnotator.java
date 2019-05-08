@@ -1,16 +1,8 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.relations;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.stream.Stream;
 
 import org.apache.uima.UimaContext;
@@ -79,36 +71,34 @@ public class DocumentRelationshipAnnotator extends AbstractTypedRelationshipAnno
   @Override
   protected void extract(JCas jCas) throws AnalysisEngineProcessException {
 
-    Map<uk.gov.dstl.baleen.types.language.Sentence, Collection<Entity>> languageCovered =
-        JCasUtil.indexCovered(jCas, uk.gov.dstl.baleen.types.language.Sentence.class, Entity.class);
+    Map<Sentence, List<Entity>> languageCovered =
+        JCasUtil.indexCovered(jCas, Sentence.class, Entity.class);
 
-    Map<uk.gov.dstl.baleen.types.structure.Sentence, Collection<Entity>> structureCovered =
+    Map<uk.gov.dstl.baleen.types.structure.Sentence, List<Entity>> structureCovered =
         JCasUtil.indexCovered(
             jCas, uk.gov.dstl.baleen.types.structure.Sentence.class, Entity.class);
 
-    SortedMap<Offset, Collection<Entity>> sentences =
+    SortedMap<Offset, List<Entity>> sentences =
         cleanSentencesByOffset(languageCovered, structureCovered);
 
     addRelationsToIndex(createRelations(jCas, sentences));
   }
 
-  private Stream<Relation> createRelations(
-      JCas jCas, SortedMap<Offset, Collection<Entity>> sentences) {
+  private Stream<Relation> createRelations(JCas jCas, SortedMap<Offset, List<Entity>> sentences) {
     final List<Relation> relations = new LinkedList<>();
 
-    ArrayList<Entry<Offset, Collection<Entity>>> sentenceEntities =
-        new ArrayList<>(sentences.entrySet());
-    final ListIterator<Entry<Offset, Collection<Entity>>> outer = sentenceEntities.listIterator();
+    ArrayList<Entry<Offset, List<Entity>>> sentenceEntities = new ArrayList<>(sentences.entrySet());
+    final ListIterator<Entry<Offset, List<Entity>>> outer = sentenceEntities.listIterator();
     while (outer.hasNext()) {
-      final Entry<Offset, Collection<Entity>> source = outer.next();
+      final Entry<Offset, List<Entity>> source = outer.next();
       int begin = source.getKey().getBegin();
       int outerIndex = outer.nextIndex();
-      final ListIterator<Entry<Offset, Collection<Entity>>> inner =
+      final ListIterator<Entry<Offset, List<Entity>>> inner =
           sentenceEntities.listIterator(outerIndex);
       while (inner.hasNext()
           && sentenceThreshold > 0
           && inner.nextIndex() - outerIndex < sentenceThreshold) {
-        final Entry<Offset, Collection<Entity>> target = inner.next();
+        final Entry<Offset, List<Entity>> target = inner.next();
         int innerIndex = inner.nextIndex();
 
         int end = target.getKey().getEnd();
@@ -154,10 +144,10 @@ public class DocumentRelationshipAnnotator extends AbstractTypedRelationshipAnno
     return relations;
   }
 
-  private SortedMap<Offset, Collection<Entity>> cleanSentencesByOffset(
-      Map<Sentence, Collection<Entity>> languageCovered,
-      Map<uk.gov.dstl.baleen.types.structure.Sentence, Collection<Entity>> structureCovered) {
-    SortedMap<Offset, Collection<Entity>> sentences = new TreeMap<>();
+  private SortedMap<Offset, List<Entity>> cleanSentencesByOffset(
+      Map<Sentence, List<Entity>> languageCovered,
+      Map<uk.gov.dstl.baleen.types.structure.Sentence, List<Entity>> structureCovered) {
+    SortedMap<Offset, List<Entity>> sentences = new TreeMap<>();
     languageCovered.forEach(
         (s, c) ->
             sentences.put(
@@ -173,9 +163,7 @@ public class DocumentRelationshipAnnotator extends AbstractTypedRelationshipAnno
   public AnalysisEngineAction getAction() {
     return new AnalysisEngineAction(
         ImmutableSet.of(
-            Entity.class,
-            uk.gov.dstl.baleen.types.structure.Sentence.class,
-            uk.gov.dstl.baleen.types.language.Sentence.class),
+            Entity.class, uk.gov.dstl.baleen.types.structure.Sentence.class, Sentence.class),
         ImmutableSet.of(Relation.class));
   }
 }

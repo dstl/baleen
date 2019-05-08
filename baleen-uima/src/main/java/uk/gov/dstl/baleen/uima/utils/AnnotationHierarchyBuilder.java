@@ -1,11 +1,7 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.uima.utils;
 
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
@@ -61,7 +57,7 @@ public class AnnotationHierarchyBuilder {
    * Build the structure hierarchy, first by sorting the structure, by offset and depth, then using
    * a deque to recursively create the structure.
    *
-   * @param structures the list of all structural annotations
+   * @param annotations the list of all structural annotations
    * @return the root structure node
    */
   protected static <T extends Annotation> AnnotationNode<T> build(final List<T> annotations) {

@@ -46,7 +46,7 @@ import uk.gov.dstl.baleen.types.semantic.Entity;
 public class Coreference extends AbstractCsvConsumer {
   /**
    * The stoplist to use. If the stoplist matches one of the enum's provided in {@link
-   * uk.gov.dstl.baleen.resources.SharedStopwordResource#StopwordList}, then that list will be
+   * uk.gov.dstl.baleen.resources.SharedStopwordResource.StopwordList}, then that list will be
    * loaded.
    *
    * <p>Otherwise, the string is taken to be a file path and that file is used. The format of the
@@ -103,17 +103,16 @@ public class Coreference extends AbstractCsvConsumer {
     // For each entity we need to find all the other sentences they are contained in
 
     // This should be all entities and sentences
-    final Map<Entity, Collection<Sentence>> coveringSentence =
+    final Map<Entity, List<Sentence>> coveringSentence =
         JCasUtil.indexCovering(jCas, Entity.class, Sentence.class);
-    final Map<Sentence, Collection<Entity>> coveredEntities =
+    final Map<Sentence, List<Entity>> coveredEntities =
         JCasUtil.indexCovered(jCas, Sentence.class, Entity.class);
-    final Map<Sentence, Collection<WordToken>> coveredTokens =
+    final Map<Sentence, List<WordToken>> coveredTokens =
         JCasUtil.indexCovered(jCas, Sentence.class, WordToken.class);
-    final Map<WordToken, Collection<Entity>> coveringEntity =
+    final Map<WordToken, List<Entity>> coveringEntity =
         JCasUtil.indexCovering(jCas, WordToken.class, Entity.class);
 
-    JCasUtil.select(jCas, Entity.class)
-        .stream()
+    JCasUtil.select(jCas, Entity.class).stream()
         .map(
             e ->
                 convertEntityToRow(
@@ -124,10 +123,10 @@ public class Coreference extends AbstractCsvConsumer {
 
   private String[] convertEntityToRow(
       final String source,
-      final Map<Entity, Collection<Sentence>> coveringSentence,
-      final Map<Sentence, Collection<Entity>> coveredEntities,
-      final Map<Sentence, Collection<WordToken>> coveredTokens,
-      final Map<WordToken, Collection<Entity>> coveringEntity,
+      final Map<Entity, List<Sentence>> coveringSentence,
+      final Map<Sentence, List<Entity>> coveredEntities,
+      final Map<Sentence, List<WordToken>> coveredTokens,
+      final Map<WordToken, List<Entity>> coveringEntity,
       Entity e) {
     final List<String> list = new ArrayList<>();
 

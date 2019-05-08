@@ -1,7 +1,6 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.consumers;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -161,18 +160,15 @@ public class MongoRelations extends BaleenConsumer {
   }
 
   private void saveRelations(String documentId, JCas jCas) {
-    final Map<Relation, Collection<Sentence>> coveringSentence =
+    final Map<Relation, List<Sentence>> coveringSentence =
         JCasUtil.indexCovering(jCas, Relation.class, Sentence.class);
 
     List<Document> rels =
-        JCasUtil.select(jCas, Relation.class)
-            .stream()
+        JCasUtil.select(jCas, Relation.class).stream()
             .map(
                 r -> {
                   String sentence =
-                      coveringSentence
-                          .get(r)
-                          .stream()
+                      coveringSentence.get(r).stream()
                           .map(Sentence::getCoveredText)
                           .collect(Collectors.joining(". "));
 

@@ -238,7 +238,7 @@ public class DocumentGraphOptions {
      * set features to be ignored. Already include defaults from {@link
      * ConsumerUtils#getDefaultStopFeatures()}.
      *
-     * @param values
+     * @param stopFeatures
      * @return this
      */
     public Builder withStopFeatures(Set<String> stopFeatures) {

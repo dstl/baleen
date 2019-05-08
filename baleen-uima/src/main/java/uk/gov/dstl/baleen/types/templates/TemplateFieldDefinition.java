@@ -1,22 +1,34 @@
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:22 BST 2019 */
 
-/* First created by JCasGen Tue Apr 18 12:23:04 BST 2017 */
 package uk.gov.dstl.baleen.types.templates;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
- * A field definition in a template document. Updated by JCasGen Tue Apr 18 12:23:04 BST 2017 XML
- * source:
- * /Users/stuarthendren/git/tenode/baleen/baleen/baleen-uima/src/main/resources/types/template_type_system.xml
+ * A field definition in a template document. Updated by JCasGen Wed Apr 17 13:42:22 BST 2019 XML
+ * source: types/template_type_system.xml
  *
  * @generated
  */
 public class TemplateFieldDefinition extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName =
+      "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition";
+
   /**
    * @generated
    * @ordered
@@ -38,6 +50,33 @@ public class TemplateFieldDefinition extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_name = "name";
+  public static final String _FeatName_regex = "regex";
+  public static final String _FeatName_defaultValue = "defaultValue";
+  public static final String _FeatName_required = "required";
+  public static final String _FeatName_repeat = "repeat";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_name =
+      TypeSystemImpl.createCallSite(TemplateFieldDefinition.class, "name");
+  private static final MethodHandle _FH_name = _FC_name.dynamicInvoker();
+  private static final CallSite _FC_regex =
+      TypeSystemImpl.createCallSite(TemplateFieldDefinition.class, "regex");
+  private static final MethodHandle _FH_regex = _FC_regex.dynamicInvoker();
+  private static final CallSite _FC_defaultValue =
+      TypeSystemImpl.createCallSite(TemplateFieldDefinition.class, "defaultValue");
+  private static final MethodHandle _FH_defaultValue = _FC_defaultValue.dynamicInvoker();
+  private static final CallSite _FC_required =
+      TypeSystemImpl.createCallSite(TemplateFieldDefinition.class, "required");
+  private static final MethodHandle _FH_required = _FC_required.dynamicInvoker();
+  private static final CallSite _FC_repeat =
+      TypeSystemImpl.createCallSite(TemplateFieldDefinition.class, "repeat");
+  private static final MethodHandle _FH_repeat = _FC_repeat.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -51,11 +90,11 @@ public class TemplateFieldDefinition extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public TemplateFieldDefinition(int addr, TOP_Type type) {
-    super(addr, type);
+  public TemplateFieldDefinition(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -103,12 +142,7 @@ public class TemplateFieldDefinition extends Base {
    * @return value of the feature
    */
   public String getName() {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing(
-          "name", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_name);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_name));
   }
 
   /**
@@ -118,12 +152,7 @@ public class TemplateFieldDefinition extends Base {
    * @param v value to set into the feature
    */
   public void setName(String v) {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_name == null)
-      jcasType.jcas.throwFeatMissing(
-          "name", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_name, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_name), v);
   }
 
   // *--------------*
@@ -137,12 +166,7 @@ public class TemplateFieldDefinition extends Base {
    * @return value of the feature
    */
   public String getRegex() {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_regex == null)
-      jcasType.jcas.throwFeatMissing(
-          "regex", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_regex);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_regex));
   }
 
   /**
@@ -153,12 +177,7 @@ public class TemplateFieldDefinition extends Base {
    * @param v value to set into the feature
    */
   public void setRegex(String v) {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_regex == null)
-      jcasType.jcas.throwFeatMissing(
-          "regex", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_regex, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_regex), v);
   }
 
   // *--------------*
@@ -172,12 +191,7 @@ public class TemplateFieldDefinition extends Base {
    * @return value of the feature
    */
   public String getDefaultValue() {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_defaultValue == null)
-      jcasType.jcas.throwFeatMissing(
-          "defaultValue", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_defaultValue);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_defaultValue));
   }
 
   /**
@@ -188,12 +202,7 @@ public class TemplateFieldDefinition extends Base {
    * @param v value to set into the feature
    */
   public void setDefaultValue(String v) {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_defaultValue == null)
-      jcasType.jcas.throwFeatMissing(
-          "defaultValue", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    jcasType.ll_cas.ll_setStringValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_defaultValue, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_defaultValue), v);
   }
 
   // *--------------*
@@ -207,12 +216,7 @@ public class TemplateFieldDefinition extends Base {
    * @return value of the feature
    */
   public boolean getRequired() {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_required == null)
-      jcasType.jcas.throwFeatMissing(
-          "required", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    return jcasType.ll_cas.ll_getBooleanValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_required);
+    return _getBooleanValueNc(wrapGetIntCatchException(_FH_required));
   }
 
   /**
@@ -223,12 +227,7 @@ public class TemplateFieldDefinition extends Base {
    * @param v value to set into the feature
    */
   public void setRequired(boolean v) {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_required == null)
-      jcasType.jcas.throwFeatMissing(
-          "required", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    jcasType.ll_cas.ll_setBooleanValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_required, v);
+    _setBooleanValueNfc(wrapGetIntCatchException(_FH_required), v);
   }
 
   // *--------------*
@@ -241,12 +240,7 @@ public class TemplateFieldDefinition extends Base {
    * @return value of the feature
    */
   public boolean getRepeat() {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_repeat == null)
-      jcasType.jcas.throwFeatMissing(
-          "repeat", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    return jcasType.ll_cas.ll_getBooleanValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_repeat);
+    return _getBooleanValueNc(wrapGetIntCatchException(_FH_repeat));
   }
 
   /**
@@ -256,11 +250,6 @@ public class TemplateFieldDefinition extends Base {
    * @param v value to set into the feature
    */
   public void setRepeat(boolean v) {
-    if (TemplateFieldDefinition_Type.featOkTst
-        && ((TemplateFieldDefinition_Type) jcasType).casFeat_repeat == null)
-      jcasType.jcas.throwFeatMissing(
-          "repeat", "uk.gov.dstl.baleen.types.templates.TemplateFieldDefinition");
-    jcasType.ll_cas.ll_setBooleanValue(
-        addr, ((TemplateFieldDefinition_Type) jcasType).casFeatCode_repeat, v);
+    _setBooleanValueNfc(wrapGetIntCatchException(_FH_repeat), v);
   }
 }

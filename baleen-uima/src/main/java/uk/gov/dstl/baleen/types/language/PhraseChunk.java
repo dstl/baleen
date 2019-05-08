@@ -1,23 +1,35 @@
-/* First created by JCasGen Wed Jan 14 12:58:18 GMT 2015 */
-// Dstl (c) Crown Copyright 2017
+/* Apache UIMA v3 - First created by JCasGen Wed Apr 17 13:42:08 BST 2019 */
+
 package uk.gov.dstl.baleen.types.language;
 
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandle;
+
+import org.apache.uima.cas.impl.CASImpl;
+import org.apache.uima.cas.impl.TypeImpl;
+import org.apache.uima.cas.impl.TypeSystemImpl;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.jcas.JCasRegistry;
 import org.apache.uima.jcas.cas.FSArray;
-import org.apache.uima.jcas.cas.TOP_Type;
 
 import uk.gov.dstl.baleen.types.Base;
 
 /**
  * Annotation to store the result of shallow parsing, which provide noun phrase and verb phrase
- * constituents, rather than just WordTokens. Updated by JCasGen Wed Apr 13 13:23:16 BST 2016 XML
- * source:
- * H:/git/TextProcessing/core/baleen/baleen-uima/src/main/resources/types/common_type_system.xml
+ * constituents, rather than just WordTokens. Updated by JCasGen Wed Apr 17 13:42:08 BST 2019 XML
+ * source: types/military_type_system.xml
  *
  * @generated
  */
 public class PhraseChunk extends Base {
+
+  /**
+   * @generated
+   * @ordered
+   */
+  @SuppressWarnings("hiding")
+  public static final String _TypeName = "uk.gov.dstl.baleen.types.language.PhraseChunk";
+
   /**
    * @generated
    * @ordered
@@ -39,6 +51,25 @@ public class PhraseChunk extends Base {
     return typeIndexID;
   }
 
+  /* *******************
+   *   Feature Offsets *
+   * *******************/
+
+  public static final String _FeatName_chunkType = "chunkType";
+  public static final String _FeatName_constituentWords = "constituentWords";
+  public static final String _FeatName_headWord = "headWord";
+
+  /* Feature Adjusted Offsets */
+  private static final CallSite _FC_chunkType =
+      TypeSystemImpl.createCallSite(PhraseChunk.class, "chunkType");
+  private static final MethodHandle _FH_chunkType = _FC_chunkType.dynamicInvoker();
+  private static final CallSite _FC_constituentWords =
+      TypeSystemImpl.createCallSite(PhraseChunk.class, "constituentWords");
+  private static final MethodHandle _FH_constituentWords = _FC_constituentWords.dynamicInvoker();
+  private static final CallSite _FC_headWord =
+      TypeSystemImpl.createCallSite(PhraseChunk.class, "headWord");
+  private static final MethodHandle _FH_headWord = _FC_headWord.dynamicInvoker();
+
   /**
    * Never called. Disable default constructor
    *
@@ -52,11 +83,11 @@ public class PhraseChunk extends Base {
    * Internal - constructor used by generator
    *
    * @generated
-   * @param addr low level Feature Structure reference
+   * @param casImpl the CAS this Feature Structure belongs to
    * @param type the type of this Feature Structure
    */
-  public PhraseChunk(int addr, TOP_Type type) {
-    super(addr, type);
+  public PhraseChunk(TypeImpl type, CASImpl casImpl) {
+    super(type, casImpl);
     readObject();
   }
 
@@ -104,10 +135,7 @@ public class PhraseChunk extends Base {
    * @return value of the feature
    */
   public String getChunkType() {
-    if (PhraseChunk_Type.featOkTst && ((PhraseChunk_Type) jcasType).casFeat_chunkType == null)
-      jcasType.jcas.throwFeatMissing("chunkType", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    return jcasType.ll_cas.ll_getStringValue(
-        addr, ((PhraseChunk_Type) jcasType).casFeatCode_chunkType);
+    return _getStringValueNc(wrapGetIntCatchException(_FH_chunkType));
   }
 
   /**
@@ -117,9 +145,7 @@ public class PhraseChunk extends Base {
    * @param v value to set into the feature
    */
   public void setChunkType(String v) {
-    if (PhraseChunk_Type.featOkTst && ((PhraseChunk_Type) jcasType).casFeat_chunkType == null)
-      jcasType.jcas.throwFeatMissing("chunkType", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    jcasType.ll_cas.ll_setStringValue(addr, ((PhraseChunk_Type) jcasType).casFeatCode_chunkType, v);
+    _setStringValueNfc(wrapGetIntCatchException(_FH_chunkType), v);
   }
 
   // *--------------*
@@ -132,14 +158,7 @@ public class PhraseChunk extends Base {
    * @return value of the feature
    */
   public FSArray getConstituentWords() {
-    if (PhraseChunk_Type.featOkTst
-        && ((PhraseChunk_Type) jcasType).casFeat_constituentWords == null)
-      jcasType.jcas.throwFeatMissing(
-          "constituentWords", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    return (FSArray)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((PhraseChunk_Type) jcasType).casFeatCode_constituentWords)));
+    return (FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_constituentWords)));
   }
 
   /**
@@ -149,14 +168,7 @@ public class PhraseChunk extends Base {
    * @param v value to set into the feature
    */
   public void setConstituentWords(FSArray v) {
-    if (PhraseChunk_Type.featOkTst
-        && ((PhraseChunk_Type) jcasType).casFeat_constituentWords == null)
-      jcasType.jcas.throwFeatMissing(
-          "constituentWords", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    jcasType.ll_cas.ll_setRefValue(
-        addr,
-        ((PhraseChunk_Type) jcasType).casFeatCode_constituentWords,
-        jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_constituentWords), v);
   }
 
   /**
@@ -168,20 +180,8 @@ public class PhraseChunk extends Base {
    * @return value of the element at index i
    */
   public WordToken getConstituentWords(int i) {
-    if (PhraseChunk_Type.featOkTst
-        && ((PhraseChunk_Type) jcasType).casFeat_constituentWords == null)
-      jcasType.jcas.throwFeatMissing(
-          "constituentWords", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((PhraseChunk_Type) jcasType).casFeatCode_constituentWords),
-        i);
     return (WordToken)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefArrayValue(
-                jcasType.ll_cas.ll_getRefValue(
-                    addr, ((PhraseChunk_Type) jcasType).casFeatCode_constituentWords),
-                i)));
+        (((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_constituentWords)))).get(i));
   }
 
   /**
@@ -193,19 +193,7 @@ public class PhraseChunk extends Base {
    * @param v value to set into the array
    */
   public void setConstituentWords(int i, WordToken v) {
-    if (PhraseChunk_Type.featOkTst
-        && ((PhraseChunk_Type) jcasType).casFeat_constituentWords == null)
-      jcasType.jcas.throwFeatMissing(
-          "constituentWords", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    jcasType.jcas.checkArrayBounds(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((PhraseChunk_Type) jcasType).casFeatCode_constituentWords),
-        i);
-    jcasType.ll_cas.ll_setRefArrayValue(
-        jcasType.ll_cas.ll_getRefValue(
-            addr, ((PhraseChunk_Type) jcasType).casFeatCode_constituentWords),
-        i,
-        jcasType.ll_cas.ll_getFSRef(v));
+    ((FSArray) (_getFeatureValueNc(wrapGetIntCatchException(_FH_constituentWords)))).set(i, v);
   }
 
   // *--------------*
@@ -218,12 +206,7 @@ public class PhraseChunk extends Base {
    * @return value of the feature
    */
   public WordToken getHeadWord() {
-    if (PhraseChunk_Type.featOkTst && ((PhraseChunk_Type) jcasType).casFeat_headWord == null)
-      jcasType.jcas.throwFeatMissing("headWord", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    return (WordToken)
-        (jcasType.ll_cas.ll_getFSForRef(
-            jcasType.ll_cas.ll_getRefValue(
-                addr, ((PhraseChunk_Type) jcasType).casFeatCode_headWord)));
+    return (WordToken) (_getFeatureValueNc(wrapGetIntCatchException(_FH_headWord)));
   }
 
   /**
@@ -233,9 +216,6 @@ public class PhraseChunk extends Base {
    * @param v value to set into the feature
    */
   public void setHeadWord(WordToken v) {
-    if (PhraseChunk_Type.featOkTst && ((PhraseChunk_Type) jcasType).casFeat_headWord == null)
-      jcasType.jcas.throwFeatMissing("headWord", "uk.gov.dstl.baleen.types.language.PhraseChunk");
-    jcasType.ll_cas.ll_setRefValue(
-        addr, ((PhraseChunk_Type) jcasType).casFeatCode_headWord, jcasType.ll_cas.ll_getFSRef(v));
+    _setFeatureValueNcWj(wrapGetIntCatchException(_FH_headWord), v);
   }
 }
