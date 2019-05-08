@@ -3,6 +3,8 @@ jdk:
 - openjdk8
 - openjdk11
 
+install:
+- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dgpg.skip
 script:
 - mvn -B -Pdisable-logging clean package -Dgpg.skip
 after_success:
