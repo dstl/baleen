@@ -52,13 +52,4 @@ public class ReporterUtilsTest {
         ReporterUtils.createSlf4jReporter(registry, new HashMap<String, Object>());
     assertNotNull(reporter);
   }
-
-  @Test
-  public void testCreateElasticSearchReporter() throws BaleenException {
-    // NOTE: At the time of writing, although this supposedly throws an IO
-    // exception it doesn't even it the server doesn't exist!
-    ScheduledReporter reporter =
-        ReporterUtils.createElasticSearchReporter(registry, new HashMap<String, Object>());
-    assertNotNull(reporter);
-  }
 }

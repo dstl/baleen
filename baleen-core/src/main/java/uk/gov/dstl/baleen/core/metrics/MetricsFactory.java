@@ -184,9 +184,6 @@ public class MetricsFactory implements BaleenComponent {
         case "console":
           reporter = ReporterUtils.createConsoleReporter(metricRegistry, config);
           break;
-        case "elasticsearch":
-          reporter = ReporterUtils.createElasticSearchReporter(metricRegistry, config);
-          break;
         case "none":
           continue;
         default:

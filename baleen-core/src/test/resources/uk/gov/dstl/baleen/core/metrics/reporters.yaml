@@ -18,14 +18,3 @@ metrics:
     # Ensure you have write permission to this directory.
     directory: test_csvmetrics
     period: 1
-
-  - type: elasticsearch
-    # The server to connect to (defaults to localhost)
-    server: localhost
-    # The name of the ES index to write to
-    index: test_metrics
-    # Bulk size for batching. Defaults to 2500
-    bulkSize: 1
-    # Timeout for connections in ms (defaults to 1000)
-    timeout: 10000
-    period: 1

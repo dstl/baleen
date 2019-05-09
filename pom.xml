@@ -93,8 +93,7 @@
     <logback.version>1.2.3</logback.version>
     <maltparser.version>1.9.2</maltparser.version>
     <mboxiterator.version>0.8.3</mboxiterator.version>
-    <metrics.version>3.0.2</metrics.version>
-    <metrics-elasticsearch.version>2.2.0</metrics-elasticsearch.version>
+    <metrics.version>4.0.0</metrics.version>
     <mongodb.version>3.5.0</mongodb.version>
     <opencsv.version>4.5</opencsv.version>
     <opennlp.version>1.9.1</opennlp.version>
