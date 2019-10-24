@@ -1,26 +1,24 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.renoun;
 
-import java.util.function.Supplier;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
-
+import com.google.common.base.Predicates;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import org.apache.uima.UimaContext;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
 import org.apache.uima.fit.descriptor.ExternalResource;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.bson.Document;
 import org.elasticsearch.common.Strings;
-
-import com.google.common.base.Predicates;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.resources.data.ReNounFact;
 import uk.gov.dstl.baleen.types.semantic.Relation;
 import uk.gov.dstl.baleen.uima.grammar.DependencyParseException;
 import uk.gov.dstl.baleen.uima.grammar.DependencyTree;
+
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * A dependency tree based relation extractor for ReNoun.
@@ -47,9 +45,9 @@ public class ReNounRelationshipAnnotator extends AbstractReNounRelationshipAnnot
    *
    * @baleen.config renoun_patterns
    */
-  public static final String PARAM_OUPUT_COLLECTION = "ouputCollection";
+  public static final String PARAM_OUTPUT_COLLECTION = "outputCollection";
 
-  @ConfigurationParameter(name = PARAM_OUPUT_COLLECTION, defaultValue = "renoun_patterns")
+  @ConfigurationParameter(name = PARAM_OUTPUT_COLLECTION, defaultValue = "renoun_patterns")
   private String patternsCollection;
 
   /**
