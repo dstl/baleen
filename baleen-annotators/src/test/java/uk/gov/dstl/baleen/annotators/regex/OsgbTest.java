@@ -8,9 +8,9 @@ import uk.gov.dstl.baleen.annotators.testing.types.TestCoordinate;
 import uk.gov.dstl.baleen.types.geo.Coordinate;
 
 /** */
-public class OrdnanceSurveyTest extends AbstractAnnotatorTest {
+public class OsgbTest extends AbstractAnnotatorTest {
 
-  public OrdnanceSurveyTest() {
+  public OsgbTest() {
     super(Osgb.class);
   }
 

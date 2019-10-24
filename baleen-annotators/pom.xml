@@ -27,6 +27,11 @@
       <version>${baleen.version}</version>
     </dependency>
     <dependency>
+      <groupId>uk.gov.dstl.geo</groupId>
+      <artifactId>osgb</artifactId>
+      <version>${osgb.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <version>${opencsv.version}</version>

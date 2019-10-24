@@ -97,6 +97,7 @@
     <mongodb.version>3.5.0</mongodb.version>
     <opencsv.version>4.5</opencsv.version>
     <opennlp.version>1.9.1</opennlp.version>
+    <osgb.version>1.0.0</osgb.version>
     <postgres.version>42.2.5</postgres.version>
     <reflections.version>0.9.11</reflections.version>
     <slf4j.version>1.7.26</slf4j.version>
