@@ -1,5 +1,8 @@
 # Baleen
 
+**Baleen 2 has now reached the end of it's life, and we encourage all users to move to [Baleen 3](https://github.com/dstl/baleen3).**
+There is no intention to provide further updates or any significant support for Baleen 2.
+
 [![Build Status](https://travis-ci.org/dstl/baleen.svg?branch=master)](https://travis-ci.org/dstl/baleen) [![Coverage Status](https://coveralls.io/repos/github/dstl/baleen/badge.svg?branch=master)](https://coveralls.io/github/dstl/baleen?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/27988357f1274bec85626a85ec093e97)](https://www.codacy.com/app/jbaker-dstl/baleen?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dstl/baleen&amp;utm_campaign=Badge_Grade)
 
 Baleen is an extensible text processing capability that allows entity-related information to be extracted from unstructured and semi-structured data sources. It makes available in a structured format things of interest otherwise stored in formats such as text documents - references to people, organisations, unique identifiers, location information.
