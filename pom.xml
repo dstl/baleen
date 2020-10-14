@@ -110,7 +110,7 @@
     <!-- Testing -->
     <fongo.version>2.1.1</fongo.version>
     <greenmail.version>1.5.10</greenmail.version>
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <jts.version>1.13</jts.version>
     <log4j.version>2.11.2</log4j.version>
     <mockito.version>2.27.0</mockito.version>

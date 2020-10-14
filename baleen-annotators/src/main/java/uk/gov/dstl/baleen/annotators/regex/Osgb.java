@@ -1,8 +1,13 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
-import com.google.common.collect.ImmutableSet;
+import java.util.Collections;
+import java.util.regex.Matcher;
+
 import org.apache.uima.jcas.JCas;
+
+import com.google.common.collect.ImmutableSet;
+
 import uk.gov.dstl.baleen.annotators.regex.helpers.AbstractRegexAnnotator;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.geo.Coordinate;
@@ -10,9 +15,6 @@ import uk.gov.dstl.geo.osgb.Constants;
 import uk.gov.dstl.geo.osgb.EastingNorthingConversion;
 import uk.gov.dstl.geo.osgb.NationalGrid;
 import uk.gov.dstl.geo.osgb.OSGB36;
-
-import java.util.Collections;
-import java.util.regex.Matcher;
 
 /**
  * Annotate Ordnance Survey coordinates

@@ -1,17 +1,18 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.mallet;
 
-import cc.mallet.pipe.Pipe;
-import cc.mallet.types.Instance;
-import cc.mallet.types.Token;
-import cc.mallet.types.TokenSequence;
-import com.google.common.collect.ImmutableSet;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
+
+import cc.mallet.pipe.Pipe;
+import cc.mallet.types.Instance;
+import cc.mallet.types.Token;
+import cc.mallet.types.TokenSequence;
+
+import com.google.common.collect.ImmutableSet;
 
 /** A pipe to remove the given stopwords */
 public class RemoveStopwords extends Pipe implements Serializable {

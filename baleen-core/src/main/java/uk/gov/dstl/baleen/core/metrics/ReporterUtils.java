@@ -1,13 +1,15 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.core.metrics;
 
-import com.codahale.metrics.*;
-import org.slf4j.LoggerFactory;
-import uk.gov.dstl.baleen.exceptions.BaleenException;
-
 import java.io.File;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import org.slf4j.LoggerFactory;
+
+import com.codahale.metrics.*;
+
+import uk.gov.dstl.baleen.exceptions.BaleenException;
 
 /**
  * Helper utility class to capture the creation of the different reporter types. See each {@link

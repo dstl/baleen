@@ -1,10 +1,10 @@
 // Copyright (c) Committed Software 2018, opensource@committed.io
 package uk.gov.dstl.baleen.annotators.renoun;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import org.apache.uima.UimaContext;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
@@ -13,6 +13,12 @@ import org.apache.uima.fit.util.JCasUtil;
 import org.apache.uima.jcas.JCas;
 import org.apache.uima.resource.ResourceInitializationException;
 import org.bson.Document;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.resources.SharedMongoResource;
 import uk.gov.dstl.baleen.resources.data.ReNounFact;
@@ -22,10 +28,6 @@ import uk.gov.dstl.baleen.types.language.WordToken;
 import uk.gov.dstl.baleen.uima.BaleenSentenceAnnotator;
 import uk.gov.dstl.baleen.uima.grammar.DependencyGraph;
 import uk.gov.dstl.baleen.uima.grammar.DependencyTree;
-
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 /**
  * An abstract annotator for the generation of ReNoun dependency patterns based on known facts.
