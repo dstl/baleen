@@ -1,28 +1,22 @@
 // Dstl (c) Crown Copyright 2017
 package uk.gov.dstl.baleen.annotators.regex;
 
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.google.common.collect.ImmutableSet;
 import org.apache.uima.analysis_engine.AnalysisEngineProcessException;
 import org.apache.uima.fit.descriptor.ConfigurationParameter;
-
-import com.google.common.collect.ImmutableSet;
-
 import uk.gov.dstl.baleen.annotators.helpers.DateTimeUtils;
 import uk.gov.dstl.baleen.core.pipelines.orderers.AnalysisEngineAction;
 import uk.gov.dstl.baleen.types.semantic.Temporal;
 import uk.gov.dstl.baleen.uima.BaleenTextAwareAnnotator;
 import uk.gov.dstl.baleen.uima.data.TextBlock;
 import uk.gov.dstl.baleen.uima.utils.TemporalUtils;
+
+import java.time.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Annotate dates and date ranges as Temporal entities. The following examples show the types of
@@ -464,7 +458,7 @@ public class Date extends BaleenTextAwareAnnotator {
       Integer month;
       if (n1 >= 1 && n1 <= 12) {
         // n1 could be a month or a day
-        if (n2 >= 12 && n2 <= 31) {
+        if (n2 > 12 && n2 <= 31) {
           // n2 must be a day
           month = n1;
           day = n2;
@@ -480,7 +474,7 @@ public class Date extends BaleenTextAwareAnnotator {
           // invalid combination of n1 and n2
           continue;
         }
-      } else if (n1 >= 1 && n1 <= 31) {
+      } else if (n1 > 12 && n1 <= 31) {
         // n1 must be a day
         day = n1;
         if (n2 >= 1 && n2 <= 12) {
