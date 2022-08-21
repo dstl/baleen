@@ -76,7 +76,7 @@
     <h2.version>1.4.199</h2.version>
     <httpclient.version>4.5.8</httpclient.version>
     <httpcore.version>4.4.11</httpcore.version>
-    <jackson.version>2.9.8</jackson.version>
+    <jackson.version>2.10.0</jackson.version>
     <javamail.version>1.6.2</javamail.version>
     <javamail-protocols.version>1.6.3</javamail-protocols.version>
     <javassist.version>3.20.0-GA</javassist.version>
